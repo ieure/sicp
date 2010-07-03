@@ -297,7 +297,7 @@ of leaves in the above tree, in general) is precisely
 <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1).  To get an idea of how bad this is, one can show that the
 value of  <em>F</em><em>i</em><em>b</em>(<em>n</em>) <a name="%_idx_722" id="%_idx_722"></a>grows exponentially with <em>n</em>.  More precisely
 (see exercise <a href="#%_thm_1.13">1.13</a>),  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest
-integer to <img src="images/book-Z-G-D-11.gif" border="0" /><sup><em>n</em></sup> /√5, where</p><p>
+integer to <em>φ</em><sup><em>n</em></sup> /√5, where</p><p>
 
 </p><p></p><div align="left"><img src="images/ch1-Z-G-14.gif" border="0" /></div><p>
 is the <a name="%_idx_724" id="%_idx_724"></a><em>golden ratio</em>, which satisfies the equation</p><p>
@@ -452,11 +452,11 @@ of a recursive process.
 </p><p></p><p>
 
 </p><p><a name="%_thm_1.13" id="%_thm_1.13"></a>
-<b>Exercise 1.13.</b>  Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <img src="images/book-Z-G-D-11.gif" border="0" /><sup><em>n</em></sup>/√5,
-where <img src="images/book-Z-G-D-11.gif" border="0" /> =  (1 + √5)/2.  Hint: Let <img src="images/book-Z-G-D-12.gif" border="0" /> =  (1 - √5)/2.  Use
+<b>Exercise 1.13.</b>  Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <em>φ</em><sup><em>n</em></sup>/√5,
+where <em>φ</em> =  (1 + √5)/2.  Hint: Let <em>ψ</em> =  (1 - √5)/2.  Use
 induction and the definition of the Fibonacci numbers (see
-section <a href="#%_sec_1.2.2">1.2.2</a>) to prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = (<img src="images/book-Z-G-D-11.gif" border="0" /><sup><em>n</em></sup>
- - <img src="images/book-Z-G-D-12.gif" border="0" /><sup><em>n</em></sup>)/√5.
+section <a href="#%_sec_1.2.2">1.2.2</a>) to prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = (<em>φ</em><sup><em>n</em></sup>
+ - <em>ψ</em><sup><em>n</em></sup>)/√5.
 
 </p><p></p><p>
 
@@ -503,7 +503,7 @@ steps required for this process grows as θ(<em>n</em>).  We also saw
 that the space required grows as θ(<em>n</em>).  For the <a name="%_idx_768" id="%_idx_768"></a><a name="%_idx_770" id="%_idx_770"></a><a name="%_idx_772" id="%_idx_772"></a>iterative
 factorial, the number of steps is still θ(<em>n</em>) but the space is
 θ(1) – that is, constant.<a name="call_footnote_Temp_59" href="#footnote_Temp_59" id="call_footnote_Temp_59"><sup><small>36</small></sup></a> The <a name="%_idx_774" id="%_idx_774"></a><a name="%_idx_776" id="%_idx_776"></a><a name="%_idx_778" id="%_idx_778"></a>tree-recursive Fibonacci computation requires
-θ(<img src="images/book-Z-G-D-11.gif" border="0" /><sup><em>n</em></sup>) steps and space θ(<em>n</em>), where <img src="images/book-Z-G-D-11.gif" border="0" /> is the
+θ(<em>φ</em><sup><em>n</em></sup>) steps and space θ(<em>n</em>), where <em>φ</em> is the
 golden ratio described in section <a href="#%_sec_1.2.2">1.2.2</a>.</p><p>
 
 
@@ -775,9 +775,9 @@ number.<a name="call_footnote_Temp_72" href="#footnote_Temp_72" id="call_footnot
 We can use this theorem to get an order-of-growth estimate for Euclid's
 Algorithm.  Let <em>n</em> be the smaller of the two inputs to the
 procedure.  If the process takes <em>k</em> steps, then we must have
-<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) ≈ <img src="images/book-Z-G-D-11.gif" border="0" /><sup><em>k</em></sup>/√5.  Therefore
+<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) ≈ <em>φ</em><sup><em>k</em></sup>/√5.  Therefore
 the number of steps <em>k</em> grows as the logarithm (to the base
-<img src="images/book-Z-G-D-11.gif" border="0" />) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).</p><p>
+<em>φ</em>) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).</p><p>
 
 </p><p><a name="%_thm_1.20" id="%_thm_1.20"></a>
 <b>Exercise 1.20.</b>  <a name="%_idx_852" id="%_idx_852"></a><a name="%_idx_854" id="%_idx_854"></a>The process that a procedure generates is of course dependent on the

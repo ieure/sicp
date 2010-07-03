@@ -660,9 +660,9 @@ successive approximations to a solution, a technique we that we call
 searches.</p><p>
 
 </p><p><a name="%_thm_1.35" id="%_thm_1.35"></a>
-<b>Exercise 1.35.</b>  <a name="%_idx_1130" id="%_idx_1130"></a><a name="%_idx_1132" id="%_idx_1132"></a>Show that the golden ratio <img src="images/book-Z-G-D-11.gif" border="0" /> (section <a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>)
+<b>Exercise 1.35.</b>  <a name="%_idx_1130" id="%_idx_1130"></a><a name="%_idx_1132" id="%_idx_1132"></a>Show that the golden ratio <em>φ</em> (section <a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>)
 is a fixed point of the transformation <em>x</em>  ⟼  1  +  1/<em>x</em>, and use
-this fact to compute <img src="images/book-Z-G-D-11.gif" border="0" /> by means of the <tt>fixed-point</tt>
+this fact to compute <em>φ</em> by means of the <tt>fixed-point</tt>
 procedure.
 </p><p></p><p>
 
@@ -684,7 +684,7 @@ guess of 1, as this would cause division by <tt>log</tt>(1) = 0.)
 </p><p></p><div align="left"><img src="images/ch1-Z-G-34.gif" border="0" /></div><p>
 <a name="%_idx_1140" id="%_idx_1140"></a><a name="%_idx_1142" id="%_idx_1142"></a>As an example, one can show that the infinite continued fraction
 expansion with the <em>N</em><sub><em>i</em></sub> and the <em>D</em><sub><em>i</em></sub> all equal to 1 produces
-1/<img src="images/book-Z-G-D-11.gif" border="0" />, where <img src="images/book-Z-G-D-11.gif" border="0" /> is the golden ratio (described in
+1/<em>φ</em>, where <em>φ</em> is the golden ratio (described in
 section <a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>).
 One way to approximate an
 infinite continued fraction is to truncate the expansion after a given
@@ -696,7 +696,7 @@ term index <em>i</em>) that return the <em>N</em><sub><em>i</em></sub> and <em>D
 continued fraction.  Define a procedure <tt>cont-frac</tt>
 such that evaluating <tt>(cont-frac n d k)</tt>
 computes the value of the <em>k</em>-term finite
-continued fraction.  Check your procedure by approximating 1/<img src="images/book-Z-G-D-11.gif" border="0" /> using
+continued fraction.  Check your procedure by approximating 1/<em>φ</em> using
 </p><p></p><p><tt>(cont-frac (lambda (i) 1.0)<br />
            (lambda (i) 1.0)<br />
            k)<br /></tt></p><p></p><p>
