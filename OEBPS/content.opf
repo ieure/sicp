@@ -53,9 +53,46 @@
         <item id="css" href="stylesheet.css" media-type="text/css"/>
     </manifest>
     <spine toc="ncx">
-        <itemref idref="book" linear="no"/>
+        <itemref idref="book-Z-H-1" linear="yes"/>
+        <itemref idref="book-Z-H-2" linear="yes"/>
+        <itemref idref="book-Z-H-3" linear="yes"/>
+        <itemref idref="book-Z-H-4" linear="yes"/>
+        <itemref idref="book-Z-H-5" linear="yes"/>
+        <itemref idref="book-Z-H-6" linear="yes"/>
+        <itemref idref="book-Z-H-7" linear="yes"/>
+        <itemref idref="book-Z-H-8" linear="yes"/>
+        <itemref idref="book-Z-H-9" linear="yes"/>
+        <itemref idref="book-Z-H-10" linear="yes"/>
+        <itemref idref="book-Z-H-11" linear="yes"/>
+        <itemref idref="book-Z-H-12" linear="yes"/>
+        <itemref idref="book-Z-H-13" linear="yes"/>
+        <itemref idref="book-Z-H-14" linear="yes"/>
+        <itemref idref="book-Z-H-15" linear="yes"/>
+        <itemref idref="book-Z-H-16" linear="yes"/>
+        <itemref idref="book-Z-H-17" linear="yes"/>
+        <itemref idref="book-Z-H-18" linear="yes"/>
+        <itemref idref="book-Z-H-19" linear="yes"/>
+        <itemref idref="book-Z-H-20" linear="yes"/>
+        <itemref idref="book-Z-H-21" linear="yes"/>
+        <itemref idref="book-Z-H-22" linear="yes"/>
+        <itemref idref="book-Z-H-23" linear="yes"/>
+        <itemref idref="book-Z-H-24" linear="yes"/>
+        <itemref idref="book-Z-H-25" linear="yes"/>
+        <itemref idref="book-Z-H-26" linear="yes"/>
+        <itemref idref="book-Z-H-27" linear="yes"/>
+        <itemref idref="book-Z-H-28" linear="yes"/>
+        <itemref idref="book-Z-H-29" linear="yes"/>
+        <itemref idref="book-Z-H-30" linear="yes"/>
+        <itemref idref="book-Z-H-31" linear="yes"/>
+        <itemref idref="book-Z-H-32" linear="yes"/>
+        <itemref idref="book-Z-H-33" linear="yes"/>
+        <itemref idref="book-Z-H-34" linear="yes"/>
+        <itemref idref="book-Z-H-35" linear="yes"/>
+        <itemref idref="book-Z-H-36" linear="yes"/>
+        <itemref idref="book-Z-H-37" linear="yes"/>
+        <itemref idref="book-Z-H-38" linear="yes"/>
     </spine>
     <guide>
-        <reference href="book.html" type="cover" title="Cover"/>
+        <reference href=".html" type="cover" title="Cover"/>
     </guide>
 </package>
