@@ -1,0 +1,664 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-20.html">previous</a></span><span>, <a href="book-Z-H-22.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_3.2"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_3.2">3.2&nbsp;&nbsp;The Environment Model of Evaluation</a></h2><p>
+
+
+<a name="%_idx_3034"></a>
+When we introduced compound procedures in chapter&nbsp;1, we used the
+<a name="%_idx_3036"></a>substitution model of evaluation
+(section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>) to define what is meant by
+applying a procedure to arguments:<p>
+
+<p><ul>
+<li>To apply a compound procedure to arguments, evaluate the body of the
+procedure with each formal parameter replaced by the corresponding
+argument.
+</ul><p><p>
+
+Once we admit assignment into our programming language, such a
+definition is no longer adequate.  In particular,
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> argued that, in the presence of
+assignment, a variable can no longer be considered to be merely a name
+for a value.  Rather, a variable must somehow designate a ``place'' in
+which values can be stored.  In our new model of evaluation, these
+places will be maintained in structures called <a name="%_idx_3038"></a><em>environments</em>.<p>
+
+An environment is a sequence of <a name="%_idx_3040"></a><em>frames</em>.  Each frame is a table
+(possibly empty) of <a name="%_idx_3042"></a><em>bindings</em>, which associate variable names with
+their corresponding values.  (A single frame may contain at most one
+binding for any variable.)  Each frame also has a pointer to its <a name="%_idx_3044"></a><a name="%_idx_3046"></a><em>enclosing environment</em>, unless, for the purposes of discussion, the
+frame is considered to be <a name="%_idx_3048"></a><a name="%_idx_3050"></a><em>global</em>.  The <a name="%_idx_3052"></a><em>value of a variable</em>
+with respect to an environment is the value given by the binding of
+the variable in the first frame in the environment that contains a
+binding for that variable.  If no frame in the sequence specifies a
+binding for the variable, then the variable is said to be <a name="%_idx_3054"></a><a name="%_idx_3056"></a><em>unbound</em> in the environment.<p>
+
+<a name="%_fig_3.1"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-2.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.1:</b>&nbsp;&nbsp;A simple environment structure.</div></caption><tr><td>
+
+<a name="%_idx_3058"></a></td></tr></table></div><p><p>
+
+Figure&nbsp;<a href="#%_fig_3.1">3.1</a> shows a simple environment
+structure consisting of three frames, labeled I, II, and III.  In the
+diagram, A, B, C, and D are pointers to environments.  C and D point
+to the same environment.  The variables <tt>z</tt> and <tt>x</tt> are bound
+in frame II, while <tt>y</tt> and <tt>x</tt> are bound in frame I.  The
+value of <tt>x</tt> in environment D is 3.  The value of <tt>x</tt> with
+respect to environment B is also 3.  This is determined as follows: We
+examine the first frame in the sequence (frame III) and do not find a
+binding for <tt>x</tt>, so we proceed to the enclosing environment D and
+find the binding in frame I.  On the other hand, the value of <tt>x</tt>
+in environment A is 7, because the first frame in the sequence (frame
+II) contains a binding of <tt>x</tt> to 7.  With respect to environment
+A, the binding of <tt>x</tt> to 7 in frame II is said to <a name="%_idx_3060"></a><em>shadow</em> the
+binding of <tt>x</tt> to 3 in frame I.<p>
+
+
+The environment is crucial to the evaluation process,
+because it determines the context in which an expression should be
+evaluated.  Indeed, one could say that expressions in a programming
+language do not, in themselves, have any meaning.  Rather, an
+expression acquires a meaning only with respect to some environment in
+which it is evaluated.  Even the interpretation of an expression as
+straightforward as <tt>(+&nbsp;1&nbsp;1)</tt> depends on an understanding that one
+is operating in a context in which <tt>+</tt> is the symbol for addition.
+Thus, in our model of evaluation we will always speak of evaluating an
+expression with respect to some environment.  To describe interactions
+with the interpreter, we will suppose that there is a <a name="%_idx_3062"></a>global
+environment, consisting of a single frame (with no enclosing
+environment) that includes values for the symbols associated with the
+primitive procedures.  For example, the idea that <tt>+</tt> is the
+symbol for addition is captured by saying that the symbol <tt>+</tt> is
+bound in the global environment to the primitive addition procedure.<p>
+
+<a name="%_sec_3.2.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.2.1">3.2.1&nbsp;&nbsp;The Rules for Evaluation</a></h3><p>
+
+<a name="%_idx_3064"></a>
+The overall specification of how the interpreter evaluates a
+combination remains the same as when we first introduced it in
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.3">1.1.3</a>:<p>
+
+<p><ul>
+<li>To evaluate a combination:
+</ul><p><p>
+
+<blockquote>
+<p>1.&nbsp;&nbsp;Evaluate the subexpressions of the
+combination.<a name="call_footnote_Temp_342" href="#footnote_Temp_342"><sup><small>12</small></sup></a><p>
+
+<p>2.&nbsp;&nbsp;Apply the value of the operator subexpression to the values of the
+operand subexpressions.
+</blockquote><p>
+
+The environment model of evaluation replaces the substitution model in
+specifying what it means to apply a compound procedure to arguments.<p>
+
+In the environment model of evaluation, a procedure is always a pair
+consisting of some code and a pointer to an environment.  Procedures
+are created in one way only: by evaluating a <tt>lambda</tt> expression.
+<a name="%_idx_3070"></a>This produces a procedure whose code is obtained from the text of the
+<tt>lambda</tt> expression and whose environment is the environment in
+which the <tt>lambda</tt> expression was evaluated to produce the
+procedure.  For example, consider the procedure definition<p>
+
+<p><p><tt><a name="%_idx_3072"></a>(define&nbsp;(square&nbsp;x)<br>
+&nbsp;&nbsp;(*&nbsp;x&nbsp;x))<br>
+</tt><p><p>
+evaluated in the global environment.  The procedure definition syntax
+is just syntactic sugar for an underlying implicit <tt>lambda</tt>
+expression.  It would have been equivalent to have used<p>
+
+<p><p><tt>(define&nbsp;square<br>
+&nbsp;&nbsp;(lambda&nbsp;(x)&nbsp;(*&nbsp;x&nbsp;x)))<br>
+</tt><p><p>
+which evaluates <tt>(lambda (x) (* x x))</tt> and binds <tt>square</tt> to the resulting value, all in the global environment.<p>
+
+Figure&nbsp;<a href="#%_fig_3.2">3.2</a> shows the result of evaluating this
+<tt>define</tt> expression.  The procedure object is a pair whose code
+specifies that the procedure has one formal parameter, namely <tt>x</tt>,
+and a procedure body <tt>(* x x)</tt>.  The environment part of the
+procedure is a pointer to the global environment, since that is the
+environment in which the <tt>lambda</tt> expression was evaluated to
+produce the procedure. A new binding, which associates the procedure
+object with the symbol <tt>square</tt>, has been added to the global
+frame.  In general, <tt>define</tt> creates definitions by adding
+bindings to frames.<p>
+
+<a name="%_fig_3.2"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-3.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.2:</b>&nbsp;&nbsp;Environment structure produced by
+evaluating
+<tt>(define (square x) (* x x))</tt> in the global environment.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Now that we have seen how procedures are created, we can describe how
+procedures are applied.  The environment model specifies: To apply a
+procedure to arguments, create a new environment containing a frame
+that binds the parameters to the values of the arguments.  The
+enclosing environment of this frame is the environment specified by
+the procedure.  Now, within this new environment, evaluate the
+procedure body.<p>
+
+
+To show how this rule is followed, figure&nbsp;<a href="#%_fig_3.3">3.3</a>
+illustrates the environment structure created by evaluating the
+expression <tt>(square 5)</tt> in the global environment, where <tt>square</tt> is the procedure generated in
+figure&nbsp;<a href="#%_fig_3.2">3.2</a>.  Applying the procedure results in
+the creation of a new environment, labeled E1 in the figure, that
+begins with a frame in which <tt>x</tt>, the formal parameter for the
+procedure, is bound to the argument 5.  The pointer leading upward
+from this frame shows that the frame's enclosing environment is the
+global environment.  The global environment is chosen here, because
+this is the environment that is indicated as part of the <tt>square</tt>
+procedure object.  Within E1, we evaluate the body of the procedure,
+<tt>(* x x)</tt>.  Since the value of <tt>x</tt> in E1 is 5, the result is
+<tt>(*&nbsp;5&nbsp;5)</tt>, or&nbsp;25.
+
+<a name="%_fig_3.3"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-4.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.3:</b>&nbsp;&nbsp;Environment created by evaluating <tt>(square 5)</tt>
+in the global environment.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+The environment model of procedure application can be summarized by
+two rules:<p>
+
+<p><ul>
+<li>A procedure object is applied to a set of arguments by
+constructing a frame, binding the formal parameters of the procedure
+to the arguments of the call, and then evaluating the body of
+the procedure in the context of the new environment constructed.  The
+new frame has as its enclosing environment the environment part of the
+procedure object being applied.<p>
+
+<a name="%_idx_3074"></a><a name="%_idx_3076"></a><li>A procedure is created by evaluating a <tt>lambda</tt>
+expression relative to a given environment.  The resulting procedure
+object is a pair consisting of the text of the <tt>lambda</tt> expression
+and a pointer to the environment in which the procedure was created.
+</ul><p><p>
+
+<a name="%_idx_3078"></a>We also specify that defining a symbol using <tt>define</tt> creates a
+binding in the current environment frame and assigns to the symbol the
+indicated value.<a name="call_footnote_Temp_343" href="#footnote_Temp_343"><sup><small>13</small></sup></a>  Finally, we specify the behavior of
+<tt>set!</tt>, the operation that forced us to introduce the environment
+model in the first place.  Evaluating the expression <tt>(set!
+&lt;<em>variable</em>&gt; &lt;<em>value</em>&gt;)</tt> in some environment locates the binding of
+the variable in the environment and changes that binding to indicate
+the new value.  That is, one finds the first frame in the environment
+that contains a binding for the variable and modifies that frame.  If
+the variable is unbound in the environment, then <tt>set!</tt> signals
+an error.<p>
+
+
+These evaluation rules, though considerably more complex than the
+substitution model, are still reasonably straightforward.  Moreover,
+the evaluation model, though abstract, provides a correct description
+of how the interpreter evaluates expressions.  In chapter&nbsp;4 we shall
+see how this model can serve as a blueprint for implementing a working
+interpreter.  The following sections elaborate the details of the
+model by analyzing some illustrative programs.
+
+<a name="%_sec_3.2.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.2.2">3.2.2&nbsp;&nbsp;Applying Simple Procedures</a></h3><p>
+
+<a name="%_idx_3082"></a><a name="%_idx_3084"></a>
+<a name="%_idx_3086"></a>When we introduced the substitution model in
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a> we showed how the combination
+<tt>(f 5)</tt> evaluates to 136, given the following procedure
+definitions:<p>
+
+<p><p><tt>(define&nbsp;(square&nbsp;x)<br>
+&nbsp;&nbsp;(*&nbsp;x&nbsp;x))<br>
+(define&nbsp;(sum-of-squares&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(+&nbsp;(square&nbsp;x)&nbsp;(square&nbsp;y)))<br>
+(define&nbsp;(f&nbsp;a)<br>
+&nbsp;&nbsp;(sum-of-squares&nbsp;(+&nbsp;a&nbsp;1)&nbsp;(*&nbsp;a&nbsp;2)))<br>
+</tt><p><p>
+We can analyze the same example using the environment model.
+Figure&nbsp;<a href="#%_fig_3.4">3.4</a> shows the three procedure objects
+created by evaluating the definitions of <tt>f</tt>, <tt>square</tt>, and
+<tt>sum-of-squares</tt> in the global environment.  Each procedure object
+consists of some code, together with a pointer to the global
+environment.<p>
+
+<a name="%_fig_3.4"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-5.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.4:</b>&nbsp;&nbsp;Procedure objects in the global frame.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+In figure&nbsp;<a href="#%_fig_3.5">3.5</a> we see the environment structure created
+by evaluating the expression <tt>(f 5)</tt>.  The call to <tt>f</tt> creates
+a new environment E1 beginning with a frame in which <tt>a</tt>, the
+formal parameter of <tt>f</tt>, is bound to the argument 5.  In E1, we
+evaluate the body of <tt>f</tt>:<p>
+
+<p><p><tt>(sum-of-squares&nbsp;(+&nbsp;a&nbsp;1)&nbsp;(*&nbsp;a&nbsp;2))<br>
+</tt><p><p><p>
+
+<a name="%_fig_3.5"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-6.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.5:</b>&nbsp;&nbsp;Environments created by evaluating <tt>(f 5)</tt>
+using the procedures in figure&nbsp;<a href="#%_fig_3.4">3.4</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+
+To evaluate this combination, we first evaluate the subexpressions.
+The first subexpression, <tt>sum-of-squares</tt>, has a value that is a
+procedure object.  (Notice how this value is found: We first look in
+the first frame of E1, which contains no binding for <tt>sum-of-squares</tt>.  Then we proceed to the enclosing environment,
+i.e. the global environment, and find the binding shown in
+figure&nbsp;<a href="#%_fig_3.4">3.4</a>.)  The other two subexpressions are
+evaluated by applying the primitive operations <tt>+</tt> and <tt>*</tt> to
+evaluate the two combinations <tt>(+ a 1)</tt> and <tt>(* a 2)</tt> to
+obtain 6 and 10, respectively.<p>
+
+Now we apply the procedure object <tt>sum-of-squares</tt> to the
+arguments 6 and 10.  This results in a new environment E2 in which the
+formal parameters <tt>x</tt> and <tt>y</tt> are bound to the arguments.
+Within E2 we evaluate the combination <tt>(+ (square x) (square y))</tt>.
+This leads us to evaluate <tt>(square x)</tt>, where <tt>square</tt> is
+found in the global frame and <tt>x</tt> is 6.  Once again, we set up a
+new environment, E3, in which <tt>x</tt> is bound to 6, and within this
+we evaluate the body of <tt>square</tt>, which is <tt>(* x x)</tt>.  Also as
+part of applying <tt>sum-of-squares</tt>, we must evaluate the
+subexpression <tt>(square y)</tt>, where <tt>y</tt> is 10.  This second call
+to <tt>square</tt> creates another environment, E4, in which <tt>x</tt>, the
+formal parameter of <tt>square</tt>, is bound to 10.  And within E4 we
+must evaluate <tt>(* x x)</tt>.<p>
+
+The important point to observe is that each call to <tt>square</tt>
+creates a new environment containing a binding for <tt>x</tt>.  We can
+see here how the different frames serve to keep separate the different
+local variables all named <tt>x</tt>.  Notice that each frame created by
+<tt>square</tt> points to the global environment, since this is the
+environment indicated by the <tt>square</tt> procedure object.<p>
+
+After the subexpressions are evaluated, the results are
+returned.  The values generated by the two calls to <tt>square</tt> are
+added by <tt>sum-of-squares</tt>, and this result is returned by <tt>f</tt>.
+Since our focus here is on the environment structures, we will not
+dwell on how these returned values are passed from call to call;
+however, this is also an important aspect of the evaluation process,
+and we will return to it in detail in chapter&nbsp;5.
+
+<p><a name="%_thm_3.9"></a>
+<b>Exercise 3.9.</b>&nbsp;&nbsp;<a name="%_idx_3088"></a><a name="%_idx_3090"></a><a name="%_idx_3092"></a>In section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>
+we used the substitution model to analyze two
+procedures for computing factorials, a recursive version<p>
+
+<p><p><tt>(define&nbsp;(factorial&nbsp;n)<br>
+&nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;n&nbsp;(factorial&nbsp;(-&nbsp;n&nbsp;1)))))<br>
+</tt><p><p>
+and an iterative version<p>
+
+<p><p><tt>(define&nbsp;(factorial&nbsp;n)<br>
+&nbsp;&nbsp;(fact-iter&nbsp;1&nbsp;1&nbsp;n))<br>
+(define&nbsp;(fact-iter&nbsp;product&nbsp;counter&nbsp;max-count)<br>
+&nbsp;&nbsp;(if&nbsp;(&gt;&nbsp;counter&nbsp;max-count)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;product<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fact-iter&nbsp;(*&nbsp;counter&nbsp;product)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;counter&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;max-count)))<br>
+</tt><p><p>
+Show the environment structures created by evaluating <tt>(factorial 6)</tt>
+using each version of the <tt>factorial</tt> procedure.<a name="call_footnote_Temp_345" href="#footnote_Temp_345"><sup><small>14</small></sup></a>
+<p>
+
+<a name="%_sec_3.2.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.2.3">3.2.3&nbsp;&nbsp;Frames as the Repository of Local State</a></h3><p>
+
+
+<a name="%_idx_3098"></a><a name="%_idx_3100"></a><a name="%_idx_3102"></a>
+<a name="%_idx_3104"></a>We can turn to the environment model to see how procedures and
+assignment can be used to represent objects with local state.  As an
+example, consider the ``withdrawal processor'' from
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a> created by calling the
+procedure<p>
+
+<p><p><tt>(define&nbsp;(make-withdraw&nbsp;balance)<br>
+&nbsp;&nbsp;(lambda&nbsp;(amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;)))<br>
+</tt><p><p>
+Let us describe the evaluation of<p>
+
+<p><p><tt>(define&nbsp;W1&nbsp;(make-withdraw&nbsp;100))<br>
+</tt><p><p>
+followed by<p>
+
+<p><p><tt>(W1&nbsp;50)<br>
+<i>50</i><br>
+</tt><p><p>
+Figure&nbsp;<a href="#%_fig_3.6">3.6</a> shows the result of defining the <tt>make-withdraw</tt> procedure in the global environment.  This produces a
+procedure object that contains a pointer to the global environment.
+So far, this is no different from the examples we have already seen,
+except that the body of the procedure is itself a <tt>lambda</tt>
+expression.<p>
+
+<a name="%_fig_3.6"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-7.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.6:</b>&nbsp;&nbsp;Result of defining <tt>make-withdraw</tt>
+in the global environment.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+The interesting part of the computation happens when we apply the
+procedure <tt>make-withdraw</tt> to an argument:<p>
+
+<p><p><tt>(define&nbsp;W1&nbsp;(make-withdraw&nbsp;100))<br>
+</tt><p><p>
+We begin, as usual, by setting up an environment E1 in which the
+formal parameter <tt>balance</tt> is bound to the argument 100.  Within
+this environment, we evaluate the body of <tt>make-withdraw</tt>, namely
+the <tt>lambda</tt> expression.  This constructs a new procedure object,
+whose code is as specified by the <tt>lambda</tt> and whose environment
+is E1, the environment in which the <tt>lambda</tt> was evaluated to
+produce the procedure.  The resulting procedure object is the value
+returned by the call to <tt>make-withdraw</tt>.  This is bound to <tt>W1</tt> in the global environment, since the <tt>define</tt> itself is being
+evaluated in the global environment.  Figure&nbsp;<a href="#%_fig_3.7">3.7</a> shows the
+resulting environment structure.<p>
+
+<a name="%_fig_3.7"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-8.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.7:</b>&nbsp;&nbsp;Result of evaluating <tt>(define W1 (make-withdraw 100))</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Now we can analyze what happens when <tt>W1</tt> is applied to an
+argument:<p>
+
+<p><p><tt>(W1&nbsp;50)<br>
+<i>50</i><br>
+</tt><p><p>
+We begin by constructing a frame in which <tt>amount</tt>, the formal
+parameter of <tt>W1</tt>, is bound to the argument 50.  The crucial point
+to observe is that this frame has as its enclosing environment not the
+global environment, but rather the environment E1, because this is the
+environment that is specified by the <tt>W1</tt> procedure object.
+Within this new environment, we evaluate the body of the procedure:<p>
+
+<p><p><tt>(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;)<br>
+</tt><p><p>
+The resulting environment structure is shown in
+figure&nbsp;<a href="#%_fig_3.8">3.8</a>.  The expression being evaluated references
+both <tt>amount</tt> and <tt>balance</tt>.  <tt>Amount</tt> will be found in
+the first frame in the environment, while <tt>balance</tt> will be found
+by following the enclosing-environment pointer to E1.<p>
+
+<a name="%_fig_3.8"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-9.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.8:</b>&nbsp;&nbsp;Environments created by applying the procedure
+object <tt>W1</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+When the <tt>set!</tt> is executed, the binding of <tt>balance</tt> in E1 is changed.  At the completion of the call to <tt>W1</tt>,
+<tt>balance</tt> is 50, and the frame that contains <tt>balance</tt>
+is still pointed to by the procedure object <tt>W1</tt>.  The frame
+that binds <tt>amount</tt>
+(in which we executed the code that changed <tt>balance</tt>) is no longer
+relevant, since the procedure call that constructed it has terminated,
+and there are no pointers to that frame from other parts of the
+environment.  The next time <tt>W1</tt> is called, this will build a new
+frame that binds <tt>amount</tt> and whose enclosing environment is E1.
+We see that E1 serves as the ``place'' that holds the local state
+variable for the procedure object <tt>W1</tt>.  Figure&nbsp;<a href="#%_fig_3.9">3.9</a>
+shows the situation after the call to <tt>W1</tt>.<p>
+
+<a name="%_fig_3.9"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-10.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.9:</b>&nbsp;&nbsp;Environments after the call to <tt>W1</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Observe what happens when we create a second ``withdraw'' object by
+making another call to <tt>make-withdraw</tt>:<p>
+
+<p><p><tt>(define&nbsp;W2&nbsp;(make-withdraw&nbsp;100))<br>
+</tt><p><p>
+This produces the environment structure of figure&nbsp;<a href="#%_fig_3.10">3.10</a>, which shows
+that <tt>W2</tt> is a procedure object, that is, a pair with some code
+and an environment.  The environment E2 for <tt>W2</tt> was created by
+the call to <tt>make-withdraw</tt>.  It contains a frame with its own
+local binding for <tt>balance</tt>.  On the other hand, <tt>W1</tt> and <tt>W2</tt> have the same code: the code specified by the <tt>lambda</tt>
+expression in the body of <tt>make-withdraw</tt>.<a name="call_footnote_Temp_346" href="#footnote_Temp_346"><sup><small>15</small></sup></a> We see here why <tt>W1</tt> and <tt>W2</tt>
+behave as independent objects.  Calls to <tt>W1</tt> reference the state
+variable <tt>balance</tt> stored in E1, whereas calls to <tt>W2</tt>
+reference the <tt>balance</tt> stored in E2. Thus, changes to the local
+state of one object do not affect the other object.<p>
+
+<a name="%_fig_3.10"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-11.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.10:</b>&nbsp;&nbsp;Using <tt>(define W2 (make-withdraw 100))</tt>
+to create a second object.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<p><a name="%_thm_3.10"></a>
+<b>Exercise 3.10.</b>&nbsp;&nbsp;In the <tt>make-withdraw</tt> procedure, the local variable <tt>balance</tt>
+is created as a parameter of <tt>make-withdraw</tt>.  We could also
+create the local state variable explicitly, using <tt>let</tt>, as
+follows:
+<p>
+
+<p><p><tt><a name="%_idx_3106"></a>(define&nbsp;(make-withdraw&nbsp;initial-amount)<br>
+&nbsp;&nbsp;(let&nbsp;((balance&nbsp;initial-amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))))<br>
+</tt><p><p>
+<a name="%_idx_3108"></a><a name="%_idx_3110"></a>Recall from section&nbsp;<a href="book-Z-H-12.html#%_sec_1.3.2">1.3.2</a> that <tt>let</tt> is simply
+syntactic sugar for a procedure call:<p>
+
+
+<p><p><tt>(let&nbsp;((&lt;<em>var</em>&gt;&nbsp;&lt;<em>exp</em>&gt;))&nbsp;&lt;<em>body</em>&gt;)<br>
+</tt><p><p>
+is interpreted as an alternate syntax for<p>
+
+
+<p><p><tt>((lambda&nbsp;(&lt;<em>var</em>&gt;)&nbsp;&lt;<em>body</em>&gt;)&nbsp;&lt;<em>exp</em>&gt;)<br>
+</tt><p><p>
+Use the environment model to analyze this alternate
+version of <tt>make-withdraw</tt>, drawing figures like the ones above to
+illustrate the interactions<p>
+
+<p><p><tt>(define&nbsp;W1&nbsp;(make-withdraw&nbsp;100))<br>
+<br>
+(W1&nbsp;50)<br>
+<br>
+(define&nbsp;W2&nbsp;(make-withdraw&nbsp;100))<br>
+</tt><p><p>
+Show that the two versions of <tt>make-withdraw</tt> create objects with
+the same behavior.  How do the environment structures differ for the two
+versions?
+
+<p>
+<p>
+
+<a name="%_sec_3.2.4"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.2.4">3.2.4&nbsp;&nbsp;Internal Definitions</a></h3><p>
+
+<a name="%_idx_3112"></a><a name="%_idx_3114"></a><a name="%_idx_3116"></a>
+Section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.8">1.1.8</a> introduced the idea that procedures can have internal
+definitions, thus leading to a block structure as in the
+following procedure to compute square roots:<p>
+
+
+<p><p><tt><a name="%_idx_3118"></a>(define&nbsp;(sqrt&nbsp;x)<br>
+&nbsp;&nbsp;(define&nbsp;(good-enough?&nbsp;guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(&lt;&nbsp;(abs&nbsp;(-&nbsp;(square&nbsp;guess)&nbsp;x))&nbsp;0.001))<br>
+&nbsp;&nbsp;(define&nbsp;(improve&nbsp;guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(average&nbsp;guess&nbsp;(/&nbsp;x&nbsp;guess)))<br>
+&nbsp;&nbsp;(define&nbsp;(sqrt-iter&nbsp;guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(good-enough?&nbsp;guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;guess<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt-iter&nbsp;(improve&nbsp;guess))))<br>
+&nbsp;&nbsp;(sqrt-iter&nbsp;1.0))<br>
+</tt><p><p>
+Now we can use the environment model to see why these internal
+definitions behave as desired.  Figure&nbsp;<a href="#%_fig_3.11">3.11</a> shows the point in the
+evaluation of the expression <tt>(sqrt 2)</tt> where the internal
+procedure <tt>good-enough?</tt> has been called for the first time with
+<tt>guess</tt> equal to 1.<p>
+
+<a name="%_fig_3.11"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-12.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.11:</b>&nbsp;&nbsp;<tt>Sqrt</tt> procedure with internal definitions.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Observe the structure of the environment.  <tt>Sqrt</tt> is a symbol in
+the global environment that is bound to a procedure object whose
+associated environment is the global environment.  When <tt>sqrt</tt> was
+called, a new environment E1 was formed, subordinate to the global
+environment, in which the parameter <tt>x</tt> is bound to 2.  The body
+of <tt>sqrt</tt> was then evaluated in E1.  Since the first expression in
+the body of <tt>sqrt</tt> is<p>
+
+<p><p><tt>(define&nbsp;(good-enough?&nbsp;guess)<br>
+&nbsp;&nbsp;(&lt;&nbsp;(abs&nbsp;(-&nbsp;(square&nbsp;guess)&nbsp;x))&nbsp;0.001))<br>
+</tt><p><p>
+evaluating this expression defined the procedure <tt>good-enough?</tt>
+in the environment E1.  To be more precise, the symbol <tt>good-enough?</tt> was added to the first frame of E1, bound to a
+procedure object whose associated environment is E1.  Similarly, <tt>improve</tt> and <tt>sqrt-iter</tt> were defined as procedures in E1.  For
+conciseness, figure&nbsp;<a href="#%_fig_3.11">3.11</a> shows only the procedure
+object for <tt>good-enough?</tt>.<p>
+
+After the local procedures were defined, the
+expression <tt>(sqrt-iter 1.0)</tt> was evaluated,
+still in environment E1.  So the
+procedure object bound to <tt>sqrt-iter</tt> in E1 was called with 1 as
+an argument.  This created an environment E2 in which <tt>guess</tt>,
+the parameter of <tt>sqrt-iter</tt>, is bound to 1.  <tt>Sqrt-iter</tt> in
+turn called <tt>good-enough?</tt> with the value of <tt>guess</tt> (from
+E2) as the argument for <tt>good-enough?</tt>.  This set up another
+environment, E3, in which <tt>guess</tt> (the parameter of <tt>good-enough?</tt>) is bound to 1.  Although <tt>sqrt-iter</tt> and <tt>good-enough?</tt> both have a parameter named <tt>guess</tt>, these are two
+distinct local variables located in different frames.  Also, E2 and E3
+both have E1 as their enclosing environment, because the <tt>sqrt-iter</tt> and <tt>good-enough?</tt> procedures both have E1 as their
+environment part.  One consequence of this is that the symbol <tt>x</tt>
+that appears in the body of <tt>good-enough?</tt> will reference the
+binding of <tt>x</tt> that appears in E1, namely the value of <tt>x</tt>
+with which the original <tt>sqrt</tt> procedure was called.
+
+The environment model thus explains the two key properties that make
+local procedure definitions a useful technique for modularizing
+programs:
+<p><ul>
+<li>The names of the local procedures do not interfere with
+names external to the enclosing procedure, because the local procedure
+names will be bound in the frame that the procedure creates when it is
+run, rather than being bound in the global environment.<p>
+
+<li>The local procedures can access the arguments of the enclosing
+procedure, simply by using parameter names as free variables.
+This is because the body of the local procedure is evaluated in an
+environment that is subordinate to the evaluation environment for the
+enclosing procedure.
+</ul><p><p>
+
+<p><a name="%_thm_3.11"></a>
+<b>Exercise 3.11.</b>&nbsp;&nbsp;<a name="%_idx_3120"></a><a name="%_idx_3122"></a><a name="%_idx_3124"></a>In section&nbsp;<a href="#%_sec_3.2.3">3.2.3</a>
+we saw how the environment model described the
+behavior of procedures with local state.  Now we have seen how
+internal definitions work.  A typical message-passing procedure
+contains both of these aspects.  Consider the bank account procedure
+of section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>:<p>
+
+<p><p><tt><a name="%_idx_3126"></a>(define&nbsp;(make-account&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;withdraw)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;deposit)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;dispatch)<br>
+</tt><p><p>
+Show the environment structure generated by the sequence of
+interactions<p>
+
+<p><p><tt>(define&nbsp;acc&nbsp;(make-account&nbsp;50))<br>
+<br>
+((acc&nbsp;'deposit)&nbsp;40)<br>
+<i>90</i><br>
+<br>
+((acc&nbsp;'withdraw)&nbsp;60)<br>
+<i>30</i><br>
+</tt><p><p>
+Where is the local state for <tt>acc</tt> kept?  Suppose we define
+another account<p>
+
+<p><p><tt>(define&nbsp;acc2&nbsp;(make-account&nbsp;100))<br>
+</tt><p><p>
+How are the local states for the two accounts kept distinct?  Which
+parts of the environment structure are shared between <tt>acc</tt> and
+<tt>acc2</tt>?
+
+<p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_342" href="#call_footnote_Temp_342"><sup><small>12</small></sup></a> Assignment introduces a subtlety into step 1 of
+the evaluation rule.  As shown in
+exercise&nbsp;<a href="book-Z-H-20.html#%_thm_3.8">3.8</a>, the presence of assignment
+allows us to write expressions that will produce different values
+depending on the order in which the subexpressions in a combination
+<a name="%_idx_3066"></a><a name="%_idx_3068"></a>are evaluated.  Thus, to be precise, we should specify an evaluation
+order in step 1 (e.g., left to right or right to left).  However, this
+order should always be considered to be an implementation detail, and
+one should never write programs that depend on some particular order.
+For instance, a sophisticated compiler might optimize a program by
+varying the order in which subexpressions are evaluated.
+
+<p><a name="footnote_Temp_343" href="#call_footnote_Temp_343"><sup><small>13</small></sup></a> If there is already a binding for the
+variable in the current frame, then the binding is changed.  This is
+convenient because it allows redefinition of symbols; however, it also
+means that <tt>define</tt> can be used to change values, and this brings
+up the issues of assignment without explicitly using <a name="%_idx_3080"></a><tt>set!</tt>.
+Because of this, some people prefer redefinitions of existing symbols
+to signal errors or warnings.
+
+<p><a name="footnote_Temp_345" href="#call_footnote_Temp_345"><sup><small>14</small></sup></a> The
+environment model will not clarify our claim in
+section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a> that the interpreter can
+execute a procedure such as <tt>fact-iter</tt> in a constant amount of
+space using tail recursion.  We will discuss tail recursion when we
+<a name="%_idx_3094"></a><a name="%_idx_3096"></a>deal with the control structure of the interpreter in
+section&nbsp;<a href="book-Z-H-34.html#%_sec_5.4">5.4</a>.
+
+<p><a name="footnote_Temp_346" href="#call_footnote_Temp_346"><sup><small>15</small></sup></a> Whether
+<tt>W1</tt> and <tt>W2</tt> share the same physical code stored in the
+computer, or whether they each keep a copy of the code, is a detail of
+the implementation.  For the interpreter we implement in chapter&nbsp;4,
+the code is in fact shared.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-20.html">previous</a></span><span>, <a href="book-Z-H-22.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

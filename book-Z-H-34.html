@@ -1,0 +1,1030 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-33.html">previous</a></span><span>, <a href="book-Z-H-35.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_5.4"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_5.4">5.4&nbsp;&nbsp;The Explicit-Control Evaluator</a></h2><p>
+
+
+<a name="%_idx_5996"></a>
+In section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1">5.1</a> we saw how to
+transform simple Scheme programs into descriptions of register
+machines.  We will now perform this transformation on a more complex
+program, the metacircular evaluator of
+sections <a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>-<a href="book-Z-H-26.html#%_sec_4.1.4">4.1.4</a>,
+which shows how
+the behavior of a Scheme interpreter can be described in terms of the
+procedures <tt>eval</tt> and <tt>apply</tt>.
+The <em>explicit-control
+evaluator</em> that we develop in this section shows how the underlying
+procedure-calling and argument-passing mechanisms used in the
+evaluation process can be described in terms of operations on
+registers and stacks.  In addition, the explicit-control evaluator can
+serve as an implementation of a Scheme interpreter, written in a
+language that is very similar to the native machine language of
+conventional computers.  The evaluator can be executed by the
+register-machine simulator of section&nbsp;<a href="book-Z-H-32.html#%_sec_5.2">5.2</a>.
+Alternatively, it can be used as a starting point for building a
+machine-language implementation of a Scheme evaluator, or even a
+<a name="%_idx_5998"></a><a name="%_idx_6000"></a><a name="%_idx_6002"></a>special-purpose machine for evaluating Scheme expressions.
+Figure&nbsp;<a href="#%_fig_5.16">5.16</a> shows such a hardware implementation: a
+silicon chip that acts as an evaluator for Scheme.  The chip designers
+started with the data-path and controller specifications for a
+register machine similar to the evaluator described in this section
+and used design automation programs to construct the
+integrated-circuit layout.<a name="call_footnote_Temp_765" href="#footnote_Temp_765"><sup><small>19</small></sup></a><p>
+
+<p>
+
+<a name="%_sec_Temp_766"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_766">Registers and operations</a></h4><p>
+
+<a name="%_idx_6006"></a>
+<a name="%_idx_6008"></a>In designing the explicit-control evaluator, we must specify the
+operations to be used in our register machine.  We described the
+metacircular evaluator in terms of abstract syntax, using procedures
+such as <tt>quoted?</tt> and <tt>make-procedure</tt>.  In implementing the
+register machine, we could expand these procedures into sequences of
+elementary list-structure memory operations, and implement these
+operations on our register machine.  However, this would make our
+evaluator very long, obscuring the basic structure with
+details.  To clarify the presentation, we will include as primitive
+operations of the register machine the syntax procedures given in
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a> and the procedures for
+representing environments and other run-time data given in
+sections&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.3">4.1.3</a> and&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.4">4.1.4</a>.
+In order to completely specify an evaluator that could be programmed
+in a low-level machine language or implemented in hardware, we would
+replace these operations by more elementary operations, using the
+list-structure implementation we described in
+section&nbsp;<a href="book-Z-H-33.html#%_sec_5.3">5.3</a>.<p>
+
+<a name="%_fig_5.16"></a><p><div align=left><table width=100%><tr><td><img src="chip.jpg" border="0" height=310>
+</td></tr><caption align=bottom><div align=left><b>Figure 5.16:</b>&nbsp;&nbsp;A silicon-chip implementation of an evaluator for
+Scheme.</div></caption><tr><td>
+<a name="%_idx_6010"></a><a name="%_idx_6012"></a><a name="%_idx_6014"></a>
+</td></tr></table></div><p><p>
+
+<a name="%_idx_6016"></a><a name="%_idx_6018"></a><a name="%_idx_6020"></a><a name="%_idx_6022"></a><a name="%_idx_6024"></a><a name="%_idx_6026"></a><a name="%_idx_6028"></a><a name="%_idx_6030"></a>Our Scheme evaluator register machine includes a stack and seven
+registers: <tt>exp</tt>, <tt>env</tt>, <tt>val</tt>, <tt>continue</tt>, <tt>proc</tt>,
+<tt>argl</tt>, and <tt>unev</tt>.  <tt>Exp</tt> is used to hold the expression
+to be evaluated, and <tt>env</tt> contains the environment in which the
+evaluation is to be performed.  At the end of an evaluation, <tt>val</tt>
+contains the value obtained by evaluating the expression in the
+designated environment.  The <tt>continue</tt> register is used to
+implement recursion, as explained in
+section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1.4">5.1.4</a>.  (The evaluator needs to call
+itself recursively, since evaluating an expression requires evaluating
+its subexpressions.)  The registers <tt>proc</tt>, <tt>argl</tt>, and <tt>unev</tt> are used in evaluating combinations.<p>
+
+
+We will not provide a data-path diagram to show how the registers and
+operations of the evaluator are connected, nor will we give the
+complete list of machine operations.  These are implicit in the
+evaluator's controller, which will be presented in detail.<p>
+
+<a name="%_sec_5.4.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.4.1">5.4.1&nbsp;&nbsp;The Core of the Explicit-Control Evaluator</a></h3><p>
+
+
+<a name="%_idx_6032"></a>
+The central element in the evaluator is the sequence of instructions
+beginning at <tt>eval-dispatch</tt>.  This corresponds to the <tt>eval</tt>
+procedure of the metacircular evaluator described in
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>.  When the controller starts at <tt>eval-dispatch</tt>, it evaluates the expression specified by <tt>exp</tt> in
+the environment specified by <tt>env</tt>.  When evaluation is complete,
+the controller will go to the entry point stored in <tt>continue</tt>, and the
+<tt>val</tt> register will hold the value of the expression.  As with the
+metacircular <tt>eval</tt>, the structure of <tt>eval-dispatch</tt> is a
+case analysis on the syntactic type of the expression to be
+evaluated.<a name="call_footnote_Temp_767" href="#footnote_Temp_767"><sup><small>20</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_6034"></a>eval-dispatch<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;self-evaluating?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-self-eval))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;variable?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-variable))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;quoted?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-quoted))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;assignment?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-assignment))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;definition?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-definition))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;if?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-if))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;lambda?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-lambda))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;begin?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-begin))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;application?)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-application))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;unknown-expression-type))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_768"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_768">Evaluating simple expressions</a></h4><p>
+
+<a name="%_idx_6036"></a>
+Numbers and strings (which are self-evaluating),
+variables, quotations, and <tt>lambda</tt> expressions have no
+subexpressions to be evaluated.  For these, the evaluator simply
+places the correct value in the <tt>val</tt> register and continues
+execution at the entry point specified by <tt>continue</tt>.  Evaluation
+of simple expressions is performed by the following controller code:<p>
+
+<p><p><tt><a name="%_idx_6038"></a>ev-self-eval<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+<a name="%_idx_6040"></a>ev-variable<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(op&nbsp;lookup-variable-value)&nbsp;(reg&nbsp;exp)&nbsp;(reg&nbsp;env))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+<a name="%_idx_6042"></a>ev-quoted<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(op&nbsp;text-of-quotation)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+<a name="%_idx_6044"></a>ev-lambda<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;lambda-parameters)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;lambda-body)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(op&nbsp;make-procedure)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reg&nbsp;unev)&nbsp;(reg&nbsp;exp)&nbsp;(reg&nbsp;env))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+</tt><p><p>
+Observe how <tt>ev-lambda</tt> uses the <tt>unev</tt> and <tt>exp</tt>
+registers to hold the parameters and body of the lambda expression so
+that they can be passed to the <tt>make-procedure</tt> operation, along
+with the environment in <tt>env</tt>.<p>
+
+<a name="%_sec_Temp_769"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_769">Evaluating procedure applications</a></h4><p>
+
+<a name="%_idx_6046"></a><a name="%_idx_6048"></a>
+A procedure application is specified by a combination containing an
+operator and operands.  The operator is a subexpression whose value is
+a procedure, and the operands are subexpressions whose values are the
+arguments to which the procedure should be applied.  The metacircular
+<tt>eval</tt> handles applications by calling itself recursively to
+evaluate each element of the combination, and then passing the results
+to <tt>apply</tt>, which performs the actual procedure application.  The
+explicit-control evaluator does the same thing; these recursive calls
+are implemented by <tt>goto</tt> instructions, together with <a name="%_idx_6050"></a>use of the
+stack to save registers that will be restored after the recursive call
+returns.  Before each call we will be careful to identify which
+registers must be saved (because their values will be needed
+later).<a name="call_footnote_Temp_770" href="#footnote_Temp_770"><sup><small>21</small></sup></a><p>
+
+We begin the evaluation of an application by evaluating the operator
+to produce a procedure, which will later be applied to the evaluated
+operands.  To evaluate the operator, we move it to the <tt>exp</tt>
+register and go to <tt>eval-dispatch</tt>.  The environment in the <tt>env</tt> register is already the correct one in which to evaluate the
+operator.  However, we save <tt>env</tt> because we will need it later to
+evaluate the operands.  We also extract the operands into <tt>unev</tt>
+and save this on the stack.  We set up <tt>continue</tt> so that <tt>eval-dispatch</tt> will resume at <tt>ev-appl-did-operator</tt> after the
+operator has been evaluated.  First, however, we save the old value of
+<tt>continue</tt>, which tells the controller where to continue after the
+application.<p>
+
+<p><p><tt><a name="%_idx_6056"></a>ev-application<br>
+&nbsp;&nbsp;(save&nbsp;continue)<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;operands)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;unev)<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;operator)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-appl-did-operator))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+</tt><p><p><p>
+
+<a name="%_idx_6058"></a>Upon returning from evaluating the operator subexpression, we proceed
+to evaluate the operands of the combination and to accumulate the
+resulting arguments in a list, held in <tt>argl</tt>.  First we restore
+the unevaluated operands and the environment.  We initialize <tt>argl</tt> to an empty list.  Then we assign to the <tt>proc</tt> register the
+procedure that was produced by evaluating the operator.  If there are
+no operands, we go directly to <tt>apply-dispatch</tt>.  Otherwise we
+save <tt>proc</tt> on the stack and start the argument-evaluation
+loop:<a name="call_footnote_Temp_771" href="#footnote_Temp_771"><sup><small>22</small></sup></a><p>
+
+<p><p><tt>ev-appl-did-operator<br>
+&nbsp;&nbsp;(restore&nbsp;unev)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;the&nbsp;operands</em><br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(assign&nbsp;argl&nbsp;(op&nbsp;empty-arglist))<br>
+&nbsp;&nbsp;(assign&nbsp;proc&nbsp;(reg&nbsp;val))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;the&nbsp;operator</em><br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;no-operands?)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;apply-dispatch))<br>
+&nbsp;&nbsp;(save&nbsp;proc)<br>
+</tt><p><p><p>
+
+Each cycle of the argument-evaluation loop evaluates an operand
+from the list in <tt>unev</tt> and accumulates the result into <tt>argl</tt>.
+To evaluate an operand, we place it in the <tt>exp</tt> register
+and go to <tt>eval-dispatch</tt>, after setting <tt>continue</tt> so that
+execution will resume with the argument-accumulation phase.  But first
+we save the arguments accumulated so far (held in <tt>argl</tt>), the
+environment (held in <tt>env</tt>), and the remaining operands to be evaluated
+(held in <tt>unev</tt>).  A special case is made for the evaluation of the
+last operand, which is handled at <tt>ev-appl-last-arg</tt>.<p>
+
+<p><p><tt>ev-appl-operand-loop<br>
+&nbsp;&nbsp;(save&nbsp;argl)<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;first-operand)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;last-operand?)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-appl-last-arg))<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(save&nbsp;unev)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-appl-accumulate-arg))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+</tt><p><p><p>
+
+When an operand has been evaluated, the value is accumulated into the
+list held in <tt>argl</tt>.  The operand is then removed from the list of
+unevaluated operands in <tt>unev</tt>, and the argument-evaluation continues.<p>
+
+<p><p><tt>ev-appl-accumulate-arg<br>
+&nbsp;&nbsp;(restore&nbsp;unev)<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;argl)<br>
+&nbsp;&nbsp;(assign&nbsp;argl&nbsp;(op&nbsp;adjoin-arg)&nbsp;(reg&nbsp;val)&nbsp;(reg&nbsp;argl))<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;rest-operands)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;ev-appl-operand-loop))<br>
+</tt><p><p><p>
+
+Evaluation of the last argument is handled differently.  There is no
+need to save the environment or the list of unevaluated operands
+before going to <tt>eval-dispatch</tt>,
+since they will not be required after the last operand is evaluated.
+Thus, we return from the evaluation to a special entry point <tt>ev-appl-accum-last-arg</tt>, which restores the argument list, accumulates
+the new argument, restores the saved procedure, and goes off to
+perform the application.<a name="call_footnote_Temp_772" href="#footnote_Temp_772"><sup><small>23</small></sup></a><p>
+
+<p><p><tt>ev-appl-last-arg<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-appl-accum-last-arg))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+ev-appl-accum-last-arg<br>
+&nbsp;&nbsp;(restore&nbsp;argl)<br>
+&nbsp;&nbsp;(assign&nbsp;argl&nbsp;(op&nbsp;adjoin-arg)&nbsp;(reg&nbsp;val)&nbsp;(reg&nbsp;argl))<br>
+&nbsp;&nbsp;(restore&nbsp;proc)<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;apply-dispatch))<br>
+</tt><p><p><p>
+
+<a name="%_idx_6070"></a>The details of the argument-evaluation loop determine the order in
+which the interpreter evaluates the operands of a combination (e.g.,
+left to right or right to left -- see
+exercise&nbsp;<a href="book-Z-H-20.html#%_thm_3.8">3.8</a>).  This order is not determined
+by the metacircular evaluator, which inherits its control structure
+from the underlying Scheme in which it is implemented.<a name="call_footnote_Temp_773" href="#footnote_Temp_773"><sup><small>24</small></sup></a> Because the <tt>first-operand</tt>
+selector (used in <tt>ev-appl-operand-loop</tt> to extract successive operands
+from <tt>unev</tt>) is implemented as <tt>car</tt> and the <tt>rest-operands</tt> selector is implemented as <tt>cdr</tt>, the
+explicit-control evaluator will evaluate the operands of a combination
+in left-to-right order.<p>
+
+<a name="%_sec_Temp_774"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_774">Procedure application</a></h4><p>
+
+<p>
+
+The entry point <tt>apply-dispatch</tt> corresponds to the <tt>apply</tt>
+procedure of the metacircular evaluator.  By the time we get to <tt>apply-dispatch</tt>, the <tt>proc</tt> register contains the procedure to
+apply and <tt>argl</tt> contains the list of evaluated arguments to which
+it must be applied.  The saved value of <tt>continue</tt> (originally
+passed to <tt>eval-dispatch</tt> and saved at <tt>ev-application</tt>),
+which tells where to return with the result of the procedure
+application, is on the stack.  When the application is complete, the
+controller transfers to the entry point specified by the saved <tt>continue</tt>, with the result of the application in <tt>val</tt>.  As with
+the metacircular <tt>apply</tt>, there are two cases to consider.  Either
+the procedure to be applied is a primitive or it is a compound
+procedure.<p>
+
+<p><p><tt><a name="%_idx_6072"></a>apply-dispatch<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;primitive-procedure?)&nbsp;(reg&nbsp;proc))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;primitive-apply))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;compound-procedure?)&nbsp;(reg&nbsp;proc))&nbsp;&nbsp;<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;compound-apply))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;unknown-procedure-type))<br>
+</tt><p><p><p>
+
+<a name="%_idx_6074"></a>We assume that each primitive is implemented so as to obtain its
+arguments from <tt>argl</tt> and place its result in <tt>val</tt>.  To
+specify how the machine handles primitives, we would have to provide a
+sequence of controller instructions to implement each primitive and
+arrange for <tt>primitive-apply</tt> to dispatch to the
+instructions for the primitive identified by the
+contents of <tt>proc</tt>.  Since we are interested in the structure of
+the evaluation process rather than the details of the primitives, we
+will instead just use an <tt>apply-primitive-procedure</tt> operation
+that applies the procedure in <tt>proc</tt> to the arguments in <tt>argl</tt>.  For the purpose of simulating the evaluator with the simulator
+of section&nbsp;<a href="book-Z-H-32.html#%_sec_5.2">5.2</a> we use the procedure <tt>apply-primitive-procedure</tt>, which calls on the underlying Scheme
+system to perform the application, just as we did for the metacircular
+evaluator in section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.4">4.1.4</a>.  After computing the
+value of the primitive application, we restore <tt>continue</tt> and go
+to the designated entry point.<p>
+
+<p><p><tt><a name="%_idx_6076"></a>primitive-apply<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(op&nbsp;apply-primitive-procedure)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reg&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reg&nbsp;argl))<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+</tt><p><p><p>
+
+<a name="%_idx_6078"></a>To apply a compound procedure, we proceed just as with the
+metacircular evaluator.  We construct a frame that binds the
+procedure's parameters to the arguments, use this frame to
+extend the environment carried by the procedure, and evaluate in this
+extended environment the sequence of expressions that forms the body
+of the procedure.  <tt>Ev-sequence</tt>, described below in
+section&nbsp;<a href="#%_sec_5.4.2">5.4.2</a>, handles the evaluation
+of the sequence.<p>
+
+<p><p><tt><a name="%_idx_6080"></a>compound-apply<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;procedure-parameters)&nbsp;(reg&nbsp;proc))<br>
+&nbsp;&nbsp;(assign&nbsp;env&nbsp;(op&nbsp;procedure-environment)&nbsp;(reg&nbsp;proc))<br>
+&nbsp;&nbsp;(assign&nbsp;env&nbsp;(op&nbsp;extend-environment)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reg&nbsp;unev)&nbsp;(reg&nbsp;argl)&nbsp;(reg&nbsp;env))<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;procedure-body)&nbsp;(reg&nbsp;proc))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;ev-sequence))<br>
+</tt><p><p><p>
+
+<tt>Compound-apply</tt> is the only place in the interpreter where the
+<tt>env</tt> register is ever assigned a new value.  Just as in the
+metacircular evaluator, the new environment is constructed from the
+environment carried by the procedure, together with the argument list
+and the corresponding list of variables to be bound.<p>
+
+<a name="%_sec_5.4.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.4.2">5.4.2&nbsp;&nbsp;Sequence Evaluation and Tail Recursion</a></h3><p>
+
+
+<a name="%_idx_6082"></a>
+The portion of the explicit-control evaluator at <tt>ev-sequence</tt> is
+analogous to the metacircular evaluator's <tt>eval-sequence</tt> procedure.  It
+handles sequences of expressions in procedure bodies or in explicit
+<tt>begin</tt> expressions.<p>
+
+Explicit <tt>begin</tt> expressions are evaluated by placing the sequence
+of expressions to be evaluated in <tt>unev</tt>, saving <tt>continue</tt> on the
+stack, and jumping to <tt>ev-sequence</tt>.
+<p><p><tt><a name="%_idx_6084"></a>ev-begin<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;begin-actions)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;continue)<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;ev-sequence))<br>
+</tt><p><p>
+The implicit sequences in procedure bodies are handled by jumping to
+<tt>ev-sequence</tt> from <tt>compound-apply</tt>, at which point <tt>continue</tt> is already on the stack, having been saved at
+<tt>ev-application</tt>.<p>
+
+The entries at <tt>ev-sequence</tt>
+and <tt>ev-sequence-continue</tt> form a loop that
+successively evaluates each expression in a sequence.  The list of
+unevaluated expressions is kept in <tt>unev</tt>.  Before evaluating each
+expression, we check to see if there are additional expressions to be
+evaluated in the sequence.  If so, we save the rest of the unevaluated
+expressions (held in <tt>unev</tt>) and the environment in which these
+must be evaluated (held in <tt>env</tt>) and call <tt>eval-dispatch</tt> to
+evaluate the expression.  The two saved registers are restored upon
+the return from this evaluation, at <tt>ev-sequence-continue</tt>.<p>
+
+The final expression in the sequence is handled differently, at the
+entry point <tt>ev-sequence-last-exp</tt>.  Since there are no more
+expressions to be evaluated after this one, we need not save <tt>unev</tt> or <tt>env</tt> before going to <tt>eval-dispatch</tt>.  The value of
+the whole sequence is the value of the last expression, so after the
+evaluation of the last expression there is nothing left to do except
+continue at the entry point currently held on the stack (which was saved
+by <tt>ev-application</tt> or <tt>ev-begin</tt>.)
+Rather than setting up <tt>continue</tt> to arrange for <tt>eval-dispatch</tt> to return here and then restoring <tt>continue</tt> from
+the stack and continuing at that entry point, we restore <tt>continue</tt> from
+the stack before going to <tt>eval-dispatch</tt>, so that <tt>eval-dispatch</tt> will continue at that entry point after evaluating the
+expression.<p>
+
+<p><p><tt><a name="%_idx_6086"></a>ev-sequence<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;first-exp)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;last-exp?)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-sequence-last-exp))<br>
+&nbsp;&nbsp;(save&nbsp;unev)<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-sequence-continue))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+ev-sequence-continue<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;unev)<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;rest-exps)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;ev-sequence))<br>
+ev-sequence-last-exp<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_775"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_775">Tail recursion</a></h4><p>
+
+<a name="%_idx_6088"></a><a name="%_idx_6090"></a>
+In chapter&nbsp;1 we said that the process described by a procedure such as<p>
+
+<p><p><tt>(define&nbsp;(sqrt-iter&nbsp;guess&nbsp;x)<br>
+&nbsp;&nbsp;(if&nbsp;(good-enough?&nbsp;guess&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;guess<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt-iter&nbsp;(improve&nbsp;guess&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x)))<br>
+</tt><p><p>
+is an iterative process.  Even though the procedure is syntactically
+recursive (defined in terms of itself), it is not logically necessary
+for an evaluator to save information in passing from one call to <tt>sqrt-iter</tt> to the next.<a name="call_footnote_Temp_776" href="#footnote_Temp_776"><sup><small>25</small></sup></a> An evaluator that can
+execute a procedure such as <tt>sqrt-iter</tt> without requiring
+increasing storage as the procedure continues to call itself is called
+a <a name="%_idx_6092"></a><em>tail-recursive</em> evaluator.  <a name="%_idx_6094"></a><a name="%_idx_6096"></a>The metacircular implementation of
+the evaluator in chapter&nbsp;4 does not specify whether the evaluator is
+tail-recursive, because that evaluator inherits its mechanism for
+saving state from the underlying Scheme.  With the explicit-control
+evaluator, however, we can trace through the evaluation process to see
+when procedure calls cause a net accumulation of information on the
+stack.<p>
+
+
+Our evaluator is tail-recursive, because in order to evaluate the final
+expression of a sequence we transfer directly to <tt>eval-dispatch</tt> without
+saving any information on the stack.  Hence, evaluating the final expression
+in a sequence -- even if it is a procedure call (as in <tt>sqrt-iter</tt>, where
+the <tt>if</tt> expression, which is the last expression in the procedure body,
+reduces to a call to <tt>sqrt-iter</tt>) -- will not cause any information to be
+accumulated on the stack.<a name="call_footnote_Temp_777" href="#footnote_Temp_777"><sup><small>26</small></sup></a><p>
+
+If we did not think to take advantage of the fact that it was
+unnecessary to save information in this case, we might have
+implemented <tt>eval-sequence</tt> by treating all the expressions in a
+sequence in the same way -- saving the registers, evaluating the expression,
+returning to restore the registers, and repeating this until all the
+expressions have been evaluated:<a name="call_footnote_Temp_778" href="#footnote_Temp_778"><sup><small>27</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_6100"></a>ev-sequence<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;no-more-exps?)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-sequence-end))<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;first-exp)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(save&nbsp;unev)<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-sequence-continue))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+ev-sequence-continue<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;unev)<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;rest-exps)&nbsp;(reg&nbsp;unev))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;ev-sequence))<br>
+ev-sequence-end<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+</tt><p><p><p>
+
+
+This may seem like a minor change to our previous code for evaluation
+of a sequence:  The only difference is that we go through the
+save-restore cycle for the last expression in a sequence as well as
+for the
+others.  The interpreter will still give the same value for
+any expression.  But this change is fatal to the tail-recursive
+implementation, because we must now return after evaluating the final
+expression in a sequence in order to undo the (useless) register
+saves.  These extra saves will accumulate during a nest of procedure
+calls.  Consequently, processes such as <tt>sqrt-iter</tt> will require
+space proportional to the number of iterations rather than requiring
+constant space.  This difference can be significant.  For example,
+<a name="%_idx_6102"></a>with tail recursion, an infinite loop can be expressed using only the
+procedure-call mechanism:<p>
+
+<p><p><tt>(define&nbsp;(count&nbsp;n)<br>
+&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;(display&nbsp;n)<br>
+&nbsp;&nbsp;(count&nbsp;(+&nbsp;n&nbsp;1)))<br>
+</tt><p><p>
+Without tail recursion, such a procedure would eventually run out of
+stack space, and expressing a true iteration would require some
+control mechanism other than procedure call.<p>
+
+<a name="%_sec_5.4.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.4.3">5.4.3&nbsp;&nbsp;Conditionals, Assignments, and Definitions</a></h3><p>
+
+<a name="%_idx_6104"></a>As with the metacircular evaluator, special forms are handled by
+selectively evaluating fragments of the expression.  For an <tt>if</tt>
+expression, we must evaluate the predicate and decide, based on the
+value of predicate, whether to evaluate the consequent or the
+alternative.<p>
+
+Before evaluating the predicate, we save the <tt>if</tt> expression
+itself so that we can later extract the consequent or alternative.  We
+also save the environment, which we will need later in order to
+evaluate the consequent or the alternative, and we save <tt>continue</tt>, which we will need later in order to return to the
+evaluation of the expression that is waiting for the value of the <tt>if</tt>.<p>
+
+
+<p><p><tt><a name="%_idx_6106"></a>ev-if<br>
+&nbsp;&nbsp;(save&nbsp;exp)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;save&nbsp;expression&nbsp;for&nbsp;later</em><br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(save&nbsp;continue)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-if-decide))<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;if-predicate)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))&nbsp;&nbsp;<em>;&nbsp;evaluate&nbsp;the&nbsp;predicate</em><br>
+</tt><p><p><p>
+
+
+When we return from evaluating the predicate, we test whether it was
+true or false and, depending on the result, place either the
+consequent or the alternative in <tt>exp</tt> before going to <tt>eval-dispatch</tt>.  Notice that restoring <tt>env</tt> and <tt>continue</tt>
+here sets up <tt>eval-dispatch</tt> to have the correct environment and
+to continue at the right place to receive the value of the <tt>if</tt>
+expression. <p>
+
+
+<p><p><tt>ev-if-decide<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;exp)<br>
+&nbsp;&nbsp;(test&nbsp;(op&nbsp;true?)&nbsp;(reg&nbsp;val))<br>
+&nbsp;&nbsp;(branch&nbsp;(label&nbsp;ev-if-consequent))<br>
+<br>
+ev-if-alternative<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;if-alternative)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+ev-if-consequent<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;if-consequent)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_779"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_779">Assignments and definitions</a></h4><p>
+
+<a name="%_idx_6108"></a>Assignments are handled by <tt>ev-assignment</tt>, which is reached from
+<tt>eval-dispatch</tt> with the assignment expression in <tt>exp</tt>.  The code at <tt>ev-assignment</tt> first evaluates the value part of the expression and
+then installs the new value in the environment.  <tt>Set-variable-value!</tt> is assumed to be available as a machine
+operation.<p>
+
+
+<p><p><tt><a name="%_idx_6110"></a>ev-assignment<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;assignment-variable)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;unev)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;save&nbsp;variable&nbsp;for&nbsp;later</em><br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;assignment-value)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(save&nbsp;continue)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-assignment-1))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))&nbsp;&nbsp;<em>;&nbsp;evaluate&nbsp;the&nbsp;assignment&nbsp;value</em><br>
+ev-assignment-1<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;unev)<br>
+&nbsp;&nbsp;(perform<br>
+&nbsp;&nbsp;&nbsp;(op&nbsp;set-variable-value!)&nbsp;(reg&nbsp;unev)&nbsp;(reg&nbsp;val)&nbsp;(reg&nbsp;env))<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(const&nbsp;ok))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+</tt><p><p><p>
+
+
+<a name="%_idx_6112"></a>Definitions are handled in a similar way:
+
+<p><p><tt><a name="%_idx_6114"></a>ev-definition<br>
+&nbsp;&nbsp;(assign&nbsp;unev&nbsp;(op&nbsp;definition-variable)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;unev)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;save&nbsp;variable&nbsp;for&nbsp;later</em><br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;definition-value)&nbsp;(reg&nbsp;exp))<br>
+&nbsp;&nbsp;(save&nbsp;env)<br>
+&nbsp;&nbsp;(save&nbsp;continue)<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;ev-definition-1))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))&nbsp;&nbsp;<em>;&nbsp;evaluate&nbsp;the&nbsp;definition&nbsp;value</em><br>
+ev-definition-1<br>
+&nbsp;&nbsp;(restore&nbsp;continue)<br>
+&nbsp;&nbsp;(restore&nbsp;env)<br>
+&nbsp;&nbsp;(restore&nbsp;unev)<br>
+&nbsp;&nbsp;(perform<br>
+&nbsp;&nbsp;&nbsp;(op&nbsp;define-variable!)&nbsp;(reg&nbsp;unev)&nbsp;(reg&nbsp;val)&nbsp;(reg&nbsp;env))<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(const&nbsp;ok))<br>
+&nbsp;&nbsp;(goto&nbsp;(reg&nbsp;continue))<br>
+</tt><p><p>
+<p>
+
+<p><a name="%_thm_5.23"></a>
+<b>Exercise 5.23.</b>&nbsp;&nbsp;<a name="%_idx_6116"></a><a name="%_idx_6118"></a><a name="%_idx_6120"></a>Extend the evaluator to handle derived expressions such as <tt>cond</tt>,
+<tt>let</tt>, and so on (section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a>).
+You may ``cheat'' and assume that the syntax
+transformers such as <tt>cond-&gt;if</tt> are available as machine
+operations.<a name="call_footnote_Temp_781" href="#footnote_Temp_781"><sup><small>28</small></sup></a>
+
+<p><p>
+
+<p><a name="%_thm_5.24"></a>
+<b>Exercise 5.24.</b>&nbsp;&nbsp;<a name="%_idx_6122"></a>Implement <tt>cond</tt> as a new basic special form without
+reducing it to <tt>if</tt>.  You will have to construct a loop that tests
+the predicates of successive <tt>cond</tt> clauses until you find one
+that is true, and then use <tt>ev-sequence</tt> to evaluate the actions
+of the clause.
+
+<p><p>
+
+<p><a name="%_thm_5.25"></a>
+<b>Exercise 5.25.</b>&nbsp;&nbsp;<a name="%_idx_6124"></a><a name="%_idx_6126"></a>Modify the evaluator so that it uses normal-order evaluation,
+based on the lazy evaluator of section&nbsp;<a href="book-Z-H-27.html#%_sec_4.2">4.2</a>.
+<p><p>
+
+<a name="%_sec_5.4.4"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.4.4">5.4.4&nbsp;&nbsp;Running the Evaluator</a></h3><p>
+
+
+<a name="%_idx_6128"></a>
+<a name="%_idx_6130"></a><a name="%_idx_6132"></a>With the implementation of the explicit-control evaluator we come to
+the end of a development, begun in chapter&nbsp;1, in which we have
+explored successively more precise models of the evaluation process.
+We started with the relatively informal substitution model, then
+extended this in chapter&nbsp;3 to the environment model, which enabled us
+to deal with state and change.  In the metacircular evaluator of
+chapter&nbsp;4, we used Scheme itself as a language for making more explicit
+the environment structure constructed during evaluation of an
+expression.  Now, with register machines, we have taken a close look
+at the evaluator's mechanisms for storage management,
+argument passing, and control.  At
+each new level of description, we have had to raise issues and resolve
+ambiguities that were not apparent at the previous, less precise
+treatment of evaluation.  To understand the behavior of the
+explicit-control evaluator, we can simulate it and monitor its
+performance.<p>
+
+
+<a name="%_idx_6134"></a><a name="%_idx_6136"></a>We will install a driver loop in our evaluator machine.  This plays
+the role of the <tt>driver-loop</tt> procedure of
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.4">4.1.4</a>.  The evaluator will repeatedly print a
+prompt, read an expression, evaluate the expression by going to <tt>eval-dispatch</tt>, and print the result.  The following instructions form
+the beginning of the explicit-control evaluator's controller
+sequence:<a name="call_footnote_Temp_784" href="#footnote_Temp_784"><sup><small>29</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_6142"></a><a name="%_idx_6144"></a>read-eval-print-loop<br>
+&nbsp;&nbsp;(perform&nbsp;(op&nbsp;initialize-stack))<br>
+&nbsp;&nbsp;(perform<br>
+&nbsp;&nbsp;&nbsp;(op&nbsp;prompt-for-input)&nbsp;(const&nbsp;&quot;;;;&nbsp;EC-Eval&nbsp;input:&quot;))<br>
+&nbsp;&nbsp;(assign&nbsp;exp&nbsp;(op&nbsp;read))<br>
+&nbsp;&nbsp;(assign&nbsp;env&nbsp;(op&nbsp;get-global-environment))<br>
+&nbsp;&nbsp;(assign&nbsp;continue&nbsp;(label&nbsp;print-result))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;eval-dispatch))<br>
+<a name="%_idx_6146"></a>print-result<br>
+&nbsp;&nbsp;(perform<br>
+&nbsp;&nbsp;&nbsp;(op&nbsp;announce-output)&nbsp;(const&nbsp;&quot;;;;&nbsp;EC-Eval&nbsp;value:&quot;))<br>
+&nbsp;&nbsp;(perform&nbsp;(op&nbsp;user-print)&nbsp;(reg&nbsp;val))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;read-eval-print-loop))<br>
+</tt><p><p><p>
+
+<a name="%_idx_6148"></a><a name="%_idx_6150"></a>When we encounter an error in a procedure (such as the ``unknown
+procedure type error'' indicated at <tt>apply-dispatch</tt>), we print an
+error message and return to the driver loop.<a name="call_footnote_Temp_785" href="#footnote_Temp_785"><sup><small>30</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_6152"></a>unknown-expression-type<br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(const&nbsp;unknown-expression-type-error))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;signal-error))<br>
+<a name="%_idx_6154"></a>unknown-procedure-type<br>
+&nbsp;&nbsp;(restore&nbsp;continue)&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;clean&nbsp;up&nbsp;stack&nbsp;(from&nbsp;<tt>apply-dispatch</tt>)</em><br>
+&nbsp;&nbsp;(assign&nbsp;val&nbsp;(const&nbsp;unknown-procedure-type-error))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;signal-error))<br>
+<a name="%_idx_6156"></a>signal-error<br>
+&nbsp;&nbsp;(perform&nbsp;(op&nbsp;user-print)&nbsp;(reg&nbsp;val))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;read-eval-print-loop))<br>
+</tt><p><p><p>
+
+For the purposes of the simulation, we initialize the stack each time
+through the driver loop, since it might not be empty after an error
+(such as an undefined variable) interrupts an evaluation.<a name="call_footnote_Temp_786" href="#footnote_Temp_786"><sup><small>31</small></sup></a><p>
+
+<a name="%_idx_6158"></a>If we combine all the code fragments presented in sections
+<a href="#%_sec_5.4.1">5.4.1</a>-<a href="#%_sec_5.4.4">5.4.4</a>, we can create an
+evaluator machine model that we can run using the register-machine simulator
+of section&nbsp;<a href="book-Z-H-32.html#%_sec_5.2">5.2</a>.<p>
+
+<p><p><tt>(define&nbsp;eceval<br>
+&nbsp;&nbsp;(make-machine<br>
+&nbsp;&nbsp;&nbsp;'(exp&nbsp;env&nbsp;val&nbsp;proc&nbsp;argl&nbsp;continue&nbsp;unev)<br>
+&nbsp;&nbsp;&nbsp;eceval-operations<br>
+&nbsp;&nbsp;'(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;read-eval-print-loop<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>entire&nbsp;machine&nbsp;controller&nbsp;as&nbsp;given&nbsp;above</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;)))<br>
+</tt><p><p>
+We must define Scheme procedures to simulate the
+operations used as primitives by the evaluator.  These are
+the same procedures we used for the metacircular evaluator in
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1">4.1</a>, together with the few additional ones
+defined in footnotes throughout section&nbsp;<a href="#%_sec_5.4">5.4</a>.
+<p><p><tt>(define&nbsp;eceval-operations<br>
+&nbsp;&nbsp;(list&nbsp;(list&nbsp;'self-evaluating?&nbsp;self-evaluating)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>&lt;complete&nbsp;list&nbsp;of&nbsp;operations&nbsp;for&nbsp;eceval&nbsp;machine&gt;</em>))<br>
+</tt><p><p><p>
+
+
+Finally, we can initialize the global environment and run the evaluator:
+<p><p><tt>(define&nbsp;the-global-environment&nbsp;(setup-environment))<br>
+<br>
+(start&nbsp;eceval)<br>
+<i>;;;&nbsp;EC-Eval&nbsp;input:</i><br>
+(define&nbsp;(append&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(car&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(append&nbsp;(cdr&nbsp;x)&nbsp;y))))<br>
+<i>;;;&nbsp;EC-Eval&nbsp;value:</i><br>
+<i>ok</i><br>
+<i>;;;&nbsp;EC-Eval&nbsp;input:</i><br>
+(append&nbsp;'(a&nbsp;b&nbsp;c)&nbsp;'(d&nbsp;e&nbsp;f))<br>
+<i>;;;&nbsp;EC-Eval&nbsp;value:</i><br>
+<i>(a&nbsp;b&nbsp;c&nbsp;d&nbsp;e&nbsp;f)</i><br>
+</tt><p><p><p>
+
+Of course, evaluating expressions in this way will take much longer
+than if we had directly typed them into Scheme, because of the
+multiple levels of simulation involved.  Our expressions are evaluated
+by the explicit-control-evaluator machine, which is being simulated by
+a Scheme program, which is itself being evaluated by the Scheme
+interpreter.<p>
+
+<a name="%_sec_Temp_787"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_787">Monitoring the performance of the evaluator</a></h4><p>
+
+<a name="%_idx_6160"></a>
+<a name="%_idx_6162"></a>Simulation can be a powerful tool to guide the implementation of
+evaluators.  Simulations make it easy not only to explore variations
+of the register-machine design but also to monitor the performance of
+the simulated evaluator.  For example, one important factor in
+performance is how efficiently the evaluator uses the stack.  We can
+observe the number of stack operations required to evaluate various
+expressions by defining the evaluator register machine with the
+version of the simulator that collects statistics on stack use
+(section&nbsp;<a href="book-Z-H-32.html#%_sec_5.2.4">5.2.4</a>), and adding an instruction at the
+evaluator's <tt>print-result</tt> entry point to print the
+statistics:<p>
+
+<p><p><tt><a name="%_idx_6164"></a>print-result<br>
+&nbsp;&nbsp;(perform&nbsp;(op&nbsp;print-stack-statistics))<em>;&nbsp;added&nbsp;instruction</em><br>
+&nbsp;&nbsp;(perform<br>
+&nbsp;&nbsp;&nbsp;(op&nbsp;announce-output)&nbsp;(const&nbsp;&quot;;;;&nbsp;EC-Eval&nbsp;value:&quot;))<br>
+&nbsp;&nbsp;<tt>...</tt>&nbsp;<em>;&nbsp;same&nbsp;as&nbsp;before</em><br>
+</tt><p><p>
+Interactions with the evaluator now look like this:
+<p><p><tt><i>;;;&nbsp;EC-Eval&nbsp;input:</i><br>
+(define&nbsp;(factorial&nbsp;n)<br>
+&nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;(factorial&nbsp;(-&nbsp;n&nbsp;1))&nbsp;n)))<br>
+<i>(total-pushes&nbsp;=&nbsp;3&nbsp;maximum-depth&nbsp;=&nbsp;3)</i><br>
+<i>;;;&nbsp;EC-Eval&nbsp;value:</i><br>
+<i>ok</i><br>
+<i>;;;&nbsp;EC-Eval&nbsp;input:</i><br>
+(factorial&nbsp;5)<br>
+<i>(total-pushes&nbsp;=&nbsp;144&nbsp;maximum-depth&nbsp;=&nbsp;28)</i><br>
+<i>;;;&nbsp;EC-Eval&nbsp;value:</i><br>
+<i>120</i><br>
+</tt><p><p>
+Note that the driver loop of the evaluator reinitializes the stack
+at the start of
+each interaction, so that the statistics printed will refer only to
+stack operations used to evaluate the previous expression.<p>
+
+<p><a name="%_thm_5.26"></a>
+<b>Exercise 5.26.</b>&nbsp;&nbsp;<a name="%_idx_6166"></a><a name="%_idx_6168"></a><a name="%_idx_6170"></a>Use the monitored stack to explore the tail-recursive property of the
+evaluator (section&nbsp;<a href="#%_sec_5.4.2">5.4.2</a>).  Start the
+evaluator and define the iterative <tt>factorial</tt> procedure from
+section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>:<p>
+
+<p><p><tt>(define&nbsp;(factorial&nbsp;n)<br>
+&nbsp;&nbsp;(define&nbsp;(iter&nbsp;product&nbsp;counter)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;&nbsp;counter&nbsp;n)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;product<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iter&nbsp;(*&nbsp;counter&nbsp;product)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;counter&nbsp;1))))<br>
+&nbsp;&nbsp;(iter&nbsp;1&nbsp;1))<br>
+</tt><p><p>
+Run the procedure with some small values of <em>n</em>.  Record the maximum
+stack depth and the number of pushes required to compute <em>n</em>! for each of
+these values.<p>
+
+<p><p>a.  You will find that the maximum depth required to evaluate <em>n</em>! is
+independent of <em>n</em>.  What is that depth?<p>
+
+<p><p>b.  Determine from your data a formula in terms of <em>n</em> for the total
+number of push operations used in evaluating <em>n</em>! for any <em>n</em> <u>&gt;</u> 1.
+Note that the number of operations used is a linear function of <em>n</em>
+and is thus determined by two constants.
+<p><p>
+
+<p><a name="%_thm_5.27"></a>
+<b>Exercise 5.27.</b>&nbsp;&nbsp;<a name="%_idx_6172"></a>For comparison with exercise&nbsp;<a href="#%_thm_5.26">5.26</a>, explore the
+behavior of the following procedure for computing factorials
+recursively:
+<p><p><tt>(define&nbsp;(factorial&nbsp;n)<br>
+&nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;(factorial&nbsp;(-&nbsp;n&nbsp;1))&nbsp;n)))<br>
+</tt><p><p>
+By running this procedure with the monitored stack, determine, as a
+function of <em>n</em>, the maximum depth of the stack and the total number
+of pushes used in evaluating <em>n</em>! for <em>n</em> <u>&gt;</u> 1.  (Again, these functions
+will be linear.)  Summarize your experiments by filling in the
+following table with the appropriate expressions in terms of <em>n</em>:<p>
+
+<table border=1><tr><td valign=top ></td><td valign=top >Maximum depth </td><td valign=top >Number of pushes</td></tr>
+<tr><td valign=top >Recursive </td><td valign=top ></td><td valign=top ></td></tr>
+<tr><td valign=top >factorial </td><td valign=top ></td><td valign=top ></td></tr>
+<tr><td valign=top >Iterative </td><td valign=top ></td><td valign=top ></td></tr>
+<tr><td valign=top >factorial </td><td valign=top ></td><td valign=top ></td></tr>
+<tr><td valign=top ></td></tr></table><p>
+
+The maximum depth is a measure of the amount of space used by the
+evaluator in carrying out the computation, and the number of pushes
+correlates well with the time required.
+
+<p><p>
+
+<p>
+
+<p><a name="%_thm_5.28"></a>
+<b>Exercise 5.28.</b>&nbsp;&nbsp;<a name="%_idx_6174"></a><a name="%_idx_6176"></a>Modify the definition of the evaluator by changing
+<tt>eval-sequence</tt> as described in
+section&nbsp;<a href="#%_sec_5.4.2">5.4.2</a> so that the evaluator is no
+longer tail-recursive.  Rerun your experiments from
+exercises&nbsp;<a href="#%_thm_5.26">5.26</a> and&nbsp;<a href="#%_thm_5.27">5.27</a> to demonstrate
+that both versions of the <tt>factorial</tt> procedure now require space
+that grows linearly with their input.
+<p><p>
+
+<p><a name="%_thm_5.29"></a>
+<b>Exercise 5.29.</b>&nbsp;&nbsp;<a name="%_idx_6178"></a>Monitor the stack operations in the tree-recursive Fibonacci computation:<p>
+
+<p><p><tt><a name="%_idx_6180"></a>(define&nbsp;(fib&nbsp;n)<br>
+&nbsp;&nbsp;(if&nbsp;(&lt;&nbsp;n&nbsp;2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(fib&nbsp;(-&nbsp;n&nbsp;1))&nbsp;(fib&nbsp;(-&nbsp;n&nbsp;2)))))<br>
+</tt><p><p>
+a.  Give a formula in terms of <em>n</em> for the maximum depth of the stack
+required to compute  <em>F</em><em>i</em><em>b</em>(<em>n</em>) for <em>n</em> <u>&gt;</u> 2.  Hint: In
+section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a> we argued that the space used by this
+process grows linearly with <em>n</em>.<p>
+
+<p><p>b.  Give a formula for the total number of pushes used to compute
+ <em>F</em><em>i</em><em>b</em>(<em>n</em>) for <em>n</em> <u>&gt;</u> 2.  You should find that the number of
+pushes (which correlates well with the time used) grows exponentially
+with <em>n</em>.  Hint: Let <em>S</em>(<em>n</em>) be the number of pushes used in computing
+ <em>F</em><em>i</em><em>b</em>(<em>n</em>).  You should be able to argue that there is a formula
+that expresses <em>S</em>(<em>n</em>) in terms of <em>S</em>(<em>n</em> - 1), <em>S</em>(<em>n</em> - 2), and some fixed
+``overhead'' constant <em>k</em> that is independent of <em>n</em>.  Give the
+formula, and say what <em>k</em> is.  Then show that <em>S</em>(<em>n</em>) can be expressed
+as <em>a</em>  <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1)  +  <em>b</em> and give the values of <em>a</em> and <em>b</em>.
+
+<p><p>
+
+<p><a name="%_thm_5.30"></a>
+<b>Exercise 5.30.</b>&nbsp;&nbsp;<a name="%_idx_6182"></a><a name="%_idx_6184"></a>Our evaluator currently catches and signals only two kinds of
+errors -- unknown expression types and unknown procedure types.  Other
+errors will take us out of the evaluator read-eval-print loop.  When
+we run the evaluator using the register-machine simulator, these
+errors are caught by the underlying Scheme system.  This is analogous
+to the computer crashing when a user program makes an
+error.<a name="call_footnote_Temp_793" href="#footnote_Temp_793"><sup><small>32</small></sup></a>  It is a large project to make a real
+error system work, but it is well worth the effort to understand what
+is involved here.<p>
+
+<p><p>a. Errors that occur in the evaluation process, such as an attempt to
+access an unbound variable, could be caught by changing the lookup
+operation to make it return a distinguished condition code, which cannot
+be a possible value of any user variable.  The evaluator can test
+for this condition code and then do what is necessary to go to <tt>signal-error</tt>.  Find all of the places in the evaluator where such a
+change is necessary and fix them.  This is lots of work.<p>
+
+<p><p>b. Much worse is the problem of handling errors that are signaled by
+applying primitive procedures, such as an attempt to divide by zero or
+an attempt to extract the <tt>car</tt> of a symbol.  In a professionally
+written high-quality system, each primitive application is checked for
+safety as part of the primitive.  For example, every call to <tt>car</tt>
+could first check that the argument is a pair.  If the argument is not
+a pair, the application would return a distinguished condition code to
+the evaluator, which would then report the failure.  We could arrange
+for this in our register-machine simulator by making each primitive
+procedure
+check for applicability and returning an appropriate distinguished
+condition code on failure. Then the <tt>primitive-apply</tt> code in the
+evaluator can check for the condition code and go to <tt>signal-error</tt> if necessary.  Build this structure and make it work.
+This is a major project.
+
+<p><p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_765" href="#call_footnote_Temp_765"><sup><small>19</small></sup></a> See Batali et al. 1982 for more
+<a name="%_idx_6004"></a>information on the chip and the method by which it was designed.
+
+<p><a name="footnote_Temp_767" href="#call_footnote_Temp_767"><sup><small>20</small></sup></a> In our controller, the dispatch is written as a
+sequence of <tt>test</tt> and <tt>branch</tt> instructions.  Alternatively,
+it could have been written in a data-directed style (and in a real
+system it probably would have been) to avoid the need to perform
+sequential tests and to facilitate the definition of new expression
+types.  A machine designed to run Lisp would probably include a <tt>dispatch-on-type</tt> instruction that would efficiently execute such
+data-directed dispatches.
+
+<p><a name="footnote_Temp_770" href="#call_footnote_Temp_770"><sup><small>21</small></sup></a> This is an important but subtle point in translating
+algorithms from a procedural language, such as Lisp, to a
+register-machine language.  As an alternative to saving only what is
+needed, we could save all the registers (except <tt>val</tt>) before each
+recursive call. This is called a <a name="%_idx_6052"></a><a name="%_idx_6054"></a><em>framed-stack</em> discipline.  This
+would work but might save more registers than necessary; this could be
+an important consideration in a system where stack operations are
+expensive.  Saving registers whose contents will not be needed later
+may also hold onto useless data that could otherwise be
+garbage-collected, freeing space to be reused.
+
+<p><a name="footnote_Temp_771" href="#call_footnote_Temp_771"><sup><small>22</small></sup></a> We add to the evaluator data-structure procedures in
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.3">4.1.3</a> the following two procedures
+for manipulating argument lists:
+<p><p><tt><a name="%_idx_6060"></a>(define&nbsp;(empty-arglist)&nbsp;'())<br>
+<br>
+<a name="%_idx_6062"></a>(define&nbsp;(adjoin-arg&nbsp;arg&nbsp;arglist)<br>
+&nbsp;&nbsp;(append&nbsp;arglist&nbsp;(list&nbsp;arg)))<br>
+</tt><p><p>
+We also use an additional syntax procedure to test for the
+last operand in a combination:
+<p><p><tt><a name="%_idx_6064"></a>(define&nbsp;(last-operand?&nbsp;ops)<br>
+&nbsp;&nbsp;(null?&nbsp;(cdr&nbsp;ops)))<br>
+</tt><p><p>
+
+
+<p><a name="footnote_Temp_772" href="#call_footnote_Temp_772"><sup><small>23</small></sup></a> The optimization of treating the last operand
+<a name="%_idx_6066"></a>specially is known as <i>evlis tail recursion</i> (see <a name="%_idx_6068"></a>Wand 1980).
+We could be somewhat more efficient
+in the argument evaluation loop if we made evaluation of the first
+operand a special case too.  This would permit us to postpone
+initializing <tt>argl</tt> until after evaluating the first operand, so
+as to avoid saving <tt>argl</tt> in this case.  The compiler in
+section&nbsp;<a href="book-Z-H-35.html#%_sec_5.5">5.5</a> performs this optimization.  (Compare
+the <tt>construct-arglist</tt> procedure of
+section&nbsp;<a href="book-Z-H-35.html#%_sec_5.5.3">5.5.3</a>.)
+
+<p><a name="footnote_Temp_773" href="#call_footnote_Temp_773"><sup><small>24</small></sup></a> The
+order of operand evaluation in the metacircular evaluator is
+determined by the order of evaluation of the arguments to <tt>cons</tt>
+in the procedure <tt>list-of-values</tt> of section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>
+(see exercise&nbsp;<a href="book-Z-H-26.html#%_thm_4.1">4.1</a>).
+
+<p><a name="footnote_Temp_776" href="#call_footnote_Temp_776"><sup><small>25</small></sup></a> We saw in
+section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1">5.1</a> how to implement such a
+process with a register machine that had no stack; the state of the
+process was stored in a fixed set of registers.
+
+<p><a name="footnote_Temp_777" href="#call_footnote_Temp_777"><sup><small>26</small></sup></a> This implementation of tail recursion in
+<tt>ev-sequence</tt> is one variety of a well-known optimization technique used
+by many compilers.  In compiling a procedure that ends with a procedure call,
+one can replace the call by a jump to the called procedure's entry point.
+Building this strategy into the interpreter, as we have done in this section,
+provides the optimization uniformly throughout the language.
+
+<p><a name="footnote_Temp_778" href="#call_footnote_Temp_778"><sup><small>27</small></sup></a> We can define <tt>no-more-exps?</tt> as follows:
+<p><p><tt><a name="%_idx_6098"></a>(define&nbsp;(no-more-exps?&nbsp;seq)&nbsp;(null?&nbsp;seq))<br>
+</tt><p><p>
+
+
+<p><a name="footnote_Temp_781" href="#call_footnote_Temp_781"><sup><small>28</small></sup></a> This isn't really cheating.  In an actual
+implementation built from scratch, we would use our explicit-control
+evaluator to interpret a Scheme program that performs source-level
+transformations like <tt>cond-&gt;if</tt> in a syntax phase that runs before
+execution.
+
+<p><a name="footnote_Temp_784" href="#call_footnote_Temp_784"><sup><small>29</small></sup></a> We assume here that <tt>read</tt> and the
+various printing operations are
+available as primitive machine operations, which is useful for our
+simulation, but completely unrealistic in practice.  These
+are actually extremely complex operations.  In practice, they would be
+implemented using low-level input-output operations
+such as transferring single characters to and from a device.<p>
+
+To support the <tt>get-global-environment</tt> operation we define
+<p><p><tt><a name="%_idx_6138"></a>(define&nbsp;the-global-environment&nbsp;(setup-environment))<br>
+<br>
+<a name="%_idx_6140"></a>(define&nbsp;(get-global-environment)<br>
+&nbsp;&nbsp;the-global-environment)<br>
+</tt><p><p>
+
+
+<p><a name="footnote_Temp_785" href="#call_footnote_Temp_785"><sup><small>30</small></sup></a> There are other
+errors that we would like the interpreter to handle, but these are not
+so simple.  See exercise&nbsp;<a href="#%_thm_5.30">5.30</a>.
+
+<p><a name="footnote_Temp_786" href="#call_footnote_Temp_786"><sup><small>31</small></sup></a> We
+could perform the stack initialization only after errors, but doing it in
+the driver loop will be convenient for monitoring the evaluator's
+performance, as described below.
+
+<p><a name="footnote_Temp_793" href="#call_footnote_Temp_793"><sup><small>32</small></sup></a> Regrettably, this is the normal state of affairs in
+<a name="%_idx_6186"></a>conventional compiler-based language systems such as C.  
+<a name="%_idx_6188"></a><a name="%_idx_6190"></a><a name="%_idx_6192"></a>In UNIX<sup> <em>T</em><em>M</em></sup> the system ``dumps core,'' and in 
+DOS/Windows<sup> <em>T</em><em>M</em></sup> it becomes catatonic.
+The Macintosh<sup> <em>T</em><em>M</em></sup> displays a
+picture of an exploding bomb and offers you the opportunity to reboot
+the computer -- if you're lucky.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-33.html">previous</a></span><span>, <a href="book-Z-H-35.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

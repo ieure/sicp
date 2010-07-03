@@ -1,0 +1,1385 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-27.html">previous</a></span><span>, <a href="book-Z-H-29.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_4.3"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_4.3">4.3&nbsp;&nbsp;Variations on a Scheme -- Nondeterministic Computing</a></h2><p>
+
+
+<a name="%_idx_4806"></a>
+<a name="%_idx_4808"></a>In this section, we extend the Scheme evaluator to support a
+programming paradigm called <em>nondeterministic computing</em> by
+building into the evaluator a facility to support automatic search.
+This is a much more profound change to the language than the
+introduction of lazy evaluation in section&nbsp;<a href="book-Z-H-27.html#%_sec_4.2">4.2</a>.<p>
+
+<a name="%_idx_4810"></a>Nondeterministic computing, like stream processing, is useful for
+``generate and test'' applications.  Consider the task of starting with
+two lists of positive integers and finding a pair of integers -- one
+from the first list and one from the second list -- whose sum is prime.
+We saw how to handle this with finite sequence operations in
+section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a> and with infinite streams in
+section&nbsp;<a href="book-Z-H-24.html#%_sec_3.5.3">3.5.3</a>.  Our approach was to generate
+the sequence of all possible pairs and filter these to select the
+pairs whose sum is prime.  Whether we actually generate the entire
+sequence of pairs first as in chapter&nbsp;2, or interleave the generating
+and filtering as in chapter&nbsp;3, is immaterial to the essential image of
+how the computation is organized.<p>
+
+<a name="%_idx_4812"></a>The nondeterministic approach evokes a different image.  Imagine simply
+that we choose (in some way) a number from the first list and a number
+from the second list and require (using some mechanism) that their sum
+be prime.  This is expressed by following procedure:<p>
+
+<p><p><tt><a name="%_idx_4814"></a>(define&nbsp;(prime-sum-pair&nbsp;list1&nbsp;list2)<br>
+&nbsp;&nbsp;(let&nbsp;((a&nbsp;(an-element-of&nbsp;list1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(b&nbsp;(an-element-of&nbsp;list2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(prime?&nbsp;(+&nbsp;a&nbsp;b)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;a&nbsp;b)))<br>
+</tt><p><p>
+It might seem as if this procedure merely restates the problem,
+rather than specifying a way to solve it.  Nevertheless, this is
+a legitimate nondeterministic program.<a name="call_footnote_Temp_598" href="#footnote_Temp_598"><sup><small>42</small></sup></a><p>
+
+
+The key idea here is that expressions in a nondeterministic language
+can have more than one possible value.  For instance,
+<tt>an-element-of</tt> might return any element of the given list.  Our
+nondeterministic program evaluator will work by automatically choosing
+a possible value and keeping track of the choice.  If a subsequent
+requirement is not met, the evaluator will try a different choice, and
+it will keep trying new choices until the evaluation succeeds, or
+until we run out of choices.  Just as the lazy evaluator freed the
+programmer from the details of how values are delayed and forced, the
+nondeterministic program evaluator will free the programmer from the
+details of how choices are made.<p>
+
+<a name="%_idx_4820"></a>It is instructive to contrast the different images of time evoked by
+nondeterministic evaluation and stream processing.  Stream processing
+uses lazy evaluation to decouple the time when the stream of possible
+answers is assembled from the time when the actual stream elements are
+produced.  The evaluator supports the illusion that all the possible
+answers are laid out before us in a timeless sequence.  With
+nondeterministic evaluation, an expression represents the exploration
+of a set of possible worlds, each determined by a set of choices.
+Some of the possible worlds lead to dead ends, while others have
+useful values.  The nondeterministic program evaluator supports the
+illusion that time branches, and that our programs have different
+possible execution histories.  When we reach a dead end, we can
+revisit a previous choice point and proceed along a different branch.<p>
+
+The nondeterministic program evaluator implemented below is called the
+<tt>amb</tt> evaluator because it is based on a new special form called
+<tt>amb</tt>.  We can type the above definition of <tt>prime-sum-pair</tt>
+at the <tt>amb</tt> evaluator driver loop (along with definitions of <tt>prime?</tt>, <tt>an-element-of</tt>, and <tt>require</tt>) and run the
+procedure as follows:<p>
+
+<p><p><tt><i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(prime-sum-pair&nbsp;'(1&nbsp;3&nbsp;5&nbsp;8)&nbsp;'(20&nbsp;35&nbsp;110))<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(3&nbsp;20)</i><br>
+</tt><p><p>
+The value returned was obtained after the evaluator repeatedly chose
+elements from each of the lists, until a successful choice was made.<p>
+
+Section&nbsp;<a href="#%_sec_4.3.1">4.3.1</a> introduces <tt>amb</tt> and explains how it
+supports nondeterminism through the evaluator's automatic search
+mechanism.  Section <a href="#%_sec_4.3.2">4.3.2</a> presents examples of
+nondeterministic programs, and section&nbsp;<a href="#%_sec_4.3.3">4.3.3</a>
+gives the details of how to implement the <tt>amb</tt> evaluator by
+modifying the ordinary Scheme evaluator.<p>
+
+<a name="%_sec_4.3.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.1">4.3.1&nbsp;&nbsp;Amb and Search</a></h3><p>
+
+<p>
+
+<a name="%_idx_4822"></a>To extend Scheme to support nondeterminism, we introduce a new special
+form called <tt>amb</tt>.<a name="call_footnote_Temp_599" href="#footnote_Temp_599"><sup><small>43</small></sup></a>
+The expression <tt>(amb &lt;<em><em>e</em><sub>1</sub></em>&gt; &lt;<em><em>e</em><sub>2</sub></em>&gt; <tt>...</tt> &lt;<em><em>e</em><sub><em>n</em></sub></em>&gt;)</tt>
+returns the value of one of the <em>n</em> expressions &lt;<em><em>e</em><sub><em>i</em></sub></em>&gt; ``ambiguously.''
+For example, the expression<p>
+
+<p><p><tt>(list&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3)&nbsp;(amb&nbsp;'a&nbsp;'b))<br>
+</tt><p><p>
+can have six possible values:
+<table border=0><tr><td valign=top ><tt>(1 a) </tt></td><td valign=top ><tt>(1 b) </tt></td><td valign=top ><tt>(2 a) </tt></td><td valign=top ><tt>(2 b) </tt></td><td valign=top ><tt>(3 a) </tt></td><td valign=top ><tt>(3 b)
+</tt></td></tr></table>
+<tt>Amb</tt> with a single choice produces an ordinary (single) value.<p>
+
+<a name="%_idx_4826"></a><tt>Amb</tt> with no choices -- the expression <tt>(amb)</tt> -- is an
+expression with no acceptable values.  Operationally, we can think of
+<tt>(amb)</tt> as an expression that when evaluated causes the
+computation to ``fail'': The computation aborts and no value is
+produced.  Using this idea, we can express the requirement that a
+particular predicate expression <tt>p</tt> must be true as follows:<p>
+
+<p><p><tt><a name="%_idx_4828"></a>(define&nbsp;(require&nbsp;p)<br>
+&nbsp;&nbsp;(if&nbsp;(not&nbsp;p)&nbsp;(amb)))<br>
+</tt><p><p><p>
+
+With <tt>amb</tt> and <tt>require</tt>, we can implement the <tt>an-element-of</tt> procedure used above:<p>
+
+<p><p><tt><a name="%_idx_4830"></a>(define&nbsp;(an-element-of&nbsp;items)<br>
+&nbsp;&nbsp;(require&nbsp;(not&nbsp;(null?&nbsp;items)))<br>
+&nbsp;&nbsp;(amb&nbsp;(car&nbsp;items)&nbsp;(an-element-of&nbsp;(cdr&nbsp;items))))<br>
+</tt><p><p>
+<tt>An-element-of</tt> fails if the list is empty.  Otherwise it
+ambiguously returns either the first element of the list or an element
+chosen from the rest of the list.<p>
+
+We can also express infinite ranges of choices.  The following
+procedure potentially returns any integer greater than or equal to
+some given&nbsp;<em>n</em>:<p>
+
+<p><p><tt><a name="%_idx_4832"></a>(define&nbsp;(an-integer-starting-from&nbsp;n)<br>
+&nbsp;&nbsp;(amb&nbsp;n&nbsp;(an-integer-starting-from&nbsp;(+&nbsp;n&nbsp;1))))<br>
+</tt><p><p>
+This is like the stream procedure <tt>integers-starting-from</tt>
+described in section&nbsp;<a href="book-Z-H-24.html#%_sec_3.5.2">3.5.2</a>, but with an important
+difference: The stream procedure returns an object that represents the
+sequence of all integers beginning with <em>n</em>, whereas the <tt>amb</tt>
+procedure returns a single integer.<a name="call_footnote_Temp_600" href="#footnote_Temp_600"><sup><small>44</small></sup></a><p>
+
+<a name="%_idx_4834"></a>Abstractly, we can imagine that evaluating an <tt>amb</tt> expression
+causes time to split into branches, where the computation continues on
+each branch with one of the possible values of the expression.  We say
+that <tt>amb</tt> represents a <a name="%_idx_4836"></a><em>nondeterministic choice point</em>.
+If we had a machine with a sufficient number of processors that could
+be dynamically allocated, we could implement the search in a
+straightforward way.  Execution would proceed as in a sequential
+machine, until an <tt>amb</tt> expression is encountered.  At this point,
+more processors would be allocated and initialized to continue all of
+the parallel executions implied by the choice.  Each processor would
+proceed sequentially as if it were the only choice, until it either
+terminates by encountering a failure, or it further subdivides, or
+it finishes.<a name="call_footnote_Temp_601" href="#footnote_Temp_601"><sup><small>45</small></sup></a><p>
+
+<a name="%_idx_4840"></a>On the other hand, if we have a machine that can execute
+only one process (or a few concurrent processes),
+we must consider the alternatives sequentially.
+One could imagine modifying an evaluator
+to pick at random a branch to follow whenever it encounters a choice
+point.  Random choice, however, can easily lead to failing values.
+We might try running the evaluator over and over, making random
+choices and hoping to find a non-failing value, but it is better to <a name="%_idx_4842"></a><a name="%_idx_4844"></a><em>systematically search</em> all possible execution paths.
+The <tt>amb</tt> evaluator that we will develop and work with in this section
+implements a systematic search as follows: When the evaluator
+encounters an application of <tt>amb</tt>, it initially selects the first
+alternative.  This selection may itself lead to a further choice.  The
+evaluator will always initially choose the first alternative at each
+choice point.  If a choice results in a failure, then the evaluator
+<a name="%_idx_4846"></a><a name="%_idx_4848"></a><a name="%_idx_4850"></a>automagically<a name="call_footnote_Temp_602" href="#footnote_Temp_602"><sup><small>46</small></sup></a> <a name="%_idx_4852"></a><em>backtracks</em>
+to the most recent choice point and tries the next
+alternative.  If it runs out of alternatives at any choice point, the
+evaluator will back up to the previous choice point and resume from
+there.  This process leads to a search strategy known as <a name="%_idx_4854"></a><a name="%_idx_4856"></a><a name="%_idx_4858"></a><em>depth-first search</em> or <em>chronological backtracking</em>.<a name="call_footnote_Temp_603" href="#footnote_Temp_603"><sup><small>47</small></sup></a><p>
+
+<a name="%_sec_Temp_604"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_604">Driver loop</a></h4><p>
+
+<a name="%_idx_4908"></a>The driver loop for the <tt>amb</tt> evaluator
+has some unusual properties.  It reads an
+expression and prints the value of the first non-failing execution, as
+in the <tt>prime-sum-pair</tt> example shown above.  If we
+want to see the value of the next successful execution, we can
+ask the interpreter to backtrack and attempt to generate a second
+non-failing execution.  This is signaled by typing the symbol <a name="%_idx_4910"></a><tt>try-again</tt>.  If any expression except <tt>try-again</tt> is given, the
+interpreter will start a new problem, discarding the unexplored
+alternatives in the previous problem.  Here is a sample
+interaction:<p>
+
+<p><p><tt><i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(prime-sum-pair&nbsp;'(1&nbsp;3&nbsp;5&nbsp;8)&nbsp;'(20&nbsp;35&nbsp;110))<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(3&nbsp;20)</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+try-again<br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(3&nbsp;110)</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+try-again<br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(8&nbsp;35)</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+try-again<br>
+<i>;;;&nbsp;There&nbsp;are&nbsp;no&nbsp;more&nbsp;values&nbsp;of</i><br>
+<i>(prime-sum-pair&nbsp;(quote&nbsp;(1&nbsp;3&nbsp;5&nbsp;8))&nbsp;(quote&nbsp;(20&nbsp;35&nbsp;110)))</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(prime-sum-pair&nbsp;'(19&nbsp;27&nbsp;30)&nbsp;'(11&nbsp;36&nbsp;58))<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(30&nbsp;11)</i><br>
+</tt><p><p><p>
+
+<p><a name="%_thm_4.35"></a>
+<b>Exercise 4.35.</b>&nbsp;&nbsp;<a name="%_idx_4912"></a><a name="%_idx_4914"></a>Write a procedure <tt>an-integer-between</tt> that returns an integer
+between two given bounds.  This can be used to implement a
+procedure that finds Pythagorean triples,
+i.e., triples of integers (<em>i</em>,<em>j</em>,<em>k</em>) between the given bounds such
+that <em>i</em> <u>&lt;</u> <em>j</em> and <em>i</em><sup>2</sup>  +  <em>j</em><sup>2</sup>  = <em>k</em><sup>2</sup>, as follows:
+<p><p><tt>(define&nbsp;(a-pythagorean-triple-between&nbsp;low&nbsp;high)<br>
+&nbsp;&nbsp;(let&nbsp;((i&nbsp;(an-integer-between&nbsp;low&nbsp;high)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((j&nbsp;(an-integer-between&nbsp;i&nbsp;high)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((k&nbsp;(an-integer-between&nbsp;j&nbsp;high)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(=&nbsp;(+&nbsp;(*&nbsp;i&nbsp;i)&nbsp;(*&nbsp;j&nbsp;j))&nbsp;(*&nbsp;k&nbsp;k)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;i&nbsp;j&nbsp;k)))))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_4.36"></a>
+<b>Exercise 4.36.</b>&nbsp;&nbsp;<a name="%_idx_4916"></a><a name="%_idx_4918"></a>Exercise&nbsp;<a href="book-Z-H-24.html#%_thm_3.69">3.69</a> discussed how to generate
+the stream of <em>all</em> Pythagorean triples, with no upper bound on the
+size of the integers to be searched.  Explain why simply replacing
+<tt>an-integer-between</tt> by <tt>an-integer-starting-from</tt> in the procedure in
+exercise&nbsp;<a href="#%_thm_4.35">4.35</a> is not an adequate way to
+generate arbitrary Pythagorean triples.  Write a procedure that
+actually will accomplish this.  (That is, write a procedure for which
+repeatedly typing <tt>try-again</tt> would in principle eventually
+generate all Pythagorean triples.)
+<p><p>
+
+<p><a name="%_thm_4.37"></a>
+<b>Exercise 4.37.</b>&nbsp;&nbsp;<a name="%_idx_4920"></a><a name="%_idx_4922"></a>Ben Bitdiddle claims that the following method for generating
+Pythagorean triples is more efficient than the one in
+exercise&nbsp;<a href="#%_thm_4.35">4.35</a>.  Is he correct?  (Hint: Consider
+the number of possibilities that must be explored.)<p>
+
+<p><p><tt>(define&nbsp;(a-pythagorean-triple-between&nbsp;low&nbsp;high)<br>
+&nbsp;&nbsp;(let&nbsp;((i&nbsp;(an-integer-between&nbsp;low&nbsp;high))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(hsq&nbsp;(*&nbsp;high&nbsp;high)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((j&nbsp;(an-integer-between&nbsp;i&nbsp;high)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((ksq&nbsp;(+&nbsp;(*&nbsp;i&nbsp;i)&nbsp;(*&nbsp;j&nbsp;j))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(&gt;=&nbsp;hsq&nbsp;ksq))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((k&nbsp;(sqrt&nbsp;ksq)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(integer?&nbsp;k))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;i&nbsp;j&nbsp;k))))))<br>
+</tt><p><p>
+<p><p>
+
+<a name="%_sec_4.3.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.2">4.3.2&nbsp;&nbsp;Examples of Nondeterministic Programs</a></h3><p>
+
+<p>
+
+Section&nbsp;<a href="#%_sec_4.3.3">4.3.3</a> describes the implementation of
+the <tt>amb</tt> evaluator.  First, however, we give some examples of how
+it can be used.  The advantage of nondeterministic programming is that
+we can suppress the details of how search is carried out, thereby
+<a name="%_idx_4924"></a>expressing our programs at a higher level of abstraction.<p>
+
+<a name="%_sec_Temp_608"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_608">Logic Puzzles</a></h4><p>
+
+<a name="%_idx_4926"></a><a name="%_idx_4928"></a><a name="%_idx_4930"></a>
+<a name="%_idx_4932"></a>The following puzzle (taken from Dinesman 1968) is typical of a large
+class of simple logic puzzles:<p>
+
+<blockquote>
+Baker, Cooper, Fletcher, Miller, and Smith live on different floors of
+an apartment house that contains only five floors.  Baker does not
+live on the top floor.  Cooper does not live on the bottom floor.
+Fletcher does not live on either the top or the bottom floor.  Miller
+lives on a higher floor than does Cooper.  Smith does not live on a
+floor adjacent to Fletcher's.  Fletcher does not live on a floor
+adjacent to Cooper's.  Where does everyone live?
+</blockquote><p>
+
+We can determine who lives on each floor in a straightforward way by
+enumerating all the possibilities and imposing the given
+restrictions:<a name="call_footnote_Temp_609" href="#footnote_Temp_609"><sup><small>48</small></sup></a><p>
+
+
+<p><p><tt><a name="%_idx_4938"></a>(define&nbsp;(multiple-dwelling)<br>
+&nbsp;&nbsp;(let&nbsp;((baker&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cooper&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fletcher&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(miller&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(smith&nbsp;(amb&nbsp;1&nbsp;2&nbsp;3&nbsp;4&nbsp;5)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(distinct?&nbsp;(list&nbsp;baker&nbsp;cooper&nbsp;fletcher&nbsp;miller&nbsp;smith)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;baker&nbsp;5)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;cooper&nbsp;1)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;fletcher&nbsp;5)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;fletcher&nbsp;1)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(&gt;&nbsp;miller&nbsp;cooper))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;(abs&nbsp;(-&nbsp;smith&nbsp;fletcher))&nbsp;1)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(not&nbsp;(=&nbsp;(abs&nbsp;(-&nbsp;fletcher&nbsp;cooper))&nbsp;1)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(list&nbsp;'baker&nbsp;baker)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'cooper&nbsp;cooper)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'fletcher&nbsp;fletcher)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'miller&nbsp;miller)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'smith&nbsp;smith))))<br>
+</tt><p><p><p>
+
+
+Evaluating the expression <tt>(multiple-dwelling)</tt> produces the
+result
+
+<p><p><tt>((baker&nbsp;3)&nbsp;(cooper&nbsp;2)&nbsp;(fletcher&nbsp;4)&nbsp;(miller&nbsp;5)&nbsp;(smith&nbsp;1))<br>
+</tt><p><p>
+Although this simple procedure works, it is very slow.
+Exercises&nbsp;<a href="#%_thm_4.39">4.39</a>
+and&nbsp;<a href="#%_thm_4.40">4.40</a> discuss some possible
+improvements.<p>
+
+<p><a name="%_thm_4.38"></a>
+<b>Exercise 4.38.</b>&nbsp;&nbsp;Modify the multiple-dwelling procedure to omit the requirement that
+Smith and Fletcher do not live on adjacent floors.  How many solutions
+are there to this modified puzzle?
+<p><p>
+
+<p><a name="%_thm_4.39"></a>
+<b>Exercise 4.39.</b>&nbsp;&nbsp;Does the order of the restrictions in the multiple-dwelling procedure
+affect the answer? Does it affect the time to find an answer?  If you
+think it matters, demonstrate a faster program obtained from the given
+one by reordering the restrictions.  If you think it does not matter,
+argue your case.
+
+<p><p>
+
+<p><a name="%_thm_4.40"></a>
+<b>Exercise 4.40.</b>&nbsp;&nbsp;In the multiple dwelling problem, how many sets of assignments are
+there of people to floors, both before and after the requirement that
+floor assignments be distinct?  It is very inefficient to generate all
+possible assignments of people to floors and then leave it to
+backtracking to eliminate them.  For example, most of the restrictions
+depend on only one or two of the person-floor variables, and can thus
+be imposed before floors have been selected for all the people.
+Write and demonstrate a much more efficient
+nondeterministic procedure that solves this problem based upon
+generating only those possibilities that are not already ruled out by
+previous restrictions.  (Hint: This will require a nest of <tt>let</tt>
+expressions.)
+
+<p><p>
+
+<p><a name="%_thm_4.41"></a>
+<b>Exercise 4.41.</b>&nbsp;&nbsp;<a name="%_idx_4940"></a>Write an ordinary Scheme program to solve the multiple dwelling puzzle.
+<p><p>
+
+<p><a name="%_thm_4.42"></a>
+<b>Exercise 4.42.</b>&nbsp;&nbsp;<a name="%_idx_4942"></a>Solve the following ``Liars'' puzzle (from Phillips 1934):
+<blockquote>
+Five schoolgirls sat for an examination.  Their parents -- so they
+thought -- showed an undue degree of interest in the result.  They
+therefore agreed that, in writing home about the examination, each 
+girl should make one true statement and one untrue one.  The following
+are the relevant passages from their letters:
+<p><ul>
+<li>Betty: ``Kitty was second in the examination.  I was only third.''
+<li>Ethel: ``You'll be glad to hear that I was on top.  Joan was second.''
+<li>Joan: ``I was third, and poor old Ethel was bottom.''
+<li>Kitty: ``I came out second.  Mary was only fourth.''
+<li>Mary: ``I was fourth.  Top place was taken by Betty.''
+</ul><p>
+What in fact was the order in which the five girls were placed?
+</blockquote>
+<p><p>
+
+<p><a name="%_thm_4.43"></a>
+<b>Exercise 4.43.</b>&nbsp;&nbsp;Use the <tt>amb</tt> evaluator to solve the following puzzle:<a name="call_footnote_Temp_616" href="#footnote_Temp_616"><sup><small>49</small></sup></a>
+<blockquote>
+Mary Ann Moore's father has a yacht and so has each of his four
+friends:  Colonel Downing, Mr. Hall, Sir Barnacle Hood, and Dr.
+Parker.  Each of the five also has one daughter and each has named his
+yacht after a daughter of one of the others.  Sir Barnacle's yacht is
+the Gabrielle, Mr. Moore owns the Lorna; Mr. Hall the Rosalind.  The
+Melissa, owned by Colonel Downing, is named after Sir Barnacle's
+daughter.  Gabrielle's father owns the yacht that is named after Dr.
+Parker's daughter.  Who is Lorna's father?
+</blockquote>
+Try to write the program so that it runs efficiently (see
+exercise&nbsp;<a href="#%_thm_4.40">4.40</a>).  Also determine how many
+solutions there are if we are not told that Mary Ann's last name is
+Moore.
+<p><p>
+
+<p><a name="%_thm_4.44"></a>
+<b>Exercise 4.44.</b>&nbsp;&nbsp;<a name="%_idx_4944"></a><a name="%_idx_4946"></a><a name="%_idx_4948"></a><a name="%_idx_4950"></a>Exercise&nbsp;<a href="book-Z-H-15.html#%_thm_2.42">2.42</a> described the ``eight-queens puzzle'' of
+placing queens on a chessboard so that no two attack each other.
+Write a nondeterministic program to solve this puzzle.
+<p><p>
+
+<a name="%_sec_Temp_618"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_618">Parsing natural language</a></h4><p>
+
+<a name="%_idx_4952"></a><a name="%_idx_4954"></a>
+Programs designed to accept natural language as input usually start by
+attempting to <em>parse</em> the input, that is, to match the input
+against some grammatical structure.  For example, we might try to
+recognize simple sentences consisting of an article followed by a noun
+followed by a verb, such as ``The cat eats.''  To accomplish such an
+analysis, we must be able to identify the parts of speech of
+individual words.  We could start with some lists that classify
+various words:<a name="call_footnote_Temp_619" href="#footnote_Temp_619"><sup><small>50</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_4956"></a>(define&nbsp;nouns&nbsp;'(noun&nbsp;student&nbsp;professor&nbsp;cat&nbsp;class))<br>
+<a name="%_idx_4958"></a>(define&nbsp;verbs&nbsp;'(verb&nbsp;studies&nbsp;lectures&nbsp;eats&nbsp;sleeps))<br>
+<a name="%_idx_4960"></a>(define&nbsp;articles&nbsp;'(article&nbsp;the&nbsp;a))<br>
+</tt><p><p>
+<a name="%_idx_4962"></a>We also need a <em>grammar</em>, that is, a set of rules describing how
+grammatical elements are composed from simpler elements.  A very
+simple grammar might stipulate that a sentence always consists of two
+pieces -- a noun phrase followed by a verb -- and that a noun phrase
+consists of an article followed by a noun.  With this grammar, the
+sentence ``The cat eats'' is parsed as follows:<p>
+
+<p><p><tt>(sentence&nbsp;(noun-phrase&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;cat))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(verb&nbsp;eats))<br>
+</tt><p><p><p>
+
+We can generate such a parse with a simple program that has separate
+procedures for each of the grammatical rules.  To parse a sentence, we
+identify its two constituent pieces and return a list of
+these two elements, tagged with the symbol <tt>sentence</tt>:<p>
+
+<a name="%_idx_4964"></a><p><p><tt>(define&nbsp;(parse-sentence)<br>
+&nbsp;&nbsp;(list&nbsp;'sentence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-noun-phrase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;verbs)))<br>
+</tt><p><p>
+A noun phrase, similarly, is parsed by finding an article followed by a
+noun:
+<p><p><tt>(define&nbsp;(parse-noun-phrase)<br>
+&nbsp;&nbsp;(list&nbsp;'noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;articles)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;nouns)))<br>
+</tt><p><p><p>
+
+At the lowest level, parsing boils down to repeatedly checking that
+the next unparsed word is a member of the list of words for the
+required part of speech.  To implement this, we maintain a global
+variable <tt>*unparsed*</tt>, which is the input that has not yet been
+parsed.  Each time we check a word, we require that <tt>*unparsed*</tt>
+must be non-empty and that it should begin with a word from the
+designated list.  If so, we remove that word from <tt>*unparsed*</tt> and
+return the word together with its part of speech (which is found at
+the head of the list):<a name="call_footnote_Temp_620" href="#footnote_Temp_620"><sup><small>51</small></sup></a><p>
+
+<p><p><tt>(define&nbsp;(parse-word&nbsp;word-list)<br>
+&nbsp;&nbsp;(require&nbsp;(not&nbsp;(null?&nbsp;*unparsed*)))<br>
+&nbsp;&nbsp;(require&nbsp;(memq&nbsp;(car&nbsp;*unparsed*)&nbsp;(cdr&nbsp;word-list)))<br>
+&nbsp;&nbsp;(let&nbsp;((found-word&nbsp;(car&nbsp;*unparsed*)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;*unparsed*&nbsp;(cdr&nbsp;*unparsed*))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(car&nbsp;word-list)&nbsp;found-word)))<br>
+</tt><p><p><p>
+
+To start the parsing, all we need to do is set <tt>*unparsed*</tt> to be
+the entire input, try to parse a sentence, and check that nothing is
+left over:<p>
+
+<p><p><tt>(define&nbsp;*unparsed*&nbsp;'())<br>
+<a name="%_idx_4966"></a>(define&nbsp;(parse&nbsp;input)<br>
+&nbsp;&nbsp;(set!&nbsp;*unparsed*&nbsp;input)<br>
+&nbsp;&nbsp;(let&nbsp;((sent&nbsp;(parse-sentence)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(null?&nbsp;*unparsed*))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sent))<br>
+</tt><p><p><p>
+
+We can now try the parser and verify that it works for our simple test
+sentence:<p>
+
+<p><p><tt><i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(parse&nbsp;'(the&nbsp;cat&nbsp;eats))<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(sentence&nbsp;(noun-phrase&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;cat))&nbsp;(verb&nbsp;eats))</i><br>
+</tt><p><p><p>
+
+The <tt>amb</tt> evaluator is useful here because it is convenient to
+express the parsing constraints with the aid of <tt>require</tt>.
+Automatic search and backtracking really pay off, however, when we
+consider more complex grammars where there are choices for how the
+units can be decomposed.<p>
+
+
+Let's add to our grammar a list of prepositions:<p>
+
+<p><p><tt><a name="%_idx_4968"></a>(define&nbsp;prepositions&nbsp;'(prep&nbsp;for&nbsp;to&nbsp;in&nbsp;by&nbsp;with))<br>
+</tt><p><p>
+
+and define a prepositional phrase (e.g., ``for the cat'') to be
+a preposition followed by a noun phrase:<p>
+
+<p><p><tt>(define&nbsp;(parse-prepositional-phrase)<br>
+&nbsp;&nbsp;(list&nbsp;'prep-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;prepositions)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-noun-phrase)))<br>
+</tt><p><p>
+Now we can define a sentence to be a noun phrase followed by a verb
+phrase, where a verb phrase can be either a verb or a verb phrase
+extended by a prepositional phrase:<a name="call_footnote_Temp_621" href="#footnote_Temp_621"><sup><small>52</small></sup></a><p>
+
+<p><p><tt>(define&nbsp;(parse-sentence)<br>
+&nbsp;&nbsp;(list&nbsp;'sentence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-noun-phrase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-verb-phrase)))<br>
+(define&nbsp;(parse-verb-phrase)<br>
+&nbsp;&nbsp;(define&nbsp;(maybe-extend&nbsp;verb-phrase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(amb&nbsp;verb-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(maybe-extend&nbsp;(list&nbsp;'verb-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;verb-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-prepositional-phrase)))))<br>
+&nbsp;&nbsp;(maybe-extend&nbsp;(parse-word&nbsp;verbs)))<br>
+</tt><p><p><p>
+
+While we're at it, we can also elaborate the definition of noun
+phrases to permit such things as ``a cat in the class.''  What we used
+to call a noun phrase, we'll now call a simple noun phrase, and a noun
+phrase will now be either a simple noun phrase or a noun phrase
+extended by a prepositional phrase:<p>
+
+<p><p><tt>(define&nbsp;(parse-simple-noun-phrase)<br>
+&nbsp;&nbsp;(list&nbsp;'simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;articles)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-word&nbsp;nouns)))<br>
+(define&nbsp;(parse-noun-phrase)<br>
+&nbsp;&nbsp;(define&nbsp;(maybe-extend&nbsp;noun-phrase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(amb&nbsp;noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(maybe-extend&nbsp;(list&nbsp;'noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-prepositional-phrase)))))<br>
+&nbsp;&nbsp;(maybe-extend&nbsp;(parse-simple-noun-phrase)))<br>
+</tt><p><p><p>
+
+Our new grammar lets us parse more complex sentences.  For example
+<p><p><tt>(parse&nbsp;'(the&nbsp;student&nbsp;with&nbsp;the&nbsp;cat&nbsp;sleeps&nbsp;in&nbsp;the&nbsp;class))<br>
+</tt><p><p>
+produces<p>
+
+<p><p><tt>(sentence<br>
+&nbsp;(noun-phrase<br>
+&nbsp;&nbsp;(simple-noun-phrase&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;student))<br>
+&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;with)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;cat))))<br>
+&nbsp;(verb-phrase<br>
+&nbsp;&nbsp;(verb&nbsp;sleeps)<br>
+&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;in)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;class)))))<br>
+</tt><p><p><p>
+
+Observe that a given input may have more than one legal parse.  In
+the sentence ``The professor lectures to the student with the cat,''
+it may be that the professor is lecturing with the cat, or that the
+student has the cat.  Our nondeterministic program finds both
+possibilities:<p>
+
+<p><p><tt>(parse&nbsp;'(the&nbsp;professor&nbsp;lectures&nbsp;to&nbsp;the&nbsp;student&nbsp;with&nbsp;the&nbsp;cat))<br>
+</tt><p><p>
+produces<p>
+
+<p><p><tt>(sentence<br>
+&nbsp;(simple-noun-phrase&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;professor))<br>
+&nbsp;(verb-phrase<br>
+&nbsp;&nbsp;(verb-phrase<br>
+&nbsp;&nbsp;&nbsp;(verb&nbsp;lectures)<br>
+&nbsp;&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;to)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;student))))<br>
+&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;with)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;cat)))))<br>
+</tt><p><p>
+Asking the evaluator to try again yields
+<p><p><tt>(sentence<br>
+&nbsp;(simple-noun-phrase&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;professor))<br>
+&nbsp;(verb-phrase<br>
+&nbsp;&nbsp;(verb&nbsp;lectures)<br>
+&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;to)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;student))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(prep-phrase&nbsp;(prep&nbsp;with)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(simple-noun-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(article&nbsp;the)&nbsp;(noun&nbsp;cat)))))))<br>
+</tt><p><p>
+<p>
+
+<p><a name="%_thm_4.45"></a>
+<b>Exercise 4.45.</b>&nbsp;&nbsp;With the grammar given above, the following sentence can be parsed in
+five different ways:
+``The professor lectures to the student in the class with the cat.''
+Give the five parses and explain the differences in shades of
+meaning among them.
+<p><p>
+
+<p><a name="%_thm_4.46"></a>
+<b>Exercise 4.46.</b>&nbsp;&nbsp;<a name="%_idx_4970"></a>The evaluators in sections&nbsp;<a href="book-Z-H-26.html#%_sec_4.1">4.1</a> and <a href="book-Z-H-27.html#%_sec_4.2">4.2</a>
+do not determine what order operands are evaluated in.
+We will see that the <tt>amb</tt> evaluator evaluates them from left to right.
+Explain why our parsing program wouldn't work if the operands were evaluated
+in some other order.
+<p><p>
+
+<p><a name="%_thm_4.47"></a>
+<b>Exercise 4.47.</b>&nbsp;&nbsp;Louis Reasoner suggests that, since a verb phrase is either a verb or
+a verb phrase followed by a prepositional phrase, it would be much more
+straightforward to define the procedure <tt>parse-verb-phrase</tt> as
+follows (and similarly for noun phrases):
+<p><p><tt>(define&nbsp;(parse-verb-phrase)<br>
+&nbsp;&nbsp;(amb&nbsp;(parse-word&nbsp;verbs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'verb-phrase<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-verb-phrase)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(parse-prepositional-phrase))))<br>
+</tt><p><p>
+Does this work?  Does the program's behavior change if we interchange
+the order of expressions in the <tt>amb</tt>?
+<p><p>
+
+<p><a name="%_thm_4.48"></a>
+<b>Exercise 4.48.</b>&nbsp;&nbsp;Extend the grammar given above to handle more complex sentences.  For
+example, you could extend noun phrases and verb phrases to include
+adjectives and adverbs, or you could handle compound sentences.<a name="call_footnote_Temp_626" href="#footnote_Temp_626"><sup><small>53</small></sup></a>
+<p><p>
+
+<p><a name="%_thm_4.49"></a>
+<b>Exercise 4.49.</b>&nbsp;&nbsp;<a name="%_idx_4976"></a>Alyssa P. Hacker is more interested in generating interesting
+sentences than in parsing them.  She reasons that by simply changing
+the procedure <tt>parse-word</tt> so that it ignores the ``input
+sentence'' and instead always succeeds and generates an appropriate
+word, we can use the programs we had built for parsing to do
+generation instead.  Implement Alyssa's idea, and show the first
+half-dozen or so sentences generated.<a name="call_footnote_Temp_628" href="#footnote_Temp_628"><sup><small>54</small></sup></a>
+
+<p><p>
+
+<a name="%_sec_4.3.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.3">4.3.3&nbsp;&nbsp;Implementing the <tt>Amb</tt> Evaluator</a></h3><p>
+
+
+<a name="%_idx_4978"></a>
+The evaluation of an ordinary Scheme expression may return a value,
+may never terminate, or may signal an error.  In nondeterministic
+Scheme the evaluation of an expression may in addition result in the
+discovery of a dead end, in which case evaluation must backtrack to a previous
+choice point.  The interpretation of nondeterministic Scheme is
+complicated by this extra case.<p>
+
+<a name="%_idx_4980"></a>We will construct the <tt>amb</tt> evaluator for nondeterministic Scheme
+by modifying the analyzing evaluator of section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.<a name="call_footnote_Temp_629" href="#footnote_Temp_629"><sup><small>55</small></sup></a>
+As in the analyzing evaluator, evaluation of an expression is
+accomplished by calling an <a name="%_idx_4982"></a>execution procedure produced by analysis of
+that expression.  The difference between the interpretation of ordinary
+Scheme and the interpretation of nondeterministic Scheme will be entirely
+in the execution procedures.<p>
+
+<a name="%_sec_Temp_630"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_630">Execution procedures and continuations</a></h4><p>
+
+<a name="%_idx_4984"></a>
+<a name="%_idx_4986"></a>Recall that the execution procedures for the ordinary evaluator take
+one argument: the environment of execution.  In contrast, the
+execution procedures in the <tt>amb</tt> evaluator take three arguments:
+the environment, and two procedures called <em>continuation
+procedures</em>.  The evaluation of an expression will finish by calling
+one of these two continuations: If the evaluation results in a value,
+the <a name="%_idx_4988"></a><em>success continuation</em> is called with that value; if the
+evaluation results in the discovery of a dead end, the <a name="%_idx_4990"></a><em>failure
+continuation</em> is called.  Constructing and calling appropriate
+continuations is the mechanism by which the nondeterministic evaluator
+implements backtracking.<p>
+
+It is the job of the success continuation to receive a value and
+proceed with the computation.  Along with that value, the success
+continuation is passed another failure continuation, which is to be
+called subsequently if the use of that value leads to a dead end.<p>
+
+It is the job of the failure continuation to try another branch of the
+nondeterministic process.  The essence of the nondeterministic
+language is in the fact that expressions may represent choices among
+alternatives.  The evaluation of such an expression must proceed with
+one of the indicated alternative choices, even though it is not known
+in advance which choices will lead to acceptable results.  To deal
+with this, the evaluator picks one of the alternatives and passes this
+value to the success continuation.  Together with this value, the
+evaluator constructs and passes along a failure continuation that can
+be called later to choose a different alternative.<p>
+
+A failure is triggered during evaluation (that is, a failure
+continuation is called) when a user program explicitly rejects the
+current line of attack (for example, a call to <tt>require</tt> may
+result in execution of <tt>(amb)</tt>, an expression that always
+fails -- see section&nbsp;<a href="#%_sec_4.3.1">4.3.1</a>).  The failure continuation in hand
+at that point will cause the most recent choice point to choose
+another alternative.  If there are no more alternatives to be
+considered at that choice point, a failure at an earlier choice point
+is triggered, and so on.  Failure continuations are also invoked by
+the driver loop in response to a <tt>try-again</tt> request, to find
+another value of the expression.<p>
+
+In addition, if a side-effect operation (such as assignment to a
+variable) occurs on a branch of the process resulting from a choice,
+it may be necessary, when the process finds a dead end, to undo the
+side effect before making a new choice.  This is accomplished by
+having the side-effect operation produce a failure continuation that
+undoes the side effect and propagates the failure.<p>
+
+
+In summary, failure continuations are constructed by
+<p><ul>
+<li><tt>amb</tt> expressions -- to provide a mechanism to make
+alternative choices if the current choice made by the <tt>amb</tt>
+expression leads to a dead end;<p>
+
+<li>the top-level driver -- to provide a mechanism to report failure
+when the choices are exhausted;<p>
+
+<li>assignments -- to intercept failures and undo assignments
+during backtracking.
+</ul><p><p>
+
+Failures are initiated only when a dead end is encountered.
+This occurs
+<p><ul>
+<li>if the user program executes <tt>(amb)</tt>;<p>
+
+<li>if the user types <tt>try-again</tt> at the top-level driver.
+</ul><p><p>
+
+Failure continuations are also called during processing of a failure:
+<p><ul>
+<li>When the failure continuation created by an assignment finishes
+undoing a side effect, it calls the failure continuation it intercepted,
+in order to propagate the failure back to the choice point that
+led to this assignment or to the top level.<p>
+
+<li>When the failure continuation for an <tt>amb</tt> runs out of choices,
+it calls the failure continuation that was originally given to the <tt>amb</tt>,
+in order to propagate the failure back to the previous choice point
+or to the top level.
+</ul><p>
+<p>
+
+
+<a name="%_sec_Temp_631"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_631">Structure of the evaluator</a></h4><p>
+
+<a name="%_idx_4992"></a>The syntax- and data-representation procedures for the <tt>amb</tt>
+evaluator, and also the basic <tt>analyze</tt> procedure, are identical
+to those in the evaluator of section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>,
+except for the fact that we need additional syntax procedures to
+recognize the <tt>amb</tt> special form:<a name="call_footnote_Temp_632" href="#footnote_Temp_632"><sup><small>56</small></sup></a>
+<p><p><tt>(define&nbsp;(amb?&nbsp;exp)&nbsp;(tagged-list?&nbsp;exp&nbsp;'amb))<br>
+(define&nbsp;(amb-choices&nbsp;exp)&nbsp;(cdr&nbsp;exp))<br>
+</tt><p><p>
+We must also add to the dispatch in <tt>analyze</tt> a clause that will
+recognize this special form and generate an appropriate execution procedure:<p>
+
+<p><p><tt>((amb?&nbsp;exp)&nbsp;(analyze-amb&nbsp;exp))<br>
+</tt><p><p><p>
+
+The top-level procedure <tt>ambeval</tt> (similar to the version of <tt>eval</tt> given in section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>) analyzes the
+given expression and applies the resulting execution procedure to the
+given environment, together with two given continuations:<p>
+
+<p><p><tt><a name="%_idx_4994"></a>(define&nbsp;(ambeval&nbsp;exp&nbsp;env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;((analyze&nbsp;exp)&nbsp;env&nbsp;succeed&nbsp;fail))<br>
+</tt><p><p><p>
+
+<a name="%_idx_4996"></a><a name="%_idx_4998"></a><a name="%_idx_5000"></a>A success continuation is a procedure of two arguments: the value just
+obtained and another failure continuation to be used if that value leads
+to a subsequent failure. A failure continuation is a procedure of no
+arguments.  So <a name="%_idx_5002"></a>the general form of an execution procedure is<p>
+
+<p><p><tt>(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;<em>;;&nbsp;<tt>succeed</tt>&nbsp;is&nbsp;<tt>(lambda&nbsp;(value&nbsp;fail)&nbsp;<tt>...</tt>)</tt></em><br>
+&nbsp;&nbsp;<em>;;&nbsp;<tt>fail</tt>&nbsp;is&nbsp;<tt>(lambda&nbsp;()&nbsp;<tt>...</tt>)</tt></em><br>
+&nbsp;&nbsp;<tt>...</tt>)<br>
+</tt><p><p><p>
+
+For example, executing<p>
+
+<p><p><tt>(ambeval&nbsp;&lt;<em>exp</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-global-environment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(value&nbsp;fail)&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;'failed))<br>
+</tt><p><p>
+will attempt to evaluate the given expression and will return
+either the expression's value (if the evaluation succeeds) or
+the symbol <tt>failed</tt> (if the evaluation fails).
+The call to <tt>ambeval</tt> in the driver loop shown below uses
+much more complicated continuation procedures, which continue the
+loop and support the <tt>try-again</tt> request.<p>
+
+Most of the complexity of the <tt>amb</tt> evaluator results
+from the mechanics of passing the continuations around as the
+execution procedures call each other.  In going through the following code,
+you should compare each of the execution procedures with the
+corresponding procedure for the ordinary evaluator given in
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.<p>
+
+<a name="%_sec_Temp_633"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_633">Simple expressions</a></h4><p>
+
+The execution procedures for the simplest kinds of expressions are
+essentially the same as those for the ordinary evaluator, except for the
+need to manage the continuations.  The execution procedures simply
+succeed with the value of the expression, passing along the failure
+continuation that was passed to them.<p>
+
+<a name="%_idx_5004"></a>
+<p><p><tt>(define&nbsp;(analyze-self-evaluating&nbsp;exp)<br>
+&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;exp&nbsp;fail)))<br>
+(define&nbsp;(analyze-quoted&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((qval&nbsp;(text-of-quotation&nbsp;exp)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;qval&nbsp;fail))))<br>
+(define&nbsp;(analyze-variable&nbsp;exp)<br>
+&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;(lookup-variable-value&nbsp;exp&nbsp;env)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail)))<br>
+(define&nbsp;(analyze-lambda&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((vars&nbsp;(lambda-parameters&nbsp;exp))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(bproc&nbsp;(analyze-sequence&nbsp;(lambda-body&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;(make-procedure&nbsp;vars&nbsp;bproc&nbsp;env)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p><p>
+
+
+<a name="%_idx_5006"></a>Notice that looking up a variable always ``succeeds.''  If <tt>lookup-variable-value</tt> fails to find the variable, it signals an
+error, as usual.  Such a ``failure'' indicates a program bug -- a
+reference to an unbound variable; it is not an indication that we
+should try another nondeterministic choice instead of the one that is
+currently being tried.<p>
+
+<a name="%_sec_Temp_634"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_634">Conditionals and sequences</a></h4><p>
+
+Conditionals are also handled in a similar way as in the ordinary
+evaluator.  The execution procedure generated by <tt>analyze-if</tt>
+invokes the predicate execution procedure <tt>pproc</tt> with a success
+continuation that checks whether the predicate value is true and goes
+on to execute either the consequent or the alternative.  If the
+execution of <tt>pproc</tt> fails, the original failure continuation for
+the <tt>if</tt> expression is called.<p>
+
+
+<p><p><tt>(define&nbsp;(analyze-if&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((pproc&nbsp;(analyze&nbsp;(if-predicate&nbsp;exp)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cproc&nbsp;(analyze&nbsp;(if-consequent&nbsp;exp)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aproc&nbsp;(analyze&nbsp;(if-alternative&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pproc&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;success&nbsp;continuation&nbsp;for&nbsp;evaluating&nbsp;the&nbsp;predicate</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;to&nbsp;obtain&nbsp;<tt>pred-value</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(pred-value&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(true?&nbsp;pred-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cproc&nbsp;env&nbsp;succeed&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aproc&nbsp;env&nbsp;succeed&nbsp;fail2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;failure&nbsp;continuation&nbsp;for&nbsp;evaluating&nbsp;the&nbsp;predicate</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p><p>
+
+Sequences are also handled in the same way as in the previous
+evaluator, except for the machinations in the subprocedure <tt>sequentially</tt> that are required for passing the continuations.
+Namely, to sequentially execute <tt>a</tt> and then <tt>b</tt>, we call <tt>a</tt> with a success continuation that calls <tt>b</tt>.<p>
+
+<p><p><tt>(define&nbsp;(analyze-sequence&nbsp;exps)<br>
+&nbsp;&nbsp;(define&nbsp;(sequentially&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(a&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;success&nbsp;continuation&nbsp;for&nbsp;calling&nbsp;<tt>a</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(a-value&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(b&nbsp;env&nbsp;succeed&nbsp;fail2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;failure&nbsp;continuation&nbsp;for&nbsp;calling&nbsp;<tt>a</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail)))<br>
+&nbsp;&nbsp;(define&nbsp;(loop&nbsp;first-proc&nbsp;rest-procs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;rest-procs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first-proc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(sequentially&nbsp;first-proc&nbsp;(car&nbsp;rest-procs))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;rest-procs))))<br>
+&nbsp;&nbsp;(let&nbsp;((procs&nbsp;(map&nbsp;analyze&nbsp;exps)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;procs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Empty&nbsp;sequence&nbsp;--&nbsp;ANALYZE&quot;))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(car&nbsp;procs)&nbsp;(cdr&nbsp;procs))))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_635"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_635">Definitions and assignments</a></h4><p>
+
+Definitions are another case where we must go to some trouble to
+manage the continuations, because it is necessary to evaluate the
+definition-value expression before actually defining the new variable.
+To accomplish this, the definition-value execution procedure <tt>vproc</tt> is called with the environment, a success continuation, and the
+failure continuation.  If the execution of <tt>vproc</tt> succeeds,
+obtaining a value <tt>val</tt> for the defined variable, the variable is
+defined and the success is propagated:<p>
+
+<p><p><tt>(define&nbsp;(analyze-definition&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((var&nbsp;(definition-variable&nbsp;exp))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vproc&nbsp;(analyze&nbsp;(definition-value&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vproc&nbsp;env&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(val&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define-variable!&nbsp;var&nbsp;val&nbsp;env)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;'ok&nbsp;fail2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p><p>
+
+
+<a name="%_idx_5008"></a>Assignments are more interesting.  This is the first place where we
+really use the continuations, rather than just passing them around.
+The execution procedure for assignments starts out like the one for
+definitions.  It first attempts to obtain the new value to be assigned
+to the variable. If this evaluation of <tt>vproc</tt> fails, the
+assignment fails.<p>
+
+If <tt>vproc</tt> succeeds, however, and we go on to make the assignment,
+we must consider the possibility that this branch of the computation
+might later fail, which will require us to backtrack out of the
+assignment.  Thus, we must arrange to undo the assignment as
+part of the backtracking process.<a name="call_footnote_Temp_636" href="#footnote_Temp_636"><sup><small>57</small></sup></a><p>
+
+This is accomplished by giving <tt>vproc</tt> a success continuation
+(marked with the comment ``*1*'' below) that saves the old value of
+the variable before assigning the new value to the
+variable and proceeding from the assignment.  The failure continuation
+that is passed along with the value of the assignment (marked with the
+comment ``*2*'' below) restores the old value of the variable
+before continuing the failure.
+That is, a successful assignment provides a failure continuation that
+will intercept a subsequent failure; whatever failure would otherwise
+have called <tt>fail2</tt> calls this procedure instead, to undo the
+assignment before actually calling <tt>fail2</tt>.<p>
+
+<p><p><tt>(define&nbsp;(analyze-assignment&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((var&nbsp;(assignment-variable&nbsp;exp))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vproc&nbsp;(analyze&nbsp;(assignment-value&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vproc&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(val&nbsp;fail2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;*1*</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((old-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lookup-variable-value&nbsp;var&nbsp;env)))&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-variable-value!&nbsp;var&nbsp;val&nbsp;env)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;'ok<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;*2*</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-variable-value!&nbsp;var<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;old-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fail2)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_637"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_637">Procedure applications</a></h4><p>
+
+The execution procedure for applications contains no new ideas except
+for the technical complexity of managing the continuations.  This
+complexity arises in <tt>analyze-application</tt>, due to the need to
+keep track of the success and failure continuations as we evaluate the
+operands.  We use a procedure <tt>get-args</tt> to evaluate the list of
+operands, rather than a simple <tt>map</tt> as in the ordinary evaluator.<p>
+
+<p><p><tt>(define&nbsp;(analyze-application&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((fproc&nbsp;(analyze&nbsp;(operator&nbsp;exp)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aprocs&nbsp;(map&nbsp;analyze&nbsp;(operands&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fproc&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(proc&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-args&nbsp;aprocs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(args&nbsp;fail3)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(execute-application<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proc&nbsp;args&nbsp;succeed&nbsp;fail3))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p><p>
+
+In <tt>get-args</tt>, notice how <tt>cdr</tt>ing down the list of <tt>aproc</tt> execution procedures and <tt>cons</tt>ing up the resulting list of
+<tt>args</tt> is accomplished by calling each <tt>aproc</tt> in the list
+with a success continuation that recursively calls <tt>get-args</tt>.
+Each of these recursive calls to <tt>get-args</tt> has a success
+continuation whose value is the <tt>cons</tt> of the newly obtained
+argument onto the list of accumulated arguments:<p>
+
+<p><p><tt>(define&nbsp;(get-args&nbsp;aprocs&nbsp;env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;aprocs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;'()&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((car&nbsp;aprocs)&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;success&nbsp;continuation&nbsp;for&nbsp;this&nbsp;<tt>aproc</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(arg&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-args&nbsp;(cdr&nbsp;aprocs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;success&nbsp;continuation&nbsp;for&nbsp;recursive</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;call&nbsp;to&nbsp;<tt>get-args</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(args&nbsp;fail3)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;(cons&nbsp;arg&nbsp;args)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail3))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail)))<br>
+</tt><p><p><p>
+
+The actual procedure application, which is
+performed by <tt>execute-application</tt>, is
+accomplished in the same way as for the ordinary evaluator, except for
+the need to manage the continuations.<p>
+
+<p><p><tt><a name="%_idx_5012"></a>(define&nbsp;(execute-application&nbsp;proc&nbsp;args&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;(cond&nbsp;((primitive-procedure?&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;(apply-primitive-procedure&nbsp;proc&nbsp;args)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((compound-procedure?&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((procedure-body&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(extend-environment&nbsp;(procedure-parameters&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(procedure-environment&nbsp;proc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;succeed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Unknown&nbsp;procedure&nbsp;type&nbsp;--&nbsp;EXECUTE-APPLICATION&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;proc))))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_638"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_638">Evaluating <tt>amb</tt> expressions</a></h4><p>
+
+
+<a name="%_idx_5014"></a>The <tt>amb</tt> special form is the key element in the nondeterministic
+language.  Here we see the essence of the interpretation process and
+the reason for keeping track of the continuations.  The execution
+procedure for <tt>amb</tt> defines a loop <tt>try-next</tt> that cycles
+through the execution procedures for all the possible values of the
+<tt>amb</tt> expression.  Each execution procedure is called with a
+failure continuation that will try the next one.  When there are no
+more alternatives to try, the entire <tt>amb</tt> expression fails.<p>
+
+<p><p><tt><a name="%_idx_5016"></a>(define&nbsp;(analyze-amb&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((cprocs&nbsp;(map&nbsp;analyze&nbsp;(amb-choices&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(try-next&nbsp;choices)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;choices)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((car&nbsp;choices)&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;succeed<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try-next&nbsp;(cdr&nbsp;choices))))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try-next&nbsp;cprocs))))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_639"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_639">Driver loop</a></h4><p>
+
+<a name="%_idx_5018"></a>
+<a name="%_idx_5020"></a>The driver loop for the <tt>amb</tt> evaluator is complex, due to
+the mechanism that permits the user to try again in evaluating an
+expression.  The driver uses a procedure called <tt>internal-loop</tt>,
+which takes as argument a procedure <tt>try-again</tt>.  The intent is
+that calling <tt>try-again</tt> should go on to the next untried
+alternative in the nondeterministic evaluation.  <tt>Internal-loop</tt>
+either calls <tt>try-again</tt> in response to the user typing <tt>try-again</tt> at the driver loop, or else starts a new evaluation by
+calling <tt>ambeval</tt>.  <p>
+
+The failure continuation for this call to <tt>ambeval</tt>
+informs the user that there are no more values and re-invokes the driver loop.<p>
+
+
+The success continuation for the call to <tt>ambeval</tt>
+is more subtle.  We print the obtained value and then invoke
+the internal loop again with a <tt>try-again</tt> procedure that will be
+able to try the next alternative.  This <tt>next-alternative</tt>
+procedure is the second argument that was passed to the
+success continuation.  Ordinarily, we think of this second argument
+as a failure continuation to be used if the current evaluation branch
+later fails.  In this case, however, we have completed a successful
+evaluation, so we can invoke the ``failure'' alternative branch in
+order to search for additional successful evaluations.<p>
+
+<p><p><tt><a name="%_idx_5022"></a>(define&nbsp;input-prompt&nbsp;&quot;;;;&nbsp;Amb-Eval&nbsp;input:&quot;)<br>
+(define&nbsp;output-prompt&nbsp;&quot;;;;&nbsp;Amb-Eval&nbsp;value:&quot;)<br>
+<a name="%_idx_5024"></a>(define&nbsp;(driver-loop)<br>
+&nbsp;&nbsp;(define&nbsp;(internal-loop&nbsp;try-again)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(prompt-for-input&nbsp;input-prompt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((input&nbsp;(read)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(eq?&nbsp;input&nbsp;'try-again)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(try-again)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem&nbsp;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ambeval&nbsp;input<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-global-environment<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;<tt>ambeval</tt>&nbsp;success</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(val&nbsp;next-alternative)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(announce-output&nbsp;output-prompt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(user-print&nbsp;val)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(internal-loop&nbsp;next-alternative))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;;&nbsp;<tt>ambeval</tt>&nbsp;failure</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(announce-output<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;;;;&nbsp;There&nbsp;are&nbsp;no&nbsp;more&nbsp;values&nbsp;of&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(user-print&nbsp;input)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(driver-loop)))))))<br>
+&nbsp;&nbsp;(internal-loop<br>
+&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;;;;&nbsp;There&nbsp;is&nbsp;no&nbsp;current&nbsp;problem&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(driver-loop))))<br>
+</tt><p><p>
+The initial call to <tt>internal-loop</tt> uses a <tt>try-again</tt> procedure that complains that there is no current
+problem and restarts the driver loop.  This is the behavior that will
+happen if the user types <tt>try-again</tt> when there is no evaluation
+in progress.<p>
+
+<p><a name="%_thm_4.50"></a>
+<b>Exercise 4.50.</b>&nbsp;&nbsp;Implement a new special form <tt>ramb</tt> that is like <tt>amb</tt> except that it searches alternatives in a random order, rather 
+than from left to right.  Show how this can help with Alyssa's problem
+in exercise&nbsp;<a href="#%_thm_4.49">4.49</a>.
+
+<p><p>
+
+<p><a name="%_thm_4.51"></a>
+<b>Exercise 4.51.</b>&nbsp;&nbsp;Implement a new kind of assignment called <tt>permanent-set!</tt> that
+is not undone upon failure.  For example, we can choose two distinct
+elements from a list and count the number of trials required to make a
+successful choice as follows:<p>
+
+<p><p><tt>(define&nbsp;count&nbsp;0)<br>
+(let&nbsp;((x&nbsp;(an-element-of&nbsp;'(a&nbsp;b&nbsp;c)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(y&nbsp;(an-element-of&nbsp;'(a&nbsp;b&nbsp;c))))<br>
+&nbsp;&nbsp;(permanent-set!&nbsp;count&nbsp;(+&nbsp;count&nbsp;1))<br>
+&nbsp;&nbsp;(require&nbsp;(not&nbsp;(eq?&nbsp;x&nbsp;y)))<br>
+&nbsp;&nbsp;(list&nbsp;x&nbsp;y&nbsp;count))<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(a&nbsp;b&nbsp;2)</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+try-again<br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>(a&nbsp;c&nbsp;3)</i><br>
+</tt><p><p>
+What values would have been displayed if we had used <tt>set!</tt> here
+rather than <tt>permanent-set!</tt> ?
+
+<p><p>
+
+<p><a name="%_thm_4.52"></a>
+<b>Exercise 4.52.</b>&nbsp;&nbsp;Implement a new construct called <tt>if-fail</tt> that permits the user to
+catch the failure of an expression.  <tt>If-fail</tt> takes two
+expressions.  It evaluates the first expression as usual and returns
+as usual if the evaluation succeeds.  If the evaluation fails,
+however, the value of the second expression is returned, as in the
+following example:
+<p><p><tt><i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(if-fail&nbsp;(let&nbsp;((x&nbsp;(an-element-of&nbsp;'(1&nbsp;3&nbsp;5))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(even?&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'all-odd)<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>all-odd</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;input:</i><br>
+(if-fail&nbsp;(let&nbsp;((x&nbsp;(an-element-of&nbsp;'(1&nbsp;3&nbsp;5&nbsp;8))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(require&nbsp;(even?&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'all-odd)<br>
+<i>;;;&nbsp;Starting&nbsp;a&nbsp;new&nbsp;problem</i><br>
+<i>;;;&nbsp;Amb-Eval&nbsp;value:</i><br>
+<i>8</i><br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_4.53"></a>
+<b>Exercise 4.53.</b>&nbsp;&nbsp;With <tt>permanent-set!</tt> as described in
+exercise&nbsp;<a href="#%_thm_4.51">4.51</a> and <tt>if-fail</tt> as in
+exercise&nbsp;<a href="#%_thm_4.52">4.52</a>, what will be the result of evaluating
+<p><p><tt>(let&nbsp;((pairs&nbsp;'()))<br>
+&nbsp;&nbsp;(if-fail&nbsp;(let&nbsp;((p&nbsp;(prime-sum-pair&nbsp;'(1&nbsp;3&nbsp;5&nbsp;8)&nbsp;'(20&nbsp;35&nbsp;110))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(permanent-set!&nbsp;pairs&nbsp;(cons&nbsp;p&nbsp;pairs))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(amb))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pairs))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_4.54"></a>
+<b>Exercise 4.54.</b>&nbsp;&nbsp;<a name="%_idx_5026"></a>If we had not realized that <tt>require</tt> could be implemented as an
+ordinary procedure that uses <tt>amb</tt>, to be defined by the user as
+part of a nondeterministic program, we would have had to implement it
+as a special form.  This would require syntax procedures<p>
+
+<p><p><tt>(define&nbsp;(require?&nbsp;exp)&nbsp;(tagged-list?&nbsp;exp&nbsp;'require))<br>
+<br>
+(define&nbsp;(require-predicate&nbsp;exp)&nbsp;(cadr&nbsp;exp))<br>
+</tt><p><p>
+and a new clause in the dispatch in <tt>analyze</tt><p>
+
+<p><p><tt>((require?&nbsp;exp)&nbsp;(analyze-require&nbsp;exp))<br>
+</tt><p><p>
+as well the procedure <tt>analyze-require</tt> that handles <tt>require</tt>
+expressions.  Complete the following definition of <tt>analyze-require</tt>.<p>
+
+<p><p><tt>(define&nbsp;(analyze-require&nbsp;exp)<br>
+&nbsp;&nbsp;(let&nbsp;((pproc&nbsp;(analyze&nbsp;(require-predicate&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(env&nbsp;succeed&nbsp;fail)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pproc&nbsp;env<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(pred-value&nbsp;fail2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;&lt;<em>??</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>??</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(succeed&nbsp;'ok&nbsp;fail2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fail))))<br>
+</tt><p><p>
+<p>
+<p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_598" href="#call_footnote_Temp_598"><sup><small>42</small></sup></a> We assume that we have previously defined a
+procedure <tt>prime?</tt> that tests whether numbers are prime.  Even with
+<tt>prime?</tt> defined, the <tt>prime-sum-pair</tt> procedure may look
+suspiciously like the unhelpful ``pseudo-Lisp'' attempt to define the
+square-root function, which we described at the beginning of
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>.  In fact, a square-root procedure along those
+lines can actually be formulated as a nondeterministic program.
+By incorporating a search mechanism into the evaluator, we
+are eroding the <a name="%_idx_4816"></a><a name="%_idx_4818"></a>distinction between purely declarative descriptions
+and imperative specifications of how to compute answers.  We'll go
+even farther in this direction in
+section&nbsp;<a href="book-Z-H-29.html#%_sec_4.4">4.4</a>.
+
+<p><a name="footnote_Temp_599" href="#call_footnote_Temp_599"><sup><small>43</small></sup></a> The idea of <tt>amb</tt> for nondeterministic programming was
+<a name="%_idx_4824"></a>first described in 1961 by John McCarthy (see McCarthy 1967).
+
+<p><a name="footnote_Temp_600" href="#call_footnote_Temp_600"><sup><small>44</small></sup></a> In actuality, the distinction between nondeterministically
+returning a single choice and returning all choices depends somewhat
+on our point of view.  From the perspective of the code that uses the
+value, the nondeterministic choice returns a single value.  From the
+perspective of the programmer designing the code, the nondeterministic
+choice potentially returns all possible values, and the computation
+branches so that each value is investigated separately.
+
+<p><a name="footnote_Temp_601" href="#call_footnote_Temp_601"><sup><small>45</small></sup></a> One might object that this is a hopelessly
+inefficient mechanism.  It might require millions of processors to
+solve some easily stated problem this way, and most of the time most
+of those processors would be idle.  This objection should be taken in
+the context of history.  Memory used to be considered just such an
+expensive commodity.  <a name="%_idx_4838"></a>In 1964 a megabyte of RAM cost about $400,000.
+Now every personal computer has many megabytes of RAM, and most of the
+time most of that RAM is unused.  It is hard to underestimate the cost
+of mass-produced electronics.
+
+<p><a name="footnote_Temp_602" href="#call_footnote_Temp_602"><sup><small>46</small></sup></a> Automagically: ``Automatically, but in a way
+which, for some reason (typically because it is too complicated, or
+too ugly, or perhaps even too trivial), the speaker doesn't feel like
+explaining.''  (Steele 1983, Raymond 1993)
+
+<p><a name="footnote_Temp_603" href="#call_footnote_Temp_603"><sup><small>47</small></sup></a> The integration of automatic search strategies
+<a name="%_idx_4860"></a>into programming languages has had a long and checkered history.  The
+first suggestions that nondeterministic algorithms might be elegantly
+encoded in a programming language with search and automatic
+backtracking came from <a name="%_idx_4862"></a>Robert Floyd (1967).  <a name="%_idx_4864"></a>Carl Hewitt
+(1969) invented a programming language called <a name="%_idx_4866"></a>Planner that explicitly
+supported automatic chronological backtracking, providing for a
+built-in depth-first search strategy.  <a name="%_idx_4868"></a><a name="%_idx_4870"></a><a name="%_idx_4872"></a>Sussman, Winograd, and Charniak 
+(1971) implemented a subset of this language, called <a name="%_idx_4874"></a>MicroPlanner,
+which was used to support work in problem solving and robot planning.
+Similar ideas, arising from logic and theorem proving, led to the
+genesis in Edinburgh and Marseille of the elegant language <a name="%_idx_4876"></a>Prolog
+(which we will discuss in section&nbsp;<a href="book-Z-H-29.html#%_sec_4.4">4.4</a>).  After
+sufficient frustration with automatic search, <a name="%_idx_4878"></a><a name="%_idx_4880"></a>McDermott and Sussman
+(1972) developed a language called <a name="%_idx_4882"></a>Conniver, which included mechanisms
+for placing the search strategy under programmer control.  This proved
+unwieldy, however, and <a name="%_idx_4884"></a><a name="%_idx_4886"></a>Sussman and Stallman (1975) found a more
+tractable approach while investigating methods of symbolic analysis
+for electrical circuits.  They developed a non-chronological
+backtracking scheme that was based on tracing out the logical
+dependencies connecting facts, a technique that has come to be known
+as <a name="%_idx_4888"></a><em>dependency-directed backtracking</em>.  Although their method was
+complex, it produced reasonably efficient programs because it did
+little redundant search.  <a name="%_idx_4890"></a><a name="%_idx_4892"></a>Doyle (1979) and McAllester (1978, 1980)
+generalized and clarified the methods of Stallman and Sussman,
+developing a new paradigm for formulating search that is now called
+<a name="%_idx_4894"></a><em>truth maintenance</em>.  Modern problem-solving systems all
+use some form of truth-maintenance system as a substrate.  See <a name="%_idx_4896"></a><a name="%_idx_4898"></a>Forbus
+and deKleer 1993 for a discussion of elegant ways to build
+truth-maintenance systems and applications using truth maintenance.
+<a name="%_idx_4900"></a><a name="%_idx_4902"></a><a name="%_idx_4904"></a>Zabih, McAllester, and
+Chapman 1987 describes a nondeterministic extension to Scheme that
+is based on <tt>amb</tt>; it is similar to the interpreter described in
+this section, but more sophisticated, because it uses
+dependency-directed backtracking rather than chronological
+<a name="%_idx_4906"></a>backtracking.  Winston 1992 gives an introduction to both kinds of
+backtracking.
+
+<p><a name="footnote_Temp_609" href="#call_footnote_Temp_609"><sup><small>48</small></sup></a> Our program uses the following procedure to determine 
+if the elements of a list are distinct:
+<p><p><tt><a name="%_idx_4934"></a>(define&nbsp;(distinct?&nbsp;items)<br>
+&nbsp;&nbsp;(cond&nbsp;((null?&nbsp;items)&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((null?&nbsp;(cdr&nbsp;items))&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((member&nbsp;(car&nbsp;items)&nbsp;(cdr&nbsp;items))&nbsp;false)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(distinct?&nbsp;(cdr&nbsp;items)))))<br>
+</tt><p><p>
+<a name="%_idx_4936"></a><tt>Member</tt> is like <tt>memq</tt> except that it uses <tt>equal?</tt> instead
+of <tt>eq?</tt> to test for equality.
+
+
+<p><a name="footnote_Temp_616" href="#call_footnote_Temp_616"><sup><small>49</small></sup></a> This is taken from a booklet called ``Problematical
+Recreations,'' published in the 1960s by Litton Industries, where it
+is attributed to the <em>Kansas State Engineer</em>.
+
+<p><a name="footnote_Temp_619" href="#call_footnote_Temp_619"><sup><small>50</small></sup></a> Here we use the convention that the first element of each list
+designates the part of speech for the rest of the words in the list.
+
+<p><a name="footnote_Temp_620" href="#call_footnote_Temp_620"><sup><small>51</small></sup></a> Notice that <tt>parse-word</tt> uses <tt>set!</tt> to modify the
+unparsed input list.  For this to work, our <tt>amb</tt> evaluator must
+undo the effects of <tt>set!</tt> operations when it backtracks.
+
+<p><a name="footnote_Temp_621" href="#call_footnote_Temp_621"><sup><small>52</small></sup></a> Observe that this
+definition is recursive -- a verb may be followed by any number
+of prepositional phrases.
+
+<p><a name="footnote_Temp_626" href="#call_footnote_Temp_626"><sup><small>53</small></sup></a> This kind of grammar can become arbitrarily complex, but it
+<a name="%_idx_4972"></a>is only a toy as far as real language understanding is concerned.
+Real natural-language understanding by computer requires an elaborate
+mixture of syntactic analysis and interpretation of meaning.  On the
+other hand, even toy parsers can be useful in supporting flexible
+command languages for programs such as information-retrieval systems.
+<a name="%_idx_4974"></a>Winston 1992 discusses computational approaches to real
+language understanding and also the applications of simple grammars to
+command languages.
+
+<p><a name="footnote_Temp_628" href="#call_footnote_Temp_628"><sup><small>54</small></sup></a> Although Alyssa's idea works just fine (and is
+surprisingly simple), the sentences that it generates are a bit
+boring -- they don't sample the possible sentences of this language in
+a very interesting way.  In fact, the grammar is highly recursive in
+many places, and Alyssa's technique ``falls into'' one of these recursions and
+gets stuck.  See exercise&nbsp;<a href="#%_thm_4.50">4.50</a> for a way to deal with this.
+
+<p><a name="footnote_Temp_629" href="#call_footnote_Temp_629"><sup><small>55</small></sup></a> We chose to implement the lazy evaluator in
+section&nbsp;<a href="book-Z-H-27.html#%_sec_4.2">4.2</a> as a modification of the ordinary
+metacircular evaluator of section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>.  In
+contrast, we will base the <tt>amb</tt> evaluator on the analyzing evaluator
+of section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>, because the execution procedures
+in that evaluator provide a convenient framework for implementing
+backtracking.
+
+<p><a name="footnote_Temp_632" href="#call_footnote_Temp_632"><sup><small>56</small></sup></a> We assume that the evaluator supports <tt>let</tt>
+(see exercise&nbsp;<a href="book-Z-H-26.html#%_thm_4.22">4.22</a>),
+which we have used in our nondeterministic programs.
+
+<p><a name="footnote_Temp_636" href="#call_footnote_Temp_636"><sup><small>57</small></sup></a> We didn't worry about undoing definitions, since we can
+<a name="%_idx_5010"></a>assume that internal definitions are scanned out
+(section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a>).
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-27.html">previous</a></span><span>, <a href="book-Z-H-29.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

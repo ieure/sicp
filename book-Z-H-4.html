@@ -1,0 +1,169 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-3.html">previous</a></span><span>, <a href="book-Z-H-5.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span class=disable>contents</span><span><span class=disable>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_chap_Temp_1"></a>
+<h1 class=chapter>
+<div class=chapterheading>&nbsp;</div><p>
+Contents</h1><p>
+
+<a name="%_toc_start"><p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_2" href="book-Z-H-5.html#%_chap_Temp_2">Foreword</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_3" href="book-Z-H-6.html#%_chap_Temp_3">Preface to the Second Edition</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_4" href="book-Z-H-7.html#%_chap_Temp_4">Preface to the First Edition</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_5" href="book-Z-H-8.html#%_chap_Temp_5">Acknowledgments</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_1" href="book-Z-H-9.html#%_chap_1">1&nbsp;&nbsp;Building Abstractions with Procedures</a></b><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1" href="book-Z-H-10.html#%_sec_1.1">1.1&nbsp;&nbsp;The Elements of Programming</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.1" href="book-Z-H-10.html#%_sec_1.1.1">1.1.1&nbsp;&nbsp;Expressions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.2" href="book-Z-H-10.html#%_sec_1.1.2">1.1.2&nbsp;&nbsp;Naming and the Environment</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.3" href="book-Z-H-10.html#%_sec_1.1.3">1.1.3&nbsp;&nbsp;Evaluating Combinations</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.4" href="book-Z-H-10.html#%_sec_1.1.4">1.1.4&nbsp;&nbsp;Compound Procedures</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.5" href="book-Z-H-10.html#%_sec_1.1.5">1.1.5&nbsp;&nbsp;The Substitution Model for Procedure Application</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.6" href="book-Z-H-10.html#%_sec_1.1.6">1.1.6&nbsp;&nbsp;Conditional Expressions and Predicates</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.7" href="book-Z-H-10.html#%_sec_1.1.7">1.1.7&nbsp;&nbsp;Example: Square Roots by Newton's Method</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.1.8" href="book-Z-H-10.html#%_sec_1.1.8">1.1.8&nbsp;&nbsp;Procedures as Black-Box Abstractions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2" href="book-Z-H-11.html#%_sec_1.2">1.2&nbsp;&nbsp;Procedures and the Processes They Generate</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.1" href="book-Z-H-11.html#%_sec_1.2.1">1.2.1&nbsp;&nbsp;Linear Recursion and Iteration</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.2" href="book-Z-H-11.html#%_sec_1.2.2">1.2.2&nbsp;&nbsp;Tree Recursion</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.3" href="book-Z-H-11.html#%_sec_1.2.3">1.2.3&nbsp;&nbsp;Orders of Growth</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.4" href="book-Z-H-11.html#%_sec_1.2.4">1.2.4&nbsp;&nbsp;Exponentiation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.5" href="book-Z-H-11.html#%_sec_1.2.5">1.2.5&nbsp;&nbsp;Greatest Common Divisors</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.2.6" href="book-Z-H-11.html#%_sec_1.2.6">1.2.6&nbsp;&nbsp;Example: Testing for Primality</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.3" href="book-Z-H-12.html#%_sec_1.3">1.3&nbsp;&nbsp;Formulating Abstractions with Higher-Order Procedures</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.3.1" href="book-Z-H-12.html#%_sec_1.3.1">1.3.1&nbsp;&nbsp;Procedures as Arguments</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.3.2" href="book-Z-H-12.html#%_sec_1.3.2">1.3.2&nbsp;&nbsp;Constructing Procedures Using <tt>Lambda</tt></a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.3.3" href="book-Z-H-12.html#%_sec_1.3.3">1.3.3&nbsp;&nbsp;Procedures as General Methods</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_1.3.4" href="book-Z-H-12.html#%_sec_1.3.4">1.3.4&nbsp;&nbsp;Procedures as Returned Values</a><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_2" href="book-Z-H-13.html#%_chap_2">2&nbsp;&nbsp;Building Abstractions with Data</a></b><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.1" href="book-Z-H-14.html#%_sec_2.1">2.1&nbsp;&nbsp;Introduction to Data Abstraction</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.1.1" href="book-Z-H-14.html#%_sec_2.1.1">2.1.1&nbsp;&nbsp;Example: Arithmetic Operations for Rational Numbers</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.1.2" href="book-Z-H-14.html#%_sec_2.1.2">2.1.2&nbsp;&nbsp;Abstraction Barriers</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.1.3" href="book-Z-H-14.html#%_sec_2.1.3">2.1.3&nbsp;&nbsp;What Is Meant by Data?</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.1.4" href="book-Z-H-14.html#%_sec_2.1.4">2.1.4&nbsp;&nbsp;Extended Exercise: Interval Arithmetic</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.2" href="book-Z-H-15.html#%_sec_2.2">2.2&nbsp;&nbsp;Hierarchical Data and the Closure Property</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.2.1" href="book-Z-H-15.html#%_sec_2.2.1">2.2.1&nbsp;&nbsp;Representing Sequences</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.2.2" href="book-Z-H-15.html#%_sec_2.2.2">2.2.2&nbsp;&nbsp;Hierarchical Structures</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.2.3" href="book-Z-H-15.html#%_sec_2.2.3">2.2.3&nbsp;&nbsp;Sequences as Conventional Interfaces</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.2.4" href="book-Z-H-15.html#%_sec_2.2.4">2.2.4&nbsp;&nbsp;Example: A Picture Language</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.3" href="book-Z-H-16.html#%_sec_2.3">2.3&nbsp;&nbsp;Symbolic Data</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.3.1" href="book-Z-H-16.html#%_sec_2.3.1">2.3.1&nbsp;&nbsp;Quotation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.3.2" href="book-Z-H-16.html#%_sec_2.3.2">2.3.2&nbsp;&nbsp;Example: Symbolic Differentiation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.3.3" href="book-Z-H-16.html#%_sec_2.3.3">2.3.3&nbsp;&nbsp;Example: Representing Sets</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.3.4" href="book-Z-H-16.html#%_sec_2.3.4">2.3.4&nbsp;&nbsp;Example: Huffman Encoding Trees</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.4" href="book-Z-H-17.html#%_sec_2.4">2.4&nbsp;&nbsp;Multiple Representations for Abstract Data</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.4.1" href="book-Z-H-17.html#%_sec_2.4.1">2.4.1&nbsp;&nbsp;Representations for Complex Numbers</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.4.2" href="book-Z-H-17.html#%_sec_2.4.2">2.4.2&nbsp;&nbsp;Tagged data</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.4.3" href="book-Z-H-17.html#%_sec_2.4.3">2.4.3&nbsp;&nbsp;Data-Directed Programming and Additivity</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.5" href="book-Z-H-18.html#%_sec_2.5">2.5&nbsp;&nbsp;Systems with Generic Operations</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.5.1" href="book-Z-H-18.html#%_sec_2.5.1">2.5.1&nbsp;&nbsp;Generic Arithmetic Operations</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.5.2" href="book-Z-H-18.html#%_sec_2.5.2">2.5.2&nbsp;&nbsp;Combining Data of Different Types</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_2.5.3" href="book-Z-H-18.html#%_sec_2.5.3">2.5.3&nbsp;&nbsp;Example: Symbolic Algebra</a><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_3" href="book-Z-H-19.html#%_chap_3">3&nbsp;&nbsp;Modularity, Objects, and State</a></b><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.1" href="book-Z-H-20.html#%_sec_3.1">3.1&nbsp;&nbsp;Assignment and Local State</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.1.1" href="book-Z-H-20.html#%_sec_3.1.1">3.1.1&nbsp;&nbsp;Local State Variables</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.1.2" href="book-Z-H-20.html#%_sec_3.1.2">3.1.2&nbsp;&nbsp;The Benefits of Introducing Assignment</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.1.3" href="book-Z-H-20.html#%_sec_3.1.3">3.1.3&nbsp;&nbsp;The Costs of Introducing Assignment</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.2" href="book-Z-H-21.html#%_sec_3.2">3.2&nbsp;&nbsp;The Environment Model of Evaluation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.2.1" href="book-Z-H-21.html#%_sec_3.2.1">3.2.1&nbsp;&nbsp;The Rules for Evaluation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.2.2" href="book-Z-H-21.html#%_sec_3.2.2">3.2.2&nbsp;&nbsp;Applying Simple Procedures</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.2.3" href="book-Z-H-21.html#%_sec_3.2.3">3.2.3&nbsp;&nbsp;Frames as the Repository of Local State</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.2.4" href="book-Z-H-21.html#%_sec_3.2.4">3.2.4&nbsp;&nbsp;Internal Definitions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3" href="book-Z-H-22.html#%_sec_3.3">3.3&nbsp;&nbsp;Modeling with Mutable Data</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3.1" href="book-Z-H-22.html#%_sec_3.3.1">3.3.1&nbsp;&nbsp;Mutable List Structure</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3.2" href="book-Z-H-22.html#%_sec_3.3.2">3.3.2&nbsp;&nbsp;Representing Queues</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3.3" href="book-Z-H-22.html#%_sec_3.3.3">3.3.3&nbsp;&nbsp;Representing Tables</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3.4" href="book-Z-H-22.html#%_sec_3.3.4">3.3.4&nbsp;&nbsp;A Simulator for Digital Circuits</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.3.5" href="book-Z-H-22.html#%_sec_3.3.5">3.3.5&nbsp;&nbsp;Propagation of Constraints</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.4" href="book-Z-H-23.html#%_sec_3.4">3.4&nbsp;&nbsp;Concurrency: Time Is of the Essence</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.4.1" href="book-Z-H-23.html#%_sec_3.4.1">3.4.1&nbsp;&nbsp;The Nature of Time in Concurrent Systems</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.4.2" href="book-Z-H-23.html#%_sec_3.4.2">3.4.2&nbsp;&nbsp;Mechanisms for Controlling Concurrency</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5" href="book-Z-H-24.html#%_sec_3.5">3.5&nbsp;&nbsp;Streams</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5.1" href="book-Z-H-24.html#%_sec_3.5.1">3.5.1&nbsp;&nbsp;Streams Are Delayed Lists</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5.2" href="book-Z-H-24.html#%_sec_3.5.2">3.5.2&nbsp;&nbsp;Infinite Streams</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5.3" href="book-Z-H-24.html#%_sec_3.5.3">3.5.3&nbsp;&nbsp;Exploiting the Stream Paradigm</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5.4" href="book-Z-H-24.html#%_sec_3.5.4">3.5.4&nbsp;&nbsp;Streams and Delayed Evaluation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_3.5.5" href="book-Z-H-24.html#%_sec_3.5.5">3.5.5&nbsp;&nbsp;Modularity of Functional Programs and Modularity of Objects</a><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_4" href="book-Z-H-25.html#%_chap_4">4&nbsp;&nbsp;Metalinguistic Abstraction</a></b><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1" href="book-Z-H-26.html#%_sec_4.1">4.1&nbsp;&nbsp;The Metacircular Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.1" href="book-Z-H-26.html#%_sec_4.1.1">4.1.1&nbsp;&nbsp;The Core of the Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.2" href="book-Z-H-26.html#%_sec_4.1.2">4.1.2&nbsp;&nbsp;Representing Expressions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.3" href="book-Z-H-26.html#%_sec_4.1.3">4.1.3&nbsp;&nbsp;Evaluator Data Structures</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.4" href="book-Z-H-26.html#%_sec_4.1.4">4.1.4&nbsp;&nbsp;Running the Evaluator as a Program</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.5" href="book-Z-H-26.html#%_sec_4.1.5">4.1.5&nbsp;&nbsp;Data as Programs</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.6" href="book-Z-H-26.html#%_sec_4.1.6">4.1.6&nbsp;&nbsp;Internal Definitions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.1.7" href="book-Z-H-26.html#%_sec_4.1.7">4.1.7&nbsp;&nbsp;Separating Syntactic Analysis from Execution</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.2" href="book-Z-H-27.html#%_sec_4.2">4.2&nbsp;&nbsp;Variations on a Scheme -- Lazy Evaluation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.2.1" href="book-Z-H-27.html#%_sec_4.2.1">4.2.1&nbsp;&nbsp;Normal Order and Applicative Order</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.2.2" href="book-Z-H-27.html#%_sec_4.2.2">4.2.2&nbsp;&nbsp;An Interpreter with Lazy Evaluation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.2.3" href="book-Z-H-27.html#%_sec_4.2.3">4.2.3&nbsp;&nbsp;Streams as Lazy Lists</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.3" href="book-Z-H-28.html#%_sec_4.3">4.3&nbsp;&nbsp;Variations on a Scheme -- Nondeterministic Computing</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.3.1" href="book-Z-H-28.html#%_sec_4.3.1">4.3.1&nbsp;&nbsp;Amb and Search</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.3.2" href="book-Z-H-28.html#%_sec_4.3.2">4.3.2&nbsp;&nbsp;Examples of Nondeterministic Programs</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.3.3" href="book-Z-H-28.html#%_sec_4.3.3">4.3.3&nbsp;&nbsp;Implementing the <tt>Amb</tt> Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.4" href="book-Z-H-29.html#%_sec_4.4">4.4&nbsp;&nbsp;Logic Programming</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.4.1" href="book-Z-H-29.html#%_sec_4.4.1">4.4.1&nbsp;&nbsp;Deductive Information Retrieval</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.4.2" href="book-Z-H-29.html#%_sec_4.4.2">4.4.2&nbsp;&nbsp;How the Query System Works</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.4.3" href="book-Z-H-29.html#%_sec_4.4.3">4.4.3&nbsp;&nbsp;Is Logic Programming Mathematical Logic?</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_4.4.4" href="book-Z-H-29.html#%_sec_4.4.4">4.4.4&nbsp;&nbsp;Implementing the Query System</a><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_5" href="book-Z-H-30.html#%_chap_5">5&nbsp;&nbsp;Computing with Register Machines</a></b><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1" href="book-Z-H-31.html#%_sec_5.1">5.1&nbsp;&nbsp;Designing Register Machines</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1.1" href="book-Z-H-31.html#%_sec_5.1.1">5.1.1&nbsp;&nbsp;A Language for Describing Register Machines</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1.2" href="book-Z-H-31.html#%_sec_5.1.2">5.1.2&nbsp;&nbsp;Abstraction in Machine Design</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1.3" href="book-Z-H-31.html#%_sec_5.1.3">5.1.3&nbsp;&nbsp;Subroutines</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1.4" href="book-Z-H-31.html#%_sec_5.1.4">5.1.4&nbsp;&nbsp;Using a Stack to Implement Recursion</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.1.5" href="book-Z-H-31.html#%_sec_5.1.5">5.1.5&nbsp;&nbsp;Instruction Summary</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.2" href="book-Z-H-32.html#%_sec_5.2">5.2&nbsp;&nbsp;A Register-Machine Simulator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.2.1" href="book-Z-H-32.html#%_sec_5.2.1">5.2.1&nbsp;&nbsp;The Machine Model</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.2.2" href="book-Z-H-32.html#%_sec_5.2.2">5.2.2&nbsp;&nbsp;The Assembler</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.2.3" href="book-Z-H-32.html#%_sec_5.2.3">5.2.3&nbsp;&nbsp;Generating Execution Procedures for Instructions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.2.4" href="book-Z-H-32.html#%_sec_5.2.4">5.2.4&nbsp;&nbsp;Monitoring Machine Performance</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.3" href="book-Z-H-33.html#%_sec_5.3">5.3&nbsp;&nbsp;Storage Allocation and Garbage Collection</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.3.1" href="book-Z-H-33.html#%_sec_5.3.1">5.3.1&nbsp;&nbsp;Memory as Vectors</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.3.2" href="book-Z-H-33.html#%_sec_5.3.2">5.3.2&nbsp;&nbsp;Maintaining the Illusion of Infinite Memory</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.4" href="book-Z-H-34.html#%_sec_5.4">5.4&nbsp;&nbsp;The Explicit-Control Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.4.1" href="book-Z-H-34.html#%_sec_5.4.1">5.4.1&nbsp;&nbsp;The Core of the Explicit-Control Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.4.2" href="book-Z-H-34.html#%_sec_5.4.2">5.4.2&nbsp;&nbsp;Sequence Evaluation and Tail Recursion</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.4.3" href="book-Z-H-34.html#%_sec_5.4.3">5.4.3&nbsp;&nbsp;Conditionals, Assignments, and Definitions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.4.4" href="book-Z-H-34.html#%_sec_5.4.4">5.4.4&nbsp;&nbsp;Running the Evaluator</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5" href="book-Z-H-35.html#%_sec_5.5">5.5&nbsp;&nbsp;Compilation</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.1" href="book-Z-H-35.html#%_sec_5.5.1">5.5.1&nbsp;&nbsp;Structure of the Compiler</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.2" href="book-Z-H-35.html#%_sec_5.5.2">5.5.2&nbsp;&nbsp;Compiling Expressions</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.3" href="book-Z-H-35.html#%_sec_5.5.3">5.5.3&nbsp;&nbsp;Compiling Combinations</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.4" href="book-Z-H-35.html#%_sec_5.5.4">5.5.4&nbsp;&nbsp;Combining Instruction Sequences</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.5" href="book-Z-H-35.html#%_sec_5.5.5">5.5.5&nbsp;&nbsp;An Example of Compiled Code</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.6" href="book-Z-H-35.html#%_sec_5.5.6">5.5.6&nbsp;&nbsp;Lexical Addressing</a><br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <a name="%_toc_%_sec_5.5.7" href="book-Z-H-35.html#%_sec_5.5.7">5.5.7&nbsp;&nbsp;Interfacing Compiled Code to the Evaluator</a><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_849" href="book-Z-H-36.html#%_chap_Temp_849">References</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_850" href="book-Z-H-37.html#%_chap_Temp_850">List of Exercises</a></b><br>
+<p><b>
+&nbsp; &nbsp; <a name="%_toc_%_chap_Temp_851" href="book-Z-H-38.html#%_chap_Temp_851">Index</a></b><br>
+<p>
+
+
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-3.html">previous</a></span><span>, <a href="book-Z-H-5.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span class=disable>contents</span><span><span class=disable>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

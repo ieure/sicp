@@ -1,0 +1,2201 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-21.html">previous</a></span><span>, <a href="book-Z-H-23.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_3.3"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_3.3">3.3&nbsp;&nbsp;Modeling with Mutable Data</a></h2><p>
+
+
+<a name="%_idx_3128"></a>
+Chapter&nbsp;2 dealt with compound data as a means for constructing
+computational objects that have several parts, in order to model
+real-world objects that have several aspects.  In that chapter we
+introduced the discipline of data abstraction, according to which data
+structures are specified in terms of constructors, which create data
+objects, and selectors, which access the parts of compound data
+objects.  But we now know that there is another aspect of data that
+chapter&nbsp;2 did not address.  The desire to model systems composed of
+objects that have changing state leads us to the need to modify
+compound data objects, as well as to construct and select from them.
+In order to model compound objects with changing state, we will design
+data abstractions to include, in addition to selectors and
+constructors, operations called <a name="%_idx_3130"></a><em>mutators</em>, which modify data
+objects.  For instance, modeling a banking system requires us to
+change account balances.  Thus, a data structure for representing bank
+accounts might admit an operation<p>
+
+<p><p><tt>(set-balance!&nbsp;&lt;<em>account</em>&gt;&nbsp;&lt;<em>new-value</em>&gt;)<br>
+</tt><p><p>
+that changes the balance of the designated account to the designated
+new value.  Data objects for which mutators are defined are known as
+<em>mutable data objects</em>.<p>
+
+Chapter&nbsp;2 introduced pairs as a general-purpose ``glue'' for
+synthesizing compound data.  We begin this section by defining basic
+mutators for pairs, so that pairs can serve as building blocks for
+constructing mutable data objects.  These mutators greatly enhance the
+representational power of pairs, enabling us to build data structures
+other than the sequences and trees that we worked with in
+section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2">2.2</a>.  We also present some examples of
+simulations in which complex systems are modeled as collections of
+objects with local state.<p>
+
+<a name="%_sec_3.3.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.3.1">3.3.1&nbsp;&nbsp;Mutable List Structure</a></h3><p>
+
+
+<a name="%_idx_3132"></a><a name="%_idx_3134"></a>
+<a name="%_idx_3136"></a><a name="%_idx_3138"></a>
+The basic operations on pairs -- <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> -- can be used to construct list structure and to select parts
+from list structure, but they are incapable of modifying list
+structure.  The same is true of the list operations we have used so
+far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined
+in terms of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.  To modify list
+structures we need new operations.<p>
+
+<a name="%_fig_3.12"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-13.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.12:</b>&nbsp;&nbsp;Lists <tt>x</tt>: <tt>((a b) c d)</tt> and <tt>y</tt>: <tt>(e
+f)</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_fig_3.13"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-14.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.13:</b>&nbsp;&nbsp;Effect of <tt>(set-car! x y)</tt> on the lists in
+figure&nbsp;<a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_fig_3.14"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-15.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.14:</b>&nbsp;&nbsp;Effect of <tt>(define z (cons y (cdr x)))</tt> on 
+the lists in figure&nbsp;<a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_fig_3.15"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-16.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.15:</b>&nbsp;&nbsp;Effect of <tt>(set-cdr! x y)</tt> on the lists in
+figure&nbsp;<a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_idx_3140"></a><a name="%_idx_3142"></a><a name="%_idx_3144"></a><a name="%_idx_3146"></a>The primitive mutators for pairs are <tt>set-car!</tt> and <tt>set-cdr!</tt>. <tt>Set-car!</tt> takes two arguments, the first of which
+must be a pair.  It modifies this pair, replacing the <tt>car</tt>
+pointer by a pointer to the second argument of <tt>set-car!</tt>.<a name="call_footnote_Temp_349" href="#footnote_Temp_349"><sup><small>16</small></sup></a><p>
+
+As an example, suppose that <tt>x</tt> is bound to the list <tt>((a b) c
+d)</tt> and <tt>y</tt> to the list <tt>(e f)</tt> as illustrated in
+figure&nbsp;<a href="#%_fig_3.12">3.12</a>.  Evaluating the expression <tt>(set-car!
+x y)</tt> modifies the pair to which <tt>x</tt> is bound, replacing its <tt>car</tt> by the value of <tt>y</tt>.  The result of the operation is shown in
+figure&nbsp;<a href="#%_fig_3.13">3.13</a>.  The structure <tt>x</tt> has been modified and
+would now be printed
+as <tt>((e&nbsp;f)&nbsp;c&nbsp;d)</tt>.  The
+pairs representing the list <tt>(a b)</tt>, identified by the pointer
+that was replaced, are now detached from the original
+structure.<a name="call_footnote_Temp_350" href="#footnote_Temp_350"><sup><small>17</small></sup></a><p>
+
+Compare figure&nbsp;<a href="#%_fig_3.13">3.13</a> with figure&nbsp;<a href="#%_fig_3.14">3.14</a>,
+which illustrates the result of executing <tt>(define z (cons y (cdr
+x)))</tt> with <tt>x</tt> and <tt>y</tt> bound to the original lists of
+figure&nbsp;<a href="#%_fig_3.12">3.12</a>.  The variable <tt>z</tt> is now bound to a
+new pair created by the <tt>cons</tt> operation; the list to which <tt>x</tt> is bound is unchanged.<p>
+
+The <tt>set-cdr!</tt> operation is similar to <tt>set-car!</tt>.  The
+only difference is that the <tt>cdr</tt> pointer of the pair, rather than
+the <tt>car</tt> pointer, is replaced.  The effect of executing <tt>(set-cdr! x y)</tt> on the lists of figure&nbsp;<a href="#%_fig_3.12">3.12</a> is shown
+in figure&nbsp;<a href="#%_fig_3.15">3.15</a>.
+Here the <tt>cdr</tt> pointer of <tt>x</tt> has been replaced by the pointer
+to <tt>(e f)</tt>.  Also, the list <tt>(c d)</tt>, which used to be the <tt>cdr</tt> of <tt>x</tt>, is now detached from the structure.<p>
+
+<a name="%_idx_3158"></a><tt>Cons</tt> builds new list structure by creating new pairs, while
+<tt>set-car!</tt> and <tt>set-cdr!</tt> modify existing pairs.  Indeed, we
+could implement <tt>cons</tt> in terms of the two mutators, together with
+a procedure <tt>get-new-pair</tt>, which returns a new pair that is not
+part of any existing list structure.  We obtain the new pair, set its
+<tt>car</tt> and <tt>cdr</tt> pointers to the designated objects, and return
+the new pair as the result of the <tt>cons</tt>.<a name="call_footnote_Temp_351" href="#footnote_Temp_351"><sup><small>18</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3160"></a>(define&nbsp;(cons&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(let&nbsp;((new&nbsp;(get-new-pair)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set-car!&nbsp;new&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;new&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;new))<br>
+</tt><p><p>
+
+<p><a name="%_thm_3.12"></a>
+<b>Exercise 3.12.</b>&nbsp;&nbsp;<a name="%_idx_3162"></a>The following procedure for appending lists was introduced in
+section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.1">2.2.1</a>:<p>
+
+<p><p><tt><a name="%_idx_3164"></a>(define&nbsp;(append&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(car&nbsp;x)&nbsp;(append&nbsp;(cdr&nbsp;x)&nbsp;y))))<br>
+</tt><p><p>
+<tt>Append</tt> forms a new list by successively <tt>cons</tt>ing the
+elements of <tt>x</tt> onto <tt>y</tt>.  The procedure <tt>append!</tt> is
+similar to <tt>append</tt>, but it is a mutator rather than a constructor.
+It appends the lists by splicing them together, modifying the final
+pair of <tt>x</tt> so that its <tt>cdr</tt> is now <tt>y</tt>.
+(It is an error to call <tt>append!</tt> with an empty&nbsp;<tt>x</tt>.)<p>
+
+<p><p><tt><a name="%_idx_3166"></a>(define&nbsp;(append!&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(set-cdr!&nbsp;(last-pair&nbsp;x)&nbsp;y)<br>
+&nbsp;&nbsp;x)<br>
+</tt><p><p>
+Here <tt>last-pair</tt> is a procedure that returns the last pair in its
+argument:<p>
+
+<p><p><tt><a name="%_idx_3168"></a>(define&nbsp;(last-pair&nbsp;x)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;(cdr&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(last-pair&nbsp;(cdr&nbsp;x))))<br>
+</tt><p><p>
+Consider the interaction<p>
+
+<p><p><tt>(define&nbsp;x&nbsp;(list&nbsp;'a&nbsp;'b))<br>
+(define&nbsp;y&nbsp;(list&nbsp;'c&nbsp;'d))<br>
+(define&nbsp;z&nbsp;(append&nbsp;x&nbsp;y))<br>
+z<br>
+<i>(a&nbsp;b&nbsp;c&nbsp;d)</i><br>
+(cdr&nbsp;x)<br>
+&lt;<em>response</em>&gt;<br>
+(define&nbsp;w&nbsp;(append!&nbsp;x&nbsp;y))<br>
+w<br>
+<i>(a&nbsp;b&nbsp;c&nbsp;d)</i><br>
+(cdr&nbsp;x)<br>
+&lt;<em>response</em>&gt;<br>
+</tt><p><p>
+What are the missing &lt;<em>response</em>&gt;s?
+Draw box-and-pointer diagrams to explain your answer.
+
+<p><p>
+
+<p><a name="%_thm_3.13"></a>
+<b>Exercise 3.13.</b>&nbsp;&nbsp;<a name="%_idx_3170"></a>Consider the following <tt>make-cycle</tt> procedure, which uses the <tt>last-pair</tt> procedure defined in exercise&nbsp;<a href="#%_thm_3.12">3.12</a>:<p>
+
+<p><p><tt><a name="%_idx_3172"></a>(define&nbsp;(make-cycle&nbsp;x)<br>
+&nbsp;&nbsp;(set-cdr!&nbsp;(last-pair&nbsp;x)&nbsp;x)<br>
+&nbsp;&nbsp;x)<br>
+</tt><p><p>
+Draw a box-and-pointer diagram that shows the structure <tt>z</tt>
+created by<p>
+
+<p><p><tt>(define&nbsp;z&nbsp;(make-cycle&nbsp;(list&nbsp;'a&nbsp;'b&nbsp;'c)))<br>
+</tt><p><p>
+What happens if we try to compute <tt>(last-pair z)</tt>?
+
+<p><p>
+
+<p><a name="%_thm_3.14"></a>
+<b>Exercise 3.14.</b>&nbsp;&nbsp;The following procedure is quite useful, although obscure:<p>
+
+<p><p><tt><a name="%_idx_3174"></a>(define&nbsp;(mystery&nbsp;x)<br>
+&nbsp;&nbsp;(define&nbsp;(loop&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((temp&nbsp;(cdr&nbsp;x)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;temp&nbsp;x))))<br>
+&nbsp;&nbsp;(loop&nbsp;x&nbsp;'()))<br>
+</tt><p><p>
+<tt>Loop</tt> uses the ``temporary'' variable <tt>temp</tt> to hold
+the old value of the <tt>cdr</tt> of <tt>x</tt>, since the <tt>set-cdr!</tt>
+on the next line destroys the <tt>cdr</tt>.  Explain what <tt>mystery</tt>
+does in general.  Suppose <tt>v</tt> is defined by <tt>(define v (list 'a
+'b 'c 'd))</tt>. Draw the box-and-pointer diagram that represents the list
+to which <tt>v</tt> is bound.  Suppose that we now evaluate <tt>(define
+w (mystery v))</tt>. Draw box-and-pointer diagrams that show the
+structures <tt>v</tt> and <tt>w</tt> after evaluating this expression.  What
+would be printed as the values of <tt>v</tt> and <tt>w</tt> ?
+<p>
+
+
+<a name="%_sec_Temp_355"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_355">Sharing and identity</a></h4><p>
+
+<a name="%_idx_3176"></a><a name="%_idx_3178"></a>
+<a name="%_idx_3180"></a><a name="%_idx_3182"></a>We mentioned in section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> the theoretical
+issues of ``sameness'' and ``change'' raised by the introduction of
+assignment.  These issues arise in practice when individual pairs are
+<em>shared</em> among different data objects.  For example, consider the
+structure formed by<p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;(list&nbsp;'a&nbsp;'b))<br>
+(define&nbsp;z1&nbsp;(cons&nbsp;x&nbsp;x))<br>
+</tt><p><p>
+As shown in figure&nbsp;<a href="#%_fig_3.16">3.16</a>, <tt>z1</tt> is a pair whose <tt>car</tt> and <tt>cdr</tt> both point to the same pair <tt>x</tt>.  This sharing
+of <tt>x</tt> by the <tt>car</tt> and <tt>cdr</tt> of <tt>z1</tt> is a consequence
+of the straightforward way in which <tt>cons</tt> is implemented.  In
+general, using <tt>cons</tt> to construct lists will result in an
+interlinked structure of pairs in which many individual pairs are
+shared by many different structures.<p>
+
+<a name="%_fig_3.16"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-17.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.16:</b>&nbsp;&nbsp;The list <tt>z1</tt> formed by <tt>(cons x x)</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_fig_3.17"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-18.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.17:</b>&nbsp;&nbsp;The list <tt>z2</tt> formed by 
+<tt>(cons (list 'a 'b) (list 'a 'b))</tt>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+
+In contrast to figure&nbsp;<a href="#%_fig_3.16">3.16</a>, figure&nbsp;<a href="#%_fig_3.17">3.17</a> shows
+the structure created by<p>
+
+
+<p><p><tt>(define&nbsp;z2&nbsp;(cons&nbsp;(list&nbsp;'a&nbsp;'b)&nbsp;(list&nbsp;'a&nbsp;'b)))<br>
+</tt><p><p>
+In this structure, the pairs in the two <tt>(a b)</tt> lists are
+distinct, although the actual symbols are shared.<a name="call_footnote_Temp_356" href="#footnote_Temp_356"><sup><small>19</small></sup></a><p>
+
+When thought of as a list, <tt>z1</tt> and <tt>z2</tt> both represent ``the
+same'' list, <tt>((a b) a b)</tt>.  In general, sharing is completely
+undetectable if we operate on lists using only <tt>cons</tt>, <tt>car</tt>,
+and <tt>cdr</tt>.  However, if we allow mutators on list structure,
+sharing becomes significant.  As an example of the difference that
+sharing can make, consider the following procedure, which modifies the
+<tt>car</tt> of the structure to which it is applied:<p>
+
+<p><p><tt>(define&nbsp;(set-to-wow!&nbsp;x)<br>
+&nbsp;&nbsp;(set-car!&nbsp;(car&nbsp;x)&nbsp;'wow)<br>
+&nbsp;&nbsp;x)<br>
+</tt><p><p>
+Even though <tt>z1</tt> and <tt>z2</tt> are ``the same'' structure,
+applying <tt>set-to-wow!</tt> to them yields different results.  With
+<tt>z1</tt>, altering the <tt>car</tt> also changes the <tt>cdr</tt>, because
+in <tt>z1</tt> the <tt>car</tt> and the <tt>cdr</tt> are the same pair.  With
+<tt>z2</tt>, the <tt>car</tt> and <tt>cdr</tt> are distinct, so <tt>set-to-wow!</tt> modifies only the <tt>car</tt>:<p>
+
+<p><p><tt>z1<br>
+<i>((a&nbsp;b)&nbsp;a&nbsp;b)</i><br>
+<br>
+(set-to-wow!&nbsp;z1)<br>
+<i>((wow&nbsp;b)&nbsp;wow&nbsp;b)</i><br>
+<br>
+z2<br>
+<i>((a&nbsp;b)&nbsp;a&nbsp;b)</i><br>
+<br>
+(set-to-wow!&nbsp;z2)<br>
+<i>((wow&nbsp;b)&nbsp;a&nbsp;b)</i><br>
+</tt><p><p><p>
+
+One way to detect sharing in list structures is to use the predicate
+<a name="%_idx_3186"></a><a name="%_idx_3188"></a><tt>eq?</tt>, which we introduced in section&nbsp;<a href="book-Z-H-16.html#%_sec_2.3.1">2.3.1</a> as a
+way to test whether two symbols are equal.  More generally, <tt>(eq?
+x y)</tt> tests whether <tt>x</tt> and <tt>y</tt> are the same object (that is,
+whether <tt>x</tt> and <tt>y</tt> are equal as pointers).  Thus, with <tt>z1</tt> and <tt>z2</tt> as defined in figures&nbsp;<a href="#%_fig_3.16">3.16</a>
+and&nbsp;<a href="#%_fig_3.17">3.17</a>, <tt>(eq? (car&nbsp;z1) (cdr&nbsp;z1))</tt> is true and
+<tt>(eq? (car z2) (cdr z2))</tt> is false.<p>
+
+<a name="%_idx_3190"></a>As will be seen in the following sections, we can exploit sharing to
+greatly extend the repertoire of data structures that can be
+represented by pairs.  On the other hand, sharing can also be
+dangerous, since modifications made to structures will also affect
+other structures that happen to share the modified parts.  The
+mutation operations <tt>set-car!</tt> and <tt>set-cdr!</tt> should be used
+with care; unless we have a good understanding of how our data objects
+are shared, mutation can have unanticipated results.<a name="call_footnote_Temp_357" href="#footnote_Temp_357"><sup><small>20</small></sup></a><p>
+
+<p><a name="%_thm_3.15"></a>
+<b>Exercise 3.15.</b>&nbsp;&nbsp;Draw box-and-pointer diagrams to explain the effect of <tt>set-to-wow!</tt> on the structures <tt>z1</tt> and <tt>z2</tt> above.
+<p><p>
+
+<p><a name="%_thm_3.16"></a>
+<b>Exercise 3.16.</b>&nbsp;&nbsp;Ben Bitdiddle decides to write a procedure to count the number of
+pairs in any list structure.  ``It's easy,'' he reasons.  ``The number
+of pairs in any structure is the number in the <tt>car</tt> plus the
+number in the <tt>cdr</tt> plus one more to count the current pair.''
+So Ben writes the following procedure:<p>
+
+<p><p><tt><a name="%_idx_3192"></a>(define&nbsp;(count-pairs&nbsp;x)<br>
+&nbsp;&nbsp;(if&nbsp;(not&nbsp;(pair?&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(count-pairs&nbsp;(car&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(count-pairs&nbsp;(cdr&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)))<br>
+</tt><p><p>
+Show that this procedure is not correct.  In particular, draw
+box-and-pointer diagrams representing list structures made up of
+exactly three pairs for which Ben's procedure would return 3; return
+4; return 7; never return at all.
+
+<p><p>
+
+<p><a name="%_thm_3.17"></a>
+<b>Exercise 3.17.</b>&nbsp;&nbsp;Devise a correct version of the <tt>count-pairs</tt> procedure of
+exercise&nbsp;<a href="#%_thm_3.16">3.16</a> that returns the number of distinct
+pairs in any structure.  (Hint: Traverse the structure, maintaining an
+auxiliary data structure that is used to keep track of which pairs
+have already been counted.)
+<p><p>
+
+<p>
+
+<p><a name="%_thm_3.18"></a>
+<b>Exercise 3.18.</b>&nbsp;&nbsp;<a name="%_idx_3194"></a>Write a procedure that examines a list and determines whether it
+contains a cycle, that is, whether a program that tried to find the
+end of the list by taking successive <tt>cdr</tt>s would go into an
+infinite loop.  Exercise&nbsp;<a href="#%_thm_3.13">3.13</a> constructed such lists.
+
+<p><p>
+
+<p><a name="%_thm_3.19"></a>
+<b>Exercise 3.19.</b>&nbsp;&nbsp;Redo exercise&nbsp;<a href="#%_thm_3.18">3.18</a> using an algorithm that takes only a
+constant amount of space.  (This requires a very clever idea.)
+<p>
+
+<a name="%_sec_Temp_363"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_363">Mutation is just assignment</a></h4><p>
+
+<a name="%_idx_3196"></a><a name="%_idx_3198"></a><a name="%_idx_3200"></a><a name="%_idx_3202"></a>
+When we introduced compound data, we observed in
+section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.3">2.1.3</a> that pairs can be represented purely in terms
+of procedures:<p>
+
+<p><p><tt><a name="%_idx_3204"></a>(define&nbsp;(cons&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'car)&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'cdr)&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Undefined&nbsp;operation&nbsp;--&nbsp;CONS&quot;&nbsp;m))))<br>
+&nbsp;&nbsp;dispatch)<br>
+<a name="%_idx_3206"></a>(define&nbsp;(car&nbsp;z)&nbsp;(z&nbsp;'car))<br>
+<a name="%_idx_3208"></a>(define&nbsp;(cdr&nbsp;z)&nbsp;(z&nbsp;'cdr))<br>
+</tt><p><p>
+The same observation is true for mutable data.  We can implement
+mutable data objects as procedures using assignment and local state.
+For instance, we can extend the above pair implementation to handle
+<tt>set-car!</tt> and <tt>set-cdr!</tt> in a manner analogous to the way
+we implemented bank accounts using <tt>make-account</tt> in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>:<p>
+
+<p><p><tt><a name="%_idx_3210"></a>(define&nbsp;(cons&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(define&nbsp;(set-x!&nbsp;v)&nbsp;(set!&nbsp;x&nbsp;v))<br>
+&nbsp;&nbsp;(define&nbsp;(set-y!&nbsp;v)&nbsp;(set!&nbsp;y&nbsp;v))<br>
+&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'car)&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'cdr)&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'set-car!)&nbsp;set-x!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'set-cdr!)&nbsp;set-y!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Undefined&nbsp;operation&nbsp;--&nbsp;CONS&quot;&nbsp;m))))<br>
+&nbsp;&nbsp;dispatch)<br>
+<a name="%_idx_3212"></a>(define&nbsp;(car&nbsp;z)&nbsp;(z&nbsp;'car))<br>
+<a name="%_idx_3214"></a>(define&nbsp;(cdr&nbsp;z)&nbsp;(z&nbsp;'cdr))<br>
+<a name="%_idx_3216"></a>(define&nbsp;(set-car!&nbsp;z&nbsp;new-value)<br>
+&nbsp;&nbsp;((z&nbsp;'set-car!)&nbsp;new-value)<br>
+&nbsp;&nbsp;z)<br>
+<a name="%_idx_3218"></a>(define&nbsp;(set-cdr!&nbsp;z&nbsp;new-value)<br>
+&nbsp;&nbsp;((z&nbsp;'set-cdr!)&nbsp;new-value)<br>
+&nbsp;&nbsp;z)<br>
+</tt><p><p><p>
+
+Assignment is all that is needed, theoretically, to account for the
+behavior of mutable data.  As soon as we admit <tt>set!</tt> to our
+language, we raise all the issues, not only of assignment, but of
+mutable data in general.<a name="call_footnote_Temp_364" href="#footnote_Temp_364"><sup><small>21</small></sup></a><p>
+
+<p><a name="%_thm_3.20"></a>
+<b>Exercise 3.20.</b>&nbsp;&nbsp;Draw environment diagrams to illustrate the evaluation of the sequence
+of expressions<p>
+
+<p><p><tt>(define&nbsp;x&nbsp;(cons&nbsp;1&nbsp;2))<br>
+(define&nbsp;z&nbsp;(cons&nbsp;x&nbsp;x))<br>
+(set-car!&nbsp;(cdr&nbsp;z)&nbsp;17)<br>
+(car&nbsp;x)<br>
+<i>17</i><br>
+</tt><p><p>
+using the procedural implementation of pairs given above.  (Compare
+exercise&nbsp;<a href="book-Z-H-21.html#%_thm_3.11">3.11</a>.)
+<p>
+
+<a name="%_sec_3.3.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.3.2">3.3.2&nbsp;&nbsp;Representing Queues</a></h3><p>
+
+
+<a name="%_idx_3220"></a>
+The mutators <tt>set-car!</tt> and <tt>set-cdr!</tt> enable us to use
+pairs to construct data structures that cannot be built with <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> alone.  This section shows how to use
+pairs to represent a data structure called a queue.  Section&nbsp;<a href="#%_sec_3.3.3">3.3.3</a>
+will show how to represent data structures called tables.<p>
+
+A <em>queue</em> is a sequence in which items are inserted at one end
+(called the <a name="%_idx_3222"></a><em>rear</em> of the queue) and deleted from the other end
+(the <a name="%_idx_3224"></a><em>front</em>).  Figure&nbsp;<a href="#%_fig_3.18">3.18</a> shows an initially empty
+queue in which the items <tt>a</tt> and <tt>b</tt> are inserted.  Then <tt>a</tt> is removed, <tt>c</tt> and <tt>d</tt> are inserted, and <tt>b</tt> is
+removed.  Because items are always removed in the order in which they
+are inserted, a queue is sometimes called a <a name="%_idx_3226"></a><em>FIFO</em> (first in,
+first out) buffer.<p>
+
+<a name="%_fig_3.18"></a><p><div align=left><table width=100%><tr><td><table border=0><tr><td valign=top >Operation </td><td valign=top >Resulting Queue  </td></tr>
+<tr><td valign=top ><tt>(define q (make-queue))</tt> </td><td valign=top ></td></tr>
+<tr><td valign=top ><tt>(insert-queue! q 'a)</tt> </td><td valign=top ><tt>a</tt></td></tr>
+<tr><td valign=top ><tt>(insert-queue! q 'b)</tt> </td><td valign=top ><tt>a b</tt></td></tr>
+<tr><td valign=top ><tt>(delete-queue! q)</tt> </td><td valign=top ><tt>b</tt></td></tr>
+<tr><td valign=top ><tt>(insert-queue! q 'c)</tt> </td><td valign=top ><tt>b c</tt></td></tr>
+<tr><td valign=top ><tt>(insert-queue! q 'd)</tt> </td><td valign=top ><tt>b c d</tt></td></tr>
+<tr><td valign=top ><tt>(delete-queue! q)</tt> </td><td valign=top ><tt>c d</tt>
+</td></tr></table>
+</td></tr><caption align=bottom><div align=left><b>Figure 3.18:</b>&nbsp;&nbsp;Queue operations.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_idx_3228"></a><a name="%_idx_3230"></a>In terms of data abstraction, we can regard a queue as defined by the
+following set of operations:
+<p><ul>
+<li>a constructor:<br>
+<a name="%_idx_3232"></a><tt>(make-queue)</tt><br>
+returns an empty queue (a queue containing no items).<p>
+
+<li>two selectors:<br>
+<a name="%_idx_3234"></a><tt>(empty-queue? &lt;<em>queue</em>&gt;)</tt><br>
+tests if the queue is empty.<br>
+
+<a name="%_idx_3236"></a><tt>(front-queue &lt;<em>queue</em>&gt;)</tt><br>
+returns the object at the front of
+the queue, signaling an error if the queue is empty; it does not
+modify the queue.<p>
+
+<li>two mutators:<br>
+<a name="%_idx_3238"></a><tt>(insert-queue! &lt;<em>queue</em>&gt; &lt;<em>item</em>&gt;)</tt><br>
+inserts the item at the rear of the queue and returns the modified
+queue as its value.<br>
+
+<a name="%_idx_3240"></a><tt>(delete-queue! &lt;<em>queue</em>&gt;)</tt><br>
+removes the item at the
+front of the queue and returns the modified queue as its value,
+signaling an error if the queue is empty before the deletion.
+</ul><p><p>
+
+Because a queue is a sequence of items, we could certainly represent
+it as an ordinary list; the front of the queue would be the <tt>car</tt>
+of the list, inserting an item in the queue would amount to appending
+a new element at the end of the list, and deleting an item from the
+queue would just be taking the <tt>cdr</tt> of the list.  However, this
+representation is inefficient, because in order to insert an item we
+must scan the list until we reach the end.  Since the only method we
+have for scanning a list is by successive <tt>cdr</tt> operations, this
+scanning requires <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>) steps for a list of <em>n</em> items.  A simple
+modification to the list representation overcomes this disadvantage by
+allowing the queue operations to be implemented so that they require
+<img src="book-Z-G-D-3.gif" border="0">(1) steps; that is, so that the number of steps
+needed is independent of the length of the queue.<p>
+
+The difficulty with the list representation arises from the need to
+scan to find the end of the list.  The reason we need to scan is that,
+although the standard way of representing a list as a chain of pairs
+readily provides us with a pointer to the beginning of the list, it
+gives us no easily accessible pointer to the end.  The modification
+that avoids the drawback is to represent the queue as a list, together
+with an additional pointer that indicates the final pair in the list.
+That way, when we go to insert an item, we can consult the rear
+pointer and so avoid scanning the list.<p>
+
+A queue is represented, then, as a pair of pointers, <tt>front-ptr</tt>
+and <tt>rear-ptr</tt>, which indicate, respectively, the first and last
+pairs in an ordinary list.  Since we would like the queue to be an
+identifiable object, we can use <tt>cons</tt> to combine the two
+pointers.  Thus, the queue itself will be the <tt>cons</tt> of the two
+pointers.  Figure&nbsp;<a href="#%_fig_3.19">3.19</a> illustrates this
+representation.<p>
+
+<a name="%_fig_3.19"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-19.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.19:</b>&nbsp;&nbsp;Implementation of a queue as a list with front and rear
+pointers.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+To define the queue operations we use the following procedures, which
+enable us to select and to modify the front and rear pointers of a
+queue:<p>
+
+<p><p><tt><a name="%_idx_3242"></a>(define&nbsp;(front-ptr&nbsp;queue)&nbsp;(car&nbsp;queue))<br>
+<a name="%_idx_3244"></a>(define&nbsp;(rear-ptr&nbsp;queue)&nbsp;(cdr&nbsp;queue))<br>
+<a name="%_idx_3246"></a>(define&nbsp;(set-front-ptr!&nbsp;queue&nbsp;item)&nbsp;(set-car!&nbsp;queue&nbsp;item))<br>
+<a name="%_idx_3248"></a>(define&nbsp;(set-rear-ptr!&nbsp;queue&nbsp;item)&nbsp;(set-cdr!&nbsp;queue&nbsp;item))<br>
+</tt><p><p><p>
+
+Now we can implement the actual queue operations.  We will consider a
+queue to be empty if its front pointer is the empty list:<p>
+
+
+<p><p><tt><a name="%_idx_3250"></a>(define&nbsp;(empty-queue?&nbsp;queue)&nbsp;(null?&nbsp;(front-ptr&nbsp;queue)))<br>
+</tt><p><p>
+The <tt>make-queue</tt> constructor returns, as an initially empty queue,
+a pair whose <tt>car</tt> and <tt>cdr</tt> are both the empty list:<p>
+
+
+<p><p><tt><a name="%_idx_3252"></a>(define&nbsp;(make-queue)&nbsp;(cons&nbsp;'()&nbsp;'()))<br>
+</tt><p><p>
+To select the item at the front of the queue, we return the <tt>car</tt>
+of the pair indicated by the front pointer:<p>
+
+
+<p><p><tt><a name="%_idx_3254"></a>(define&nbsp;(front-queue&nbsp;queue)<br>
+&nbsp;&nbsp;(if&nbsp;(empty-queue?&nbsp;queue)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;FRONT&nbsp;called&nbsp;with&nbsp;an&nbsp;empty&nbsp;queue&quot;&nbsp;queue)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(car&nbsp;(front-ptr&nbsp;queue))))<br>
+</tt><p><p><p>
+
+
+To insert an item in a queue, we follow the method whose result is
+indicated in figure&nbsp;<a href="#%_fig_3.20">3.20</a>.  We first create a new
+pair whose <tt>car</tt> is the item to be inserted and whose <tt>cdr</tt> is
+the empty list.  If the queue was initially empty, we set the front and
+rear pointers of the queue to this new pair.  Otherwise, we modify the
+final pair in the queue to point to the new pair, and also set the
+rear pointer to the new pair.<p>
+
+<a name="%_fig_3.20"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-20.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.20:</b>&nbsp;&nbsp;Result of using <tt>(insert-queue! q 'd)</tt> 
+on the queue of figure&nbsp;<a href="#%_fig_3.19">3.19</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+
+<p><p><tt><a name="%_idx_3256"></a>(define&nbsp;(insert-queue!&nbsp;queue&nbsp;item)<br>
+&nbsp;&nbsp;(let&nbsp;((new-pair&nbsp;(cons&nbsp;item&nbsp;'())))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((empty-queue?&nbsp;queue)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-front-ptr!&nbsp;queue&nbsp;new-pair)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-rear-ptr!&nbsp;queue&nbsp;new-pair)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;(rear-ptr&nbsp;queue)&nbsp;new-pair)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-rear-ptr!&nbsp;queue&nbsp;new-pair)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue))))&nbsp;<br>
+</tt><p><p><p>
+
+To delete the item at the front of the queue, we merely modify the
+front pointer so that it now points at the second item in the queue,
+which can be found by following the <tt>cdr</tt> pointer of the first
+item (see figure&nbsp;<a href="#%_fig_3.21">3.21</a>):<a name="call_footnote_Temp_366" href="#footnote_Temp_366"><sup><small>22</small></sup></a><p>
+
+<a name="%_fig_3.21"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-21.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.21:</b>&nbsp;&nbsp;Result of using <tt>(delete-queue! q)</tt> on 
+the queue of figure&nbsp;<a href="#%_fig_3.20">3.20</a>.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<p><p><tt><a name="%_idx_3258"></a>(define&nbsp;(delete-queue!&nbsp;queue)<br>
+&nbsp;&nbsp;(cond&nbsp;((empty-queue?&nbsp;queue)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;DELETE!&nbsp;called&nbsp;with&nbsp;an&nbsp;empty&nbsp;queue&quot;&nbsp;queue))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-front-ptr!&nbsp;queue&nbsp;(cdr&nbsp;(front-ptr&nbsp;queue)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;queue)))&nbsp;<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.21"></a>
+<b>Exercise 3.21.</b>&nbsp;&nbsp;Ben Bitdiddle decides to test the queue implementation described
+above.  He types in the procedures to the Lisp interpreter and
+proceeds to try them out:<p>
+
+<p><p><tt>(define&nbsp;q1&nbsp;(make-queue))<br>
+(insert-queue!&nbsp;q1&nbsp;'a)<br>
+<i>((a)&nbsp;a)</i><br>
+(insert-queue!&nbsp;q1&nbsp;'b)<br>
+<i>((a&nbsp;b)&nbsp;b)</i><br>
+(delete-queue!&nbsp;q1)<br>
+<i>((b)&nbsp;b)</i><br>
+(delete-queue!&nbsp;q1)<br>
+<i>(()&nbsp;b)</i><br>
+</tt><p><p>
+``It's all wrong!'' he complains.  ``The interpreter's response shows
+that the last item is inserted into the queue twice.  And when I
+delete both items, the second <tt>b</tt> is still there, so the queue
+isn't empty, even though it's supposed to be.''  Eva Lu Ator suggests
+that Ben has misunderstood what is happening.  ``It's not that the
+items are going into the queue twice,'' she explains.  ``It's just
+that the standard Lisp printer doesn't know how to make sense of the
+queue representation.  If you want to see the queue printed correctly,
+you'll have to define your own print procedure for queues.'' Explain
+what Eva Lu is talking about.  In particular, show why Ben's examples
+produce the printed results that they do.  Define a procedure <a name="%_idx_3260"></a><tt>print-queue</tt> that takes a queue as input and prints the sequence of
+items in the queue.
+<p><p>
+
+<p><a name="%_thm_3.22"></a>
+<b>Exercise 3.22.</b>&nbsp;&nbsp;<a name="%_idx_3262"></a>Instead of representing a queue as a pair of pointers, we can build a
+queue as a procedure with local state.  The local state will consist
+of pointers to the beginning and the end of an ordinary list.  Thus,
+the <tt>make-queue</tt> procedure will have the form<p>
+
+<p><p><tt>(define&nbsp;(make-queue)<br>
+&nbsp;&nbsp;(let&nbsp;((front-ptr&nbsp;<tt>...</tt>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(rear-ptr&nbsp;<tt>...</tt>))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>definitions&nbsp;of&nbsp;internal&nbsp;procedures</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)&nbsp;<tt>...</tt>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+Complete the definition of <tt>make-queue</tt> and provide
+implementations of the queue operations using this representation.
+<p><p>
+
+<p><a name="%_thm_3.23"></a>
+<b>Exercise 3.23.</b>&nbsp;&nbsp;<a name="%_idx_3264"></a><a name="%_idx_3266"></a>A <em>deque</em> (``double-ended queue'') is a sequence in which items
+can be inserted and deleted at either the front or the rear.
+Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>.  Show how to represent deques using pairs, and
+give implementations of the operations.<a name="call_footnote_Temp_370" href="#footnote_Temp_370"><sup><small>23</small></sup></a>
+All operations should be accomplished in <img src="book-Z-G-D-3.gif" border="0">(1) steps.
+<p>
+
+<a name="%_sec_3.3.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.3.3">3.3.3&nbsp;&nbsp;Representing Tables</a></h3><p>
+
+
+<a name="%_idx_3268"></a>
+<a name="%_idx_3270"></a>When we studied various ways of representing sets in chapter&nbsp;2, we
+mentioned in section&nbsp;<a href="book-Z-H-16.html#%_sec_2.3.3">2.3.3</a> the task of
+maintaining a table of records indexed by identifying keys.  In the
+implementation of data-directed programming in
+section&nbsp;<a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a>, we made extensive use of
+two-dimensional tables, in which information is stored and retrieved
+using two keys.  Here we see how to build tables as mutable list
+structures.<p>
+
+<a name="%_idx_3272"></a>We first consider a one-dimensional table, in which each value is
+stored under a single key.  We implement the table as a list of
+records, each of which is implemented as a pair consisting of a key
+and the associated value. The records are glued together to form a
+list by pairs whose <tt>car</tt>s point to successive records.  These
+gluing pairs are called the <a name="%_idx_3274"></a><em>backbone</em> of the table.  In order to
+have a place that we can change when we add a new record to the table,
+we build the table as a <a name="%_idx_3276"></a><a name="%_idx_3278"></a><em>headed list</em>.  A headed list has a
+special backbone pair at the beginning, which holds a dummy
+``record'' -- in this case the arbitrarily chosen symbol <tt>*table*</tt>.
+Figure&nbsp;<a href="#%_fig_3.22">3.22</a> shows the box-and-pointer diagram for the table<p>
+
+<p><p><tt>a:&nbsp;&nbsp;1<br>
+b:&nbsp;&nbsp;2<br>
+c:&nbsp;&nbsp;3<br>
+</tt><p><p><p>
+
+<a name="%_fig_3.22"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-22.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.22:</b>&nbsp;&nbsp;A table represented as a headed list.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+To extract information from a table we use the <tt>lookup</tt>
+procedure, which takes a key as argument and returns the associated
+value (or false if there is no value stored under that key).
+<tt>Lookup</tt> is defined in terms of the <tt>assoc</tt> operation, which
+expects a key and a list of records as arguments.  Note that <tt>assoc</tt> never sees the dummy record.  <tt>Assoc</tt> returns the record
+that has the given key as its <tt>car</tt>.<a name="call_footnote_Temp_371" href="#footnote_Temp_371"><sup><small>24</small></sup></a>
+<tt>Lookup</tt> then
+checks to see that the resulting record returned by <tt>assoc</tt> is not
+false, and returns the value (the <tt>cdr</tt>) of the record.<p>
+
+<p><p><tt><a name="%_idx_3280"></a>(define&nbsp;(lookup&nbsp;key&nbsp;table)<br>
+&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key&nbsp;(cdr&nbsp;table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;record)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false)))<br>
+<a name="%_idx_3282"></a>(define&nbsp;(assoc&nbsp;key&nbsp;records)<br>
+&nbsp;&nbsp;(cond&nbsp;((null?&nbsp;records)&nbsp;false)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((equal?&nbsp;key&nbsp;(caar&nbsp;records))&nbsp;(car&nbsp;records))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(assoc&nbsp;key&nbsp;(cdr&nbsp;records)))))<br>
+</tt><p><p><p>
+
+To insert a value in a table under a specified key, we first use <tt>assoc</tt> to see if there is already a record in the table with this key.
+If not, we form a new record by <tt>cons</tt>ing the key with the value,
+and insert this at the head of the table's list of records, after the
+dummy record.  If there already is a record with this key, we set the
+<tt>cdr</tt> of this record to the designated new value.  The header of
+the table provides us with a fixed location to modify in order to
+insert the new record.<a name="call_footnote_Temp_372" href="#footnote_Temp_372"><sup><small>25</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3284"></a>(define&nbsp;(insert!&nbsp;key&nbsp;value&nbsp;table)<br>
+&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key&nbsp;(cdr&nbsp;table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;record&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(cons&nbsp;key&nbsp;value)&nbsp;(cdr&nbsp;table)))))<br>
+&nbsp;&nbsp;'ok)<br>
+</tt><p><p><p>
+
+To construct a new table, we simply create a list containing the
+symbol <tt>*table*</tt>:<p>
+
+<p><p><tt><a name="%_idx_3286"></a>(define&nbsp;(make-table)<br>
+&nbsp;&nbsp;(list&nbsp;'*table*))<br>
+</tt><p><p>
+
+<a name="%_sec_Temp_373"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_373">Two-dimensional tables</a></h4><p>
+
+<a name="%_idx_3288"></a>
+In a two-dimensional table, each value is indexed by two keys.  We can
+construct such a table as a one-dimensional table in which each key
+identifies a subtable.
+Figure&nbsp;<a href="#%_fig_3.23">3.23</a> shows the box-and-pointer diagram for the table
+<p><p><tt>math:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;+:&nbsp;&nbsp;43<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-:&nbsp;&nbsp;45<br>
+&nbsp;&nbsp;&nbsp;&nbsp;*:&nbsp;&nbsp;42<br>
+letters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;a:&nbsp;&nbsp;97<br>
+&nbsp;&nbsp;&nbsp;&nbsp;b:&nbsp;&nbsp;98<br>
+</tt><p><p>
+which has two subtables.  (The subtables don't need a
+special header symbol, since the key that identifies the subtable
+serves this purpose.)<p>
+
+<a name="%_fig_3.23"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-23.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.23:</b>&nbsp;&nbsp;A two-dimensional table.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+When we look up an item, we use the first key
+to identify the correct subtable.  Then we use the second key to
+identify the record within the subtable.<p>
+
+<p><p><tt><a name="%_idx_3290"></a>(define&nbsp;(lookup&nbsp;key-1&nbsp;key-2&nbsp;table)<br>
+&nbsp;&nbsp;(let&nbsp;((subtable&nbsp;(assoc&nbsp;key-1&nbsp;(cdr&nbsp;table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key-2&nbsp;(cdr&nbsp;subtable))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;record)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false)))<br>
+</tt><p><p><p>
+
+To insert a new item under a pair of keys, we use <tt>assoc</tt> to see if
+there is a subtable stored under the first key.  If not, we build a
+new subtable containing the single record (<tt>key-2</tt>, <tt>value</tt>)
+and insert it into the table under the first key.  If a subtable
+already exists for the first key, we insert the new record into this
+subtable, using the insertion method for one-dimensional tables
+described above:<p>
+
+<p><p><tt><a name="%_idx_3292"></a>(define&nbsp;(insert!&nbsp;key-1&nbsp;key-2&nbsp;value&nbsp;table)<br>
+&nbsp;&nbsp;(let&nbsp;((subtable&nbsp;(assoc&nbsp;key-1&nbsp;(cdr&nbsp;table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key-2&nbsp;(cdr&nbsp;subtable))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;record&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(cons&nbsp;key-2&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;subtable)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(list&nbsp;key-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;key-2&nbsp;value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;table)))))<br>
+&nbsp;&nbsp;'ok)<br>
+</tt><p><p>
+
+<a name="%_sec_Temp_374"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_374">Creating local tables</a></h4><p>
+
+<a name="%_idx_3294"></a>
+The <tt>lookup</tt> and <tt>insert!</tt> operations defined above take the
+table as an argument.  This enables us to use programs that access
+more than one table.  Another way to deal with multiple tables is to
+have separate <tt>lookup</tt> and <tt>insert!</tt> procedures for each
+table.  We can do this by representing a table procedurally, as an
+object that maintains an internal table as part of its local state.
+When sent an appropriate message, this ``table object'' supplies the
+procedure with which to operate on the internal table.  Here is a
+generator for two-dimensional tables represented in this fashion:<p>
+
+<p><p><tt><a name="%_idx_3296"></a>(define&nbsp;(make-table)<br>
+&nbsp;&nbsp;(let&nbsp;((local-table&nbsp;(list&nbsp;'*table*)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(lookup&nbsp;key-1&nbsp;key-2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((subtable&nbsp;(assoc&nbsp;key-1&nbsp;(cdr&nbsp;local-table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key-2&nbsp;(cdr&nbsp;subtable))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;record)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(insert!&nbsp;key-1&nbsp;key-2&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((subtable&nbsp;(assoc&nbsp;key-1&nbsp;(cdr&nbsp;local-table))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((record&nbsp;(assoc&nbsp;key-2&nbsp;(cdr&nbsp;subtable))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;record<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;record&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;subtable<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(cons&nbsp;key-2&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;subtable)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!&nbsp;local-table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(list&nbsp;key-1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;key-2&nbsp;value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;local-table)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ok)&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'lookup-proc)&nbsp;lookup)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'insert-proc!)&nbsp;insert!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;operation&nbsp;--&nbsp;TABLE&quot;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p><p>
+
+Using <tt>make-table</tt>, we could implement the <tt>get</tt> and <tt>put</tt>
+operations used in section&nbsp;<a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a> for data-directed
+programming, as follows:<p>
+
+<p><p><tt><a name="%_idx_3298"></a>(define&nbsp;operation-table&nbsp;(make-table))<br>
+<a name="%_idx_3300"></a>(define&nbsp;get&nbsp;(operation-table&nbsp;'lookup-proc))<br>
+<a name="%_idx_3302"></a>(define&nbsp;put&nbsp;(operation-table&nbsp;'insert-proc!))<br>
+</tt><p><p>
+<tt>Get</tt> takes as arguments two keys, and <tt>put</tt> takes
+as arguments two keys and a value.  Both operations access the same
+local table, which is encapsulated within the object created by the
+call to <tt>make-table</tt>.
+
+
+<p><a name="%_thm_3.24"></a>
+<b>Exercise 3.24.</b>&nbsp;&nbsp;<a name="%_idx_3304"></a><a name="%_idx_3306"></a>In the table implementations above, the keys are tested for equality
+using <tt>equal?</tt> (called by <tt>assoc</tt>).  This is not always the appropriate test.  For
+instance, we might have a table with numeric keys in which we don't
+need an exact match to the number we're looking up,
+but only a number within some tolerance of it.
+Design a table constructor <tt>make-table</tt> that takes as an argument a <tt>same-key?</tt> procedure
+that will be used to test ``equality'' of keys.  <tt>Make-table</tt> should
+return a <tt>dispatch</tt> procedure that can be used to access
+appropriate <tt>lookup</tt> and <tt>insert!</tt> procedures for a local
+table.
+
+<p><p>
+
+<p><a name="%_thm_3.25"></a>
+<b>Exercise 3.25.</b>&nbsp;&nbsp;<a name="%_idx_3308"></a>Generalizing one- and two-dimensional tables, show how to implement a
+table in which values are stored under an arbitrary number of keys and
+different values may be stored under different numbers of keys.  The
+<tt>lookup</tt> and <tt>insert!</tt> procedures should take as input a list
+of keys used to access the table.
+<p><p>
+
+<p><a name="%_thm_3.26"></a>
+<b>Exercise 3.26.</b>&nbsp;&nbsp;<a name="%_idx_3310"></a><a name="%_idx_3312"></a>To search a table as implemented above, one needs to scan through the
+list of records.  This is basically the unordered list representation of
+section&nbsp;<a href="book-Z-H-16.html#%_sec_2.3.3">2.3.3</a>.  For large tables, it may be more
+efficient to structure the table in a different manner.  Describe a
+table implementation where the (key, value) records are organized
+using a binary tree, assuming that keys can be ordered in some way
+(e.g., numerically or alphabetically).  (Compare
+exercise&nbsp;<a href="book-Z-H-16.html#%_thm_2.66">2.66</a> of chapter&nbsp;2.)
+<p><p>
+
+
+<p><a name="%_thm_3.27"></a>
+<b>Exercise 3.27.</b>&nbsp;&nbsp;<a name="%_idx_3314"></a><a name="%_idx_3316"></a><a name="%_idx_3318"></a><a name="%_idx_3320"></a><em>Memoization</em> (also called <em>tabulation</em>) is a technique that
+enables a procedure to record, in a local table, values that have
+previously been computed.  This technique can make a vast difference
+in the performance of a program.  A memoized procedure maintains a
+table in which values of previous calls are stored
+using as keys the arguments that produced the values.  When the
+memoized procedure is asked to compute a value, it first checks the
+table to see if the value is already there and, if so, just returns
+that value.  Otherwise, it computes the new value in the ordinary way
+and stores this in the table.  As an example of memoization, recall
+from section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a> the exponential process for
+computing Fibonacci numbers:<p>
+
+
+<p><p><tt><a name="%_idx_3322"></a>(define&nbsp;(fib&nbsp;n)<br>
+&nbsp;&nbsp;(cond&nbsp;((=&nbsp;n&nbsp;0)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((=&nbsp;n&nbsp;1)&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(+&nbsp;(fib&nbsp;(-&nbsp;n&nbsp;1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fib&nbsp;(-&nbsp;n&nbsp;2))))))<br>
+</tt><p><p>
+The memoized version of the same procedure is<p>
+
+
+<p><p><tt><a name="%_idx_3324"></a>(define&nbsp;memo-fib<br>
+&nbsp;&nbsp;(memoize&nbsp;(lambda&nbsp;(n)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((=&nbsp;n&nbsp;0)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((=&nbsp;n&nbsp;1)&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(+&nbsp;(memo-fib&nbsp;(-&nbsp;n&nbsp;1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(memo-fib&nbsp;(-&nbsp;n&nbsp;2))))))))<br>
+</tt><p><p>
+where the memoizer is defined as
+<p><p><tt><a name="%_idx_3326"></a>(define&nbsp;(memoize&nbsp;f)<br>
+&nbsp;&nbsp;(let&nbsp;((table&nbsp;(make-table)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((previously-computed-result&nbsp;(lookup&nbsp;x&nbsp;table)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;previously-computed-result<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((result&nbsp;(f&nbsp;x)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(insert!&nbsp;x&nbsp;result&nbsp;table)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result))))))<br>
+</tt><p><p>
+Draw an environment diagram to analyze the computation of <tt>(memo-fib 3)</tt>.  Explain why <tt>memo-fib</tt> computes the <em>n</em>th
+Fibonacci number in a number of steps proportional to <em>n</em>.
+Would the scheme still
+work if we had simply defined <tt>memo-fib</tt> to be <tt>(memoize
+fib)</tt>?
+
+<p>
+
+<a name="%_sec_3.3.4"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.3.4">3.3.4&nbsp;&nbsp;A Simulator for Digital Circuits</a></h3><p>
+
+
+<a name="%_idx_3328"></a>
+Designing complex digital systems, such as computers, is an important
+engineering activity.  Digital systems are constructed by
+interconnecting simple elements.  Although the behavior of these
+individual elements is simple, networks of them can have very complex
+behavior.  Computer simulation of proposed circuit designs is an
+important tool used by digital systems engineers.  In this section we
+design a system for performing digital logic simulations.  This system
+typifies a kind of program called an <a name="%_idx_3330"></a><a name="%_idx_3332"></a><em>event-driven simulation</em>, in
+which actions (``events'') trigger further events that happen at a
+later time, which in turn trigger more events, and so so.<p>
+
+
+Our computational model of a circuit will be composed of objects that
+correspond to the elementary components from which the circuit is
+constructed.  There are <a name="%_idx_3334"></a><em>wires</em>, which carry <a name="%_idx_3336"></a><a name="%_idx_3338"></a><em>digital signals</em>.  A
+digital signal may at any moment have only one of two possible values,
+0 and 1.  There are also various types of digital <a name="%_idx_3340"></a><em>function
+boxes</em>, which connect wires carrying input signals to other output
+wires.  Such boxes produce output signals computed from their input
+signals.  The output signal is <a name="%_idx_3342"></a>delayed by a time that depends on the
+type of the function box.  For example, an <a name="%_idx_3344"></a><em>inverter</em> is a
+primitive function box that inverts its input.  If the
+input signal to an inverter changes to 0, then one inverter-delay
+later the inverter will change its output signal to 1.  If the input
+signal to an inverter changes to 1, then one inverter-delay later the
+inverter will change its output signal to 0.  We draw an inverter
+symbolically as in figure&nbsp;<a href="#%_fig_3.24">3.24</a>.  An <a name="%_idx_3346"></a><em>and-gate</em>,
+also shown in figure&nbsp;<a href="#%_fig_3.24">3.24</a>, is a primitive function
+box with two inputs and one output.  It drives its output signal to a
+value that is the <a name="%_idx_3348"></a><em>logical and</em> of the inputs.  That is, if both
+of its input signals become&nbsp;1, then one and-gate-delay time later the
+and-gate will force its output signal to be 1; otherwise the output
+will be 0.  An <a name="%_idx_3350"></a><em>or-gate</em> is a similar two-input primitive function
+box that drives its output signal to a value that is the <a name="%_idx_3352"></a><em>logical
+or</em> of the inputs.  That is, the output will become 1 if at least one
+of the input signals is 1; otherwise the output will become 0.<p>
+
+<a name="%_fig_3.24"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-24.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.24:</b>&nbsp;&nbsp;Primitive functions in the digital logic simulator.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+We can connect primitive functions together to construct more complex
+functions.  To accomplish this we wire the outputs of some
+function boxes to the inputs of other function boxes.  For example,
+the <a name="%_idx_3354"></a><a name="%_idx_3356"></a><em>half-adder</em> circuit shown in figure&nbsp;<a href="#%_fig_3.25">3.25</a> consists of an
+or-gate, two and-gates, and an inverter.  It takes two input signals,
+A and B, and has two output signals, S and C.  S will become 1
+whenever precisely one of A and B is&nbsp;1, and C will become 1 whenever A
+and B are both 1.  We can see from the figure that, because of the
+delays involved, the outputs may be generated at different times.
+Many of the difficulties in the design of digital circuits arise from
+this fact.<p>
+
+<a name="%_fig_3.25"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-25.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.25:</b>&nbsp;&nbsp;A half-adder circuit.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+We will now build a program for modeling the digital logic circuits we
+wish to study.  The program will construct computational objects
+modeling the wires, which will ``hold'' the signals.  Function boxes
+will be modeled by procedures that enforce the correct relationships
+among the signals.<p>
+
+<a name="%_idx_3358"></a>One basic element of our simulation will be a procedure <tt>make-wire</tt>, which constructs wires.  For example, we can construct six
+wires as follows:<p>
+
+<p><p><tt>(define&nbsp;a&nbsp;(make-wire))<br>
+(define&nbsp;b&nbsp;(make-wire))<br>
+(define&nbsp;c&nbsp;(make-wire))<br>
+<br>
+(define&nbsp;d&nbsp;(make-wire))<br>
+(define&nbsp;e&nbsp;(make-wire))<br>
+(define&nbsp;s&nbsp;(make-wire))<br>
+</tt><p><p>
+We attach a function box to a set of wires by calling a procedure that
+constructs that kind of box.  The arguments to the constructor
+procedure are the wires to be attached to the box.  For example, given
+that we can construct and-gates, or-gates, and inverters, we can wire
+together the half-adder shown in figure&nbsp;<a href="#%_fig_3.25">3.25</a>:<p>
+
+<p><p><tt>(or-gate&nbsp;a&nbsp;b&nbsp;d)<br>
+<i>ok</i><br>
+<br>
+(and-gate&nbsp;a&nbsp;b&nbsp;c)<br>
+<i>ok</i><br>
+<br>
+(inverter&nbsp;c&nbsp;e)<br>
+<i>ok</i><br>
+<br>
+(and-gate&nbsp;d&nbsp;e&nbsp;s)<br>
+<i>ok</i><br>
+</tt><p><p><p>
+
+Better yet, we can explicitly name this operation by defining a procedure <tt>half-adder</tt> that constructs this circuit, given the four
+external wires to be attached to the half-adder:<p>
+
+<p><p><tt><a name="%_idx_3360"></a>(define&nbsp;(half-adder&nbsp;a&nbsp;b&nbsp;s&nbsp;c)<br>
+&nbsp;&nbsp;(let&nbsp;((d&nbsp;(make-wire))&nbsp;(e&nbsp;(make-wire)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(or-gate&nbsp;a&nbsp;b&nbsp;d)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(and-gate&nbsp;a&nbsp;b&nbsp;c)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(inverter&nbsp;c&nbsp;e)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(and-gate&nbsp;d&nbsp;e&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'ok))<br>
+</tt><p><p>
+The advantage of making this definition is that we can use
+<tt>half-adder</tt> itself as a building block in creating more complex
+circuits.  Figure&nbsp;<a href="#%_fig_3.26">3.26</a>, for example, shows a <a name="%_idx_3362"></a><a name="%_idx_3364"></a><em>full-adder</em> composed of two half-adders and an or-gate.<a name="call_footnote_Temp_379" href="#footnote_Temp_379"><sup><small>26</small></sup></a> We can construct a full-adder
+as follows:<p>
+
+<p><p><tt><a name="%_idx_3366"></a>(define&nbsp;(full-adder&nbsp;a&nbsp;b&nbsp;c-in&nbsp;sum&nbsp;c-out)<br>
+&nbsp;&nbsp;(let&nbsp;((s&nbsp;(make-wire))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c1&nbsp;(make-wire))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c2&nbsp;(make-wire)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(half-adder&nbsp;b&nbsp;c-in&nbsp;s&nbsp;c1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(half-adder&nbsp;a&nbsp;s&nbsp;sum&nbsp;c2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(or-gate&nbsp;c1&nbsp;c2&nbsp;c-out)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'ok))<br>
+</tt><p><p>
+Having defined <tt>full-adder</tt> as a procedure, we can now use it as a
+building block for creating still more complex circuits.  (For
+example, see exercise&nbsp;<a href="#%_thm_3.30">3.30</a>.)<p>
+
+<a name="%_fig_3.26"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-26.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.26:</b>&nbsp;&nbsp;A full-adder circuit.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+In essence, our simulator provides us with the tools to construct a
+language of circuits.  If we adopt the general perspective on
+languages with which we approached the study of Lisp in
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1">1.1</a>,
+we can say that the primitive function boxes form the primitive
+elements of the language, that wiring boxes together provides a means
+of combination, and that specifying wiring patterns as procedures
+serves as a means of abstraction.<p>
+
+<a name="%_sec_Temp_380"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_380">Primitive function boxes</a></h4><p>
+
+<a name="%_idx_3368"></a>
+The primitive function boxes implement the ``forces'' by which a
+change in the signal on one wire influences the signals on other
+wires.  To build function boxes, we use the following operations on
+wires:<p>
+
+<p><ul>
+<li><tt>(get-signal &lt;<em>wire</em>&gt;)</tt><br>
+<a name="%_idx_3370"></a>returns the current value of the signal on the wire.<p>
+
+<li><tt>(set-signal! &lt;<em>wire</em>&gt; &lt;<em>new value</em>&gt;)</tt><br>
+<a name="%_idx_3372"></a>changes the value of the signal on the wire to the new value.<p>
+
+<li><tt>(add-action! &lt;<em>wire</em>&gt; &lt;<em>procedure of no arguments</em>&gt;)</tt><br>
+<a name="%_idx_3374"></a>asserts that the designated procedure should be run whenever the
+signal on the wire changes value.  Such procedures are the vehicles by
+which changes in the signal value on the wire are communicated to
+other wires.
+</ul><p>
+<a name="%_idx_3376"></a>In addition, we will make use of a procedure <tt>after-delay</tt> that
+takes a time delay and a procedure to be run and executes the
+given procedure after the given delay.<p>
+
+Using these procedures, we can define the primitive digital logic
+functions.  To connect an input to an output through an inverter, we
+use <tt>add-action!</tt> to associate with the input wire a procedure
+that will be run whenever the signal on the input wire changes value.
+The procedure computes the <tt>logical-not</tt> of the input signal, and
+then, after one <tt>inverter-delay</tt>, sets the output signal to be
+this new value:<p>
+
+<p><p><tt><a name="%_idx_3378"></a>(define&nbsp;(inverter&nbsp;input&nbsp;output)<br>
+&nbsp;&nbsp;(define&nbsp;(invert-input)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((new-value&nbsp;(logical-not&nbsp;(get-signal&nbsp;input))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(after-delay&nbsp;inverter-delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-signal!&nbsp;output&nbsp;new-value)))))<br>
+&nbsp;&nbsp;(add-action!&nbsp;input&nbsp;invert-input)<br>
+&nbsp;&nbsp;'ok)<br>
+<a name="%_idx_3380"></a>(define&nbsp;(logical-not&nbsp;s)<br>
+&nbsp;&nbsp;(cond&nbsp;((=&nbsp;s&nbsp;0)&nbsp;1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((=&nbsp;s&nbsp;1)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Invalid&nbsp;signal&quot;&nbsp;s))))<br>
+</tt><p><p><p>
+
+An and-gate is a little more complex.  The action procedure must be run if
+either of the inputs to the gate changes.  It computes the <tt>logical-and</tt> (using a procedure analogous to <tt>logical-not</tt>) of the
+values of the signals on the input wires and sets up a change to the
+new value to occur on the output wire after one <tt>and-gate-delay</tt>.<p>
+
+<p><p><tt><a name="%_idx_3382"></a>(define&nbsp;(and-gate&nbsp;a1&nbsp;a2&nbsp;output)<br>
+&nbsp;&nbsp;(define&nbsp;(and-action-procedure)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((new-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(logical-and&nbsp;(get-signal&nbsp;a1)&nbsp;(get-signal&nbsp;a2))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(after-delay&nbsp;and-gate-delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-signal!&nbsp;output&nbsp;new-value)))))<br>
+&nbsp;&nbsp;(add-action!&nbsp;a1&nbsp;and-action-procedure)<br>
+&nbsp;&nbsp;(add-action!&nbsp;a2&nbsp;and-action-procedure)<br>
+&nbsp;&nbsp;'ok)<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.28"></a>
+<b>Exercise 3.28.</b>&nbsp;&nbsp;<a name="%_idx_3384"></a>Define an or-gate as a primitive function box.  Your <tt>or-gate</tt>
+constructor should be similar to <tt>and-gate</tt>.
+<p><p>
+
+<p><a name="%_thm_3.29"></a>
+<b>Exercise 3.29.</b>&nbsp;&nbsp;<a name="%_idx_3386"></a>Another way to construct an or-gate is as a compound digital logic
+device, built from and-gates and inverters.  Define a procedure <tt>or-gate</tt> that accomplishes this.  What is the delay time of the
+or-gate in terms of <tt>and-gate-delay</tt> and <tt>inverter-delay</tt>?
+<p><p>
+
+<p><a name="%_thm_3.30"></a>
+<b>Exercise 3.30.</b>&nbsp;&nbsp;Figure&nbsp;<a href="#%_fig_3.27">3.27</a> shows a <a name="%_idx_3388"></a><a name="%_idx_3390"></a><em>ripple-carry adder</em> formed by stringing
+together <em>n</em> full-adders.  This is the simplest form of parallel adder
+for adding two <em>n</em>-bit binary numbers.  The inputs A<sub>1</sub>, A<sub>2</sub>,
+A<sub>3</sub>, <tt>...</tt>, A<sub><em>n</em></sub> and B<sub>1</sub>, B<sub>2</sub>, B<sub>3</sub>, <tt>...</tt>,
+B<sub><em>n</em></sub> are the two binary numbers to be added (each A<sub><em>k</em></sub> and B<sub><em>k</em></sub>
+is a 0 or a 1).  The circuit generates S<sub>1</sub>, S<sub>2</sub>, S<sub>3</sub>,
+<tt>...</tt>, S<sub><em>n</em></sub>, the <em>n</em> bits of the sum, and C, the carry from
+the addition.  Write a procedure <tt>ripple-carry-adder</tt> that
+generates this circuit.  The procedure should take as arguments three
+lists of <em>n</em> wires each -- the A<sub><em>k</em></sub>, the B<sub><em>k</em></sub>, and the S<sub><em>k</em></sub> -- and
+also another wire C.  The major drawback of the ripple-carry adder is
+the need to wait for the carry signals to propagate.  What is the
+delay needed to obtain the complete output from an <em>n</em>-bit
+ripple-carry adder, expressed in terms of the delays for and-gates,
+or-gates, and inverters?
+
+<p><p>
+
+<a name="%_fig_3.27"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-27.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.27:</b>&nbsp;&nbsp;A ripple-carry adder for <em>n</em>-bit numbers.</div></caption><tr><td>
+
+</td></tr></table></div><p>
+
+<a name="%_sec_Temp_384"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_384">Representing wires</a></h4><p>
+
+<a name="%_idx_3392"></a>
+A wire in our simulation will be a computational object with two local
+state variables: a <tt>signal-value</tt> (initially taken to be 0) and a
+collection of <tt>action-procedures</tt> to be run when the signal
+changes value.  We implement the wire, using message-passing style, as
+<a name="%_idx_3394"></a>a collection of local procedures together with a <tt>dispatch</tt>
+procedure that selects the appropriate local operation, just as we did
+with the simple bank-account object in section
+&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>:<p>
+
+<p><p><tt><a name="%_idx_3396"></a>(define&nbsp;(make-wire)<br>
+&nbsp;&nbsp;(let&nbsp;((signal-value&nbsp;0)&nbsp;(action-procedures&nbsp;'()))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(set-my-signal!&nbsp;new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(not&nbsp;(=&nbsp;signal-value&nbsp;new-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;signal-value&nbsp;new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(call-each&nbsp;action-procedures))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(accept-action-procedure!&nbsp;proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;action-procedures&nbsp;(cons&nbsp;proc&nbsp;action-procedures))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(proc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'get-signal)&nbsp;signal-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'set-signal!)&nbsp;set-my-signal!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'add-action!)&nbsp;accept-action-procedure!)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;operation&nbsp;--&nbsp;WIRE&quot;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+The local procedure <tt>set-my-signal!</tt> tests whether the new signal
+value changes the signal on the wire.  If so, it runs each of the
+action procedures, using the following procedure <tt>call-each</tt>,
+which calls each of the items in a list of no-argument procedures:<p>
+
+<p><p><tt><a name="%_idx_3398"></a>(define&nbsp;(call-each&nbsp;procedures)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;procedures)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((car&nbsp;procedures))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(call-each&nbsp;(cdr&nbsp;procedures)))))<br>
+</tt><p><p>
+The local procedure <tt>accept-action-procedure!</tt> adds the given
+procedure to the list of procedures to be run, and then runs the new
+procedure once.  (See exercise&nbsp;<a href="#%_thm_3.31">3.31</a>.)<p>
+
+With the local <tt>dispatch</tt> procedure set up as specified, we can
+provide the following procedures to access the local operations on
+wires:<a name="call_footnote_Temp_385" href="#footnote_Temp_385"><sup><small>27</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3404"></a>(define&nbsp;(get-signal&nbsp;wire)<br>
+&nbsp;&nbsp;(wire&nbsp;'get-signal))<br>
+<a name="%_idx_3406"></a>(define&nbsp;(set-signal!&nbsp;wire&nbsp;new-value)<br>
+&nbsp;&nbsp;((wire&nbsp;'set-signal!)&nbsp;new-value))<br>
+<a name="%_idx_3408"></a>(define&nbsp;(add-action!&nbsp;wire&nbsp;action-procedure)<br>
+&nbsp;&nbsp;((wire&nbsp;'add-action!)&nbsp;action-procedure))<br>
+</tt><p><p><p>
+
+Wires, which have time-varying signals and may be incrementally
+attached to devices, are typical of mutable objects.  We have modeled
+them as procedures with local state variables that are modified by
+assignment.  When a new wire is created, a new set of state variables
+is allocated (by the <tt>let</tt> expression in <tt>make-wire</tt>) and a
+new <tt>dispatch</tt> procedure is constructed and returned, capturing
+the environment with the new state variables.<p>
+
+The wires are shared among the various devices that have been
+connected to them.  Thus, a change made by an interaction with one
+device will affect all the other devices attached to the wire.  The
+wire communicates the change to its neighbors by calling the action
+procedures provided to it when the connections were established.
+
+<a name="%_sec_Temp_386"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_386">The agenda</a></h4><p>
+
+<a name="%_idx_3410"></a>
+The only thing needed to complete the simulator is <tt>after-delay</tt>.
+The idea here is that we maintain a data structure, called an <em>agenda</em>, that contains a schedule of things to do.  The following
+operations are defined for agendas:<p>
+
+<p><ul>
+<li><a name="%_idx_3412"></a><tt>(make-agenda)</tt><br>
+returns a new empty agenda.<p>
+
+<li><a name="%_idx_3414"></a><tt>(empty-agenda? &lt;<em>agenda</em>&gt;)</tt><br>
+is true if the specified agenda is empty.<p>
+
+<li><a name="%_idx_3416"></a><tt>(first-agenda-item &lt;<em>agenda</em>&gt;)</tt><br>
+returns the first item on the agenda.<p>
+
+<li><a name="%_idx_3418"></a><tt>(remove-first-agenda-item! &lt;<em>agenda</em>&gt;)</tt><br>
+modifies the agenda by removing the first item.<p>
+
+<li><a name="%_idx_3420"></a><tt>(add-to-agenda! &lt;<em>time</em>&gt; &lt;<em>action</em>&gt; &lt;<em>agenda</em>&gt;)</tt><br>
+modifies the agenda by adding the given action procedure to be run at
+the specified time.<p>
+
+<li><a name="%_idx_3422"></a><tt>(current-time &lt;<em>agenda</em>&gt;)</tt><br>
+returns the current simulation time.
+</ul><p><p>
+
+The particular agenda that we use is denoted by
+<tt>the-agenda</tt>.  The procedure <tt>after-delay</tt> adds new
+elements to <tt>the-agenda</tt>:<p>
+
+<p><p><tt><a name="%_idx_3424"></a>(define&nbsp;(after-delay&nbsp;delay&nbsp;action)<br>
+&nbsp;&nbsp;(add-to-agenda!&nbsp;(+&nbsp;delay&nbsp;(current-time&nbsp;the-agenda))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-agenda))<br>
+</tt><p><p><p>
+
+The simulation is driven by the procedure <tt>propagate</tt>, which
+operates on <tt>the-agenda</tt>, executing each procedure on the agenda
+in sequence.  In general, as the simulation runs, new items will be
+added to the agenda, and <tt>propagate</tt> will continue the simulation
+as long as there are items on the agenda:<p>
+
+<p><p><tt><a name="%_idx_3426"></a>(define&nbsp;(propagate)<br>
+&nbsp;&nbsp;(if&nbsp;(empty-agenda?&nbsp;the-agenda)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((first-item&nbsp;(first-agenda-item&nbsp;the-agenda)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(first-item)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(remove-first-agenda-item!&nbsp;the-agenda)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(propagate))))<br>
+</tt><p><p>
+<p>
+
+<a name="%_sec_Temp_387"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_387">A sample simulation</a></h4><p>
+
+<a name="%_idx_3428"></a><a name="%_idx_3430"></a>
+The following procedure, which places a ``probe'' on a wire, shows the
+simulator in action.  The probe tells the wire that, whenever its
+signal changes value, it should print the new signal value, together
+with the current time and a name that identifies the wire:<p>
+
+<p><p><tt><a name="%_idx_3432"></a>(define&nbsp;(probe&nbsp;name&nbsp;wire)<br>
+&nbsp;&nbsp;(add-action!&nbsp;wire<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;&nbsp;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;(current-time&nbsp;the-agenda))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;&nbsp;&nbsp;New-value&nbsp;=&nbsp;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;(get-signal&nbsp;wire)))))<br>
+</tt><p><p><p>
+
+We begin by initializing the agenda and specifying delays for the
+primitive function boxes:<p>
+
+<p><p><tt>(define&nbsp;the-agenda&nbsp;(make-agenda))<br>
+(define&nbsp;inverter-delay&nbsp;2)<br>
+(define&nbsp;and-gate-delay&nbsp;3)<br>
+(define&nbsp;or-gate-delay&nbsp;5)<br>
+</tt><p><p>
+Now we define four wires, placing probes on two of them:<p>
+
+
+<p><p><tt>(define&nbsp;input-1&nbsp;(make-wire))<br>
+(define&nbsp;input-2&nbsp;(make-wire))<br>
+(define&nbsp;sum&nbsp;(make-wire))<br>
+(define&nbsp;carry&nbsp;(make-wire))<br>
+(probe&nbsp;'sum&nbsp;sum)<br>
+<i>sum&nbsp;0&nbsp;&nbsp;New-value&nbsp;=&nbsp;0</i><br>
+(probe&nbsp;'carry&nbsp;carry)<br>
+<i>carry&nbsp;0&nbsp;&nbsp;New-value&nbsp;=&nbsp;0</i><br>
+</tt><p><p>
+Next we connect the wires in a half-adder circuit (as in
+figure&nbsp;<a href="#%_fig_3.25">3.25</a>), set the signal on <tt>input-1</tt> to 1,
+and run the simulation:<p>
+
+
+<p><p><tt>(half-adder&nbsp;input-1&nbsp;input-2&nbsp;sum&nbsp;carry)<br>
+<i>ok</i><br>
+(set-signal!&nbsp;input-1&nbsp;1)<br>
+<i>done</i><br>
+(propagate)<br>
+<i>sum&nbsp;8&nbsp;&nbsp;New-value&nbsp;=&nbsp;1</i><br>
+<i>done</i><br>
+</tt><p><p>
+The <tt>sum</tt> signal changes to 1 at time 8.  We are now eight time
+units from the beginning of the simulation.  At this point, we can set
+the signal on <tt>input-2</tt> to 1 and allow the values to propagate:<p>
+
+
+<p><p><tt>(set-signal!&nbsp;input-2&nbsp;1)<br>
+<i>done</i><br>
+(propagate)<br>
+<i>carry&nbsp;11&nbsp;&nbsp;New-value&nbsp;=&nbsp;1</i><br>
+<i>sum&nbsp;16&nbsp;&nbsp;New-value&nbsp;=&nbsp;0</i><br>
+<i>done</i><br>
+</tt><p><p>
+The <tt>carry</tt> changes to 1 at time 11 and the <tt>sum</tt> changes to 0
+at time 16.
+
+
+<p><a name="%_thm_3.31"></a>
+<b>Exercise 3.31.</b>&nbsp;&nbsp;
+<a name="%_idx_3434"></a>The internal procedure <tt>accept-action-procedure!</tt> defined in <tt>make-wire</tt> specifies that when a new action procedure is added to
+a wire, the procedure is immediately run.  Explain why this initialization
+is necessary.  In particular, trace through the half-adder example in
+the paragraphs above and say how the system's response would differ if
+we had defined <tt>accept-action-procedure!</tt> as<p>
+
+
+<p><p><tt>(define&nbsp;(accept-action-procedure!&nbsp;proc)<br>
+&nbsp;&nbsp;(set!&nbsp;action-procedures&nbsp;(cons&nbsp;proc&nbsp;action-procedures)))<br>
+</tt><p><p>
+<p><p>
+
+<a name="%_sec_Temp_389"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_389">Implementing the agenda</a></h4><p>
+
+<a name="%_idx_3436"></a>
+Finally, we give details of the agenda data structure, which holds the
+procedures that are scheduled for future execution.<p>
+
+The agenda is made up of <a name="%_idx_3438"></a><em>time segments</em>.  Each time segment is a
+pair consisting of a number (the time) and a <a name="%_idx_3440"></a>queue (see
+exercise&nbsp;<a href="#%_thm_3.32">3.32</a>) that holds the procedures that are
+scheduled to be run during that time segment.<p>
+
+<p><p><tt><a name="%_idx_3442"></a>(define&nbsp;(make-time-segment&nbsp;time&nbsp;queue)<br>
+&nbsp;&nbsp;(cons&nbsp;time&nbsp;queue))<br>
+<a name="%_idx_3444"></a>(define&nbsp;(segment-time&nbsp;s)&nbsp;(car&nbsp;s))<br>
+<a name="%_idx_3446"></a>(define&nbsp;(segment-queue&nbsp;s)&nbsp;(cdr&nbsp;s))<br>
+</tt><p><p>
+We will operate on the time-segment queues using the queue operations
+described in section&nbsp;<a href="#%_sec_3.3.2">3.3.2</a>.<p>
+
+<a name="%_idx_3448"></a>The agenda itself is a one-dimensional table of time segments.  It
+differs from the tables described in section&nbsp;<a href="#%_sec_3.3.3">3.3.3</a> in that
+the segments will be sorted in order of increasing time.  In addition,
+we store the <a name="%_idx_3450"></a><em>current time</em> (i.e., the time of the last action
+that was processed) at the head of the agenda.  A newly constructed
+agenda has no time segments and has a current time of 0:<a name="call_footnote_Temp_390" href="#footnote_Temp_390"><sup><small>28</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3456"></a>(define&nbsp;(make-agenda)&nbsp;(list&nbsp;0))<br>
+<a name="%_idx_3458"></a>(define&nbsp;(current-time&nbsp;agenda)&nbsp;(car&nbsp;agenda))<br>
+<a name="%_idx_3460"></a>(define&nbsp;(set-current-time!&nbsp;agenda&nbsp;time)<br>
+&nbsp;&nbsp;(set-car!&nbsp;agenda&nbsp;time))<br>
+<a name="%_idx_3462"></a>(define&nbsp;(segments&nbsp;agenda)&nbsp;(cdr&nbsp;agenda))<br>
+<a name="%_idx_3464"></a>(define&nbsp;(set-segments!&nbsp;agenda&nbsp;segments)<br>
+&nbsp;&nbsp;(set-cdr!&nbsp;agenda&nbsp;segments))<br>
+<a name="%_idx_3466"></a>(define&nbsp;(first-segment&nbsp;agenda)&nbsp;(car&nbsp;(segments&nbsp;agenda)))<br>
+<a name="%_idx_3468"></a>(define&nbsp;(rest-segments&nbsp;agenda)&nbsp;(cdr&nbsp;(segments&nbsp;agenda)))<br>
+</tt><p><p><p>
+
+An agenda is empty if it has no time segments:
+
+<p><p><tt><a name="%_idx_3470"></a>(define&nbsp;(empty-agenda?&nbsp;agenda)<br>
+&nbsp;&nbsp;(null?&nbsp;(segments&nbsp;agenda)))<br>
+</tt><p><p>
+<p>
+
+
+To add an action to an agenda, we first check if the agenda is empty.
+If so, we create a time segment for the action and install this in
+the agenda.  Otherwise, we scan the agenda, examining the time of each
+segment.  If we find a segment for our appointed time, we add the
+action to the associated queue.  If we reach a time later than the one
+to which we are appointed, we insert a new time segment into the
+agenda just before it.  If we reach the end of the agenda, we must
+create a new time segment at the end.<p>
+
+
+<p><p><tt><a name="%_idx_3472"></a>(define&nbsp;(add-to-agenda!&nbsp;time&nbsp;action&nbsp;agenda)<br>
+&nbsp;&nbsp;(define&nbsp;(belongs-before?&nbsp;segments)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(or&nbsp;(null?&nbsp;segments)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&lt;&nbsp;time&nbsp;(segment-time&nbsp;(car&nbsp;segments)))))<br>
+&nbsp;&nbsp;(define&nbsp;(make-new-time-segment&nbsp;time&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((q&nbsp;(make-queue)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(insert-queue!&nbsp;q&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-time-segment&nbsp;time&nbsp;q)))<br>
+&nbsp;&nbsp;(define&nbsp;(add-to-segments!&nbsp;segments)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(=&nbsp;(segment-time&nbsp;(car&nbsp;segments))&nbsp;time)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(insert-queue!&nbsp;(segment-queue&nbsp;(car&nbsp;segments))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((rest&nbsp;(cdr&nbsp;segments)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(belongs-before?&nbsp;rest)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-cdr!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;segments<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(make-new-time-segment&nbsp;time&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;segments)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-to-segments!&nbsp;rest)))))<br>
+&nbsp;&nbsp;(let&nbsp;((segments&nbsp;(segments&nbsp;agenda)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(belongs-before?&nbsp;segments)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-segments!<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agenda<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(make-new-time-segment&nbsp;time&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;segments))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-to-segments!&nbsp;segments))))<br>
+</tt><p><p><p>
+
+The procedure that removes the first item from the agenda deletes the
+item at the front of the queue in the first time segment.  If this
+deletion makes the time segment empty, we remove it from the list of
+segments:<a name="call_footnote_Temp_391" href="#footnote_Temp_391"><sup><small>29</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3478"></a>(define&nbsp;(remove-first-agenda-item!&nbsp;agenda)<br>
+&nbsp;&nbsp;(let&nbsp;((q&nbsp;(segment-queue&nbsp;(first-segment&nbsp;agenda))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(delete-queue!&nbsp;q)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(empty-queue?&nbsp;q)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-segments!&nbsp;agenda&nbsp;(rest-segments&nbsp;agenda)))))<br>
+</tt><p><p><p>
+
+The first agenda item is found at the head of the queue in the first
+time segment.  Whenever we extract an item, we also update the current
+time:<a name="call_footnote_Temp_392" href="#footnote_Temp_392"><sup><small>30</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3480"></a>(define&nbsp;(first-agenda-item&nbsp;agenda)<br>
+&nbsp;&nbsp;(if&nbsp;(empty-agenda?&nbsp;agenda)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Agenda&nbsp;is&nbsp;empty&nbsp;--&nbsp;FIRST-AGENDA-ITEM&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((first-seg&nbsp;(first-segment&nbsp;agenda)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-current-time!&nbsp;agenda&nbsp;(segment-time&nbsp;first-seg))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(front-queue&nbsp;(segment-queue&nbsp;first-seg)))))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.32"></a>
+<b>Exercise 3.32.</b>&nbsp;&nbsp;The procedures to be run during each time segment of the agenda are
+kept in a queue.  Thus, the procedures for each segment are called in
+the order in which they were added to the agenda (first in, first
+out).  Explain why this order must be used.  In particular, trace the
+behavior of an and-gate whose inputs change from 0,1 to 1,0 in the
+same segment and say how the behavior would differ if we stored a
+segment's procedures in an ordinary list, adding and removing
+procedures only at the front (last in, first out).
+
+<p>
+    
+<a name="%_sec_3.3.5"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.3.5">3.3.5&nbsp;&nbsp;Propagation of Constraints</a></h3><p>
+
+
+<a name="%_idx_3482"></a><a name="%_idx_3484"></a>
+Computer programs are traditionally organized as
+one-directional computations, which perform operations on prespecified
+arguments to produce desired outputs.  On the other hand, we often
+model systems in terms of relations among quantities.  For example, a
+mathematical model of a mechanical structure might include the
+information that the deflection <em>d</em> of a metal rod is related to the
+force <em>F</em> on the rod, the length <em>L</em> of the rod, the cross-sectional
+area <em>A</em>, and the elastic modulus <em>E</em> via the equation
+<p><div align=left><img src="ch3-Z-G-28.gif" border="0"></div><p>
+Such an equation is not one-directional.  Given any four of the
+quantities, we can use it to compute the fifth.  Yet translating the
+equation into a traditional computer language would force us to choose
+one of the quantities to be computed in terms of the other four.
+Thus, a procedure for computing the area <em>A</em> could not be used to
+compute the deflection <em>d</em>, even though the computations of <em>A</em> and
+<em>d</em> arise from the same equation.<a name="call_footnote_Temp_394" href="#footnote_Temp_394"><sup><small>31</small></sup></a><p>
+
+<a name="%_idx_3508"></a>In this section, we sketch the design of a language that enables us to
+work in terms of relations themselves.  The primitive elements of the
+language are <a name="%_idx_3510"></a><a name="%_idx_3512"></a><em>primitive constraints</em>, which state that certain
+relations hold between quantities.  For example, <tt>(adder a b c)</tt>
+specifies that the quantities <em>a</em>, <em>b</em>, and <em>c</em> must be related by the
+equation <em>a</em> + <em>b</em> = <em>c</em>, <tt>(multiplier&nbsp;x&nbsp;y&nbsp;z)</tt> expresses the constraint
+<em>x</em><em>y</em>  =  <em>z</em>, and <tt>(constant&nbsp;3.14&nbsp;x)</tt> says that the value of <em>x</em> must
+be 3.14.<p>
+
+
+Our language provides a means of combining primitive constraints in
+order to express more complex relations.  We combine constraints by
+constructing <a name="%_idx_3514"></a><em>constraint networks</em>, in which constraints are
+joined by <a name="%_idx_3516"></a><em>connectors</em>.  A connector is an object that ``holds'' a
+value that may participate in one or more constraints.  For example,
+we know that the relationship between Fahrenheit and Celsius
+temperatures is<p>
+
+<p><div align=left><img src="ch3-Z-G-29.gif" border="0"></div><p><p>
+
+Such a constraint can be thought of as a network consisting of
+primitive adder, multiplier, and constant constraints
+(figure&nbsp;<a href="#%_fig_3.28">3.28</a>).  In the figure, we see on the left a
+multiplier box with three terminals, labeled <em>m</em>1, <em>m</em>2, and <em>p</em>.
+These connect the multiplier to the rest of the network as follows:
+The <em>m</em>1 terminal is linked to a connector <em>C</em>, which will hold the
+Celsius temperature.  The <em>m</em>2 terminal is linked to a connector
+<em>w</em>, which is also linked to a constant box that holds 9.  The <em>p</em>
+terminal, which the multiplier box constrains to be the product of
+<em>m</em>1 and <em>m</em>2, is linked to the <em>p</em> terminal
+of another multiplier box, whose <em>m</em>2 is connected to a constant 5 and
+whose <em>m</em>1 is connected to one of the terms in a sum.<p>
+
+<a name="%_fig_3.28"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-30.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.28:</b>&nbsp;&nbsp;The relation 9<em>C</em>  =  5(<em>F</em>  -  32)
+expressed as a constraint network.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Computation by such a network proceeds as follows: When a connector is
+given a value (by the user or by a constraint box to which it is
+linked), it awakens all of its associated constraints (except for the
+constraint that just awakened it) to inform them that it has a value.
+Each awakened constraint box then polls its connectors to see if there
+is enough information to determine a value for a connector.  If so,
+the box sets that connector, which then awakens all of its associated
+constraints, and so on.  For instance, in conversion between
+Celsius and Fahrenheit, <em>w</em>, <em>x</em>, and <em>y</em> are immediately set by
+the constant boxes to 9, 5, and 32, respectively.  The connectors
+awaken the multipliers and the adder, which determine that there is
+not enough information to proceed.  If the user (or some other part of
+the network) sets <em>C</em> to a value (say 25), the leftmost multiplier
+will be awakened, and it will set <em>u</em> to 25 &middot;  9 = 225.  Then <em>u</em>
+awakens the second multiplier, which sets <em>v</em> to 45, and <em>v</em> awakens
+the adder, which sets <em>F</em> to 77.<p>
+
+
+<a name="%_sec_Temp_395"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_395">Using the constraint system</a></h4><p>
+
+To use the constraint system to carry out the temperature computation
+outlined above, we first create two connectors, <tt>C</tt> and <tt>F</tt>,
+by calling the constructor <tt>make-connector</tt>, and link <tt>C</tt> and
+<tt>F</tt> in an appropriate network:<p>
+
+<p><p><tt>(define&nbsp;C&nbsp;(make-connector))<br>
+(define&nbsp;F&nbsp;(make-connector))<br>
+(celsius-fahrenheit-converter&nbsp;C&nbsp;F)<br>
+<i>ok</i><br>
+</tt><p><p>
+The procedure that creates the network is defined as follows:<p>
+
+<p><p><tt><a name="%_idx_3518"></a>(define&nbsp;(celsius-fahrenheit-converter&nbsp;c&nbsp;f)<br>
+&nbsp;&nbsp;(let&nbsp;((u&nbsp;(make-connector))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(v&nbsp;(make-connector))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(w&nbsp;(make-connector))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(x&nbsp;(make-connector))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(y&nbsp;(make-connector)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(multiplier&nbsp;c&nbsp;w&nbsp;u)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(multiplier&nbsp;v&nbsp;x&nbsp;u)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(adder&nbsp;v&nbsp;y&nbsp;f)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(constant&nbsp;9&nbsp;w)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(constant&nbsp;5&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(constant&nbsp;32&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;'ok))<br>
+</tt><p><p>
+This procedure creates the internal connectors <tt>u</tt>, <tt>v</tt>, <tt>w</tt>, <tt>x</tt>, and <tt>y</tt>, and links them as shown in
+figure&nbsp;<a href="#%_fig_3.28">3.28</a> using the primitive constraint
+constructors <tt>adder</tt>, <tt>multiplier</tt>, and <tt>constant</tt>.  Just
+as with the digital-circuit simulator of
+section&nbsp;<a href="#%_sec_3.3.4">3.3.4</a>, expressing these combinations of
+primitive elements in terms of procedures automatically provides our
+language with a means of abstraction for compound objects.<p>
+
+To watch the network in action, we can place probes on the connectors
+<tt>C</tt> and <tt>F</tt>, using a <tt>probe</tt> procedure similar to the one
+we used to monitor wires in section&nbsp;<a href="#%_sec_3.3.4">3.3.4</a>.
+Placing a probe on a connector will cause a message to be printed
+whenever the connector is given a value:<p>
+
+
+<p><p><tt>(probe&nbsp;&quot;Celsius&nbsp;temp&quot;&nbsp;C)<br>
+(probe&nbsp;&quot;Fahrenheit&nbsp;temp&quot;&nbsp;F)<br>
+</tt><p><p>
+Next we set the value of <tt>C</tt> to 25.  (The third argument to <tt>set-value!</tt> tells <tt>C</tt> that this directive comes from the <tt>user</tt>.)<p>
+
+
+<p><p><tt>(set-value!&nbsp;C&nbsp;25&nbsp;'user)<br>
+<i>Probe:&nbsp;Celsius&nbsp;temp&nbsp;=&nbsp;25</i><br>
+<i>Probe:&nbsp;Fahrenheit&nbsp;temp&nbsp;=&nbsp;77</i><br>
+<i>done</i><br>
+</tt><p><p>
+The probe on <tt>C</tt> awakens and reports the value.  <tt>C</tt> also
+propagates its value through the network as described above.  This
+sets <tt>F</tt> to 77, which is reported by the probe on <tt>F</tt>.<p>
+
+Now we can try to set <tt>F</tt> to a new value, say 212:<p>
+
+
+<p><p><tt>(set-value!&nbsp;F&nbsp;212&nbsp;'user)<br>
+<i>Error!&nbsp;Contradiction&nbsp;(77&nbsp;212)</i><br>
+</tt><p><p>
+The connector complains that it has sensed a contradiction: Its value
+is 77, and someone is trying to set it to 212.  If we really want to
+reuse the network with new values, we can tell <tt>C</tt> to forget its
+old value:<p>
+
+
+<p><p><tt>(forget-value!&nbsp;C&nbsp;'user)<br>
+<i>Probe:&nbsp;Celsius&nbsp;temp&nbsp;=&nbsp;?</i><br>
+<i>Probe:&nbsp;Fahrenheit&nbsp;temp&nbsp;=&nbsp;?</i><br>
+<i>done</i><br>
+</tt><p><p>
+<tt>C</tt> finds that the <tt>user</tt>, who set its value originally, is
+now retracting that value, so <tt>C</tt> agrees to lose its value, as
+shown by the probe, and informs the rest of the network of this fact.
+This information eventually propagates to <tt>F</tt>, which now finds
+that it has no reason for continuing to believe that its own value is
+77.  Thus, <tt>F</tt> also gives up its value, as shown by the probe.<p>
+
+Now that <tt>F</tt> has no value, we are free to set it to 212:<p>
+
+<p><p><tt>(set-value!&nbsp;F&nbsp;212&nbsp;'user)<br>
+<i>Probe:&nbsp;Fahrenheit&nbsp;temp&nbsp;=&nbsp;212</i><br>
+<i>Probe:&nbsp;Celsius&nbsp;temp&nbsp;=&nbsp;100</i><br>
+<i>done</i><br>
+</tt><p><p>
+This new value, when propagated through the network, forces <tt>C</tt> to
+have a value of 100, and this is registered by the probe on <tt>C</tt>.
+Notice that the very same network is being used to compute <tt>C</tt>
+given <tt>F</tt> and to compute <tt>F</tt> given&nbsp;<tt>C</tt>.  This
+nondirectionality of computation is the distinguishing feature of
+constraint-based systems.<p>
+
+<a name="%_sec_Temp_396"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_396">Implementing the constraint system</a></h4><p>
+
+The constraint system is implemented via procedural objects with local
+state, in a manner very similar to the digital-circuit simulator of
+section&nbsp;<a href="#%_sec_3.3.4">3.3.4</a>.  Although the primitive objects
+of the constraint system are somewhat more complex, the overall system
+is simpler, since there is no concern about agendas and logic delays.<p>
+
+<a name="%_idx_3520"></a>The basic operations on connectors are the following:
+<p><ul>
+<li><a name="%_idx_3522"></a><tt>(has-value? &lt;<em>connector</em>&gt;)</tt><br>
+tells whether the connector has a value.<p>
+
+<li><a name="%_idx_3524"></a><tt>(get-value &lt;<em>connector</em>&gt;)</tt><br>
+returns the connector's current value.<p>
+
+<li><a name="%_idx_3526"></a><tt>(set-value! &lt;<em>connector</em>&gt; &lt;<em>new-value</em>&gt; &lt;<em>informant</em>&gt;)</tt><br>
+indicates that the informant is requesting the connector to set its
+value to the new value.<p>
+
+<li><a name="%_idx_3528"></a><tt>(forget-value! &lt;<em>connector</em>&gt; &lt;<em>retractor</em>&gt;)</tt><br>
+tells the connector that the retractor is requesting it to forget its value.<p>
+
+<li><a name="%_idx_3530"></a><tt>(connect &lt;<em>connector</em>&gt; &lt;<em>new-constraint</em>&gt;)</tt><br>
+tells the connector to participate in the new constraint.
+</ul><p><p>
+
+The connectors communicate with the constraints by means of the
+procedures <tt>inform-about-value</tt>, which tells the given
+constraint that the connector has a value, and <tt>inform-about-no-value</tt>, which tells the constraint that the connector
+has lost its value.<p>
+
+<tt>Adder</tt> constructs an adder constraint among summand connectors
+<tt>a1</tt> and <tt>a2</tt> and a <tt>sum</tt> connector.  An adder is
+implemented as a procedure with local state (the procedure <tt>me</tt>
+below):<p>
+
+<p><p><tt><a name="%_idx_3532"></a>(define&nbsp;(adder&nbsp;a1&nbsp;a2&nbsp;sum)<br>
+&nbsp;&nbsp;(define&nbsp;(process-new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((and&nbsp;(has-value?&nbsp;a1)&nbsp;(has-value?&nbsp;a2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;sum<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(get-value&nbsp;a1)&nbsp;(get-value&nbsp;a2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((and&nbsp;(has-value?&nbsp;a1)&nbsp;(has-value?&nbsp;sum))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;a2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&nbsp;(get-value&nbsp;sum)&nbsp;(get-value&nbsp;a1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((and&nbsp;(has-value?&nbsp;a2)&nbsp;(has-value?&nbsp;sum))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;a1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&nbsp;(get-value&nbsp;sum)&nbsp;(get-value&nbsp;a2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))))<br>
+&nbsp;&nbsp;(define&nbsp;(process-forget-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;sum&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;a1&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;a2&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(process-new-value))<br>
+&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;request&nbsp;'I-have-a-value)&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-new-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'I-lost-my-value)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-forget-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;ADDER&quot;&nbsp;request))))<br>
+&nbsp;&nbsp;(connect&nbsp;a1&nbsp;me)<br>
+&nbsp;&nbsp;(connect&nbsp;a2&nbsp;me)<br>
+&nbsp;&nbsp;(connect&nbsp;sum&nbsp;me)<br>
+&nbsp;&nbsp;me)<br>
+</tt><p><p>
+<tt>Adder</tt> connects the new adder to the designated connectors and
+returns it as its value.  The procedure <tt>me</tt>, which represents the
+adder, acts as a dispatch to the local procedures.  The following
+``syntax interfaces'' (see footnote&nbsp;<a href="#footnote_Temp_385">27</a> in
+section&nbsp;<a href="#%_sec_3.3.4">3.3.4</a>) are used in conjunction with the
+dispatch:<p>
+
+<p><p><tt><a name="%_idx_3534"></a>(define&nbsp;(inform-about-value&nbsp;constraint)<br>
+&nbsp;&nbsp;(constraint&nbsp;'I-have-a-value))<br>
+<a name="%_idx_3536"></a>(define&nbsp;(inform-about-no-value&nbsp;constraint)<br>
+&nbsp;&nbsp;(constraint&nbsp;'I-lost-my-value))<br>
+</tt><p><p>
+The adder's local procedure <tt>process-new-value</tt> is called when the
+adder is informed that one of its connectors has a value. The adder
+first checks to see if both <tt>a1</tt> and <tt>a2</tt> have values. If so,
+it tells <tt>sum</tt> to set its value to the sum of the two addends.
+The <tt>informant</tt> argument to <tt>set-value!</tt> is <tt>me</tt>, which is
+the adder object itself.  If <tt>a1</tt> and <tt>a2</tt> do not both have
+values, then the adder checks to see if perhaps <tt>a1</tt> and <tt>sum</tt>
+have values.  If so, it sets <tt>a2</tt> to the difference of these two.
+Finally, if <tt>a2</tt> and <tt>sum</tt> have values, this gives the adder
+enough information to set <tt>a1</tt>.  If the adder is told that one of
+its connectors has lost a value, it requests that all of its
+connectors now lose their values.  (Only those values that were set by
+this adder are actually lost.)  Then it runs <tt>process-new-value</tt>.
+The reason for this last step is that one or more connectors may still
+have a value (that is, a connector may have had a value that was not
+originally set by the adder), and these values may need to be
+propagated back through the adder.<p>
+
+A multiplier is very similar to an adder. It will set its <tt>product</tt> to 0 if either of the factors is 0, even if the other factor
+is not known.<p>
+
+<p><p><tt><a name="%_idx_3538"></a>(define&nbsp;(multiplier&nbsp;m1&nbsp;m2&nbsp;product)<br>
+&nbsp;&nbsp;(define&nbsp;(process-new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((or&nbsp;(and&nbsp;(has-value?&nbsp;m1)&nbsp;(=&nbsp;(get-value&nbsp;m1)&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(and&nbsp;(has-value?&nbsp;m2)&nbsp;(=&nbsp;(get-value&nbsp;m2)&nbsp;0)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;product&nbsp;0&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((and&nbsp;(has-value?&nbsp;m1)&nbsp;(has-value?&nbsp;m2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;product<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;(get-value&nbsp;m1)&nbsp;(get-value&nbsp;m2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((and&nbsp;(has-value?&nbsp;product)&nbsp;(has-value?&nbsp;m1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;m2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(/&nbsp;(get-value&nbsp;product)&nbsp;(get-value&nbsp;m1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((and&nbsp;(has-value?&nbsp;product)&nbsp;(has-value?&nbsp;m2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-value!&nbsp;m1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(/&nbsp;(get-value&nbsp;product)&nbsp;(get-value&nbsp;m2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;me))))<br>
+&nbsp;&nbsp;(define&nbsp;(process-forget-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;product&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;m1&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(forget-value!&nbsp;m2&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(process-new-value))<br>
+&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;request&nbsp;'I-have-a-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-new-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'I-lost-my-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-forget-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MULTIPLIER&quot;&nbsp;request))))<br>
+&nbsp;&nbsp;(connect&nbsp;m1&nbsp;me)<br>
+&nbsp;&nbsp;(connect&nbsp;m2&nbsp;me)<br>
+&nbsp;&nbsp;(connect&nbsp;product&nbsp;me)<br>
+&nbsp;&nbsp;me)<br>
+</tt><p><p>
+A <tt>constant</tt> constructor simply sets the value of the designated
+connector.  Any <tt>I-have-a-value</tt> or <tt>I-lost-my-value</tt> message
+sent to the constant box will produce an error.<p>
+
+<p><p><tt><a name="%_idx_3540"></a>(define&nbsp;(constant&nbsp;value&nbsp;connector)<br>
+&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;CONSTANT&quot;&nbsp;request))<br>
+&nbsp;&nbsp;(connect&nbsp;connector&nbsp;me)<br>
+&nbsp;&nbsp;(set-value!&nbsp;connector&nbsp;value&nbsp;me)<br>
+&nbsp;&nbsp;me)<br>
+</tt><p><p>
+Finally, a probe prints a message about the setting or unsetting of
+the designated connector:<p>
+
+<p><p><tt><a name="%_idx_3542"></a>(define&nbsp;(probe&nbsp;name&nbsp;connector)<br>
+&nbsp;&nbsp;(define&nbsp;(print-probe&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;Probe:&nbsp;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;&quot;&nbsp;=&nbsp;&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;value))<br>
+&nbsp;&nbsp;(define&nbsp;(process-new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(print-probe&nbsp;(get-value&nbsp;connector)))<br>
+&nbsp;&nbsp;(define&nbsp;(process-forget-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(print-probe&nbsp;&quot;?&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;request&nbsp;'I-have-a-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-new-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'I-lost-my-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(process-forget-value))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;PROBE&quot;&nbsp;request))))<br>
+&nbsp;&nbsp;(connect&nbsp;connector&nbsp;me)<br>
+&nbsp;&nbsp;me)<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_397"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_397">Representing connectors</a></h4><p>
+
+<a name="%_idx_3544"></a>
+A connector is represented as a procedural object with local state
+variables <tt>value</tt>, the current value of the connector; <tt>informant</tt>, the object that set the connector's value; and <tt>constraints</tt>, a list of the constraints in which the connector
+participates.<p>
+
+<p><p><tt><a name="%_idx_3546"></a>(define&nbsp;(make-connector)<br>
+&nbsp;&nbsp;(let&nbsp;((value&nbsp;false)&nbsp;(informant&nbsp;false)&nbsp;(constraints&nbsp;'()))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(set-my-value&nbsp;newval&nbsp;setter)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((not&nbsp;(has-value?&nbsp;me))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;value&nbsp;newval)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;informant&nbsp;setter)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(for-each-except&nbsp;setter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inform-about-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constraints))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((not&nbsp;(=&nbsp;value&nbsp;newval))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Contradiction&quot;&nbsp;(list&nbsp;value&nbsp;newval)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;'ignored)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(forget-my-value&nbsp;retractor)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(eq?&nbsp;retractor&nbsp;informant)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;informant&nbsp;false)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(for-each-except&nbsp;retractor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inform-about-no-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;constraints))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'ignored))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(connect&nbsp;new-constraint)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(not&nbsp;(memq&nbsp;new-constraint&nbsp;constraints))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;constraints&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;new-constraint&nbsp;constraints)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(has-value?&nbsp;me)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(inform-about-value&nbsp;new-constraint))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;request&nbsp;'has-value?)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;informant&nbsp;true&nbsp;false))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'value)&nbsp;value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'set-value!)&nbsp;set-my-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'forget)&nbsp;forget-my-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;request&nbsp;'connect)&nbsp;connect)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;operation&nbsp;--&nbsp;CONNECTOR&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;me))<br>
+</tt><p><p><p>
+
+
+The connector's local procedure <tt>set-my-value</tt> is called when
+there is a request to set the connector's value.  If the connector
+does not currently have a value, it will set its value and remember as
+<tt>informant</tt> the constraint that requested the value to be
+set.<a name="call_footnote_Temp_398" href="#footnote_Temp_398"><sup><small>32</small></sup></a>
+Then the connector will notify all of its participating
+constraints except the constraint that requested the value to be set.
+This is accomplished using the following iterator, which applies a
+designated procedure to all items in a list except a given one:<p>
+
+<p><p><tt><a name="%_idx_3548"></a>(define&nbsp;(for-each-except&nbsp;exception&nbsp;procedure&nbsp;list)<br>
+&nbsp;&nbsp;(define&nbsp;(loop&nbsp;items)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((null?&nbsp;items)&nbsp;'done)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;items)&nbsp;exception)&nbsp;(loop&nbsp;(cdr&nbsp;items)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(procedure&nbsp;(car&nbsp;items))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(cdr&nbsp;items)))))<br>
+&nbsp;&nbsp;(loop&nbsp;list))<br>
+</tt><p><p><p>
+
+If a connector is asked to forget its value, it runs the local
+procedure <tt>forget-my-value</tt>, which first checks to make sure that
+the request is coming from the same object that set the value
+originally.  If so, the connector informs its associated constraints
+about the loss of the value.<p>
+
+The local procedure <tt>connect</tt> adds the designated new constraint
+to the list of constraints if it is not already in that list.  Then,
+if the connector has a value, it informs the new constraint of this
+fact.<p>
+
+The connector's procedure <tt>me</tt> serves as a dispatch to the other
+internal procedures and also represents the connector as an object.
+The following procedures provide a syntax interface for the dispatch:<p>
+
+<p><p><tt><a name="%_idx_3550"></a>(define&nbsp;(has-value?&nbsp;connector)<br>
+&nbsp;&nbsp;(connector&nbsp;'has-value?))<br>
+<a name="%_idx_3552"></a>(define&nbsp;(get-value&nbsp;connector)<br>
+&nbsp;&nbsp;(connector&nbsp;'value))<br>
+<a name="%_idx_3554"></a>(define&nbsp;(set-value!&nbsp;connector&nbsp;new-value&nbsp;informant)<br>
+&nbsp;&nbsp;((connector&nbsp;'set-value!)&nbsp;new-value&nbsp;informant))<br>
+<a name="%_idx_3556"></a>(define&nbsp;(forget-value!&nbsp;connector&nbsp;retractor)<br>
+&nbsp;&nbsp;((connector&nbsp;'forget)&nbsp;retractor))<br>
+<a name="%_idx_3558"></a>(define&nbsp;(connect&nbsp;connector&nbsp;new-constraint)<br>
+&nbsp;&nbsp;((connector&nbsp;'connect)&nbsp;new-constraint))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.33"></a>
+<b>Exercise 3.33.</b>&nbsp;&nbsp;Using primitive multiplier, adder, and constant constraints, define a
+procedure <a name="%_idx_3560"></a><tt>averager</tt> that takes three connectors <tt>a</tt>, <tt>b</tt>,
+and <tt>c</tt> as inputs and establishes the constraint that the value of
+<tt>c</tt> is the average of the values of <tt>a</tt> and <tt>b</tt>.
+<p><p>
+
+<p><a name="%_thm_3.34"></a>
+<b>Exercise 3.34.</b>&nbsp;&nbsp;<a name="%_idx_3562"></a>Louis Reasoner wants to build a squarer, a constraint device with two
+terminals such that the value of connector <tt>b</tt> on the second
+terminal will always be the square of the value <tt>a</tt> on the first
+terminal.  He proposes the following simple device made from a
+multiplier:<p>
+
+
+<p><p><tt>(define&nbsp;(squarer&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;(multiplier&nbsp;a&nbsp;a&nbsp;b))<br>
+</tt><p><p>
+There is a serious flaw in this idea.  Explain.
+
+<p><p>
+
+<p><a name="%_thm_3.35"></a>
+<b>Exercise 3.35.</b>&nbsp;&nbsp;<a name="%_idx_3564"></a>Ben Bitdiddle tells Louis that one way to avoid the trouble in
+exercise&nbsp;<a href="#%_thm_3.34">3.34</a> is to define a squarer as a new
+primitive constraint.  Fill in the missing portions in Ben's outline
+for a procedure to implement such a constraint:<p>
+
+
+<p><p><tt>(define&nbsp;(squarer&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;(define&nbsp;(process-new-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(has-value?&nbsp;b)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&lt;&nbsp;(get-value&nbsp;b)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;square&nbsp;less&nbsp;than&nbsp;0&nbsp;--&nbsp;SQUARER&quot;&nbsp;(get-value&nbsp;b))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>alternative1</em>&gt;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>alternative2</em>&gt;))<br>
+&nbsp;&nbsp;(define&nbsp;(process-forget-value)&nbsp;&lt;<em>body1</em>&gt;)<br>
+&nbsp;&nbsp;(define&nbsp;(me&nbsp;request)&nbsp;&lt;<em>body2</em>&gt;)<br>
+&nbsp;&nbsp;&lt;<em>rest&nbsp;of&nbsp;definition</em>&gt;<br>
+&nbsp;&nbsp;me)<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.36"></a>
+<b>Exercise 3.36.</b>&nbsp;&nbsp;Suppose we evaluate the following sequence of expressions in the
+global environment:<p>
+
+
+<p><p><tt>(define&nbsp;a&nbsp;(make-connector))<br>
+(define&nbsp;b&nbsp;(make-connector))<br>
+(set-value!&nbsp;a&nbsp;10&nbsp;'user)<br>
+</tt><p><p>
+At some time during evaluation of the <tt>set-value!</tt>, the following
+expression from the connector's local procedure is evaluated:<p>
+
+
+<p><p><tt>(for-each-except&nbsp;setter&nbsp;inform-about-value&nbsp;constraints)<br>
+</tt><p><p>
+Draw an environment diagram showing the environment in which the above
+expression is evaluated.
+<p><p>
+
+
+<p><a name="%_thm_3.37"></a>
+<b>Exercise 3.37.</b>&nbsp;&nbsp;The <tt>celsius-fahrenheit-converter</tt> procedure is cumbersome when
+compared with a more expression-oriented style of definition, such as<p>
+
+
+<p><p><tt><a name="%_idx_3566"></a>(define&nbsp;(celsius-fahrenheit-converter&nbsp;x)<br>
+&nbsp;&nbsp;(c+&nbsp;(c*&nbsp;(c/&nbsp;(cv&nbsp;9)&nbsp;(cv&nbsp;5))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cv&nbsp;32)))<br>
+(define&nbsp;C&nbsp;(make-connector))<br>
+(define&nbsp;F&nbsp;(celsius-fahrenheit-converter&nbsp;C))<br>
+</tt><p><p>
+Here <tt>c+</tt>, <tt>c*</tt>, etc. are the ``constraint'' versions of the
+arithmetic operations.  For example, <tt>c+</tt> takes two connectors as
+arguments and returns a connector that is related to these by an adder
+constraint:
+<p>
+
+
+<p><p><tt>(define&nbsp;(c+&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(let&nbsp;((z&nbsp;(make-connector)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(adder&nbsp;x&nbsp;y&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;z))<br>
+</tt><p><p>
+Define analogous procedures <tt>c-</tt>, <tt>c*</tt>, <tt>c/</tt>, and <tt>cv</tt>
+(constant value) that enable us to define compound constraints as in
+the converter example above.<a name="call_footnote_Temp_404" href="#footnote_Temp_404"><sup><small>33</small></sup></a>
+<p>
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_349" href="#call_footnote_Temp_349"><sup><small>16</small></sup></a> <tt>Set-car!</tt> and <tt>set-cdr!</tt> return implementation-dependent
+<a name="%_idx_3148"></a><a name="%_idx_3150"></a><a name="%_idx_3152"></a><a name="%_idx_3154"></a>values.  Like <tt>set!</tt>, they should be used only for their effect.
+
+<p><a name="footnote_Temp_350" href="#call_footnote_Temp_350"><sup><small>17</small></sup></a> We see from this that mutation operations on lists
+can create ``garbage'' that is not part of any accessible structure.
+We will see in section&nbsp;<a href="book-Z-H-33.html#%_sec_5.3.2">5.3.2</a> that Lisp memory-management
+systems include a <a name="%_idx_3156"></a><em>garbage collector</em>, which identifies and
+recycles the memory space used by unneeded pairs.
+
+<p><a name="footnote_Temp_351" href="#call_footnote_Temp_351"><sup><small>18</small></sup></a> <tt>Get-new-pair</tt> is one of the operations that must be implemented as
+part of the memory management required by a Lisp implementation.  We
+will discuss this in section&nbsp;<a href="book-Z-H-33.html#%_sec_5.3.1">5.3.1</a>.
+
+<p><a name="footnote_Temp_356" href="#call_footnote_Temp_356"><sup><small>19</small></sup></a> The two pairs
+are distinct because each call to <tt>cons</tt> returns a new pair.  The
+symbols are shared; in Scheme there is a unique symbol with any given
+<a name="%_idx_3184"></a>name.  Since Scheme provides no way to mutate a symbol, this sharing is
+undetectable.  Note also that the sharing is what enables us to
+compare symbols using <tt>eq?</tt>, which simply checks equality of
+pointers.
+
+<p><a name="footnote_Temp_357" href="#call_footnote_Temp_357"><sup><small>20</small></sup></a> The
+subtleties of dealing with sharing of mutable data objects reflect the
+underlying issues of ``sameness'' and ``change'' that were raised in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>.  We mentioned there that
+admitting change to our language requires that a compound object must
+have an ``identity'' that is something different from the pieces from
+which it is composed.  In Lisp, we consider this ``identity'' to be
+the quality that is tested by <tt>eq?</tt>, i.e., by equality of
+pointers.  Since in most Lisp implementations a pointer is
+essentially a memory address, we are ``solving the problem'' of
+defining the identity of objects by stipulating that a data object
+``itself'' is the information stored in some particular set of memory
+locations in the computer.  This suffices for simple Lisp programs,
+but is hardly a general way to resolve the issue of ``sameness'' in
+computational models.
+
+<p><a name="footnote_Temp_364" href="#call_footnote_Temp_364"><sup><small>21</small></sup></a> On the other hand, from the
+viewpoint of implementation, assignment requires us to modify the
+environment, which is itself a mutable data structure.  Thus,
+assignment and mutation are equipotent: Each can be implemented in
+terms of the other.
+
+<p><a name="footnote_Temp_366" href="#call_footnote_Temp_366"><sup><small>22</small></sup></a> If the first item is
+the final item in the queue, the front pointer will be the empty list after
+the deletion, which will mark the queue as empty; we needn't worry
+about updating the rear pointer, which will still point to the deleted
+item, because <tt>empty-queue?</tt> looks only at the front pointer.
+
+<p><a name="footnote_Temp_370" href="#call_footnote_Temp_370"><sup><small>23</small></sup></a> Be careful not to
+make the interpreter try to print a structure that contains cycles.
+(See exercise&nbsp;<a href="#%_thm_3.13">3.13</a>.)
+
+<p><a name="footnote_Temp_371" href="#call_footnote_Temp_371"><sup><small>24</small></sup></a> Because <tt>assoc</tt>
+uses <tt>equal?</tt>, it can recognize keys that are symbols, numbers,
+or list structure.
+
+<p><a name="footnote_Temp_372" href="#call_footnote_Temp_372"><sup><small>25</small></sup></a> Thus, the first backbone pair is the
+object that represents the table ``itself''; that is, a pointer to the
+table is a pointer to this pair.  This same backbone pair always
+starts the table.  If we did not arrange things in this way, <tt>insert!</tt> would have to return a new value for the start of the table
+when it added a new record.
+
+<p><a name="footnote_Temp_379" href="#call_footnote_Temp_379"><sup><small>26</small></sup></a> A
+full-adder is a basic circuit element used in adding two binary
+numbers.  Here A and B are the bits at corresponding positions in the
+two numbers to be added, and C<sub><em>i</em><em>n</em></sub> is the carry bit from the
+addition one place to the right.  The circuit generates SUM, which is
+the sum bit in the corresponding position, and C<sub><em>o</em><em>u</em><em>t</em></sub>, which is the
+carry bit to be propagated to the left.
+
+<p><a name="footnote_Temp_385" href="#call_footnote_Temp_385"><sup><small>27</small></sup></a> These procedures are simply syntactic sugar that allow
+<a name="%_idx_3400"></a><a name="%_idx_3402"></a>us to use ordinary procedural syntax to access the local procedures of
+objects.  It is striking that we can interchange the role of
+``procedures'' and ``data'' in such a simple way.  For example, if we
+write <tt>(wire 'get-signal)</tt> we think of <tt>wire</tt> as a procedure
+that is called with the message <tt>get-signal</tt> as input.
+Alternatively, writing <tt>(get-signal wire)</tt> encourages us to think
+of <tt>wire</tt> as a data object that is the input to a procedure <tt>get-signal</tt>.  The truth of the matter is that, in a language in which
+we can deal with procedures as objects, there is no fundamental
+difference between ``procedures'' and ``data,'' and we can choose our
+syntactic sugar to allow us to program in whatever style we choose.
+
+
+<p><a name="footnote_Temp_390" href="#call_footnote_Temp_390"><sup><small>28</small></sup></a> The
+agenda is a <a name="%_idx_3452"></a><a name="%_idx_3454"></a>headed list, like the tables in section&nbsp;<a href="#%_sec_3.3.3">3.3.3</a>,
+but since the list is headed by the time, we do not need an additional
+dummy header (such as the <tt>*table*</tt> symbol used with tables).
+
+<p><a name="footnote_Temp_391" href="#call_footnote_Temp_391"><sup><small>29</small></sup></a> Observe that the <tt>if</tt> expression in
+this procedure has no
+&lt;<em>alternative</em>&gt; expression.  Such a ``one-armed <tt>if</tt> statement''
+<a name="%_idx_3474"></a><a name="%_idx_3476"></a>is used to decide whether to do something, rather than to select
+between two expressions.  An <tt>if</tt> expression returns an
+unspecified value if the predicate is false and there is no
+&lt;<em>alternative</em>&gt;.
+
+<p><a name="footnote_Temp_392" href="#call_footnote_Temp_392"><sup><small>30</small></sup></a> In this way, the current time will always be the time
+of the action most recently processed.  Storing this time at the head
+of the agenda ensures that it will still be available even if the
+associated time segment has been deleted.
+
+<p><a name="footnote_Temp_394" href="#call_footnote_Temp_394"><sup><small>31</small></sup></a> Constraint propagation
+first appeared in the incredibly forward-looking <a name="%_idx_3486"></a>SKETCHPAD system of
+<a name="%_idx_3488"></a>Ivan Sutherland (1963).  A beautiful constraint-propagation system
+based on the <a name="%_idx_3490"></a>Smalltalk language was developed by <a name="%_idx_3492"></a>Alan Borning (1977)
+at <a name="%_idx_3494"></a>Xerox Palo Alto Research Center.  Sussman, Stallman, and Steele
+<a name="%_idx_3496"></a><a name="%_idx_3498"></a><a name="%_idx_3500"></a><a name="%_idx_3502"></a><a name="%_idx_3504"></a><a name="%_idx_3506"></a>applied constraint propagation to electrical circuit analysis (Sussman
+and Stallman 1975; Sussman and Steele 1980). TK!Solver (Konopasek and
+Jayaraman 1984) is an extensive modeling environment based on
+constraints.
+
+<p><a name="footnote_Temp_398" href="#call_footnote_Temp_398"><sup><small>32</small></sup></a> The <tt>setter</tt> might not be a constraint.  In our
+temperature example, we used <tt>user</tt> as the <tt>setter</tt>.
+
+<p><a name="footnote_Temp_404" href="#call_footnote_Temp_404"><sup><small>33</small></sup></a> The expression-oriented format
+is convenient because it avoids the need to name the intermediate
+expressions in a computation.  Our original formulation of the
+<a name="%_idx_3568"></a><a name="%_idx_3570"></a><a name="%_idx_3572"></a><a name="%_idx_3574"></a><a name="%_idx_3576"></a>constraint language is cumbersome in the same way that many languages
+are cumbersome when dealing with operations on compound data.  For
+example, if we wanted to compute the product (<em>a</em> + <em>b</em>) &middot; (<em>c</em> + <em>d</em>), where the
+variables represent vectors, we could work in ``imperative style,''
+using procedures that set the values of designated vector arguments
+but do not themselves return vectors as values:
+<p><p><tt>(v-sum&nbsp;a&nbsp;b&nbsp;temp1)<br>
+(v-sum&nbsp;c&nbsp;d&nbsp;temp2)<br>
+(v-prod&nbsp;temp1&nbsp;temp2&nbsp;answer)<br>
+</tt><p><p>
+Alternatively, we could deal with expressions, using
+procedures that return vectors as values, and thus avoid
+explicitly mentioning <tt>temp1</tt> and <tt>temp2</tt>:
+<p><p><tt>(define&nbsp;answer&nbsp;(v-prod&nbsp;(v-sum&nbsp;a&nbsp;b)&nbsp;(v-sum&nbsp;c&nbsp;d)))<br>
+</tt><p><p>
+Since Lisp allows us to return compound objects as values of
+procedures, we can transform our imperative-style constraint language
+into an expression-oriented style as shown in this exercise.  In
+languages that are impoverished in handling compound objects, such as
+Algol, Basic, and Pascal (unless one explicitly uses Pascal pointer
+variables), one is usually stuck with the imperative style when
+manipulating compound objects.  Given the advantage of the
+expression-oriented format, one might ask if there is any reason to
+have implemented the system in imperative style, as we did in this
+section.  One reason is that the non-expression-oriented constraint
+language provides a handle on constraint objects (e.g., the value of
+the <tt>adder</tt> procedure) as well as on connector objects.  This is
+useful if we wish to extend the system with new operations that
+communicate with constraints directly rather than only indirectly via
+operations on connectors.  Although it is easy to implement the
+expression-oriented style in terms of the imperative implementation,
+it is very difficult to do the converse.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-21.html">previous</a></span><span>, <a href="book-Z-H-23.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

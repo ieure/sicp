@@ -1,0 +1,895 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o,
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-16.html">previous</a></span><span>, <a href="book-Z-H-18.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_2.4"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_2.4">2.4&nbsp;&nbsp;Multiple Representations for Abstract Data</a></h2><p>
+
+
+<a name="%_idx_2286"></a><a name="%_idx_2288"></a>
+We have introduced data abstraction, a methodology for structuring
+systems in such a way that much of a program can be specified
+independent of the choices involved in implementing the data objects
+that the program manipulates.  For example, we saw in
+section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a> how to separate the task of designing a
+program that uses rational numbers from the task of implementing
+rational numbers in terms of the computer language's primitive
+mechanisms for constructing compound data.  The key idea was to erect
+an abstraction barrier -- in this case, the selectors and constructors
+for rational numbers (<tt>make-rat</tt>, <tt>numer</tt>, <tt>denom</tt>) -- that
+isolates the way rational numbers are used from their underlying
+representation in terms of list structure.  A similar abstraction
+barrier isolates the details of the procedures that perform rational
+arithmetic (<tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, and <tt>div-rat</tt>) from the ``higher-level'' procedures that use rational
+numbers.  The resulting program has the structure shown in
+figure&nbsp;<a href="book-Z-H-14.html#%_fig_2.1">2.1</a>.<p>
+
+These data-abstraction barriers are powerful tools for controlling
+complexity.  By isolating the underlying representations of data
+objects, we can divide the task of designing a large program into
+smaller tasks that can be performed separately.  But this kind of data
+abstraction is not yet powerful enough, because it may not always make
+sense to speak of ``the underlying representation'' for a data object.<p>
+
+
+For one thing, there might be more than one useful representation for
+a data object, and we might like to design systems that can deal with
+multiple representations.  To take a simple example, complex numbers
+may be represented in two almost equivalent ways: in rectangular form
+(real and imaginary parts) and in polar form (magnitude and angle).
+Sometimes rectangular form is more appropriate and sometimes polar
+form is more appropriate.  Indeed, it is perfectly plausible to
+imagine a system in which complex numbers are represented in both
+ways, and in which the procedures for manipulating complex numbers work
+with either representation.<p>
+
+More importantly, programming systems are often designed by many
+people working over extended periods of time, subject to requirements
+that change over time.  In such an environment, it is simply not
+possible for everyone to agree in advance on choices of data
+representation.  So in addition to the data-abstraction barriers that
+isolate representation from use, we need abstraction barriers that
+isolate different design choices from each other and permit different
+choices to coexist in a single program.  Furthermore, since large
+programs are often created by combining pre-existing modules that were
+designed in isolation, we need conventions that permit programmers to
+incorporate modules into larger systems <a name="%_idx_2290"></a><em>additively</em>, that is,
+without having to redesign or reimplement these modules.<p>
+
+In this section, we will learn how to cope with data that may be
+represented in different ways by different parts of a program.  This
+requires constructing <a name="%_idx_2292"></a><a name="%_idx_2294"></a><em>generic procedures</em> -- procedures that can
+operate on data that may be represented in more than one way.  Our
+main technique for building generic procedures will be to work in terms
+of data objects that have <a name="%_idx_2296"></a><em>type tags</em>, that is, data objects
+that include explicit information about how they are to be processed.
+We will also discuss <a name="%_idx_2298"></a><em>data-directed</em> programming, a powerful and
+convenient implementation strategy for additively assembling systems
+with generic operations.<p>
+
+We begin with the simple complex-number example. We will see how
+type tags and data-directed style enable us to design separate
+rectangular and polar representations for complex numbers while
+maintaining the notion of an abstract ``complex-number'' data object.
+<a name="%_idx_2300"></a><a name="%_idx_2302"></a>We will accomplish this by defining arithmetic procedures for complex
+numbers (<tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and
+<tt>div-complex</tt>) in terms of generic selectors that access parts of
+a complex number independent of how the number is represented.  The
+resulting complex-number system, as shown in
+figure&nbsp;<a href="#%_fig_2.19">2.19</a>, contains two different kinds of
+<a name="%_idx_2304"></a>abstraction barriers.  The ``horizontal'' abstraction barriers play
+the same role as the ones in
+figure&nbsp;<a href="book-Z-H-14.html#%_fig_2.1">2.1</a>.  They isolate ``higher-level''
+operations from ``lower-level'' representations.  In addition, there
+is a ``vertical'' barrier that gives us the ability to separately
+design and install alternative representations.<p>
+
+<a name="%_fig_2.19"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-54.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 2.19:</b>&nbsp;&nbsp;Data-abstraction barriers in the complex-number system.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+
+In section&nbsp;<a href="book-Z-H-18.html#%_sec_2.5">2.5</a> we will show how to use
+type tags and data-directed style to develop a generic arithmetic
+package.  This provides procedures (<tt>add</tt>, <tt>mul</tt>, and so on)
+that can be used to manipulate all sorts of ``numbers'' and can be
+easily extended when a new kind of number is needed.
+In section&nbsp;<a href="book-Z-H-18.html#%_sec_2.5.3">2.5.3</a>, we'll show how to use generic
+arithmetic in a system that performs symbolic algebra.<p>
+
+<a name="%_sec_2.4.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.4.1">2.4.1&nbsp;&nbsp;Representations for Complex Numbers</a></h3><p>
+
+<p>
+
+<a name="%_idx_2306"></a>We will develop a system that performs arithmetic operations on
+complex numbers as a simple but unrealistic example of a program that
+uses generic operations.  We begin by discussing two plausible
+representations for complex numbers as ordered pairs: rectangular form
+(real part and imaginary part) and polar form (magnitude and
+angle).<a name="call_footnote_Temp_268" href="#footnote_Temp_268"><sup><small>43</small></sup></a>  Section&nbsp;<a href="#%_sec_2.4.2">2.4.2</a>
+will show how both representations can be made to coexist in a single
+system through the use of type tags and generic operations.<p>
+
+Like rational numbers, complex numbers are naturally represented as
+ordered pairs.  The set of complex numbers can be thought of as a
+two-dimensional space with two orthogonal axes, the ``real'' axis and
+the ``imaginary'' axis. (See figure&nbsp;<a href="#%_fig_2.20">2.20</a>.)  From
+this point of view, the complex number <em>z</em> = <em>x</em> + <em>i</em><em>y</em> (where <em>i</em><sup>2</sup>  =  - 1)
+can be thought of as the point in the plane whose real coordinate is <em>x</em> and whose
+imaginary coordinate is <em>y</em>.  Addition of complex numbers reduces in
+this representation to addition of coordinates:<p>
+
+<p><div align=left><img src="ch2-Z-G-55.gif" border="0"></div><p><p>
+
+<p><div align=left><img src="ch2-Z-G-56.gif" border="0"></div><p><p>
+
+When multiplying complex numbers, it is more natural to think in terms
+of representing a complex number in polar form, as a magnitude and an
+angle (<em>r</em> and <em>A</em> in figure&nbsp;<a href="#%_fig_2.20">2.20</a>).
+The product of two complex numbers is the vector obtained by
+stretching one complex number by the length of the other and then
+rotating it through the angle of the other:<p>
+
+<p><div align=left><img src="ch2-Z-G-57.gif" border="0"></div><p><p>
+
+<p><div align=left><img src="ch2-Z-G-58.gif" border="0"></div><p>
+
+Thus, there are two different representations for complex numbers,
+which are appropriate for different operations.  Yet, from the
+viewpoint of someone writing a program that uses complex numbers, the
+principle of data abstraction suggests that all the operations for
+manipulating complex numbers should be available regardless of which
+representation is used by the computer.  For example, it is often
+useful to be able to find the magnitude of a complex number that is
+specified by rectangular coordinates.  Similarly, it is often useful
+to be able to determine the real part of a complex number that is
+specified by polar coordinates.<p>
+
+<a name="%_fig_2.20"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-59.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 2.20:</b>&nbsp;&nbsp;Complex numbers as points in the plane.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+To design such a system, we can follow the same <a name="%_idx_2310"></a>data-abstraction
+strategy we followed in designing the rational-number package in
+section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.  Assume that the operations on complex numbers are
+implemented in terms of four selectors: <tt>real-part</tt>,
+<tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>.  Also assume that
+we have two procedures for constructing complex numbers: <tt>make-from-real-imag</tt> returns a complex number with specified real and
+imaginary parts, and <tt>make-from-mag-ang</tt> returns a complex number with
+specified magnitude and angle.  These procedures have the property that,
+for any complex number <tt>z</tt>, both<p>
+
+
+<p><p><tt>(make-from-real-imag&nbsp;(real-part&nbsp;z)&nbsp;(imag-part&nbsp;z))<br>
+</tt><p><p>
+and<p>
+
+
+<p><p><tt>(make-from-mag-ang&nbsp;(magnitude&nbsp;z)&nbsp;(angle&nbsp;z))<br>
+</tt><p><p>
+produce complex numbers that are equal to <tt>z</tt>.<p>
+
+Using these constructors and selectors, we can implement
+arithmetic on complex numbers using the ``abstract data'' specified by
+the constructors and selectors, just as we did for rational numbers in
+section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.  As shown in the formulas above, we can add and
+subtract complex numbers in terms of real and imaginary parts while
+multiplying and dividing complex numbers in terms of magnitudes and
+angles:<p>
+
+<p><p><tt><a name="%_idx_2312"></a>(define&nbsp;(add-complex&nbsp;z1&nbsp;z2)<br>
+&nbsp;&nbsp;(make-from-real-imag&nbsp;(+&nbsp;(real-part&nbsp;z1)&nbsp;(real-part&nbsp;z2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(imag-part&nbsp;z1)&nbsp;(imag-part&nbsp;z2))))<br>
+<a name="%_idx_2314"></a>(define&nbsp;(sub-complex&nbsp;z1&nbsp;z2)<br>
+&nbsp;&nbsp;(make-from-real-imag&nbsp;(-&nbsp;(real-part&nbsp;z1)&nbsp;(real-part&nbsp;z2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&nbsp;(imag-part&nbsp;z1)&nbsp;(imag-part&nbsp;z2))))<br>
+<a name="%_idx_2316"></a>(define&nbsp;(mul-complex&nbsp;z1&nbsp;z2)<br>
+&nbsp;&nbsp;(make-from-mag-ang&nbsp;(*&nbsp;(magnitude&nbsp;z1)&nbsp;(magnitude&nbsp;z2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(angle&nbsp;z1)&nbsp;(angle&nbsp;z2))))<br>
+<a name="%_idx_2318"></a>(define&nbsp;(div-complex&nbsp;z1&nbsp;z2)<br>
+&nbsp;&nbsp;(make-from-mag-ang&nbsp;(/&nbsp;(magnitude&nbsp;z1)&nbsp;(magnitude&nbsp;z2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&nbsp;(angle&nbsp;z1)&nbsp;(angle&nbsp;z2))))<br>
+</tt><p><p><p>
+
+To complete the complex-number package, we must choose a
+representation and we must implement the constructors and selectors in
+terms of primitive numbers and primitive list structure.
+There are two obvious ways to do this: We can represent a complex
+number in ``rectangular form'' as a pair (real part, imaginary part)
+or in ``polar form'' as a pair (magnitude, angle).  Which shall we
+choose?<p>
+
+
+In order to make the different choices concrete, imagine that there
+are two programmers, Ben Bitdiddle and Alyssa P. Hacker, who are
+independently designing representations for the complex-number system.
+<a name="%_idx_2320"></a>Ben chooses to represent complex numbers in rectangular form.  With
+this choice, selecting the real and imaginary parts of a complex
+number is straightforward, as is constructing a complex number with
+given real and imaginary parts.  To find the magnitude and the angle,
+or to construct a complex number with a given magnitude and angle, he
+uses the trigonometric relations<p>
+
+<p><div align=left><img src="ch2-Z-G-60.gif" border="0"></div><p>
+<p><div align=left><img src="ch2-Z-G-61.gif" border="0"></div><p><p>
+
+which relate the real and imaginary parts (<em>x</em>, <em>y</em>) to the magnitude
+and the angle (<em>r</em>, <em>A</em>).<a name="call_footnote_Temp_269" href="#footnote_Temp_269"><sup><small>44</small></sup></a>  Ben's representation is
+therefore given by the following selectors and constructors:<p>
+
+<p><p><tt><a name="%_idx_2328"></a>(define&nbsp;(real-part&nbsp;z)&nbsp;(car&nbsp;z))<br>
+<a name="%_idx_2330"></a>(define&nbsp;(imag-part&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+<a name="%_idx_2332"></a>(define&nbsp;(magnitude&nbsp;z)<br>
+&nbsp;&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;(real-part&nbsp;z))&nbsp;(square&nbsp;(imag-part&nbsp;z)))))<br>
+<a name="%_idx_2334"></a>(define&nbsp;(angle&nbsp;z)<br>
+&nbsp;&nbsp;(atan&nbsp;(imag-part&nbsp;z)&nbsp;(real-part&nbsp;z)))<br>
+<a name="%_idx_2336"></a>(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)&nbsp;(cons&nbsp;x&nbsp;y))<br>
+<a name="%_idx_2338"></a>(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)&nbsp;<br>
+&nbsp;&nbsp;(cons&nbsp;(*&nbsp;r&nbsp;(cos&nbsp;a))&nbsp;(*&nbsp;r&nbsp;(sin&nbsp;a))))<br>
+</tt><p><p><p>
+
+<a name="%_idx_2340"></a>Alyssa, in contrast, chooses to represent complex numbers in polar
+form.  For her, selecting the magnitude and angle is straightforward,
+but she has to use the <a name="%_idx_2342"></a>trigonometric relations to obtain the real and
+imaginary parts.  Alyssa's representation is:<p>
+
+<p><p><tt><a name="%_idx_2344"></a>(define&nbsp;(real-part&nbsp;z)<br>
+&nbsp;&nbsp;(*&nbsp;(magnitude&nbsp;z)&nbsp;(cos&nbsp;(angle&nbsp;z))))<br>
+<a name="%_idx_2346"></a>(define&nbsp;(imag-part&nbsp;z)<br>
+&nbsp;&nbsp;(*&nbsp;(magnitude&nbsp;z)&nbsp;(sin&nbsp;(angle&nbsp;z))))<br>
+<a name="%_idx_2348"></a>(define&nbsp;(magnitude&nbsp;z)&nbsp;(car&nbsp;z))<br>
+<a name="%_idx_2350"></a>(define&nbsp;(angle&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+<a name="%_idx_2352"></a>(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)&nbsp;<br>
+&nbsp;&nbsp;(cons&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;x)&nbsp;(square&nbsp;y)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(atan&nbsp;y&nbsp;x)))<br>
+<a name="%_idx_2354"></a>(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)&nbsp;(cons&nbsp;r&nbsp;a))<br>
+</tt><p><p><p>
+
+The discipline of data abstraction ensures that the same implementation of
+<tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> will work with either Ben's representation or Alyssa's
+representation. <p>
+
+<a name="%_sec_2.4.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.4.2">2.4.2&nbsp;&nbsp;Tagged data</a></h3><p>
+
+
+<a name="%_idx_2356"></a><a name="%_idx_2358"></a><a name="%_idx_2360"></a>
+One way to view data abstraction is as an application of the
+<a name="%_idx_2362"></a><a name="%_idx_2364"></a>``principle of least commitment.''  In implementing the complex-number
+system in section&nbsp;<a href="#%_sec_2.4.1">2.4.1</a>, we can
+use either Ben's rectangular representation or Alyssa's polar
+representation.  The abstraction barrier formed by the selectors and
+constructors permits us to defer to the last possible moment the
+choice of a concrete representation for our data objects and thus
+retain maximum flexibility in our system design.<p>
+
+The principle of least commitment can be carried to even further
+extremes.  If we desire, we can maintain the ambiguity of
+representation even <em>after</em> we have designed the selectors and
+constructors, and elect to use both Ben's representation <em>and</em>
+Alyssa's representation.  If both representations are included in a
+single system, however, we will need some way to distinguish data in
+polar form from data in rectangular form.  Otherwise, if we were
+asked, for instance, to find the <tt>magnitude</tt> of the pair (3,4),
+we wouldn't know whether to answer 5 (interpreting the number in
+rectangular form) or 3 (interpreting the number in polar form).  A
+straightforward way to accomplish this distinction is to include a
+<a name="%_idx_2366"></a><em>type tag</em> -- the symbol <tt>rectangular</tt> or <tt>polar</tt> -- as
+part of each complex number.  Then when we need to manipulate a
+complex number we can use the tag to decide which selector to apply.<p>
+
+In order to manipulate tagged data,
+we will assume that we have procedures <tt>type-tag</tt> and <tt>contents</tt> that extract from a data object the tag and the actual
+contents (the polar or rectangular coordinates, in the case of a
+complex number).  We will also postulate a procedure <tt>attach-tag</tt> that takes a tag and contents and produces a tagged data
+object.  A straightforward way to implement this is to use ordinary
+list structure:<p>
+
+<p><p><tt><a name="%_idx_2368"></a>(define&nbsp;(attach-tag&nbsp;type-tag&nbsp;contents)<br>
+&nbsp;&nbsp;(cons&nbsp;type-tag&nbsp;contents))<br>
+<a name="%_idx_2370"></a>(define&nbsp;(type-tag&nbsp;datum)<br>
+&nbsp;&nbsp;(if&nbsp;(pair?&nbsp;datum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(car&nbsp;datum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Bad&nbsp;tagged&nbsp;datum&nbsp;--&nbsp;TYPE-TAG&quot;&nbsp;datum)))<br>
+<a name="%_idx_2372"></a>(define&nbsp;(contents&nbsp;datum)<br>
+&nbsp;&nbsp;(if&nbsp;(pair?&nbsp;datum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;datum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Bad&nbsp;tagged&nbsp;datum&nbsp;--&nbsp;CONTENTS&quot;&nbsp;datum)))<br>
+</tt><p><p><p>
+
+Using these procedures, we can define predicates <tt>rectangular?</tt>
+and <tt>polar?</tt>, which recognize polar and rectangular numbers,
+respectively:<p>
+
+<p><p><tt><a name="%_idx_2374"></a>(define&nbsp;(rectangular?&nbsp;z)<br>
+&nbsp;&nbsp;(eq?&nbsp;(type-tag&nbsp;z)&nbsp;'rectangular))<br>
+<a name="%_idx_2376"></a>(define&nbsp;(polar?&nbsp;z)<br>
+&nbsp;&nbsp;(eq?&nbsp;(type-tag&nbsp;z)&nbsp;'polar))<br>
+</tt><p><p><p>
+
+With type tags, Ben and Alyssa can now modify their code so that
+their two different representations can coexist in the same system.
+Whenever Ben constructs a complex number, he tags it as rectangular.
+Whenever Alyssa constructs a complex number, she tags it as polar.
+In addition, Ben and Alyssa must make sure that the names of their
+procedures do not conflict.  One way to do this is for Ben to append
+the suffix <tt>rectangular</tt> to the name of each of his representation
+procedures and for Alyssa to append <tt>polar</tt> to the names of hers.
+Here is Ben's revised rectangular representation from
+section&nbsp;<a href="#%_sec_2.4.1">2.4.1</a>:<p>
+
+<p><p><tt><a name="%_idx_2378"></a>(define&nbsp;(real-part-rectangular&nbsp;z)&nbsp;(car&nbsp;z))<br>
+<a name="%_idx_2380"></a>(define&nbsp;(imag-part-rectangular&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+<a name="%_idx_2382"></a>(define&nbsp;(magnitude-rectangular&nbsp;z)<br>
+&nbsp;&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;(real-part-rectangular&nbsp;z))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(square&nbsp;(imag-part-rectangular&nbsp;z)))))<br>
+<a name="%_idx_2384"></a>(define&nbsp;(angle-rectangular&nbsp;z)<br>
+&nbsp;&nbsp;(atan&nbsp;(imag-part-rectangular&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(real-part-rectangular&nbsp;z)))<br>
+<a name="%_idx_2386"></a>(define&nbsp;(make-from-real-imag-rectangular&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(attach-tag&nbsp;'rectangular&nbsp;(cons&nbsp;x&nbsp;y)))<br>
+<a name="%_idx_2388"></a>(define&nbsp;(make-from-mag-ang-rectangular&nbsp;r&nbsp;a)&nbsp;<br>
+&nbsp;&nbsp;(attach-tag&nbsp;'rectangular<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(*&nbsp;r&nbsp;(cos&nbsp;a))&nbsp;(*&nbsp;r&nbsp;(sin&nbsp;a)))))<br>
+</tt><p><p>
+and here is Alyssa's revised polar representation:<p>
+
+<p><p><tt><a name="%_idx_2390"></a>(define&nbsp;(real-part-polar&nbsp;z)<br>
+&nbsp;&nbsp;(*&nbsp;(magnitude-polar&nbsp;z)&nbsp;(cos&nbsp;(angle-polar&nbsp;z))))<br>
+<a name="%_idx_2392"></a>(define&nbsp;(imag-part-polar&nbsp;z)<br>
+&nbsp;&nbsp;(*&nbsp;(magnitude-polar&nbsp;z)&nbsp;(sin&nbsp;(angle-polar&nbsp;z))))<br>
+<a name="%_idx_2394"></a>(define&nbsp;(magnitude-polar&nbsp;z)&nbsp;(car&nbsp;z))<br>
+<a name="%_idx_2396"></a>(define&nbsp;(angle-polar&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+<a name="%_idx_2398"></a>(define&nbsp;(make-from-real-imag-polar&nbsp;x&nbsp;y)&nbsp;<br>
+&nbsp;&nbsp;(attach-tag&nbsp;'polar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;x)&nbsp;(square&nbsp;y)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(atan&nbsp;y&nbsp;x))))<br>
+<a name="%_idx_2400"></a>(define&nbsp;(make-from-mag-ang-polar&nbsp;r&nbsp;a)<br>
+&nbsp;&nbsp;(attach-tag&nbsp;'polar&nbsp;(cons&nbsp;r&nbsp;a)))<br>
+</tt><p><p><p>
+
+
+<a name="%_idx_2402"></a><a name="%_idx_2404"></a>Each generic selector is implemented as a procedure that checks the
+tag of its argument and calls the appropriate procedure for handling
+data of that type.  For example, to obtain the real part of a complex
+number, <tt>real-part</tt> examines the tag to determine whether to use
+Ben's <tt>real-part-rectangular</tt> or Alyssa's <tt>real-part-polar</tt>.
+In either case, we use <tt>contents</tt> to extract the bare, untagged
+datum and send this to the rectangular or polar procedure as required:<p>
+
+<p><p><tt><a name="%_idx_2406"></a>(define&nbsp;(real-part&nbsp;z)<br>
+&nbsp;&nbsp;(cond&nbsp;((rectangular?&nbsp;z)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(real-part-rectangular&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((polar?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(real-part-polar&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;type&nbsp;--&nbsp;REAL-PART&quot;&nbsp;z))))<br>
+<a name="%_idx_2408"></a>(define&nbsp;(imag-part&nbsp;z)<br>
+&nbsp;&nbsp;(cond&nbsp;((rectangular?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(imag-part-rectangular&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((polar?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(imag-part-polar&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;type&nbsp;--&nbsp;IMAG-PART&quot;&nbsp;z))))<br>
+<a name="%_idx_2410"></a>(define&nbsp;(magnitude&nbsp;z)<br>
+&nbsp;&nbsp;(cond&nbsp;((rectangular?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(magnitude-rectangular&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((polar?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(magnitude-polar&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;type&nbsp;--&nbsp;MAGNITUDE&quot;&nbsp;z))))<br>
+<a name="%_idx_2412"></a>(define&nbsp;(angle&nbsp;z)<br>
+&nbsp;&nbsp;(cond&nbsp;((rectangular?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(angle-rectangular&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((polar?&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(angle-polar&nbsp;(contents&nbsp;z)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;type&nbsp;--&nbsp;ANGLE&quot;&nbsp;z))))<br>
+</tt><p><p><p>
+
+To implement the complex-number arithmetic operations, we can use the
+same procedures <tt>add-complex</tt>, <tt>sub-complex</tt>, <tt>mul-complex</tt>, and <tt>div-complex</tt> from
+section&nbsp;<a href="#%_sec_2.4.1">2.4.1</a>, because the
+selectors they call are generic, and so will work with either
+representation.  For example, the procedure <tt>add-complex</tt> is still<p>
+
+<p><p><tt>(define&nbsp;(add-complex&nbsp;z1&nbsp;z2)<br>
+&nbsp;&nbsp;(make-from-real-imag&nbsp;(+&nbsp;(real-part&nbsp;z1)&nbsp;(real-part&nbsp;z2))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(imag-part&nbsp;z1)&nbsp;(imag-part&nbsp;z2))))<br>
+</tt><p><p><p>
+
+Finally, we must choose whether to construct complex numbers using
+Ben's representation or Alyssa's representation.  One reasonable
+choice is to construct rectangular numbers whenever we have real and
+imaginary parts and to construct polar numbers whenever we have
+magnitudes and angles:<p>
+
+<p><p><tt><a name="%_idx_2414"></a>(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(make-from-real-imag-rectangular&nbsp;x&nbsp;y))<br>
+<a name="%_idx_2416"></a>(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)<br>
+&nbsp;&nbsp;(make-from-mag-ang-polar&nbsp;r&nbsp;a))<br>
+</tt><p><p><p>
+
+<a name="%_fig_2.21"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-62.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 2.21:</b>&nbsp;&nbsp;Structure of the generic complex-arithmetic system.</div></caption><tr><td>
+<a name="%_idx_2418"></a>
+</td></tr></table></div><p><p>
+
+The resulting complex-number system has the structure shown in
+figure&nbsp;<a href="#%_fig_2.21">2.21</a>.  The system has been
+decomposed into three relatively independent parts: the
+complex-number-arithmetic operations, Alyssa's polar
+implementation, and Ben's rectangular implementation.  The polar and
+rectangular implementations could have been written by Ben and Alyssa
+working separately, and both of these can be used as underlying
+representations by a third programmer implementing the
+complex-arithmetic procedures in terms of the abstract
+constructor/selector interface.<p>
+
+<a name="%_idx_2420"></a><a name="%_idx_2422"></a>Since each data object is tagged with its type, the selectors operate
+on the data in a generic manner.  That is, each selector is defined to
+have a behavior that depends upon the particular type of data it is
+applied to.  Notice the general mechanism for interfacing the separate
+representations: Within a given representation implementation (say,
+Alyssa's polar package) a complex number is an untyped pair
+(magnitude, angle).  When a generic selector operates on a number of
+<tt>polar</tt> type, it strips off the tag and passes the contents on to
+Alyssa's code.  Conversely, when Alyssa constructs a number for general
+use, she tags it with a type so that it can be appropriately
+recognized by the higher-level procedures.  This discipline of
+stripping off and attaching tags as data objects are passed from level
+to level can be an important organizational strategy, as we shall see
+in section&nbsp;<a href="book-Z-H-18.html#%_sec_2.5">2.5</a>.
+
+<p>
+
+<a name="%_sec_2.4.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.4.3">2.4.3&nbsp;&nbsp;Data-Directed Programming and Additivity</a></h3><p>
+
+
+<a name="%_idx_2424"></a><a name="%_idx_2426"></a>
+<a name="%_idx_2428"></a>The general strategy of checking the type of a datum and calling an
+appropriate procedure is called <a name="%_idx_2430"></a><a name="%_idx_2432"></a><em>dispatching on type</em>.  This is a
+powerful strategy for obtaining modularity in system design.  On
+the other hand, implementing the dispatch as in
+section&nbsp;<a href="#%_sec_2.4.2">2.4.2</a> has two significant weaknesses.  One
+weakness is that the generic interface procedures (<tt>real-part</tt>,
+<tt>imag-part</tt>, <tt>magnitude</tt>, and <tt>angle</tt>) must know about all
+the different representations.  For instance, suppose we wanted to
+incorporate a new representation for complex numbers into our
+complex-number system.  We would need to identify this new
+representation with a type, and then add a clause to each of the
+generic interface procedures to check for the new type and apply the
+appropriate selector for that representation.<p>
+
+Another weakness of the technique is that even though the individual
+representations can be designed separately, we must guarantee that
+no two procedures in the entire system have the same name.  This is
+why Ben and Alyssa had to change the names of their original
+procedures from section&nbsp;<a href="#%_sec_2.4.1">2.4.1</a>.<p>
+
+The issue underlying both of these weaknesses is that the technique
+for implementing generic interfaces is not <em>additive</em>.  The person
+implementing the generic selector procedures must modify those
+procedures each time a new representation is installed, and the people
+interfacing the individual representations must modify their
+code to avoid name conflicts.  In each of these cases, the changes
+that must be made to the code are straightforward, but they must be
+made nonetheless, and this is a source of inconvenience and error.
+This is not much of a problem for the complex-number system as it
+stands, but suppose there were not two but hundreds of different
+representations for complex numbers.  And suppose that there were many
+generic selectors to be maintained in the abstract-data interface.
+Suppose, in fact, that no one programmer knew all the interface
+procedures or all the representations.  The problem is real and must
+be addressed in such programs as large-scale data-base-management
+systems.<p>
+
+What we need is a means for modularizing the system design even
+further.  This is provided by the programming technique known as <em>data-directed programming</em>.  To understand how data-directed
+programming works, begin with the observation that whenever we deal
+with a set of generic operations that are common to a set of
+different types we are, in effect, dealing with a two-dimensional
+table that contains the possible operations on one axis and the
+possible types on the other axis.  The entries in the table are the
+procedures that implement each operation for each type of argument
+presented.  In the complex-number system developed in the previous
+section, the correspondence between operation name, data type, and
+actual procedure was spread out among the various conditional clauses
+in the generic interface procedures.  But the same information could
+have been organized in a table, as shown in
+figure&nbsp;<a href="#%_fig_2.22">2.22</a>.<p>
+
+
+<a name="%_idx_2434"></a>Data-directed programming is the technique of designing programs to
+work with such a table directly.  Previously, we implemented the
+mechanism that interfaces the complex-arithmetic code with the two
+representation packages as a set of procedures that each perform an
+explicit dispatch on type.  Here we will implement the interface as a single
+procedure that looks up the combination of the operation name and
+argument type in
+the table to find the correct procedure to apply, and then applies it
+to the contents of the argument.  If we do this, then to add a new
+representation package to the system we need not change any existing
+procedures; we need only add new entries to the table.<p>
+
+<a name="%_fig_2.22"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-63.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 2.22:</b>&nbsp;&nbsp;Table of operations for the complex-number system.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+To implement this plan, assume that we have two procedures,
+<tt>put</tt> and <tt>get</tt>, for manipulating the
+operation-and-type table:
+<a name="%_idx_2436"></a>
+<p><ul>
+<a name="%_idx_2438"></a><li><tt>(put &lt;<em>op</em>&gt; &lt;<em>type</em>&gt; &lt;<em>item</em>&gt;)</tt><br>
+installs the <tt>&lt;<em>item</em>&gt;</tt> in the table, indexed by the
+<tt>&lt;<em>op</em>&gt;</tt> and the <tt>&lt;<em>type</em>&gt;</tt>.<p>
+
+<a name="%_idx_2440"></a><li><tt>(get &lt;<em>op</em>&gt; &lt;<em>type</em>&gt;)</tt><br>
+looks up the <tt>&lt;<em>op</em>&gt;</tt>, <tt>&lt;<em>type</em>&gt;</tt> entry in the table
+and returns the item found there.  If no item is found, <tt>get</tt>
+returns false.
+</ul><p><p>
+
+For now, we can assume that <tt>put</tt> and <tt>get</tt> are
+included in our language.  In chapter&nbsp;3
+(section&nbsp;<a href="book-Z-H-22.html#%_sec_3.3.3">3.3.3</a>, exercise&nbsp;<a href="book-Z-H-22.html#%_thm_3.24">3.24</a>)
+we will see how to implement these and
+other operations for manipulating tables.<p>
+
+
+Here is how data-directed programming can be used in the
+complex-number system.  Ben, who developed the rectangular
+representation, implements his code just as he did originally.  He
+defines a collection of procedures, or a <a name="%_idx_2442"></a><em>package</em>, and interfaces
+these to the rest of the system by adding entries to the table that
+tell the system how to operate on rectangular numbers.
+This is accomplished by calling the following procedure:
+<a name="%_idx_2444"></a><a name="%_idx_2446"></a>
+<p><p><tt><a name="%_idx_2448"></a>(define&nbsp;(install-rectangular-package)<br>
+&nbsp;&nbsp;<em>;;&nbsp;internal&nbsp;procedures</em><br>
+&nbsp;&nbsp;(define&nbsp;(real-part&nbsp;z)&nbsp;(car&nbsp;z))<br>
+&nbsp;&nbsp;(define&nbsp;(imag-part&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+&nbsp;&nbsp;(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)&nbsp;(cons&nbsp;x&nbsp;y))<br>
+&nbsp;&nbsp;(define&nbsp;(magnitude&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;(real-part&nbsp;z))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(square&nbsp;(imag-part&nbsp;z)))))<br>
+&nbsp;&nbsp;(define&nbsp;(angle&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(atan&nbsp;(imag-part&nbsp;z)&nbsp;(real-part&nbsp;z)))<br>
+&nbsp;&nbsp;(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(*&nbsp;r&nbsp;(cos&nbsp;a))&nbsp;(*&nbsp;r&nbsp;(sin&nbsp;a))))<br>
+&nbsp;&nbsp;<em>;;&nbsp;interface&nbsp;to&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;system</em><br>
+&nbsp;&nbsp;(define&nbsp;(tag&nbsp;x)&nbsp;(attach-tag&nbsp;'rectangular&nbsp;x))<br>
+&nbsp;&nbsp;(put&nbsp;'real-part&nbsp;'(rectangular)&nbsp;real-part)<br>
+&nbsp;&nbsp;(put&nbsp;'imag-part&nbsp;'(rectangular)&nbsp;imag-part)<br>
+&nbsp;&nbsp;(put&nbsp;'magnitude&nbsp;'(rectangular)&nbsp;magnitude)<br>
+&nbsp;&nbsp;(put&nbsp;'angle&nbsp;'(rectangular)&nbsp;angle)<br>
+&nbsp;&nbsp;(put&nbsp;'make-from-real-imag&nbsp;'rectangular&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(x&nbsp;y)&nbsp;(tag&nbsp;(make-from-real-imag&nbsp;x&nbsp;y))))<br>
+&nbsp;&nbsp;(put&nbsp;'make-from-mag-ang&nbsp;'rectangular&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(r&nbsp;a)&nbsp;(tag&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a))))<br>
+&nbsp;&nbsp;'done)<br>
+</tt><p><p><p>
+
+Notice that the internal procedures here are the same procedures from
+section&nbsp;<a href="#%_sec_2.4.1">2.4.1</a> that Ben wrote when
+he was working in isolation.  No changes are necessary in order to
+interface them to the rest of the system.  Moreover, since these
+procedure definitions are internal to the installation procedure, Ben
+needn't worry about name conflicts with other procedures outside the
+rectangular package.  To interface these to the rest of the system,
+Ben installs his <tt>real-part</tt> procedure under the operation name
+<tt>real-part</tt> and the type <tt>(rectangular)</tt>, and similarly
+for the other selectors.<a name="call_footnote_Temp_270" href="#footnote_Temp_270"><sup><small>45</small></sup></a>  The interface also defines
+the constructors to be used by the external system.<a name="call_footnote_Temp_271" href="#footnote_Temp_271"><sup><small>46</small></sup></a>
+These are
+identical to Ben's internally defined constructors, except that they
+attach the tag.<p>
+
+<a name="%_idx_2450"></a><a name="%_idx_2452"></a>Alyssa's polar package is analogous:
+<p><p><tt><a name="%_idx_2454"></a>(define&nbsp;(install-polar-package)<br>
+&nbsp;&nbsp;<em>;;&nbsp;internal&nbsp;procedures</em><br>
+&nbsp;&nbsp;(define&nbsp;(magnitude&nbsp;z)&nbsp;(car&nbsp;z))<br>
+&nbsp;&nbsp;(define&nbsp;(angle&nbsp;z)&nbsp;(cdr&nbsp;z))<br>
+&nbsp;&nbsp;(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)&nbsp;(cons&nbsp;r&nbsp;a))<br>
+&nbsp;&nbsp;(define&nbsp;(real-part&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;(magnitude&nbsp;z)&nbsp;(cos&nbsp;(angle&nbsp;z))))<br>
+&nbsp;&nbsp;(define&nbsp;(imag-part&nbsp;z)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;(magnitude&nbsp;z)&nbsp;(sin&nbsp;(angle&nbsp;z))))<br>
+&nbsp;&nbsp;(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;x)&nbsp;(square&nbsp;y)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(atan&nbsp;y&nbsp;x)))<br>
+&nbsp;&nbsp;<em>;;&nbsp;interface&nbsp;to&nbsp;the&nbsp;rest&nbsp;of&nbsp;the&nbsp;system</em><br>
+&nbsp;&nbsp;(define&nbsp;(tag&nbsp;x)&nbsp;(attach-tag&nbsp;'polar&nbsp;x))<br>
+&nbsp;&nbsp;(put&nbsp;'real-part&nbsp;'(polar)&nbsp;real-part)<br>
+&nbsp;&nbsp;(put&nbsp;'imag-part&nbsp;'(polar)&nbsp;imag-part)<br>
+&nbsp;&nbsp;(put&nbsp;'magnitude&nbsp;'(polar)&nbsp;magnitude)<br>
+&nbsp;&nbsp;(put&nbsp;'angle&nbsp;'(polar)&nbsp;angle)<br>
+&nbsp;&nbsp;(put&nbsp;'make-from-real-imag&nbsp;'polar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(x&nbsp;y)&nbsp;(tag&nbsp;(make-from-real-imag&nbsp;x&nbsp;y))))<br>
+&nbsp;&nbsp;(put&nbsp;'make-from-mag-ang&nbsp;'polar&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(r&nbsp;a)&nbsp;(tag&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a))))<br>
+&nbsp;&nbsp;'done)<br>
+</tt><p><p>
+<p>
+
+Even though Ben and Alyssa both still use their original procedures
+defined with the same names as each other's (e.g., <tt>real-part</tt>), these
+definitions are now internal to different procedures (see
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.8">1.1.8</a>), so there is no name
+conflict.<p>
+
+The complex-arithmetic selectors access the table by means of a
+general ``operation'' procedure called <tt>apply-generic</tt>, which
+applies a generic operation to some arguments.  <tt>Apply-generic</tt>
+looks in the table under the name of the operation and the types of the
+arguments and applies the resulting procedure if one is present:<a name="call_footnote_Temp_272" href="#footnote_Temp_272"><sup><small>47</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_2462"></a>(define&nbsp;(apply-generic&nbsp;op&nbsp;.&nbsp;args)<br>
+&nbsp;&nbsp;(let&nbsp;((type-tags&nbsp;(map&nbsp;type-tag&nbsp;args)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((proc&nbsp;(get&nbsp;op&nbsp;type-tags)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;proc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;proc&nbsp;(map&nbsp;contents&nbsp;args))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;No&nbsp;method&nbsp;for&nbsp;these&nbsp;types&nbsp;--&nbsp;APPLY-GENERIC&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;op&nbsp;type-tags))))))<br>
+</tt><p><p>
+Using <tt>apply-generic</tt>, we can define our generic selectors as follows:<p>
+
+<p><p><tt><a name="%_idx_2464"></a>(define&nbsp;(real-part&nbsp;z)&nbsp;(apply-generic&nbsp;'real-part&nbsp;z))<br>
+<a name="%_idx_2466"></a>(define&nbsp;(imag-part&nbsp;z)&nbsp;(apply-generic&nbsp;'imag-part&nbsp;z))<br>
+<a name="%_idx_2468"></a>(define&nbsp;(magnitude&nbsp;z)&nbsp;(apply-generic&nbsp;'magnitude&nbsp;z))<br>
+<a name="%_idx_2470"></a>(define&nbsp;(angle&nbsp;z)&nbsp;(apply-generic&nbsp;'angle&nbsp;z))<br>
+</tt><p><p>
+Observe that these do not change at all if a new representation is
+added to the system.<p>
+
+We can also extract from the table the
+constructors to be used by the programs external to the packages in
+making complex numbers from real and imaginary parts and from
+magnitudes and angles.
+As in section&nbsp;<a href="#%_sec_2.4.2">2.4.2</a>, we
+construct rectangular numbers whenever we have real and
+imaginary parts, and polar numbers whenever we have magnitudes and angles:<p>
+
+<p><p><tt><a name="%_idx_2472"></a>(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;((get&nbsp;'make-from-real-imag&nbsp;'rectangular)&nbsp;x&nbsp;y))<br>
+<a name="%_idx_2474"></a>(define&nbsp;(make-from-mag-ang&nbsp;r&nbsp;a)<br>
+&nbsp;&nbsp;((get&nbsp;'make-from-mag-ang&nbsp;'polar)&nbsp;r&nbsp;a))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_2.73"></a>
+<b>Exercise 2.73.</b>&nbsp;&nbsp;Section&nbsp;<a href="book-Z-H-16.html#%_sec_2.3.2">2.3.2</a> described a program that
+performs symbolic differentiation:
+<a name="%_idx_2476"></a><a name="%_idx_2478"></a><p><p><tt>(define&nbsp;(deriv&nbsp;exp&nbsp;var)<br>
+&nbsp;&nbsp;(cond&nbsp;((number?&nbsp;exp)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((variable?&nbsp;exp)&nbsp;(if&nbsp;(same-variable?&nbsp;exp&nbsp;var)&nbsp;1&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((sum?&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-sum&nbsp;(deriv&nbsp;(addend&nbsp;exp)&nbsp;var)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(deriv&nbsp;(augend&nbsp;exp)&nbsp;var)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((product?&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-sum<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-product&nbsp;(multiplier&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(deriv&nbsp;(multiplicand&nbsp;exp)&nbsp;var))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-product&nbsp;(deriv&nbsp;(multiplier&nbsp;exp)&nbsp;var)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(multiplicand&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>more&nbsp;rules&nbsp;can&nbsp;be&nbsp;added&nbsp;here</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;unknown&nbsp;expression&nbsp;type&nbsp;--&nbsp;DERIV&quot;&nbsp;exp))))<br>
+</tt><p><p>
+We can regard this program as performing a dispatch on the type of the
+expression to be differentiated.  In this situation the ``type tag'' of the
+datum is the algebraic operator symbol (such as <tt>+</tt>) and the
+operation being performed is <tt>deriv</tt>.  We can transform this
+program into data-directed style by rewriting the basic derivative
+procedure as
+<p><p><tt><a name="%_idx_2480"></a>(define&nbsp;(deriv&nbsp;exp&nbsp;var)<br>
+&nbsp;&nbsp;&nbsp;(cond&nbsp;((number?&nbsp;exp)&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((variable?&nbsp;exp)&nbsp;(if&nbsp;(same-variable?&nbsp;exp&nbsp;var)&nbsp;1&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;((get&nbsp;'deriv&nbsp;(operator&nbsp;exp))&nbsp;(operands&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var))))<br>
+(define&nbsp;(operator&nbsp;exp)&nbsp;(car&nbsp;exp))<br>
+(define&nbsp;(operands&nbsp;exp)&nbsp;(cdr&nbsp;exp))<br>
+</tt><p><p><p>
+
+a.&nbsp;&nbsp;Explain what was done above.
+Why can't we assimilate the predicates <tt>number?</tt> and <tt>same-variable?</tt> into the data-directed dispatch?<p>
+
+b.&nbsp;&nbsp;Write the procedures for derivatives of sums and products, and the
+auxiliary code required to install them in the table used by the
+program above.<p>
+
+c.&nbsp;&nbsp;Choose any additional differentiation rule that you like, such as
+the one for exponents (exercise&nbsp;<a href="book-Z-H-16.html#%_thm_2.56">2.56</a>),
+and install it in this data-directed system.<p>
+
+d.&nbsp;&nbsp;In this simple algebraic manipulator the type of an expression is
+the algebraic operator that binds it together.  Suppose, however, we
+indexed the procedures in the opposite way, so that the dispatch line
+in <tt>deriv</tt> looked like<p>
+
+<p><p><tt>((get&nbsp;(operator&nbsp;exp)&nbsp;'deriv)&nbsp;(operands&nbsp;exp)&nbsp;var)<br>
+</tt><p><p>
+What corresponding changes to the derivative system are required?
+
+<p><p>
+
+
+<p><a name="%_thm_2.74"></a>
+<b>Exercise 2.74.</b>&nbsp;&nbsp;<a name="%_idx_2482"></a><a name="%_idx_2484"></a>Insatiable Enterprises, Inc., is a highly decentralized conglomerate
+company consisting of a large number of independent divisions located
+all over the world.  The company's computer facilities have just been
+interconnected by means of a clever network-interfacing scheme that
+makes the entire network appear to any user to be a single computer.
+Insatiable's president, in her first attempt to exploit the ability of
+the network to extract administrative information from division files,
+is dismayed to discover that, although all the division files have
+been implemented as data structures in Scheme, the particular data
+structure used varies from division to division.  A meeting of
+division managers is hastily called to search for a strategy to
+integrate the files that will satisfy headquarters' needs while
+preserving the existing autonomy of the divisions.<p>
+
+Show how such a strategy can be implemented with data-directed
+programming.  As an example, suppose that each division's personnel
+records consist of a single file, which contains a set of records
+keyed on employees' names.  The structure of the set varies from
+division to division.  Furthermore, each employee's record is itself a
+set (structured differently from division to division) that contains
+information keyed under identifiers such as <tt>address</tt> and <tt>salary</tt>.  In particular:<p>
+
+a.&nbsp;&nbsp;Implement for headquarters a <tt>get-record</tt> procedure that
+retrieves a specified employee's record from a specified personnel
+file.  The procedure should be applicable to any division's file.
+Explain how the individual divisions' files should be structured.  In
+particular, what type information must be supplied?<p>
+
+b.&nbsp;&nbsp;Implement for headquarters a <tt>get-salary</tt> procedure that
+returns the salary information from a given employee's record from any
+division's personnel file.  How should the record be structured in
+order to make this operation work?<p>
+
+c.&nbsp;&nbsp;Implement for headquarters a <tt>find-employee-record</tt> procedure.
+This should search all the divisions' files for the record of a given
+employee and return the record.  Assume that this procedure takes as
+arguments an employee's name and a list of all the divisions' files.<p>
+
+d.&nbsp;&nbsp;When Insatiable takes over a new company, what changes must
+be made in order to incorporate the new personnel information into the
+central system?
+<p>
+
+<a name="%_sec_Temp_275"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_275">Message passing</a></h4><p>
+
+<a name="%_idx_2486"></a>
+The key idea of data-directed programming is to handle generic
+operations in programs by dealing explicitly with operation-and-type
+tables, such as the table in figure&nbsp;<a href="#%_fig_2.22">2.22</a>.  The
+style of programming we used in section&nbsp;<a href="#%_sec_2.4.2">2.4.2</a>
+organized the required dispatching on type by having each operation
+take care of its own dispatching.  In effect, this decomposes the
+operation-and-type table into rows, with each generic operation
+procedure representing a row of the table.<p>
+
+An alternative implementation strategy is to decompose the table into
+columns and, instead of using ``intelligent operations'' that dispatch
+on data types, to work with ``intelligent data objects'' that dispatch
+on operation names.  We can do this by arranging things so that a data
+object, such as a rectangular number, is represented as a procedure
+that takes as input the required operation name and performs the
+operation indicated.  In such a discipline, <tt>make-from-real-imag</tt>
+could be written as<p>
+
+<p><p><tt><a name="%_idx_2488"></a>(define&nbsp;(make-from-real-imag&nbsp;x&nbsp;y)<br>
+&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;op)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;op&nbsp;'real-part)&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;op&nbsp;'imag-part)&nbsp;y)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;op&nbsp;'magnitude)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt&nbsp;(+&nbsp;(square&nbsp;x)&nbsp;(square&nbsp;y))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;op&nbsp;'angle)&nbsp;(atan&nbsp;y&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;op&nbsp;--&nbsp;MAKE-FROM-REAL-IMAG&quot;&nbsp;op))))<br>
+&nbsp;&nbsp;dispatch)<br>
+</tt><p><p>
+The corresponding <tt>apply-generic</tt> procedure, which applies a
+generic operation to an argument, now simply feeds the operation's
+name to the data object and lets the object do the work:<a name="call_footnote_Temp_276" href="#footnote_Temp_276"><sup><small>48</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_2490"></a>(define&nbsp;(apply-generic&nbsp;op&nbsp;arg)&nbsp;(arg&nbsp;op))<br>
+</tt><p><p>
+Note that the value returned by <tt>make-from-real-imag</tt> is a
+procedure -- the internal <tt>dispatch</tt> procedure.  This is the
+procedure that is invoked when <tt>apply-generic</tt> requests an operation to
+be performed.<p>
+
+This style of programming is called <em>message passing</em>.  The name
+comes from the image that a data object is an entity that receives the
+requested operation name as a ``message.''  We have already seen an
+example of message passing in section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.3">2.1.3</a>, where we saw
+how <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> could be defined with no data
+objects but only procedures.  Here we see that message passing is not
+a mathematical trick but a useful technique for organizing systems
+with generic operations.  In the remainder of this chapter we will
+continue to use data-directed programming, rather than message
+passing, to discuss generic arithmetic operations.  In chapter&nbsp;3 we
+will return to message passing, and we will see that it can be a
+powerful tool for structuring simulation programs.<p>
+
+<p><a name="%_thm_2.75"></a>
+<b>Exercise 2.75.</b>&nbsp;&nbsp;<a name="%_idx_2492"></a>Implement the constructor <tt>make-from-mag-ang</tt> in message-passing style.
+This procedure should be analogous to the <tt>make-from-real-imag</tt>
+procedure given above.
+<p><p>
+
+<p><a name="%_thm_2.76"></a>
+<b>Exercise 2.76.</b>&nbsp;&nbsp;<a name="%_idx_2494"></a>As a large system with generic operations evolves, new types of data
+objects or new operations may be needed.  For each of the three
+strategies -- generic operations with explicit dispatch, data-directed
+style, and message-passing-style -- describe the changes that must be
+made to a system in order to add new types or new operations.  Which
+organization would be most appropriate for a system in which new types
+must often be added?  Which would be most appropriate for a system in
+which new operations must often be added?
+<p><p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_268" href="#call_footnote_Temp_268"><sup><small>43</small></sup></a> In actual computational systems, rectangular form is
+preferable to polar form most of the time because of <a name="%_idx_2308"></a>roundoff errors
+in conversion between rectangular and polar form.  This is why the
+complex-number example is unrealistic.  Nevertheless, it provides a
+clear illustration of the design of a system using generic operations
+and a good introduction to the more substantial systems to be
+developed later in this chapter.
+
+<p><a name="footnote_Temp_269" href="#call_footnote_Temp_269"><sup><small>44</small></sup></a> The arctangent function referred to
+<a name="%_idx_2322"></a><a name="%_idx_2324"></a><a name="%_idx_2326"></a>here, computed by Scheme's <tt>atan</tt> procedure,
+is defined so as to take two arguments <em>y</em>&nbsp;and <em>x</em> and to return
+the angle whose tangent is <em>y</em>/<em>x</em>.  The signs of the arguments
+determine the quadrant of the angle.
+
+<p><a name="footnote_Temp_270" href="#call_footnote_Temp_270"><sup><small>45</small></sup></a> We use the list <tt>(rectangular)</tt>
+rather than the symbol <tt>rectangular</tt> to allow for the possibility
+of operations with multiple arguments, not all of the same
+type.
+
+<p><a name="footnote_Temp_271" href="#call_footnote_Temp_271"><sup><small>46</small></sup></a> The
+type the constructors are installed under needn't be a list because
+a constructor is always used to make an object of one particular
+type.
+
+<p><a name="footnote_Temp_272" href="#call_footnote_Temp_272"><sup><small>47</small></sup></a> <tt>Apply-generic</tt> uses the <a name="%_idx_2456"></a>dotted-tail notation described in
+exercise&nbsp;<a href="book-Z-H-15.html#%_thm_2.20">2.20</a>, because different generic operations
+may take different numbers of arguments.  In <tt>apply-generic</tt>, <tt>op</tt> has as its value the first argument to <tt>apply-generic</tt> and
+<tt>args</tt> has as its value a list of the remaining arguments.<p>
+
+<tt>Apply-generic</tt> also uses the primitive procedure <a name="%_idx_2458"></a><a name="%_idx_2460"></a><tt>apply</tt>,
+which takes two arguments, a procedure and a list.  <tt>Apply</tt>
+applies the procedure, using the elements in the list as arguments.
+For example,
+<p><p><tt>(apply&nbsp;+&nbsp;(list&nbsp;1&nbsp;2&nbsp;3&nbsp;4))<br>
+</tt><p><p>
+returns 10.
+
+<p><a name="footnote_Temp_276" href="#call_footnote_Temp_276"><sup><small>48</small></sup></a> One
+limitation of this organization is it permits only generic procedures
+of one argument.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-16.html">previous</a></span><span>, <a href="book-Z-H-18.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

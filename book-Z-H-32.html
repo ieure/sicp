@@ -1,0 +1,1014 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-31.html">previous</a></span><span>, <a href="book-Z-H-33.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_5.2"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_5.2">5.2&nbsp;&nbsp;A Register-Machine Simulator</a></h2><p>
+
+
+<a name="%_idx_5622"></a><a name="%_idx_5624"></a>
+In order to gain a good understanding of the design of register
+machines, we must test the machines we design to see if they perform
+as expected.  One way to test a design is to hand-simulate the
+operation of the controller, as in exercise&nbsp;<a href="book-Z-H-31.html#%_thm_5.5">5.5</a>.  But this is
+extremely tedious for all but the simplest machines.  In this section
+we construct a simulator for machines described in the
+register-machine language.  The simulator is a Scheme program with
+four interface procedures.  The first uses a description of a register
+machine to construct a model of the machine (a data structure whose
+parts correspond to the parts of the machine to be simulated), and the
+other three allow us to simulate the machine by manipulating the
+model:<p>
+
+<blockquote>
+<p><a name="%_idx_5626"></a><tt>(make-machine &lt;<em>register-names</em>&gt; &lt;<em>operations</em>&gt; &lt;<em>controller</em>&gt;)</tt><br>
+constructs and returns a model of the machine with the given
+registers, operations, and controller.<p>
+
+<p><a name="%_idx_5628"></a><tt>(set-register-contents! &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt; &lt;<em>value</em>&gt;)</tt><br>
+stores a value in a simulated register in the given
+machine.<p>
+
+<a name="%_idx_5630"></a><p><tt>(get-register-contents &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt;)</tt><br>
+returns the contents of a simulated register in the given machine.<p>
+
+<a name="%_idx_5632"></a><p><tt>(start &lt;<em>machine-model</em>&gt;)</tt><br>
+simulates the execution of the given
+machine, starting from the beginning of the controller sequence and
+stopping when it reaches the end of the sequence.
+</blockquote><p>
+
+As an example of how these procedures are used, we can define
+<tt>gcd-machine</tt> to be a model of the GCD machine
+of section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1.1">5.1.1</a> as follows:<p>
+
+<p><p><tt><a name="%_idx_5634"></a>(define&nbsp;gcd-machine<br>
+&nbsp;&nbsp;(make-machine<br>
+&nbsp;&nbsp;&nbsp;'(a&nbsp;b&nbsp;t)<br>
+&nbsp;&nbsp;&nbsp;(list&nbsp;(list&nbsp;'rem&nbsp;remainder)&nbsp;(list&nbsp;'=&nbsp;=))<br>
+&nbsp;&nbsp;&nbsp;'(test-b<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(test&nbsp;(op&nbsp;=)&nbsp;(reg&nbsp;b)&nbsp;(const&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(branch&nbsp;(label&nbsp;gcd-done))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assign&nbsp;t&nbsp;(op&nbsp;rem)&nbsp;(reg&nbsp;a)&nbsp;(reg&nbsp;b))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assign&nbsp;a&nbsp;(reg&nbsp;b))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assign&nbsp;b&nbsp;(reg&nbsp;t))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(goto&nbsp;(label&nbsp;test-b))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcd-done)))<br>
+</tt><p><p>
+The first argument to <tt>make-machine</tt> is a list of register names.
+The next argument is a table (a list of two-element lists) that pairs
+each operation name with a Scheme procedure that implements the operation
+(that is, produces the same output value given the same input values).
+The last argument specifies the controller as a list of labels and
+machine instructions, as in section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1">5.1</a>.<p>
+
+
+To compute GCDs with this machine, we set the
+input registers, start the machine, and examine the result when the
+simulation terminates:
+<p><p><tt>(set-register-contents!&nbsp;gcd-machine&nbsp;'a&nbsp;206)<br>
+<i>done</i><br>
+(set-register-contents!&nbsp;gcd-machine&nbsp;'b&nbsp;40)<br>
+<i>done</i><br>
+(start&nbsp;gcd-machine)<br>
+<i>done</i><br>
+(get-register-contents&nbsp;gcd-machine&nbsp;'a)<br>
+<i>2</i><br>
+</tt><p><p>
+This computation will run much more slowly than a <tt>gcd</tt> procedure
+written in Scheme, because we will simulate low-level machine
+instructions, such as <tt>assign</tt>, by much more complex operations.<p>
+
+<p><a name="%_thm_5.7"></a>
+<b>Exercise 5.7.</b>&nbsp;&nbsp;Use the simulator to test the machines you designed in
+exercise&nbsp;<a href="book-Z-H-31.html#%_thm_5.4">5.4</a>.
+<p><p>
+
+<a name="%_sec_5.2.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.1">5.2.1&nbsp;&nbsp;The Machine Model</a></h3><p>
+
+<p>
+
+The machine model generated by <tt>make-machine</tt> is represented as a
+procedure with local state using the message-passing techniques
+developed in chapter&nbsp;3.  To build this model, <tt>make-machine</tt>
+begins by calling the procedure <tt>make-new-machine</tt> to construct
+the parts of the machine model that are common to all register
+machines.  This basic machine model constructed by <tt>make-new-machine</tt> is essentially a container for some registers and a
+stack, together with an execution mechanism that processes the controller
+instructions one by one.<p>
+
+<tt>Make-machine</tt> then extends this basic model (by sending it
+messages) to include the registers, operations, and controller of the
+particular machine being defined.  First it allocates a register in
+the new machine for each of the supplied register names and installs
+the designated operations in the machine.  Then it uses an <a name="%_idx_5636"></a><em>assembler</em> (described below in section&nbsp;<a href="#%_sec_5.2.2">5.2.2</a>) to
+transform the controller list into instructions for the new machine
+and installs these as the machine's instruction sequence.  <tt>Make-machine</tt> returns as its value the modified machine model.<p>
+
+<p><p><tt><a name="%_idx_5638"></a>(define&nbsp;(make-machine&nbsp;register-names&nbsp;ops&nbsp;controller-text)<br>
+&nbsp;&nbsp;(let&nbsp;((machine&nbsp;(make-new-machine)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(for-each&nbsp;(lambda&nbsp;(register-name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((machine&nbsp;'allocate-register)&nbsp;register-name))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;register-names)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((machine&nbsp;'install-operations)&nbsp;ops)&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((machine&nbsp;'install-instruction-sequence)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(assemble&nbsp;controller-text&nbsp;machine))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;machine))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_724"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_724">Registers</a></h4><p>
+
+<a name="%_idx_5640"></a>
+We will represent a register as a procedure with local state, as in
+chapter&nbsp;3.  The procedure <tt>make-register</tt> creates a register that
+holds a value that can be accessed or changed:<p>
+
+<p><p><tt><a name="%_idx_5642"></a>(define&nbsp;(make-register&nbsp;name)<br>
+&nbsp;&nbsp;(let&nbsp;((contents&nbsp;'*unassigned*))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;message)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;message&nbsp;'get)&nbsp;contents)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'set)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(value)&nbsp;(set!&nbsp;contents&nbsp;value)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;REGISTER&quot;&nbsp;message))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+The following procedures are used to access registers:<p>
+
+<p><p><tt><a name="%_idx_5644"></a>(define&nbsp;(get-contents&nbsp;register)<br>
+&nbsp;&nbsp;(register&nbsp;'get))<br>
+<br>
+<a name="%_idx_5646"></a>(define&nbsp;(set-contents!&nbsp;register&nbsp;value)<br>
+&nbsp;&nbsp;((register&nbsp;'set)&nbsp;value))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_725"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_725">The stack</a></h4><p>
+
+<a name="%_idx_5648"></a>
+We can also represent a stack as a procedure with local state.  The
+procedure <tt>make-stack</tt> creates a stack whose local state consists
+of a list of the items on the stack.  A stack accepts requests to <tt>push</tt> an item onto the stack, to <tt>pop</tt> the top item off the stack
+and return it, and to <tt>initialize</tt> the stack to empty.<p>
+
+<p><p><tt><a name="%_idx_5650"></a>(define&nbsp;(make-stack)<br>
+&nbsp;&nbsp;(let&nbsp;((s&nbsp;'()))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(push&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;(cons&nbsp;x&nbsp;s)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(pop)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Empty&nbsp;stack&nbsp;--&nbsp;POP&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((top&nbsp;(car&nbsp;s)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;(cdr&nbsp;s))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(initialize)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;'())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;message)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;message&nbsp;'push)&nbsp;push)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'pop)&nbsp;(pop))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'initialize)&nbsp;(initialize))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;STACK&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;message))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+The following procedures are used to access stacks:<p>
+
+<p><p><tt><a name="%_idx_5652"></a>(define&nbsp;(pop&nbsp;stack)<br>
+&nbsp;&nbsp;(stack&nbsp;'pop))<br>
+<br>
+<a name="%_idx_5654"></a>(define&nbsp;(push&nbsp;stack&nbsp;value)<br>
+&nbsp;&nbsp;((stack&nbsp;'push)&nbsp;value))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_726"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_726">The basic machine</a></h4><p>
+
+The <tt>make-new-machine</tt> procedure, shown in
+figure&nbsp;<a href="#%_fig_5.13">5.13</a>, constructs an object whose local
+state consists of a stack, an initially empty instruction sequence, a
+list of operations that initially contains an operation to <a name="%_idx_5656"></a>initialize
+the stack, and a <a name="%_idx_5658"></a><em>register table</em> that initially contains two
+<a name="%_idx_5660"></a><a name="%_idx_5662"></a>registers, named <tt>flag</tt> and <tt>pc</tt> <a name="%_idx_5664"></a>(for ``program counter'').
+The internal procedure <tt>allocate-register</tt> adds new entries to the
+register table, and the internal procedure <tt>lookup-register</tt> looks
+up registers in the table.<p>
+
+
+The <tt>flag</tt> register is used to control branching in the simulated
+machine.  <tt>Test</tt> instructions set the contents of <tt>flag</tt> to
+the result of the test (true or false).  <tt>Branch</tt> instructions
+decide whether or not to branch by examining the contents of <tt>flag</tt>.<p>
+
+The <tt>pc</tt> register determines the sequencing of instructions as
+the machine runs.  This sequencing is implemented by the internal
+procedure <tt>execute</tt>.
+In the simulation model, each machine instruction is a data structure
+that includes a procedure of no arguments, called the <a name="%_idx_5666"></a><a name="%_idx_5668"></a><em>instruction
+execution procedure</em>, such that calling this procedure simulates
+executing the instruction.  As the simulation runs, <tt>pc</tt> points to
+the place in the instruction sequence beginning with the next
+instruction to be executed.  <a name="%_idx_5670"></a><tt>Execute</tt> gets that instruction,
+executes it by calling the instruction execution procedure, and
+repeats this cycle until there are no more instructions to execute
+(i.e., until <tt>pc</tt> points to the end of the instruction sequence).<p>
+
+<a name="%_fig_5.13"></a><p><div align=left><table width=100%><tr><td><p><p><tt><a name="%_idx_5672"></a>(define&nbsp;(make-new-machine)<br>
+&nbsp;&nbsp;(let&nbsp;((pc&nbsp;(make-register&nbsp;'pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(flag&nbsp;(make-register&nbsp;'flag))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stack&nbsp;(make-stack))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(the-instruction-sequence&nbsp;'()))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((the-ops<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(list&nbsp;'initialize-stack<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(stack&nbsp;'initialize)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(register-table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(list&nbsp;'pc&nbsp;pc)&nbsp;(list&nbsp;'flag&nbsp;flag))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(allocate-register&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(assoc&nbsp;name&nbsp;register-table)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Multiply&nbsp;defined&nbsp;register:&nbsp;&quot;&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;register-table<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(list&nbsp;name&nbsp;(make-register&nbsp;name))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;register-table)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'register-allocated)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(lookup-register&nbsp;name)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((val&nbsp;(assoc&nbsp;name&nbsp;register-table)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;val<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cadr&nbsp;val)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;register:&quot;&nbsp;name))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(execute)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts&nbsp;(get-contents&nbsp;pc)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;insts)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((instruction-execution-proc&nbsp;(car&nbsp;insts)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(execute)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;message)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;message&nbsp;'start)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;pc&nbsp;the-instruction-sequence)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(execute))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'install-instruction-sequence)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(seq)&nbsp;(set!&nbsp;the-instruction-sequence&nbsp;seq)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'allocate-register)&nbsp;allocate-register)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'get-register)&nbsp;lookup-register)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'install-operations)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(ops)&nbsp;(set!&nbsp;the-ops&nbsp;(append&nbsp;the-ops&nbsp;ops))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'stack)&nbsp;stack)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'operations)&nbsp;the-ops)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MACHINE&quot;&nbsp;message))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dispatch)))<br>
+</tt><p><p>
+<p><p></td></tr><caption align=bottom><div align=left><b>Figure 5.13:</b>&nbsp;&nbsp;The <tt>make-new-machine</tt> procedure, which implements
+the basic machine model.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+As part of its operation, each instruction execution procedure
+modifies <tt>pc</tt> to indicate the next instruction to be executed.
+<tt>Branch</tt> and <tt>goto</tt> instructions change <tt>pc</tt> to point to
+the new destination.  All other instructions simply advance <tt>pc</tt>,
+making it point to the next instruction in the sequence.  Observe that
+each call to <tt>execute</tt> calls <tt>execute</tt> again, but this does
+not produce an infinite loop because running the instruction execution
+procedure changes the contents of <tt>pc</tt>.<p>
+
+<tt>Make-new-machine</tt> returns a
+<tt>dispatch</tt> procedure that implements message-passing
+access to the internal state.  Notice that starting the machine is
+accomplished by setting <tt>pc</tt> to the beginning of the instruction
+sequence and calling <tt>execute</tt>.<p>
+
+For convenience, we provide an alternate procedural interface to a
+machine's <tt>start</tt> operation,
+as well as procedures to set and examine register contents,
+as specified at the beginning of section&nbsp;<a href="#%_sec_5.2">5.2</a>:<p>
+
+<p><p><tt><a name="%_idx_5674"></a>(define&nbsp;(start&nbsp;machine)<br>
+&nbsp;&nbsp;(machine&nbsp;'start))<br>
+<a name="%_idx_5676"></a>(define&nbsp;(get-register-contents&nbsp;machine&nbsp;register-name)<br>
+&nbsp;&nbsp;(get-contents&nbsp;(get-register&nbsp;machine&nbsp;register-name)))<br>
+<a name="%_idx_5678"></a>(define&nbsp;(set-register-contents!&nbsp;machine&nbsp;register-name&nbsp;value)<br>
+&nbsp;&nbsp;(set-contents!&nbsp;(get-register&nbsp;machine&nbsp;register-name)&nbsp;value)<br>
+&nbsp;&nbsp;'done)<br>
+</tt><p><p>
+These procedures (and many procedures in sections&nbsp;<a href="#%_sec_5.2.2">5.2.2</a>
+and <a href="#%_sec_5.2.3">5.2.3</a>) use the following to look up the register with a
+given name in a given machine:
+<p><p><tt><a name="%_idx_5680"></a>(define&nbsp;(get-register&nbsp;machine&nbsp;reg-name)<br>
+&nbsp;&nbsp;((machine&nbsp;'get-register)&nbsp;reg-name))<br>
+</tt><p><p><p>
+
+<p>
+
+<a name="%_sec_5.2.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.2">5.2.2&nbsp;&nbsp;The Assembler</a></h3><p>
+
+
+<a name="%_idx_5682"></a>
+The assembler transforms the sequence of controller expressions for a
+machine into a corresponding list of machine instructions, each with
+its execution procedure.  Overall, the assembler is much like the
+evaluators we studied in chapter&nbsp;4 -- there is an input language (in
+this case, the register-machine language) and we must perform an
+appropriate action for each type of expression in the language.<p>
+
+<a name="%_idx_5684"></a>The technique of producing an execution procedure for each instruction
+is just what we used in section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a> to speed
+up the evaluator by separating analysis from runtime execution.  As we
+saw in chapter&nbsp;4, much useful analysis of Scheme expressions could be
+performed without knowing the actual values of variables.  Here,
+analogously, much useful analysis of register-machine-language
+expressions can be performed without knowing the actual contents of
+machine registers.  For example, we can replace references to
+registers by pointers to the register objects, and we can
+replace references to labels by pointers to the place in the
+instruction sequence that the label designates.<p>
+
+Before it can generate the instruction execution procedures, the
+assembler must know what all the labels refer to, so it begins by
+scanning the controller text to separate the labels from the
+instructions.  As it scans the text, it constructs both a list of
+instructions and a table that associates each label with a pointer
+into that list.  Then the assembler augments the instruction list by
+inserting the execution procedure for each instruction.<p>
+
+The <tt>assemble</tt> procedure is the main entry to the assembler.
+It takes the controller text and the machine model as arguments and
+returns the instruction sequence to be stored in the model.
+<tt>Assemble</tt> calls <tt>extract-labels</tt> to build the initial instruction list
+and label table from the supplied controller text.  The second argument
+to <tt>extract-labels</tt> is a procedure to be called to process these results:
+This procedure uses <tt>update-insts!</tt> to generate the instruction execution
+procedures and insert them into the instruction list,
+and returns the modified list.
+<p><p><tt><a name="%_idx_5686"></a>(define&nbsp;(assemble&nbsp;controller-text&nbsp;machine)<br>
+&nbsp;&nbsp;(extract-labels&nbsp;controller-text<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(insts&nbsp;labels)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(update-insts!&nbsp;insts&nbsp;labels&nbsp;machine)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insts)))<br>
+</tt><p><p><p>
+
+<tt>Extract-labels</tt>
+takes as arguments a list <tt>text</tt> (the sequence of controller
+instruction expressions) and a <tt>receive</tt> procedure.  <tt>Receive</tt>
+will be called with two values: (1) a list <tt>insts</tt> of instruction
+data structures, each containing an instruction from <tt>text</tt>; and
+(2) a table called <tt>labels</tt>, which associates each label from <tt>text</tt>
+with the position in the list <tt>insts</tt> that the label designates.<p>
+
+<p><p><tt><a name="%_idx_5688"></a>(define&nbsp;(extract-labels&nbsp;text&nbsp;receive)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;text)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(receive&nbsp;'()&nbsp;'())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(extract-labels&nbsp;(cdr&nbsp;text)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(insts&nbsp;labels)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((next-inst&nbsp;(car&nbsp;text)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(symbol?&nbsp;next-inst)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(receive&nbsp;insts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(make-label-entry&nbsp;next-inst<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insts)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(receive&nbsp;(cons&nbsp;(make-instruction&nbsp;next-inst)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insts)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels)))))))<br>
+</tt><p><p>
+<tt>Extract-labels</tt> works by sequentially scanning the elements of
+the <tt>text</tt> and accumulating the <tt>insts</tt> and the <tt>labels</tt>.
+If an element is a symbol (and thus a label) an appropriate entry is
+added to the <tt>labels</tt> table.  Otherwise the element is accumulated
+onto the <tt>insts</tt> list.<a name="call_footnote_Temp_727" href="#footnote_Temp_727"><sup><small>4</small></sup></a><p>
+
+<tt>Update-insts!</tt> modifies the instruction list, which initially
+contains only the text of the instructions, to include the
+corresponding execution procedures:<p>
+
+
+<p><p><tt><a name="%_idx_5702"></a>(define&nbsp;(update-insts!&nbsp;insts&nbsp;labels&nbsp;machine)<br>
+&nbsp;&nbsp;(let&nbsp;((pc&nbsp;(get-register&nbsp;machine&nbsp;'pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(flag&nbsp;(get-register&nbsp;machine&nbsp;'flag))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stack&nbsp;(machine&nbsp;'stack))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ops&nbsp;(machine&nbsp;'operations)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(for-each<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(inst)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-instruction-execution-proc!&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inst<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-execution-procedure<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(instruction-text&nbsp;inst)&nbsp;labels&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pc&nbsp;flag&nbsp;stack&nbsp;ops)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insts)))<br>
+</tt><p><p><p>
+
+
+The machine instruction data structure simply pairs the
+instruction text with the corresponding execution procedure.
+The execution procedure is not yet available when <tt>extract-labels</tt>
+constructs the instruction, and is inserted later by <tt>update-insts!</tt>.
+
+<p><p><tt><a name="%_idx_5704"></a>(define&nbsp;(make-instruction&nbsp;text)<br>
+&nbsp;&nbsp;(cons&nbsp;text&nbsp;'()))<br>
+<a name="%_idx_5706"></a>(define&nbsp;(instruction-text&nbsp;inst)<br>
+&nbsp;&nbsp;(car&nbsp;inst))<br>
+<a name="%_idx_5708"></a>(define&nbsp;(instruction-execution-proc&nbsp;inst)<br>
+&nbsp;&nbsp;(cdr&nbsp;inst))<br>
+<a name="%_idx_5710"></a>(define&nbsp;(set-instruction-execution-proc!&nbsp;inst&nbsp;proc)<br>
+&nbsp;&nbsp;(set-cdr!&nbsp;inst&nbsp;proc))<br>
+</tt><p><p>
+The instruction text is not used by our simulator, but it is handy to keep
+around for debugging (see exercise&nbsp;<a href="#%_thm_5.16">5.16</a>).<p>
+
+Elements of the label table are pairs:
+
+<p><p><tt><a name="%_idx_5712"></a>(define&nbsp;(make-label-entry&nbsp;label-name&nbsp;insts)<br>
+&nbsp;&nbsp;(cons&nbsp;label-name&nbsp;insts))<br>
+</tt><p><p>
+Entries will be looked up in the table with
+
+<p><p><tt><a name="%_idx_5714"></a>(define&nbsp;(lookup-label&nbsp;labels&nbsp;label-name)<br>
+&nbsp;&nbsp;(let&nbsp;((val&nbsp;(assoc&nbsp;label-name&nbsp;labels)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;val<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cdr&nbsp;val)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Undefined&nbsp;label&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;label-name))))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_5.8"></a>
+<b>Exercise 5.8.</b>&nbsp;&nbsp;The following register-machine code is ambiguous, because the label
+<tt>here</tt> is defined more than once:
+<p><p><tt>start<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;here))<br>
+here<br>
+&nbsp;&nbsp;(assign&nbsp;a&nbsp;(const&nbsp;3))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;there))<br>
+here<br>
+&nbsp;&nbsp;(assign&nbsp;a&nbsp;(const&nbsp;4))<br>
+&nbsp;&nbsp;(goto&nbsp;(label&nbsp;there))<br>
+there<br>
+</tt><p><p>
+With the simulator as written, what will the contents of register <tt>a</tt>
+be when control reaches <tt>there</tt>?  Modify the <tt>extract-labels</tt>
+procedure so that the assembler will signal an error if the same label
+name is used to indicate two different locations.
+<p>
+<p>
+
+<a name="%_sec_5.2.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.3">5.2.3&nbsp;&nbsp;Generating Execution Procedures for Instructions</a></h3><p>
+
+
+<a name="%_idx_5716"></a>
+The assembler calls <tt>make-execution-procedure</tt> to
+generate the execution procedure for an instruction.
+Like the <tt>analyze</tt> procedure in the evaluator of
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>, this dispatches on the type of
+instruction to generate the appropriate execution procedure.
+<p><p><tt><a name="%_idx_5718"></a>(define&nbsp;(make-execution-procedure&nbsp;inst&nbsp;labels&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pc&nbsp;flag&nbsp;stack&nbsp;ops)<br>
+&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'assign)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-assign&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;ops&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'test)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-test&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;ops&nbsp;flag&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'branch)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-branch&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;flag&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'goto)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-goto&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'save)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-save&nbsp;inst&nbsp;machine&nbsp;stack&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'restore)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-restore&nbsp;inst&nbsp;machine&nbsp;stack&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;(car&nbsp;inst)&nbsp;'perform)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-perform&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;ops&nbsp;pc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;instruction&nbsp;type&nbsp;--&nbsp;ASSEMBLE&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inst))))<br>
+</tt><p><p><p>
+
+For each type of instruction in the register-machine language, there
+is a generator that builds an appropriate execution procedure.  The
+details of these procedures determine both the syntax and meaning of
+the individual instructions in the register-machine language.
+We use data abstraction to isolate the detailed syntax of
+register-machine expressions from the general execution mechanism, as
+we did for evaluators in section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a>,
+by using syntax procedures to extract and classify the parts of an instruction.<p>
+
+
+<a name="%_sec_Temp_729"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_729"><tt>Assign</tt> instructions</a></h4><p>
+
+<a name="%_idx_5720"></a>
+The <tt>make-assign</tt> procedure handles <tt>assign</tt> instructions:
+<p><p><tt><a name="%_idx_5722"></a>(define&nbsp;(make-assign&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;operations&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((target<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-register&nbsp;machine&nbsp;(assign-reg-name&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(value-exp&nbsp;(assign-value-exp&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((value-proc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(operation-exp?&nbsp;value-exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-operation-exp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value-exp&nbsp;machine&nbsp;labels&nbsp;operations)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-primitive-exp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(car&nbsp;value-exp)&nbsp;machine&nbsp;labels))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;execution&nbsp;procedure&nbsp;for&nbsp;<tt>assign</tt></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;target&nbsp;(value-proc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc)))))<br>
+</tt><p><p>
+<tt>Make-assign</tt> extracts the target register name (the
+second element of the instruction) and the value expression
+(the rest of the list that forms the instruction)
+from the <tt>assign</tt> instruction using the selectors
+<p><p><tt><a name="%_idx_5724"></a>(define&nbsp;(assign-reg-name&nbsp;assign-instruction)<br>
+&nbsp;&nbsp;(cadr&nbsp;assign-instruction))<br>
+<a name="%_idx_5726"></a>(define&nbsp;(assign-value-exp&nbsp;assign-instruction)<br>
+&nbsp;&nbsp;(cddr&nbsp;assign-instruction))<br>
+</tt><p><p>
+The register name is looked up with <tt>get-register</tt> to produce the
+target register object.  The value expression is passed to <tt>make-operation-exp</tt> if the value is the result of an operation, and to
+<tt>make-primitive-exp</tt> otherwise.  These procedures (shown below)
+parse the value expression and produce an execution procedure for the
+value.  This is a procedure of no arguments, called <a name="%_idx_5728"></a><tt>value-proc</tt>,
+which will be evaluated during the simulation to produce the actual
+value to be assigned to the register.  Notice that the work of looking
+up the register name and parsing the value expression is performed
+just once, at assembly time, not every time the instruction is
+simulated.  This saving of work is the reason we use execution
+<a name="%_idx_5730"></a>procedures, and corresponds directly to the saving in work we obtained
+by separating program analysis from execution in the evaluator of
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.<p>
+
+The result returned by <tt>make-assign</tt> is the execution
+procedure for the <tt>assign</tt> instruction.  When this procedure is
+called (by the machine model's <tt>execute</tt> procedure),
+it sets the contents of the target register to the result
+obtained by executing <tt>value-proc</tt>.  Then it advances
+the <tt>pc</tt> to the next instruction by running the procedure
+<p><p><tt><a name="%_idx_5732"></a>(define&nbsp;(advance-pc&nbsp;pc)<br>
+&nbsp;&nbsp;(set-contents!&nbsp;pc&nbsp;(cdr&nbsp;(get-contents&nbsp;pc))))<br>
+</tt><p><p>
+<tt>Advance-pc</tt> is the normal termination for all instructions except
+<tt>branch</tt> and <tt>goto</tt>.<p>
+
+<a name="%_sec_Temp_730"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_730"><tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions</a></h4><p>
+
+<a name="%_idx_5734"></a><tt>Make-test</tt> handles <tt>test</tt> instructions in a similar way.  It
+extracts the expression that specifies the condition to be tested and
+generates an execution procedure for it.  At simulation time, the
+procedure for the condition is called, the result is assigned to the
+<tt>flag</tt> register, and the <tt>pc</tt> is advanced:
+<p><p><tt><a name="%_idx_5736"></a>(define&nbsp;(make-test&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;operations&nbsp;flag&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((condition&nbsp;(test-condition&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(operation-exp?&nbsp;condition)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((condition-proc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-operation-exp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;condition&nbsp;machine&nbsp;labels&nbsp;operations)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;flag&nbsp;(condition-proc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Bad&nbsp;TEST&nbsp;instruction&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;inst))))<br>
+<a name="%_idx_5738"></a>(define&nbsp;(test-condition&nbsp;test-instruction)<br>
+&nbsp;&nbsp;(cdr&nbsp;test-instruction))<br>
+</tt><p><p><p>
+
+<a name="%_idx_5740"></a>The execution procedure for a <tt>branch</tt> instruction checks the
+contents of the <tt>flag</tt> register and either sets the contents of
+the <tt>pc</tt> to the branch destination (if the branch is taken) or
+else just advances the <tt>pc</tt> (if the branch is not taken).  Notice
+that the indicated destination in a <tt>branch</tt> instruction must be a
+label, and the <tt>make-branch</tt> procedure enforces this.  Notice
+also that the label is looked up at assembly time, not each time the
+<tt>branch</tt> instruction is simulated.<p>
+
+<p><p><tt><a name="%_idx_5742"></a>(define&nbsp;(make-branch&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;flag&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((dest&nbsp;(branch-dest&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(label-exp?&nbsp;dest)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lookup-label&nbsp;labels&nbsp;(label-exp-label&nbsp;dest))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(get-contents&nbsp;flag)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;pc&nbsp;insts)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Bad&nbsp;BRANCH&nbsp;instruction&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;inst))))<br>
+<a name="%_idx_5744"></a>(define&nbsp;(branch-dest&nbsp;branch-instruction)<br>
+&nbsp;&nbsp;(cadr&nbsp;branch-instruction))<br>
+</tt><p><p><p>
+
+<a name="%_idx_5746"></a>A <tt>goto</tt> instruction is similar to a branch, except that the
+destination may be specified either as a label or as a register, and
+there is no condition to check -- the <tt>pc</tt> is always set to the
+new destination.
+<p><p><tt><a name="%_idx_5748"></a>(define&nbsp;(make-goto&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((dest&nbsp;(goto-dest&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((label-exp?&nbsp;dest)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lookup-label&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(label-exp-label&nbsp;dest))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(set-contents!&nbsp;pc&nbsp;insts))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((register-exp?&nbsp;dest)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((reg<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(get-register&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(register-exp-reg&nbsp;dest))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;pc&nbsp;(get-contents&nbsp;reg)))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Bad&nbsp;GOTO&nbsp;instruction&nbsp;--&nbsp;ASSEMBLE&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inst)))))<br>
+<a name="%_idx_5750"></a>(define&nbsp;(goto-dest&nbsp;goto-instruction)<br>
+&nbsp;&nbsp;(cadr&nbsp;goto-instruction))<br>
+</tt><p><p><p>
+
+<a name="%_sec_Temp_731"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_731">Other instructions</a></h4><p>
+
+The stack instructions <tt>save</tt> and <tt>restore</tt> simply use the
+stack with the designated register and advance the <tt>pc</tt>:
+
+<p><p><tt><a name="%_idx_5752"></a><a name="%_idx_5754"></a>(define&nbsp;(make-save&nbsp;inst&nbsp;machine&nbsp;stack&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((reg&nbsp;(get-register&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stack-inst-reg-name&nbsp;inst))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(push&nbsp;stack&nbsp;(get-contents&nbsp;reg))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc))))<br>
+<a name="%_idx_5756"></a><a name="%_idx_5758"></a>(define&nbsp;(make-restore&nbsp;inst&nbsp;machine&nbsp;stack&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((reg&nbsp;(get-register&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stack-inst-reg-name&nbsp;inst))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set-contents!&nbsp;reg&nbsp;(pop&nbsp;stack))&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc))))<br>
+<a name="%_idx_5760"></a>(define&nbsp;(stack-inst-reg-name&nbsp;stack-instruction)<br>
+&nbsp;&nbsp;(cadr&nbsp;stack-instruction))<br>
+</tt><p><p><p>
+
+<a name="%_idx_5762"></a>The final instruction type, handled by <tt>make-perform</tt>, generates
+an execution procedure for the action to be performed.  At simulation
+time, the action procedure is executed and the <tt>pc</tt> advanced.
+
+<p><p><tt><a name="%_idx_5764"></a>(define&nbsp;(make-perform&nbsp;inst&nbsp;machine&nbsp;labels&nbsp;operations&nbsp;pc)<br>
+&nbsp;&nbsp;(let&nbsp;((action&nbsp;(perform-action&nbsp;inst)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(operation-exp?&nbsp;action)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((action-proc<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-operation-exp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;action&nbsp;machine&nbsp;labels&nbsp;operations)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(action-proc)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(advance-pc&nbsp;pc)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Bad&nbsp;PERFORM&nbsp;instruction&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;inst))))<br>
+<a name="%_idx_5766"></a>(define&nbsp;(perform-action&nbsp;inst)&nbsp;(cdr&nbsp;inst))<br>
+</tt><p><p><p>
+
+
+<a name="%_sec_Temp_732"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_732">Execution procedures for subexpressions</a></h4><p>
+
+<a name="%_idx_5768"></a><a name="%_idx_5770"></a><a name="%_idx_5772"></a>The value of a <tt>reg</tt>, <tt>label</tt>, or <tt>const</tt> expression
+may be needed for assignment to a register (<tt>make-assign</tt>) or for input to
+an operation (<tt>make-operation-exp</tt>, below).  The following procedure
+generates execution procedures to produce values for these expressions
+during the simulation:
+
+<p><p><tt><a name="%_idx_5774"></a>(define&nbsp;(make-primitive-exp&nbsp;exp&nbsp;machine&nbsp;labels)<br>
+&nbsp;&nbsp;(cond&nbsp;((constant-exp?&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((c&nbsp;(constant-exp-value&nbsp;exp)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;c)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((label-exp?&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lookup-label&nbsp;labels<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(label-exp-label&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;insts)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((register-exp?&nbsp;exp)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((r&nbsp;(get-register&nbsp;machine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(register-exp-reg&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(get-contents&nbsp;r))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;expression&nbsp;type&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;exp))))<br>
+</tt><p><p>
+The syntax of <tt>reg</tt>, <tt>label</tt>, and <tt>const</tt> expressions
+is determined by
+<p><p><tt><a name="%_idx_5776"></a>(define&nbsp;(register-exp?&nbsp;exp)&nbsp;(tagged-list?&nbsp;exp&nbsp;'reg))<br>
+<a name="%_idx_5778"></a>(define&nbsp;(register-exp-reg&nbsp;exp)&nbsp;(cadr&nbsp;exp))<br>
+<a name="%_idx_5780"></a>(define&nbsp;(constant-exp?&nbsp;exp)&nbsp;(tagged-list?&nbsp;exp&nbsp;'const))<br>
+<a name="%_idx_5782"></a>(define&nbsp;(constant-exp-value&nbsp;exp)&nbsp;(cadr&nbsp;exp))<br>
+<a name="%_idx_5784"></a>(define&nbsp;(label-exp?&nbsp;exp)&nbsp;(tagged-list?&nbsp;exp&nbsp;'label))<br>
+<a name="%_idx_5786"></a>(define&nbsp;(label-exp-label&nbsp;exp)&nbsp;(cadr&nbsp;exp))<br>
+</tt><p><p>
+<p>
+
+
+<a name="%_idx_5788"></a><tt>Assign</tt>, <tt>perform</tt>, and <tt>test</tt> instructions
+may include the application of a machine operation (specified by
+an <tt>op</tt> expression) to some operands (specified by <tt>reg</tt>
+and <tt>const</tt> expressions).
+The following procedure produces an execution procedure
+for an ``operation expression'' -- a list containing the operation and
+operand expressions from the instruction:
+<p><p><tt><a name="%_idx_5790"></a>(define&nbsp;(make-operation-exp&nbsp;exp&nbsp;machine&nbsp;labels&nbsp;operations)<br>
+&nbsp;&nbsp;(let&nbsp;((op&nbsp;(lookup-prim&nbsp;(operation-exp-op&nbsp;exp)&nbsp;operations))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(aprocs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(map&nbsp;(lambda&nbsp;(e)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-primitive-exp&nbsp;e&nbsp;machine&nbsp;labels))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(operation-exp-operands&nbsp;exp))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;op&nbsp;(map&nbsp;(lambda&nbsp;(p)&nbsp;(p))&nbsp;aprocs)))))<br>
+</tt><p><p>
+The syntax of operation expressions is determined by
+<p><p><tt><a name="%_idx_5792"></a>(define&nbsp;(operation-exp?&nbsp;exp)<br>
+&nbsp;&nbsp;(and&nbsp;(pair?&nbsp;exp)&nbsp;(tagged-list?&nbsp;(car&nbsp;exp)&nbsp;'op)))<br>
+<a name="%_idx_5794"></a>(define&nbsp;(operation-exp-op&nbsp;operation-exp)<br>
+&nbsp;&nbsp;(cadr&nbsp;(car&nbsp;operation-exp)))<br>
+<a name="%_idx_5796"></a>(define&nbsp;(operation-exp-operands&nbsp;operation-exp)<br>
+&nbsp;&nbsp;(cdr&nbsp;operation-exp))<br>
+</tt><p><p>
+Observe that the treatment of operation expressions is very much like
+the treatment of procedure applications by the <tt>analyze-application</tt> procedure in the evaluator of
+section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a> in that we generate an execution
+procedure for each operand.  At simulation time, we call the
+operand procedures and apply the Scheme procedure that simulates
+the operation to the resulting values.
+The simulation procedure is found by looking up the operation name in
+the operation table for the machine:
+<p><p><tt><a name="%_idx_5798"></a>(define&nbsp;(lookup-prim&nbsp;symbol&nbsp;operations)<br>
+&nbsp;&nbsp;(let&nbsp;((val&nbsp;(assoc&nbsp;symbol&nbsp;operations)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;val<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cadr&nbsp;val)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;operation&nbsp;--&nbsp;ASSEMBLE&quot;&nbsp;symbol))))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_5.9"></a>
+<b>Exercise 5.9.</b>&nbsp;&nbsp;The treatment of machine operations above permits them to operate
+on labels as well as on constants and the contents of registers.
+Modify the expression-processing procedures to enforce the condition
+that operations can be used only with registers and constants.
+<p><p>
+
+<p><a name="%_thm_5.10"></a>
+<b>Exercise 5.10.</b>&nbsp;&nbsp;Design a new syntax for register-machine instructions and modify the
+simulator to use your new syntax.  Can you implement your new
+syntax without changing any part of the simulator except the
+syntax procedures in this section?
+<p><p>
+
+<p><a name="%_thm_5.11"></a>
+<b>Exercise 5.11.</b>&nbsp;&nbsp;<a name="%_idx_5800"></a><a name="%_idx_5802"></a>When we introduced <tt>save</tt> and <tt>restore</tt> in
+section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1.4">5.1.4</a>, we didn't specify what would happen
+if you tried to restore a register that was not the last one saved, as
+in the sequence<p>
+
+<p><p><tt>(save&nbsp;y)<br>
+(save&nbsp;x)<br>
+(restore&nbsp;y)<br>
+</tt><p><p>
+There are several reasonable possibilities for the meaning of <tt>restore</tt>:<p>
+
+a.&nbsp;&nbsp;<tt>(restore y)</tt> puts into <tt>y</tt> the last value saved on the
+stack, regardless of what register that value came from.  This is the
+way our simulator behaves.  Show how to take advantage of this
+behavior to eliminate one instruction from the Fibonacci machine of
+section&nbsp;<a href="book-Z-H-31.html#%_sec_5.1.4">5.1.4</a> (figure&nbsp;<a href="book-Z-H-31.html#%_fig_5.12">5.12</a>).<p>
+
+b.&nbsp;&nbsp;<tt>(restore y)</tt> puts into <tt>y</tt> the last value saved on the
+stack, but only if that value was saved from <tt>y</tt>; otherwise, it
+signals an error.  Modify the simulator to behave this way.  You will
+have to change <tt>save</tt> to put the register name on the stack along
+with the value.<p>
+
+c.&nbsp;&nbsp;<tt>(restore y)</tt> puts into <tt>y</tt> the last value saved from <tt>y</tt> regardless of what other registers were saved after <tt>y</tt> and not
+restored.  Modify the simulator to behave this way.  You will have to
+associate a separate stack with each register.  You should make the
+<tt>initialize-stack</tt> operation initialize all the register stacks.
+<p><p>
+
+<p><a name="%_thm_5.12"></a>
+<b>Exercise 5.12.</b>&nbsp;&nbsp;The simulator can be used to help determine the data paths required
+for implementing a machine with a given controller.  Extend
+the assembler to store the following information in the machine model:
+<p><ul>
+<li>a list of all instructions, with duplicates removed, sorted by
+instruction type (<tt>assign</tt>, <tt>goto</tt>, and so on);<p>
+
+<li>a list (without duplicates) of the registers used to hold entry
+points (these are the registers referenced by <tt>goto</tt>
+instructions);<p>
+
+<li>a list (without duplicates) of the registers that are <tt>save</tt>d
+or <tt>restore</tt>d;<p>
+
+<li>for each register, a list (without duplicates) of the sources from
+which it is assigned (for example, the sources for register <tt>val</tt>
+in the factorial machine of figure&nbsp;<a href="book-Z-H-31.html#%_fig_5.11">5.11</a> are
+<tt>(const 1)</tt> and <tt>((op *) (reg n) (reg val))</tt>).
+</ul><p>
+Extend the
+message-passing interface to the machine to provide access to this new
+information.  To test your analyzer, define the Fibonacci machine from
+figure&nbsp;<a href="book-Z-H-31.html#%_fig_5.12">5.12</a> and examine the lists you constructed.
+<p><p>
+
+<p><a name="%_thm_5.13"></a>
+<b>Exercise 5.13.</b>&nbsp;&nbsp;Modify the simulator so that it uses the controller sequence to
+determine what registers the machine has rather than requiring a list
+of registers as an argument to <tt>make-machine</tt>.  Instead of
+pre-allocating the registers in <tt>make-machine</tt>, you can allocate
+them one at a time when they are first seen during assembly of the
+instructions.
+<p>
+
+<a name="%_sec_5.2.4"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.4">5.2.4&nbsp;&nbsp;Monitoring Machine Performance</a></h3><p>
+
+
+<a name="%_idx_5804"></a>
+<a name="%_idx_5806"></a>Simulation is useful not only for verifying the correctness of a
+proposed machine design but also for measuring the machine's
+performance.  For example, we can install in our simulation program a
+``meter'' that measures the number of stack operations used in a
+computation.  To do this, we modify our simulated stack to keep track
+of the number of times registers are saved on the stack and the
+maximum depth reached by the stack, and add a message to the stack's
+interface that prints the statistics, as shown below.
+We also add an operation to the basic machine model to print the
+stack statistics, by initializing <tt>the-ops</tt> in <tt>make-new-machine</tt> to
+<p><p><tt><a name="%_idx_5808"></a><a name="%_idx_5810"></a>(list&nbsp;(list&nbsp;'initialize-stack<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(stack&nbsp;'initialize)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;'print-stack-statistics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(stack&nbsp;'print-statistics))))<br>
+</tt><p><p>
+Here is the new version of <tt>make-stack</tt>:
+<p><p><tt><a name="%_idx_5812"></a>(define&nbsp;(make-stack)<br>
+&nbsp;&nbsp;(let&nbsp;((s&nbsp;'())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(number-pushes&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(max-depth&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(current-depth&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(push&nbsp;x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;(cons&nbsp;x&nbsp;s))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;number-pushes&nbsp;(+&nbsp;1&nbsp;number-pushes))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;current-depth&nbsp;(+&nbsp;1&nbsp;current-depth))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;max-depth&nbsp;(max&nbsp;current-depth&nbsp;max-depth)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(pop)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(null?&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Empty&nbsp;stack&nbsp;--&nbsp;POP&quot;)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((top&nbsp;(car&nbsp;s)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;(cdr&nbsp;s))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;current-depth&nbsp;(-&nbsp;current-depth&nbsp;1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;top)))&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(initialize)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;s&nbsp;'())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;number-pushes&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;max-depth&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;current-depth&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(print-statistics)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(display&nbsp;(list&nbsp;'total-pushes&nbsp;&nbsp;'=&nbsp;number-pushes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'maximum-depth&nbsp;'=&nbsp;max-depth)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;message)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;message&nbsp;'push)&nbsp;push)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'pop)&nbsp;(pop))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'initialize)&nbsp;(initialize))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;message&nbsp;'print-statistics)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(print-statistics))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;STACK&quot;&nbsp;message))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+<p>
+
+Exercises&nbsp;<a href="#%_thm_5.15">5.15</a> through&nbsp;<a href="#%_thm_5.19">5.19</a>
+describe other useful monitoring and debugging features that can be
+added to the register-machine simulator.<p>
+
+<p>
+
+<p><a name="%_thm_5.14"></a>
+<b>Exercise 5.14.</b>&nbsp;&nbsp;<a name="%_idx_5814"></a>Measure the number of pushes and the maximum stack depth required to
+compute <em>n</em>! for various small values of <em>n</em> using the factorial
+machine shown in figure&nbsp;<a href="book-Z-H-31.html#%_fig_5.11">5.11</a>.  From your data
+determine formulas in terms of <em>n</em> for the total number of push
+operations and the maximum stack depth used in computing <em>n</em>! for any
+<em>n</em> &gt; 1. Note that each of these is a linear function of <em>n</em> and is
+thus determined by two constants.  In order to get the statistics
+printed, you will have to augment the factorial machine with instructions to
+initialize the stack and print the statistics.
+You may want to also modify the
+machine so that it repeatedly reads a value for <em>n</em>, computes the
+factorial, and prints the result (as we did for the GCD machine in
+figure&nbsp;<a href="book-Z-H-31.html#%_fig_5.4">5.4</a>), so that you will not have to repeatedly
+invoke <tt>get-register-contents</tt>, <tt>set-register-contents!</tt>, and
+<tt>start</tt>.
+
+<p><p>
+
+<p><a name="%_thm_5.15"></a>
+<b>Exercise 5.15.</b>&nbsp;&nbsp;Add <a name="%_idx_5816"></a><em>instruction counting</em> to the register machine simulation.
+That is, have the machine model keep track of the number of
+instructions executed.  Extend the machine model's interface to accept
+a new message that prints the value of the instruction count and
+resets the count to zero.
+<p><p>
+
+<p><a name="%_thm_5.16"></a>
+<b>Exercise 5.16.</b>&nbsp;&nbsp;Augment the simulator to provide for <a name="%_idx_5818"></a><a name="%_idx_5820"></a><em>instruction tracing</em>.
+That is, before each instruction is executed, the simulator should print
+the text of the instruction.  Make the machine model accept <tt>trace-on</tt> and
+<tt>trace-off</tt> messages to turn tracing on and off.
+<p><p>
+
+<p><a name="%_thm_5.17"></a>
+<b>Exercise 5.17.</b>&nbsp;&nbsp;Extend the instruction tracing of
+exercise&nbsp;<a href="#%_thm_5.16">5.16</a> so that before
+printing an instruction, the simulator prints any labels that
+immediately precede that instruction in the controller sequence.  Be
+careful to do this in a way that does not interfere with instruction
+counting (exercise&nbsp;<a href="#%_thm_5.15">5.15</a>).
+You will have to make the simulator retain the necessary label information.
+<p><p>
+
+<p><a name="%_thm_5.18"></a>
+<b>Exercise 5.18.</b>&nbsp;&nbsp;<a name="%_idx_5822"></a><a name="%_idx_5824"></a>Modify the <tt>make-register</tt> procedure of
+section&nbsp;<a href="#%_sec_5.2.1">5.2.1</a> so that registers can be traced.
+Registers should accept messages that turn tracing on and off.  When a
+register is traced, assigning a value to the register should print the
+name of the register, the old contents of the register, and the new
+contents being assigned.  Extend the interface to the machine model
+to permit you to turn tracing on and off for designated machine registers.
+<p><p>
+
+<p><a name="%_thm_5.19"></a>
+<b>Exercise 5.19.</b>&nbsp;&nbsp;Alyssa P. Hacker wants a <a name="%_idx_5826"></a><em>breakpoint</em> feature in the simulator to
+help her debug her machine designs.  You have been hired to install
+this feature for her.  She wants to be able to specify a place in the
+controller sequence where the simulator will stop and allow her to
+examine the state of the machine.  You are to implement a procedure<p>
+
+<p>
+
+<p><p><tt>(set-breakpoint&nbsp;&lt;<em>machine</em>&gt;&nbsp;&lt;<em>label</em>&gt;&nbsp;&lt;<em>n</em>&gt;)<br>
+</tt><p><p>
+that sets a breakpoint just before the <em>n</em>th instruction after the
+given label.  For example,<p>
+
+<p><p><tt>(set-breakpoint&nbsp;gcd-machine&nbsp;'test-b&nbsp;4)<br>
+</tt><p><p>
+installs a breakpoint in <tt>gcd-machine</tt> just before the
+assignment to register <tt>a</tt>.  When the simulator reaches the
+breakpoint it should print the label and the offset of the breakpoint
+and stop executing instructions.  Alyssa can then use <tt>get-register-contents</tt> and <tt>set-register-contents!</tt> to manipulate
+the state of the simulated machine.  She should then be able to
+continue execution by saying<p>
+
+<p><p><tt>(proceed-machine&nbsp;&lt;<em>machine</em>&gt;)<br>
+</tt><p><p>
+She should also be able to remove a specific breakpoint by means of<p>
+
+<p><p><tt>(cancel-breakpoint&nbsp;&lt;<em>machine</em>&gt;&nbsp;&lt;<em>label</em>&gt;&nbsp;&lt;<em>n</em>&gt;)<br>
+</tt><p><p>
+or to remove all breakpoints by means of<p>
+
+<p><p><tt>(cancel-all-breakpoints&nbsp;&lt;<em>machine</em>&gt;)<br>
+</tt><p><p>
+<p>
+<p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_727" href="#call_footnote_Temp_727"><sup><small>4</small></sup></a> <a name="%_idx_5690"></a>Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values -- <tt>labels</tt> and
+<tt>insts</tt> -- without explicitly making a compound data structure to
+hold them.  An alternative implementation, which returns an explicit
+pair of values, is
+<p><p><tt><a name="%_idx_5692"></a>(define&nbsp;(extract-labels&nbsp;text)<br>
+&nbsp;&nbsp;(if&nbsp;(null?&nbsp;text)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;'()&nbsp;'())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((result&nbsp;(extract-labels&nbsp;(cdr&nbsp;text))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts&nbsp;(car&nbsp;result))&nbsp;(labels&nbsp;(cdr&nbsp;result)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((next-inst&nbsp;(car&nbsp;text)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(symbol?&nbsp;next-inst)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;insts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(make-label-entry&nbsp;next-inst&nbsp;insts)&nbsp;labels))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;(cons&nbsp;(make-instruction&nbsp;next-inst)&nbsp;insts)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels)))))))<br>
+</tt><p><p>
+which would be called by <tt>assemble</tt> as follows:
+<p><p><tt><a name="%_idx_5694"></a>(define&nbsp;(assemble&nbsp;controller-text&nbsp;machine)<br>
+&nbsp;&nbsp;(let&nbsp;((result&nbsp;(extract-labels&nbsp;controller-text)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((insts&nbsp;(car&nbsp;result))&nbsp;(labels&nbsp;(cdr&nbsp;result)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(update-insts!&nbsp;insts&nbsp;labels&nbsp;machine)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;insts)))<br>
+</tt><p><p>
+<a name="%_idx_5696"></a><a name="%_idx_5698"></a><a name="%_idx_5700"></a>You can consider our use of <tt>receive</tt> as demonstrating an elegant
+way to return multiple values, or simply an excuse to show off a
+programming trick.  An argument like <tt>receive</tt> that is the next
+procedure to be invoked is called a ``continuation.''  Recall that we
+also used continuations to implement the backtracking control
+structure in the <tt>amb</tt> evaluator in section&nbsp;<a href="book-Z-H-28.html#%_sec_4.3.3">4.3.3</a>.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-31.html">previous</a></span><span>, <a href="book-Z-H-33.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

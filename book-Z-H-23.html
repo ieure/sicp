@@ -1,0 +1,1036 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-22.html">previous</a></span><span>, <a href="book-Z-H-24.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_3.4"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_3.4">3.4&nbsp;&nbsp;Concurrency: Time Is of the Essence</a></h2><p>
+
+
+<a name="%_idx_3578"></a>
+We've seen the power of computational objects with local state as
+tools for modeling.  Yet, as section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>
+warned, this power extracts a price: the loss of referential
+transparency, giving rise to a thicket of questions about sameness and
+change, and the need to abandon the substitution model of evaluation in
+favor of the more intricate environment model.<p>
+
+<a name="%_idx_3580"></a>The central issue lurking beneath the complexity of state, sameness,
+and change is that by introducing assignment we are forced to admit
+<em>time</em> into our computational models.  Before we introduced
+assignment, all our programs were timeless, in the sense that any
+expression that has a value always has the same value.  In contrast,
+recall the example of modeling withdrawals from a bank account
+and returning the resulting balance,
+introduced at the beginning of
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>:<p>
+
+<p><p><tt>(withdraw&nbsp;25)<br>
+<i>75</i><br>
+(withdraw&nbsp;25)<br>
+<i>50</i><br>
+</tt><p><p>
+Here successive evaluations of the same expression yield different
+values.  This behavior arises from the fact that the execution of
+assignment statements (in this case, assignments to the variable <tt>balance</tt>) delineates <em>moments in time</em> when values change.  The
+result of evaluating an expression depends not only on the expression
+itself, but also on whether the evaluation occurs before or after
+these moments.  Building models in terms of computational objects with
+local state forces us to confront time as an essential concept in
+programming.<p>
+
+We can go further in structuring computational models to match our
+perception of the physical world.  Objects in the world do not change
+one at a time in sequence.  Rather we perceive them as acting <em>concurrently</em> -- all at once.  So it is often natural to model systems
+as collections of computational processes that execute concurrently.
+Just as we can make our programs modular by organizing models in
+terms of objects with separate local state, it is often appropriate to
+divide computational models into parts that evolve separately and
+concurrently.  Even if the programs are to be executed on a sequential
+computer, the practice of writing programs as if they were to be
+executed concurrently forces the programmer to avoid inessential
+timing constraints and thus makes programs more modular.<p>
+
+In addition to making programs more modular, concurrent computation
+can provide a speed advantage over sequential computation.  Sequential
+computers execute only one operation at a time, so the amount of time
+it takes to perform a task is proportional to the total number of
+operations performed.<a name="call_footnote_Temp_405" href="#footnote_Temp_405"><sup><small>34</small></sup></a>
+However, if it is possible to decompose a problem into pieces that are
+relatively independent and need to communicate only rarely, it may be
+possible to allocate pieces to separate computing processors,
+producing a speed advantage proportional to the number of processors
+available.<p>
+
+Unfortunately, the complexities introduced by assignment become even
+more problematic in the presence of concurrency.  The fact of
+concurrent execution, either because the world operates in parallel or
+because our computers do, entails additional complexity in our
+understanding of time.<p>
+
+<a name="%_sec_3.4.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.4.1">3.4.1&nbsp;&nbsp;The Nature of Time in Concurrent Systems</a></h3><p>
+
+
+<a name="%_idx_3584"></a>
+On the surface, time seems straightforward.  It
+is an ordering imposed on events.<a name="call_footnote_Temp_406" href="#footnote_Temp_406"><sup><small>35</small></sup></a>
+For any events <em>A</em> and <em>B</em>, either <em>A</em> occurs before <em>B</em>, <em>A</em>&nbsp;and&nbsp;<em>B</em>
+are simultaneous, or <em>A</em> occurs after <em>B</em>.  For instance,
+returning to the bank account example, suppose that Peter withdraws
+$10 and Paul withdraws $25 from a <a name="%_idx_3588"></a>joint account that initially
+contains $100, leaving $65 in the account.  Depending on the order
+of the two withdrawals, the sequence of balances in the account is
+either $100 <img src="book-Z-G-D-15.gif" border="0"> $90 <img src="book-Z-G-D-15.gif" border="0"> $65 or
+$100 <img src="book-Z-G-D-15.gif" border="0"> $75 <img src="book-Z-G-D-15.gif" border="0"> $65.  In a computer implementation
+of the banking system, this changing sequence of balances could be
+modeled by successive assignments to a variable <tt>balance</tt>.<p>
+
+In complex situations, however, such a view can be problematic.
+Suppose that Peter and Paul, and other people besides, are
+accessing the same bank account through a network of banking machines
+distributed all over the world.  The actual sequence of balances in
+the account will depend critically on the detailed timing of the
+accesses and the details of the communication among the machines.<p>
+
+<a name="%_idx_3590"></a>This indeterminacy in the order of events can pose serious problems in
+the design of concurrent systems.  For instance, suppose that the
+withdrawals made by Peter and Paul are implemented as two separate
+processes sharing a common variable <tt>balance</tt>, each process
+specified by the procedure given in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>:
+
+<p><p><tt><a name="%_idx_3592"></a>(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+</tt><p><p>
+If the two processes operate independently, then Peter might test the
+balance and attempt to withdraw a legitimate amount.  However, Paul
+might withdraw some funds in between the time that Peter checks the
+balance and the time Peter completes the withdrawal, thus invalidating
+Peter's test.<p>
+
+Things can be worse still.  Consider the expression
+
+<p><p><tt>(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+</tt><p><p>
+executed as part of each withdrawal process.  This consists of three
+steps: (1) accessing the value of the <tt>balance</tt> variable; (2)
+computing the new balance; (3) setting <tt>balance</tt> to this new
+value.  If Peter and Paul's withdrawals execute this statement
+concurrently, then the two withdrawals might interleave the order in
+which they access <tt>balance</tt> and set it to the new value.<p>
+
+
+The timing diagram in figure&nbsp;<a href="#%_fig_3.29">3.29</a> depicts an order of
+events where <tt>balance</tt> starts at 100, Peter withdraws 10,
+Paul withdraws 25, and yet the final value of <tt>balance</tt> is 75.  As
+shown in the diagram, the reason for this anomaly is that Paul's
+assignment of 75 to <tt>balance</tt> is made under the assumption that
+the value of <tt>balance</tt> to be decremented is 100.  That assumption,
+however, became invalid when Peter changed <tt>balance</tt> to 90.  This
+is a catastrophic failure for the banking system, because the total
+amount of money in the system is not conserved.  Before the transactions,
+the total amount of money was $100.  Afterwards, Peter has $10, Paul
+has $25, and the bank has $75.<a name="call_footnote_Temp_407" href="#footnote_Temp_407"><sup><small>36</small></sup></a><p>
+
+
+<a name="%_idx_3596"></a><a name="%_idx_3598"></a>The general phenomenon illustrated
+here is that several processes may share  a
+common state variable.  What makes this complicated is that more than
+one process may be trying to manipulate the shared state at the same
+time.  For the bank account example, during each transaction, each
+customer should be able to act as if the other customers did not
+exist.  When a customer changes the balance in a way that depends on
+the balance, he must be able to assume that, just before the moment of
+change, the balance is still what he thought it was.<p>
+
+
+<a name="%_sec_Temp_408"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_408">Correct behavior of concurrent programs</a></h4><p>
+
+<a name="%_idx_3600"></a>
+The above example typifies the subtle bugs that can creep into
+concurrent programs.  The root of this complexity lies in the
+assignments to variables that are shared among the different
+processes.  We already know that we must be careful in writing
+programs that use <tt>set!</tt>, because the results of a computation
+depend on the order in which the assignments occur.<a name="call_footnote_Temp_409" href="#footnote_Temp_409"><sup><small>37</small></sup></a>
+With concurrent processes we must be especially careful about
+assignments, because we may not be able to control the order of the
+assignments made by the different processes.  If several such changes
+might be made concurrently (as with two depositors accessing a joint
+account) we need some way to ensure that our system behaves correctly.
+For example, in the case of withdrawals from a joint bank account, we
+must ensure that money is conserved.
+To make concurrent programs behave correctly, we may have to
+place some restrictions on concurrent execution.<p>
+
+<a name="%_fig_3.29"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-31.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.29:</b>&nbsp;&nbsp;Timing diagram showing how interleaving the order of events
+in two banking withdrawals can lead to an incorrect final balance.</div></caption><tr><td>
+<a name="%_idx_3602"></a>
+</td></tr></table></div><p>
+
+One possible restriction on concurrency would
+stipulate that no two operations that
+change any shared state variables can occur at the same time.  This is an
+extremely stringent requirement.  For distributed banking, it would
+require the system designer to ensure that only one transaction could
+proceed at a time.  This would be both inefficient and overly
+conservative.  Figure&nbsp;<a href="#%_fig_3.30">3.30</a> shows Peter and
+Paul sharing a bank account, where Paul has a private account as well.
+The diagram illustrates two withdrawals from the shared account
+(one by Peter and one by Paul) and a deposit to Paul's private account.<a name="call_footnote_Temp_410" href="#footnote_Temp_410"><sup><small>38</small></sup></a>
+The two withdrawals from the shared account must not be
+concurrent (since both access and update the same account), and Paul's
+deposit and withdrawal must not be concurrent (since both access and
+update the amount in Paul's wallet).
+But there should be no problem
+permitting Paul's deposit to his private account to proceed
+concurrently with Peter's withdrawal from the shared account.<p>
+
+<a name="%_fig_3.30"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-32.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.30:</b>&nbsp;&nbsp;Concurrent deposits and withdrawals from a joint account
+in Bank1 and a private account in Bank2.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+A less stringent restriction on concurrency would ensure that a
+concurrent system produces the same result
+as if the processes had run sequentially in some order.
+There are two important aspects to this requirement.
+First, it does not require the processes to actually run sequentially,
+but only to produce results that are the same <em>as if</em> they had run
+sequentially.  For the example in
+figure&nbsp;<a href="#%_fig_3.30">3.30</a>, the designer of the bank account
+system can safely allow Paul's deposit and Peter's withdrawal to
+happen concurrently, because the net result will be the same as if the
+two operations had happened sequentially.  Second, there may be more
+than one possible ``correct'' result produced by a concurrent program,
+because we require only that the result be the same as for <em>some</em>
+sequential order.
+For example, suppose that Peter and Paul's joint account starts out
+with $100, and Peter deposits $40 while Paul concurrently withdraws
+half the money in the account.
+Then sequential execution could result in the account balance being
+either $70 or $90 (see exercise&nbsp;<a href="#%_thm_3.38">3.38</a>).<a name="call_footnote_Temp_411" href="#footnote_Temp_411"><sup><small>39</small></sup></a><p>
+
+There are still weaker requirements for correct execution of
+concurrent programs.  A program for simulating <a name="%_idx_3606"></a>diffusion (say, the
+flow of heat in an object) might consist of a large number of
+processes, each one representing a small volume of space, that update
+their values concurrently.  Each process repeatedly changes its
+value to the average of its own value and its neighbors' values.
+This algorithm
+converges to the right answer independent of the order in which the
+operations are done; there is no need for any restrictions on
+concurrent use of the shared values.<p>
+
+<p><a name="%_thm_3.38"></a>
+<b>Exercise 3.38.</b>&nbsp;&nbsp;Suppose that Peter, Paul, and Mary share a joint bank account that
+initially contains $100.  Concurrently, Peter deposits $10, Paul
+withdraws $20, and Mary withdraws half the money in the account, by
+executing the following commands:
+<table border=0><tr><td valign=top >Peter: </td><td valign=top ><tt>(set! balance (+ balance 10))</tt></td></tr>
+<tr><td valign=top >Paul: </td><td valign=top ><tt>(set! balance (- balance 20))</tt></td></tr>
+<tr><td valign=top >Mary: </td><td valign=top ><tt>(set! balance (- balance (/ balance 2)))</tt>
+</td></tr></table><p>
+
+<p><p>a. List all the different possible values for <tt>balance</tt> after these
+three transactions have been completed, assuming that the banking
+system forces the three processes to run sequentially in some order.<p>
+
+<p><p>b. What are some other values
+that could be produced if the system allows the processes to be interleaved?
+Draw timing diagrams like the one in figure&nbsp;<a href="#%_fig_3.29">3.29</a> to
+explain how these values can occur.
+
+<p>
+
+<a name="%_sec_3.4.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.4.2">3.4.2&nbsp;&nbsp;Mechanisms for Controlling Concurrency</a></h3><p>
+
+<a name="%_idx_3608"></a>
+We've seen that the difficulty in dealing with concurrent processes is
+rooted in the need to consider the interleaving of the order of events
+in the different processes.  For example, suppose we have two
+processes, one with three ordered events (<em>a</em>,<em>b</em>,<em>c</em>) and one with three
+ordered events (<em>x</em>,<em>y</em>,<em>z</em>).  If the two processes run concurrently, with
+no constraints on how their execution is interleaved, then there are
+20 different possible orderings for the events that are consistent
+with the individual orderings for the two processes:
+<p><div align=left><img src="ch3-Z-G-33.gif" border="0"></div><p>
+As programmers designing this system, we would have to consider the
+effects of each of these 20 orderings and check that each behavior is
+acceptable.  Such an approach rapidly becomes unwieldy as the numbers
+of processes and events increase.<p>
+
+A more practical approach to the design of concurrent systems is to
+devise general mechanisms that allow us to constrain the interleaving
+of concurrent processes so that we can be sure that the program
+behavior is correct.  Many mechanisms have been developed for this
+purpose.  In this section, we describe one of them, the <em>serializer</em>.<p>
+
+<a name="%_sec_Temp_413"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_413">Serializing access to shared state</a></h4><p>
+
+<a name="%_idx_3610"></a>
+Serialization implements the following idea: Processes will execute
+concurrently, but there will be certain collections of procedures that
+cannot be executed concurrently.  More precisely, serialization creates
+distinguished sets of procedures such that only one execution of a
+procedure in each serialized set is permitted to happen at a time.
+If some procedure in the set is being executed, then a process that
+attempts to execute any procedure in the set will be forced to wait
+until the first execution has finished.<p>
+
+We can use serialization to control access to shared variables.
+For example, if we want to update a shared variable based on the
+previous value of that variable, we put the access to the previous
+value of the variable and the assignment of the new value to the
+variable in the same procedure.  We then ensure that no other
+procedure that assigns to the variable can run concurrently with this
+procedure by serializing all of these procedures with the same
+serializer.  This guarantees that the value of the variable cannot be
+changed between an access and the corresponding assignment.<p>
+
+<a name="%_sec_Temp_414"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_414">Serializers in Scheme</a></h4><p>
+
+To make the above mechanism more concrete, suppose that we have
+extended Scheme to include a procedure called <a name="%_idx_3612"></a><tt>parallel-execute</tt>:<p>
+
+<p><p><tt>(parallel-execute&nbsp;&lt;<em>p<sub>1</sub></em>&gt;&nbsp;&lt;<em>p<sub>2</sub></em>&gt;&nbsp;<tt>...</tt> &lt;<em>p<sub><em>k</em></sub></em>&gt;)<br>
+</tt><p><p>
+Each &lt;<em>p</em>&gt; must be a procedure of no arguments.  <tt>Parallel-execute</tt>
+creates a separate process for each
+&lt;<em>p</em>&gt;, which applies &lt;<em>p</em>&gt; (to no arguments).  These processes all
+run concurrently.<a name="call_footnote_Temp_415" href="#footnote_Temp_415"><sup><small>40</small></sup></a><p>
+
+As an example of how this is used, consider<p>
+
+<p><p><tt>(define&nbsp;x&nbsp;10)<br>
+<br>
+(parallel-execute&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(+&nbsp;x&nbsp;1))))<br>
+</tt><p><p>
+This creates two concurrent processes -- <em>P</em><sub>1</sub>, which sets <tt>x</tt> to
+<tt>x</tt> times <tt>x</tt>, and <em>P</em><sub>2</sub>, which increments <tt>x</tt>.  After
+execution is complete, <tt>x</tt> will be left with one of five possible
+values, depending on the interleaving of the events of <em>P</em><sub>1</sub> and
+<em>P</em><sub>2</sub>:
+<table border=0><tr><td valign=top >101: </td><td valign=top ><em>P</em><sub>1</sub> sets <tt>x</tt> to 100 and then <em>P</em><sub>2</sub> increments <tt>x</tt> to 101.</td></tr>
+<tr><td valign=top >121: </td><td valign=top ><em>P</em><sub>2</sub> increments <tt>x</tt> to 11 and then <em>P</em><sub>1</sub> sets <tt>x</tt> to
+<tt>x</tt> times <tt>x</tt>.</td></tr>
+<tr><td valign=top >110: </td><td valign=top ><em>P</em><sub>2</sub> changes <tt>x</tt> from 10 to 11 between the two times that
+<em>P</em><sub>1</sub> accesses the value of <tt>x</tt> during the evaluation of <tt>(* x x)</tt>.</td></tr>
+<tr><td valign=top >11:  </td><td valign=top ><em>P</em><sub>2</sub> accesses <tt>x</tt>, then <em>P</em><sub>1</sub> sets <tt>x</tt> to 100,
+then <em>P</em><sub>2</sub> sets <tt>x</tt>.</td></tr>
+<tr><td valign=top >100: </td><td valign=top ><em>P</em><sub>1</sub> accesses <tt>x</tt> (twice), then <em>P</em><sub>2</sub> sets <tt>x</tt> to 11,
+then <em>P</em><sub>1</sub> sets <tt>x</tt>.</td></tr>
+<tr><td valign=top ></td></tr></table><p>
+
+
+We can constrain the concurrency by using serialized procedures,
+which are created by <em>serializers</em>. Serializers are constructed by <tt>make-serializer</tt>, whose implementation is given below.  A serializer
+takes a procedure as argument and returns a serialized procedure that
+behaves like the original procedure.  All calls to a given serializer
+return serialized procedures in the same set.<p>
+
+Thus, in contrast to the example above, executing<p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;10)<br>
+<br>
+(define&nbsp;s&nbsp;(make-serializer))<br>
+<br>
+(parallel-execute&nbsp;(s&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(+&nbsp;x&nbsp;1)))))<br>
+</tt><p><p>
+can produce only two possible values for <tt>x</tt>, 101 or 121.  The
+other possibilities are eliminated, because the execution of <em>P</em><sub>1</sub> and
+<em>P</em><sub>2</sub> cannot be interleaved.<p>
+
+Here is a version of the <tt>make-account</tt> procedure from
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>, where the deposits and
+withdrawals have been serialized:<p>
+
+
+<p><p><tt><a name="%_idx_3614"></a><a name="%_idx_3616"></a>(define&nbsp;(make-account&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;(let&nbsp;((protected&nbsp;(make-serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;(protected&nbsp;withdraw))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;(protected&nbsp;deposit))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'balance)&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+With this implementation, two processes cannot be withdrawing from or
+depositing into a single account concurrently.  This eliminates the source
+of the error illustrated in figure&nbsp;<a href="#%_fig_3.29">3.29</a>, where Peter
+changes the account balance between the times when Paul accesses the
+balance to compute the new value and when Paul actually performs the
+assignment.  On the other hand, each account has its own serializer,
+so that deposits and withdrawals for different accounts can proceed
+concurrently.<p>
+
+
+<p><a name="%_thm_3.39"></a>
+<b>Exercise 3.39.</b>&nbsp;&nbsp;Which of the five possibilities in the parallel execution shown above
+remain if we instead serialize execution as follows:<p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;10)<br>
+<br>
+(define&nbsp;s&nbsp;(make-serializer))<br>
+<br>
+(parallel-execute&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;((s&nbsp;(lambda&nbsp;()&nbsp;(*&nbsp;x&nbsp;x))))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(+&nbsp;x&nbsp;1)))))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.40"></a>
+<b>Exercise 3.40.</b>&nbsp;&nbsp;Give all possible values of <tt>x</tt> that can result from executing<p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;10)<br>
+<br>
+(parallel-execute&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x&nbsp;x))))<br>
+</tt><p><p>
+Which of these possibilities remain if we instead use serialized
+procedures:<p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;10)<br>
+<br>
+(define&nbsp;s&nbsp;(make-serializer))<br>
+<br>
+(parallel-execute&nbsp;(s&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s&nbsp;(lambda&nbsp;()&nbsp;(set!&nbsp;x&nbsp;(*&nbsp;x&nbsp;x&nbsp;x)))))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.41"></a>
+<b>Exercise 3.41.</b>&nbsp;&nbsp;Ben Bitdiddle worries that it would be better to implement the bank
+account as follows (where the commented line has been changed):<p>
+
+
+<p><p><tt><a name="%_idx_3618"></a>(define&nbsp;(make-account&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;<em>;;&nbsp;continued&nbsp;on&nbsp;next&nbsp;page</em><br>
+<br>
+&nbsp;&nbsp;(let&nbsp;((protected&nbsp;(make-serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;(protected&nbsp;withdraw))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;(protected&nbsp;deposit))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((protected&nbsp;(lambda&nbsp;()&nbsp;balance))))&nbsp;<em>;&nbsp;serialized</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+because allowing unserialized access to the bank balance can result in
+anomalous behavior.  Do you agree?  Is there any scenario that
+demonstrates Ben's concern?
+<p><p>
+
+<p><a name="%_thm_3.42"></a>
+<b>Exercise 3.42.</b>&nbsp;&nbsp;Ben Bitdiddle suggests that it's a waste of time to create a new
+serialized procedure in response to every <tt>withdraw</tt> and <tt>deposit</tt> message.  He says that <tt>make-account</tt> could be changed so
+that the calls to <tt>protected</tt> are done outside the <tt>dispatch</tt>
+procedure.  That is, an account would return the same serialized
+procedure (which was created at the same time as the account) each time
+it is asked for a withdrawal procedure.
+<p><p><tt><a name="%_idx_3620"></a>(define&nbsp;(make-account&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;(let&nbsp;((protected&nbsp;(make-serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((protected-withdraw&nbsp;(protected&nbsp;withdraw))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(protected-deposit&nbsp;(protected&nbsp;deposit)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;protected-withdraw)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;protected-deposit)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'balance)&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dispatch)))<br>
+</tt><p><p>
+Is this a safe change to make?  In particular, is there any difference in
+what concurrency is allowed by these two versions of <tt>make-account</tt> ?
+<p>
+
+<a name="%_sec_Temp_420"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_420">Complexity of using multiple shared resources</a></h4><p>
+
+<a name="%_idx_3622"></a><a name="%_idx_3624"></a>
+Serializers provide a powerful abstraction that helps isolate the
+complexities of concurrent programs so that they can be dealt with
+carefully and (hopefully) correctly.  However, while using serializers
+is relatively straightforward when there is only a single shared
+resource (such as a single bank account), concurrent programming can
+be treacherously difficult when there are multiple shared resources.<p>
+
+To illustrate one of the difficulties that can arise, suppose we wish to swap
+the balances in two bank accounts.  We access each account to find the
+balance, compute the difference between the balances, withdraw this
+difference from one account, and deposit it in the other account.  We
+could implement this as follows:<a name="call_footnote_Temp_421" href="#footnote_Temp_421"><sup><small>41</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3626"></a><a name="%_idx_3628"></a>(define&nbsp;(exchange&nbsp;account1&nbsp;account2)<br>
+&nbsp;&nbsp;(let&nbsp;((difference&nbsp;(-&nbsp;(account1&nbsp;'balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(account2&nbsp;'balance))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((account1&nbsp;'withdraw)&nbsp;difference)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((account2&nbsp;'deposit)&nbsp;difference)))<br>
+</tt><p><p><p>
+
+This procedure works well when only a single process is trying to do
+the exchange.  Suppose, however, that Peter and Paul both have access
+to accounts <em>a</em>1, <em>a</em>2, and <em>a</em>3, and that
+Peter exchanges <em>a</em>1 and
+<em>a</em>2 while Paul concurrently exchanges <em>a</em>1 and <em>a</em>3.
+Even with account deposits and withdrawals
+serialized for individual accounts (as in the <tt>make-account</tt>
+procedure shown above in this section), <tt>exchange</tt> can still
+produce incorrect results.  For example, Peter might compute the
+difference in the balances for <em>a</em>1 and <em>a</em>2, but then Paul
+might change the balance in <em>a</em>1 before Peter is able to complete
+the exchange.<a name="call_footnote_Temp_422" href="#footnote_Temp_422"><sup><small>42</small></sup></a>
+For correct behavior, we must arrange for the <tt>exchange</tt> procedure
+to lock out any other concurrent accesses to the accounts during the
+entire time of the exchange.<p>
+
+One way we can accomplish this is by using both accounts' serializers
+to serialize the entire <tt>exchange</tt> procedure.
+To do this, we will arrange for access to an account's serializer.
+Note that we are deliberately
+breaking the modularity of the bank-account object by exposing the
+serializer.  The following version of <tt>make-account</tt> is identical
+to the original version given in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a>, except that a serializer is
+provided to protect the balance variable, and the serializer is
+exported via message passing:<p>
+
+<p><p><tt><a name="%_idx_3630"></a>(define&nbsp;(make-account-and-serializer&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;(let&nbsp;((balance-serializer&nbsp;(make-serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;withdraw)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;deposit)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'balance)&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'serializer)&nbsp;balance-serializer)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p><p>
+
+
+We can use this to do serialized deposits and withdrawals.  However,
+unlike our earlier serialized account, it is now the responsibility of
+each user of bank-account objects to explicitly manage the
+serialization, for example as follows:<a name="call_footnote_Temp_423" href="#footnote_Temp_423"><sup><small>43</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3632"></a>(define&nbsp;(deposit&nbsp;account&nbsp;amount)<br>
+&nbsp;&nbsp;(let&nbsp;((s&nbsp;(account&nbsp;'serializer))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(d&nbsp;(account&nbsp;'deposit)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((s&nbsp;d)&nbsp;amount)))<br>
+</tt><p><p><p>
+
+Exporting the serializer in this way gives us enough flexibility to
+implement a serialized exchange program.  We simply
+serialize the original
+<tt>exchange</tt> procedure with the serializers for both accounts:<p>
+
+<p><p><tt><a name="%_idx_3634"></a>(define&nbsp;(serialized-exchange&nbsp;account1&nbsp;account2)<br>
+&nbsp;&nbsp;(let&nbsp;((serializer1&nbsp;(account1&nbsp;'serializer))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(serializer2&nbsp;(account2&nbsp;'serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;((serializer1&nbsp;(serializer2&nbsp;exchange))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;account1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;account2)))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.43"></a>
+<b>Exercise 3.43.</b>&nbsp;&nbsp;Suppose that the balances in three accounts start out as $10, $20,
+and $30, and that multiple processes run, exchanging the balances in
+the accounts.  Argue that if the processes are run sequentially,
+after any number of concurrent exchanges, the account balances should be 
+$10, $20, and $30 in some order.
+Draw a timing diagram like the one in figure&nbsp;<a href="#%_fig_3.29">3.29</a> to
+show how this condition can be violated if the exchanges are
+implemented using the first version of the account-exchange program in
+this section.  On the other hand, argue that even with this <tt>exchange</tt> program, the sum of the balances in the accounts will be
+preserved.  Draw a timing diagram to show how even this condition would
+be violated if we did not serialize the transactions
+on individual accounts.
+
+<p><p>
+
+<p><a name="%_thm_3.44"></a>
+<b>Exercise 3.44.</b>&nbsp;&nbsp;<a name="%_idx_3636"></a>Consider the problem of transferring an amount from one account to
+another.  Ben Bitdiddle claims that this can be accomplished with the
+following procedure, even if there are multiple people concurrently
+transferring money among multiple accounts, using any account
+mechanism that serializes deposit and withdrawal transactions, for
+example, the version of <tt>make-account</tt> in the text above.<p>
+
+
+<p><p><tt>(define&nbsp;(transfer&nbsp;from-account&nbsp;to-account&nbsp;amount)<br>
+&nbsp;&nbsp;((from-account&nbsp;'withdraw)&nbsp;amount)<br>
+&nbsp;&nbsp;((to-account&nbsp;'deposit)&nbsp;amount))<br>
+</tt><p><p>
+Louis Reasoner claims that there is a problem here, and that we need
+to use a more sophisticated method, such as the one required for
+dealing with the exchange problem.  Is Louis right?  If not, what is
+the essential difference between the transfer problem and the exchange
+problem?  (You should assume that the balance in <tt>from-account</tt>
+is at least <tt>amount</tt>.)
+<p><p>
+
+
+<p><a name="%_thm_3.45"></a>
+<b>Exercise 3.45.</b>&nbsp;&nbsp;Louis Reasoner thinks our bank-account system is unnecessarily complex and
+error-prone now that deposits and withdrawals aren't automatically serialized.
+He suggests that <tt>make-account-and-serializer</tt> should have
+exported the serializer (for use by such procedures as
+<tt>serialized-exchange</tt>) in addition to (rather than instead of)
+using it to serialize accounts and deposits as <tt>make-account</tt> did.
+He proposes to redefine accounts as follows:<p>
+
+
+<p><p><tt>(define&nbsp;(make-account-and-serializer&nbsp;balance)<br>
+&nbsp;&nbsp;(define&nbsp;(withdraw&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(&gt;=&nbsp;balance&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Insufficient&nbsp;funds&quot;))<br>
+&nbsp;&nbsp;(define&nbsp;(deposit&nbsp;amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(+&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance)<br>
+&nbsp;&nbsp;(let&nbsp;((balance-serializer&nbsp;(make-serializer)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(dispatch&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'withdraw)&nbsp;(balance-serializer&nbsp;withdraw))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'deposit)&nbsp;(balance-serializer&nbsp;deposit))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'balance)&nbsp;balance)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'serializer)&nbsp;balance-serializer)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(error&nbsp;&quot;Unknown&nbsp;request&nbsp;--&nbsp;MAKE-ACCOUNT&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dispatch))<br>
+</tt><p><p>
+Then deposits are handled as with the original <tt>make-account</tt>:
+<p><p><tt>(define&nbsp;(deposit&nbsp;account&nbsp;amount)<br>
+&nbsp;((account&nbsp;'deposit)&nbsp;amount))<br>
+</tt><p><p>
+Explain what is wrong with Louis's reasoning.  In particular,
+consider what happens when <tt>serialized-exchange</tt> is called.
+
+<p>
+
+<a name="%_sec_Temp_427"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_427">Implementing serializers</a></h4><p>
+
+<a name="%_idx_3638"></a>
+We implement serializers in terms of a more primitive synchronization
+mechanism called a <a name="%_idx_3640"></a><em>mutex</em>.  A mutex is an object that supports
+two operations -- the mutex can be <a name="%_idx_3642"></a><em>acquired</em>, and the mutex can be
+<a name="%_idx_3644"></a><em>released</em>.  Once a mutex has been acquired, no other acquire
+operations on that mutex may proceed until the mutex is released.<a name="call_footnote_Temp_428" href="#footnote_Temp_428"><sup><small>44</small></sup></a> In our implementation, each
+serializer has an associated mutex.  Given a procedure <tt>p</tt>, the
+serializer returns a procedure that acquires the mutex, runs <tt>p</tt>,
+and then releases the mutex.  This ensures that only one of the
+procedures produced by the serializer can be running at once, which is
+precisely the serialization property that we need to guarantee.<p>
+
+<p><p><tt><a name="%_idx_3660"></a>(define&nbsp;(make-serializer)<br>
+&nbsp;&nbsp;(let&nbsp;((mutex&nbsp;(make-mutex)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(p)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(serialized-p&nbsp;.&nbsp;args)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mutex&nbsp;'acquire)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((val&nbsp;(apply&nbsp;p&nbsp;args)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(mutex&nbsp;'release)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;val))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;serialized-p)))<br>
+</tt><p><p><p>
+
+The mutex is a mutable object (here we'll use a one-element
+list, which we'll refer to as a <a name="%_idx_3662"></a><em>cell</em>) that can hold the value
+true or false.  When the value is false, the mutex is available to be
+acquired.  When the value is true, the mutex is unavailable, and any
+process that attempts to acquire the mutex must wait.<p>
+
+Our mutex constructor <tt>make-mutex</tt> begins by initializing the cell
+contents to false.  To acquire the mutex, we test the cell.  If the
+mutex is available, we set the cell contents to true and proceed.
+Otherwise, we wait in a loop, attempting to acquire over and over
+again, until we find that the mutex is available.<a name="call_footnote_Temp_429" href="#footnote_Temp_429"><sup><small>45</small></sup></a>  To release the
+mutex, we set the cell contents to false.<p>
+
+<p><p><tt><a name="%_idx_3668"></a>(define&nbsp;(make-mutex)<br>
+&nbsp;&nbsp;(let&nbsp;((cell&nbsp;(list&nbsp;false)))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;(the-mutex&nbsp;m)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((eq?&nbsp;m&nbsp;'acquire)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(test-and-set!&nbsp;cell)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(the-mutex&nbsp;'acquire)))&nbsp;<em>;&nbsp;retry</em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((eq?&nbsp;m&nbsp;'release)&nbsp;(clear!&nbsp;cell))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the-mutex))<br>
+(define&nbsp;(clear!&nbsp;cell)<br>
+&nbsp;&nbsp;(set-car!&nbsp;cell&nbsp;false))<br>
+</tt><p><p><p>
+
+<tt>Test-and-set!</tt> tests the cell and returns the result of the
+test.  In addition, if the test was false, <tt>test-and-set!</tt> sets
+the cell contents to true before returning false.  We can express this
+behavior as the following procedure:<p>
+
+<p><p><tt><a name="%_idx_3670"></a>(define&nbsp;(test-and-set!&nbsp;cell)<br>
+&nbsp;&nbsp;(if&nbsp;(car&nbsp;cell)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set-car!&nbsp;cell&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false)))<br>
+</tt><p><p><p>
+
+However, this implementation of <tt>test-and-set!</tt> does not suffice
+as it stands.  There is a crucial subtlety here, which is the
+essential place where concurrency control enters the system: The <tt>test-and-set!</tt> operation must be performed <a name="%_idx_3672"></a><em>atomically</em>.  That
+is, we must guarantee that, once a process has tested the cell and
+found it to be false, the cell contents will actually be set to true
+before any other process can test the cell.  If we do not make this
+guarantee, then the mutex can fail in a way similar to the
+bank-account failure in figure&nbsp;<a href="#%_fig_3.29">3.29</a>.  (See
+exercise&nbsp;<a href="#%_thm_3.46">3.46</a>.)<p>
+
+The actual implementation of <tt>test-and-set!</tt> depends on the
+details of how our system runs concurrent processes.  For example, we
+might be executing concurrent processes on a sequential processor
+using a <a name="%_idx_3674"></a>time-slicing mechanism that cycles through the processes,
+permitting each process to run for a short time before interrupting it
+and moving on to the next process.  In that case, <tt>test-and-set!</tt>
+can work by disabling time slicing during the testing and setting.<a name="call_footnote_Temp_430" href="#footnote_Temp_430"><sup><small>46</small></sup></a>
+Alternatively, multiprocessing computers provide instructions that
+support atomic operations directly in hardware.<a name="call_footnote_Temp_431" href="#footnote_Temp_431"><sup><small>47</small></sup></a><p>
+
+<p><a name="%_thm_3.46"></a>
+<b>Exercise 3.46.</b>&nbsp;&nbsp;Suppose that we implement <tt>test-and-set!</tt>  using an ordinary
+procedure as shown in the text, without attempting to make the operation
+atomic.  Draw a timing diagram like the one in
+figure&nbsp;<a href="#%_fig_3.29">3.29</a> to demonstrate how the mutex
+implementation can fail by allowing two processes to acquire the mutex
+at the same time.
+
+<p><p>
+
+<p><a name="%_thm_3.47"></a>
+<b>Exercise 3.47.</b>&nbsp;&nbsp;<a name="%_idx_3692"></a>A semaphore (of size <em>n</em>) is a generalization of a mutex.  Like a
+mutex, a semaphore supports acquire and release operations, but it is
+more general in that up to <em>n</em> processes can acquire it
+concurrently.  Additional processes that attempt to acquire the
+semaphore must wait for release operations.  Give implementations of
+semaphores<p>
+
+<p><p>a. in terms of mutexes<p>
+
+<p><p>b. in terms of atomic <tt>test-and-set!</tt> operations.
+
+<p>
+
+<a name="%_sec_Temp_434"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_434">Deadlock</a></h4><p>
+
+<a name="%_idx_3694"></a><a name="%_idx_3696"></a>
+Now that we have seen how to implement serializers, we can see
+that account exchanging still has a problem, even with the
+<tt>serialized-exchange</tt> procedure above.
+Imagine that Peter attempts to exchange <em>a</em>1
+with <em>a</em>2 while Paul concurrently attempts to exchange <em>a</em>2
+with <em>a</em>1.  Suppose that Peter's process reaches the point where
+it has entered a serialized procedure protecting <em>a</em>1 and, just
+after that, Paul's process enters a serialized procedure protecting
+<em>a</em>2.  Now Peter cannot proceed (to enter a serialized procedure
+protecting <em>a</em>2) until Paul exits the serialized procedure
+protecting <em>a</em>2.  Similarly, Paul cannot proceed until Peter exits
+the serialized procedure protecting <em>a</em>1.  Each process is stalled
+forever, waiting for the other.  This situation is called a <em>deadlock</em>.  Deadlock is always a danger in systems that provide
+concurrent access to multiple shared resources.<p>
+
+<a name="%_idx_3698"></a>One way to avoid the deadlock in this situation is to give each
+account a unique identification number and rewrite <tt>serialized-exchange</tt> so
+that a process will always attempt to enter a procedure protecting the
+lowest-numbered account first.  Although this method works well for
+the exchange problem, there are other situations that require more
+sophisticated deadlock-avoidance techniques, or where deadlock cannot
+be avoided at all.  (See exercises&nbsp;<a href="#%_thm_3.48">3.48</a>
+and&nbsp;<a href="#%_thm_3.49">3.49</a>.)<a name="call_footnote_Temp_435" href="#footnote_Temp_435"><sup><small>48</small></sup></a><p>
+
+<p><a name="%_thm_3.48"></a>
+<b>Exercise 3.48.</b>&nbsp;&nbsp;<a name="%_idx_3708"></a>Explain in detail why the deadlock-avoidance method described above,
+(i.e., the accounts are numbered, and each process attempts to acquire
+the smaller-numbered account first) avoids deadlock in the exchange
+problem.  Rewrite <tt>serialized-exchange</tt> to incorporate this idea.
+(You will
+also need to modify <tt>make-account</tt> so that each account is created
+with a number, which can be accessed by sending an appropriate
+message.)
+
+<p><p>
+
+<p><a name="%_thm_3.49"></a>
+<b>Exercise 3.49.</b>&nbsp;&nbsp;Give a scenario where the deadlock-avoidance mechanism described
+above does not work.  (Hint: In the exchange problem, each process
+knows in advance which accounts it will need to get access to.  Consider a
+situation where a process must get access to some shared resources before it
+can know which additional shared resources it will require.)
+
+<p>
+<p>
+
+<a name="%_sec_Temp_438"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_438">Concurrency, time, and communication</a></h4><p>
+
+We've seen how programming concurrent systems requires controlling the
+ordering of events when different processes access shared
+state, and we've seen how to achieve this control through judicious
+use of serializers.  But the problems of concurrency
+lie deeper than this, because, from a fundamental point of view, it's
+not always clear what is meant by ``shared state.''<p>
+
+Mechanisms such as <tt>test-and-set!</tt> require processes to examine a
+global shared flag at arbitrary times.  This is problematic and
+inefficient to implement in modern high-speed processors, where
+due to optimization techniques such as pipelining and cached memory,
+the contents of memory
+may not be in a consistent state at every instant.  In contemporary
+multiprocessing systems, therefore, the serializer paradigm is being
+supplanted by new approaches to concurrency control.<a name="call_footnote_Temp_439" href="#footnote_Temp_439"><sup><small>49</small></sup></a><p>
+
+
+The problematic aspects of shared state also arise
+in large, distributed systems.  For
+instance, imagine a
+distributed banking system where individual branch banks maintain
+local values for bank balances and periodically compare these with
+values maintained by other branches.  In such a system the value of
+``the account balance'' would be undetermined, except right after
+synchronization.
+If Peter deposits money in an account he holds
+jointly with Paul, when should we say that the account balance has
+changed -- when the balance in the local branch changes, or not until
+after the synchronization?  
+And if Paul accesses the account from a
+different branch, what are the reasonable constraints to place on the
+banking system such that the behavior is ``correct''?  
+The only thing that might matter for
+correctness is the behavior observed by Peter and Paul individually
+and the ``state'' of the account immediately after synchronization.
+Questions about the
+``real'' account balance or the order of events between synchronizations
+may be irrelevant or meaningless.<a name="call_footnote_Temp_440" href="#footnote_Temp_440"><sup><small>50</small></sup></a><p>
+
+
+<a name="%_idx_3720"></a>The basic phenomenon here is that synchronizing different processes,
+establishing shared state, or imposing an order on events requires
+communication among the processes.  In essence, any notion of time in
+concurrency control must be intimately tied to communication.<a name="call_footnote_Temp_441" href="#footnote_Temp_441"><sup><small>51</small></sup></a>  It is
+intriguing that a similar connection between time and communication
+also arises in the <a name="%_idx_3724"></a>Theory of Relativity, where the speed of light (the
+fastest signal that can be used to synchronize events) is a
+fundamental constant relating time and space.  The
+complexities we encounter in dealing with time and state in our
+computational models may in fact mirror a fundamental complexity of
+the physical universe.
+<p>
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_405" href="#call_footnote_Temp_405"><sup><small>34</small></sup></a> Most real processors actually execute a few
+operations at a time, following a strategy called <a name="%_idx_3582"></a><em>pipelining</em>.  Although this technique greatly improves the effective
+utilization of the hardware, it is used only to speed up the execution
+of a sequential instruction stream, while retaining the behavior of
+the sequential program.
+
+<p><a name="footnote_Temp_406" href="#call_footnote_Temp_406"><sup><small>35</small></sup></a> To quote some graffiti seen on a Cambridge
+<a name="%_idx_3586"></a>building wall: ``Time is a device that was invented to keep everything
+from happening at once.''
+
+<p><a name="footnote_Temp_407" href="#call_footnote_Temp_407"><sup><small>36</small></sup></a> An even worse failure for this system
+could occur if the two <tt>set!</tt> operations attempt to change the
+balance simultaneously, in which case the actual data appearing in
+memory might end up being a random combination of the information
+being written by the two processes.  Most computers have interlocks on
+the primitive memory-write operations, which protect against such
+simultaneous access.  Even this seemingly simple kind of protection,
+however, raises implementation challenges in the design of
+multiprocessing computers, where elaborate <a name="%_idx_3594"></a><em>cache-coherence</em>
+protocols are required to ensure that the various processors will
+maintain a consistent view of memory contents, despite the fact that
+data may be replicated (``cached'') among the different processors to
+increase the speed of memory access.
+
+<p><a name="footnote_Temp_409" href="#call_footnote_Temp_409"><sup><small>37</small></sup></a> The factorial program in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> illustrates this for a single
+sequential process.
+
+<p><a name="footnote_Temp_410" href="#call_footnote_Temp_410"><sup><small>38</small></sup></a> The columns show the contents of Peter's wallet,
+the joint account (in Bank1), Paul's wallet, and Paul's private account
+(in Bank2), before and after each withdrawal (W) and deposit (D).
+Peter withdraws $10 from Bank1; Paul deposits $5 in Bank2,
+then withdraws $25 from Bank1.
+
+<p><a name="footnote_Temp_411" href="#call_footnote_Temp_411"><sup><small>39</small></sup></a> A more formal way to express this idea is to say that
+concurrent programs are inherently <a name="%_idx_3604"></a><em>nondeterministic</em>. That
+is, they are described not by single-valued functions, but by
+functions whose results are sets of possible values.  In
+section&nbsp;<a href="book-Z-H-28.html#%_sec_4.3">4.3</a> we will study a
+language for expressing nondeterministic
+computations.
+
+<p><a name="footnote_Temp_415" href="#call_footnote_Temp_415"><sup><small>40</small></sup></a> <tt>Parallel-execute</tt> is not part of standard Scheme, but
+it can be implemented in MIT Scheme.  In our implementation, the
+new concurrent processes also run concurrently with the original
+Scheme process.  Also, in our implementation, the value returned
+by <tt>parallel-execute</tt> is a special control object that can be used
+to halt the newly created processes.
+
+<p><a name="footnote_Temp_421" href="#call_footnote_Temp_421"><sup><small>41</small></sup></a> We have simplified <tt>exchange</tt> by exploiting the fact
+that our <tt>deposit</tt> message accepts negative amounts.  (This is a
+serious bug in our banking system!)
+
+<p><a name="footnote_Temp_422" href="#call_footnote_Temp_422"><sup><small>42</small></sup></a> If the account balances start out as $10,
+$20, and $30, then after any number of concurrent exchanges, the
+balances should still be $10, $20, and
+$30 in some order.  Serializing the deposits to individual accounts is not
+sufficient to guarantee this.  See exercise&nbsp;<a href="#%_thm_3.43">3.43</a>.
+
+<p><a name="footnote_Temp_423" href="#call_footnote_Temp_423"><sup><small>43</small></sup></a> Exercise&nbsp;<a href="#%_thm_3.45">3.45</a> investigates why
+deposits and withdrawals are no longer automatically serialized
+by the account.
+
+<p><a name="footnote_Temp_428" href="#call_footnote_Temp_428"><sup><small>44</small></sup></a> The term ``mutex'' is an abbreviation for <a name="%_idx_3646"></a><em>mutual
+exclusion</em>.  The general problem of arranging a mechanism that permits
+concurrent processes to safely share resources is called the mutual
+exclusion problem.  Our mutex is a simple variant of the <a name="%_idx_3648"></a><em>semaphore</em> mechanism (see exercise&nbsp;<a href="#%_thm_3.47">3.47</a>), which was
+introduced in the <a name="%_idx_3650"></a>``THE'' Multiprogramming System developed at the
+<a name="%_idx_3652"></a>Technological University of Eindhoven and named for the university's
+initials in Dutch (Dijkstra 1968a).  The acquire and
+release operations were originally called <a name="%_idx_3654"></a><a name="%_idx_3656"></a><a name="%_idx_3658"></a>P and V, from the Dutch
+words <em>passeren</em> (to pass) and <em>vrijgeven</em> (to release), in
+reference to the semaphores used on railroad systems.  Dijkstra's
+classic exposition (1968b) was one of the first to clearly present the
+issues of concurrency control, and showed how to use semaphores to
+handle a variety of concurrency problems.
+
+<p><a name="footnote_Temp_429" href="#call_footnote_Temp_429"><sup><small>45</small></sup></a> In most
+time-shared operating systems, processes that are <a name="%_idx_3664"></a>blocked by a mutex do
+<a name="%_idx_3666"></a>not waste time ``busy-waiting'' as above.  Instead, the system
+schedules another process to run while the first is waiting, and the blocked
+process is awakened when the mutex becomes available.
+
+<p><a name="footnote_Temp_430" href="#call_footnote_Temp_430"><sup><small>46</small></sup></a> In MIT Scheme for a single processor, which uses a time-slicing
+model, <tt>test-and-set!</tt> can be implemented as follows:
+<a name="%_idx_3676"></a><a name="%_idx_3678"></a><p><p><tt><a name="%_idx_3680"></a>(define&nbsp;(test-and-set!&nbsp;cell)<br>
+&nbsp;&nbsp;(without-interrupts<br>
+&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(car&nbsp;cell)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set-car!&nbsp;cell&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;false)))))<br>
+</tt><p><p>
+<tt>Without-interrupts</tt> disables
+time-slicing interrupts while its procedure argument is being executed.
+
+<p><a name="footnote_Temp_431" href="#call_footnote_Temp_431"><sup><small>47</small></sup></a> There are many variants of such
+<a name="%_idx_3682"></a>instructions -- including test-and-set, test-and-clear, swap,
+compare-and-exchange, load-reserve, and store-conditional -- whose
+design must be carefully matched to the machine's processor-memory
+interface.
+One issue that arises here is to determine what happens
+if two processes attempt to acquire the same resource
+at exactly the same time by using such an instruction.
+This requires some mechanism
+for making a decision about which process gets control.  Such a
+mechanism is called an <a name="%_idx_3684"></a><em>arbiter</em>.  Arbiters usually boil down to
+some sort of hardware device.
+Unfortunately, it is possible to prove that one cannot physically
+construct a fair arbiter that works 100% of the time unless one
+allows the arbiter an arbitrarily long time to make its decision.  The
+fundamental phenomenon here was originally observed by the fourteenth-century
+French philosopher <a name="%_idx_3686"></a>Jean Buridan in his commentary on
+<a name="%_idx_3688"></a>Aristotle's <i>De caelo</i>.  Buridan argued that a perfectly rational
+<a name="%_idx_3690"></a>dog placed between two equally attractive sources of food will starve
+to death, because it is incapable of deciding which to go to first.
+
+<p><a name="footnote_Temp_435" href="#call_footnote_Temp_435"><sup><small>48</small></sup></a> The general technique for avoiding deadlock by numbering the
+<a name="%_idx_3700"></a>shared resources and acquiring them in order is due to <a name="%_idx_3702"></a><a name="%_idx_3704"></a><a name="%_idx_3706"></a>Havender
+(1968).  Situations where deadlock cannot be avoided require <em>deadlock-recovery</em> methods, which entail having processes ``back out''
+of the deadlocked state and try again.  Deadlock-recovery
+mechanisms are widely used in database management systems, a topic that
+is treated in detail in Gray and Reuter 1993.
+
+<p><a name="footnote_Temp_439" href="#call_footnote_Temp_439"><sup><small>49</small></sup></a> One such alternative to serialization is called <a name="%_idx_3710"></a><em>barrier
+synchronization</em>.  The programmer permits concurrent processes to
+execute as they please, but establishes certain synchronization points
+(``barriers'') through which no process can proceed until all the
+processes have reached the barrier.  Modern processors provide machine
+instructions that permit programmers to establish synchronization
+points at places where consistency is required.  The <a name="%_idx_3712"></a>PowerPC<sup>
+<em>T</em><em>M</em></sup>, for example, includes for this purpose two instructions called
+<a name="%_idx_3714"></a>SYNC and <a name="%_idx_3716"></a>EIEIO (Enforced In-order Execution of Input/Output).
+
+<p><a name="footnote_Temp_440" href="#call_footnote_Temp_440"><sup><small>50</small></sup></a> This may seem like a strange point of view, but there are
+<a name="%_idx_3718"></a>systems that work this way.  International charges to credit-card
+accounts, for example, are normally cleared on a per-country basis,
+and the charges made in different countries are periodically
+reconciled.  Thus the account balance may be different in
+different countries.
+
+<p><a name="footnote_Temp_441" href="#call_footnote_Temp_441"><sup><small>51</small></sup></a> For distributed
+systems, this perspective was pursued by <a name="%_idx_3722"></a>Lamport (1978), who showed how
+to use communication to establish ``global clocks'' that can be used
+to establish orderings on events in distributed systems.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-22.html">previous</a></span><span>, <a href="book-Z-H-24.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>

@@ -1,0 +1,2057 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<!-- Generated from TeX source by tex2page, v 4o, 
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
+<head>
+<title>
+Structure and Interpretation 
+of Computer Programs
+</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
+<meta name=robots content="noindex,follow">
+</head>
+<body>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-23.html">previous</a></span><span>, <a href="book-Z-H-25.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+<a name="%_sec_3.5"></a>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_3.5">3.5&nbsp;&nbsp;Streams</a></h2><p>
+
+
+<a name="%_idx_3726"></a>
+We've gained a good understanding of assignment as a tool in modeling,
+as well as an appreciation of the complex problems that assignment
+raises. It is time to ask whether we could have gone about things in a
+different way, so as to avoid some of these problems.  In this
+section, we explore an alternative approach to modeling state, based
+on data structures called <em>streams</em>.  As we shall see, streams can
+mitigate some of the complexity of modeling state.<p>
+
+Let's step back and review where this complexity comes from.  In an
+attempt to model real-world phenomena, we made some apparently
+reasonable decisions: We modeled real-world objects with local state
+by computational objects with local variables.  We identified time
+variation in the real world with time variation in the computer.  We
+implemented the time variation of the states of the model objects in
+the computer with assignments to the local variables of the model
+objects.<p>
+
+Is there another approach?  Can we avoid identifying time in the
+computer with time in the modeled world?  Must we make the model
+change with time in order to model phenomena in a changing world?
+Think about the issue in terms of mathematical functions.  We can
+describe the time-varying behavior of a quantity <em>x</em> as a function of
+time <em>x</em>(<em>t</em>).  If we concentrate on <em>x</em> instant by instant, we think of
+it as a changing quantity.  Yet if we concentrate on the entire
+time history of values, we do not emphasize change -- the function
+itself does not change.<a name="call_footnote_Temp_442" href="#footnote_Temp_442"><sup><small>52</small></sup></a><p>
+
+If time is measured in discrete steps, then we can model a time function as
+a (possibly infinite) sequence.  In this section, we will see how to
+model change in terms of sequences that represent the time histories
+of the systems being modeled.  To accomplish this, we introduce new
+data structures called <em>streams</em>.  From an abstract point of view,
+a stream is simply a sequence.  However, we will find that the
+straightforward implementation of streams as lists (as in
+section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.1">2.2.1</a>) doesn't fully reveal
+the power of stream processing.  As an alternative, we introduce the
+technique of <a name="%_idx_3730"></a><em>delayed evaluation</em>, which enables us to represent
+very large (even infinite) sequences as streams.<p>
+
+Stream processing lets us model systems that have state without ever
+using assignment or mutable data.  This has important implications,
+both theoretical and practical, because we can build models that avoid
+the drawbacks inherent in introducing assignment.  On the other hand,
+the stream framework raises difficulties of its own, and the question
+of which modeling technique leads to more modular and more easily
+maintained systems remains open.<p>
+
+<a name="%_sec_3.5.1"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.5.1">3.5.1&nbsp;&nbsp;Streams Are Delayed Lists</a></h3><p>
+
+
+<a name="%_idx_3732"></a>
+As we saw in section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>,
+sequences can serve as standard interfaces for combining program
+modules.  We formulated powerful abstractions for manipulating
+sequences, such as <tt>map</tt>, <tt>filter</tt>, and <tt>accumulate</tt>, that
+capture a wide variety of operations in a manner that is both succinct
+and elegant.<p>
+
+Unfortunately, if we represent sequences as lists, this elegance is
+bought at the price of severe inefficiency with respect to both the
+time and space required by our computations.
+When we represent manipulations on sequences as transformations
+of lists, our programs must construct and copy data structures (which
+may be huge) at every step of a process.<p>
+
+To see why this is true, let us compare two programs for computing the
+sum of all the prime numbers in an interval.  The first program is
+written in standard iterative style:<a name="call_footnote_Temp_443" href="#footnote_Temp_443"><sup><small>53</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3734"></a>(define&nbsp;(sum-primes&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;(define&nbsp;(iter&nbsp;count&nbsp;accum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((&gt;&nbsp;count&nbsp;b)&nbsp;accum)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((prime?&nbsp;count)&nbsp;(iter&nbsp;(+&nbsp;count&nbsp;1)&nbsp;(+&nbsp;count&nbsp;accum)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(iter&nbsp;(+&nbsp;count&nbsp;1)&nbsp;accum))))<br>
+&nbsp;&nbsp;(iter&nbsp;a&nbsp;0))<br>
+</tt><p><p>
+The second program performs the same computation using the sequence
+operations of section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>:<p>
+
+<p><p><tt><a name="%_idx_3736"></a>(define&nbsp;(sum-primes&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;(accumulate&nbsp;+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(filter&nbsp;prime?&nbsp;(enumerate-interval&nbsp;a&nbsp;b))))<br>
+</tt><p><p><p>
+
+In carrying out the computation, the first program needs to store only
+the sum being accumulated.  In contrast, the filter in the second
+program cannot do any testing until <tt>enumerate-interval</tt> has
+constructed a complete list of the numbers in the interval.  The
+filter generates another list, which in turn is passed to <tt>accumulate</tt> before being collapsed to form a sum.  Such large
+intermediate storage is not needed by the first program, which we can
+think of as enumerating the interval incrementally, adding each prime
+to the sum as it is generated.<p>
+
+
+The inefficiency in using lists becomes painfully apparent if we use
+the sequence paradigm to compute the second prime in the interval from
+10,000 to 1,000,000 by evaluating the expression<p>
+
+<p><p><tt>(car&nbsp;(cdr&nbsp;(filter&nbsp;prime?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(enumerate-interval&nbsp;10000&nbsp;1000000))))<br>
+</tt><p><p>
+This expression does find the second prime, but the computational
+overhead is outrageous.  We construct a list of almost a million
+integers, filter this list by testing each element for primality, and
+then ignore almost all of the result.  In a more traditional
+programming style, we would interleave the enumeration and the
+filtering, and stop when we reached the second prime.<p>
+
+
+Streams are a clever idea that allows one to use sequence
+manipulations without incurring the costs of manipulating sequences as
+lists.  With streams we can achieve the best of both worlds: We can
+formulate programs elegantly as sequence manipulations, while attaining the
+efficiency of incremental computation.  The basic idea is to arrange
+to construct a stream only partially, and to pass the partial
+construction to the program that consumes the stream.  If the consumer
+attempts to access a part of the stream that has not yet been
+constructed, the stream will automatically construct just enough more
+of itself to produce the required part, thus preserving the illusion
+that the entire stream exists.  In other words, although we will write
+programs as if we were processing complete sequences, we design our
+stream implementation to automatically and transparently interleave
+the construction of the stream with its use.<p>
+
+On the surface, streams are just lists with different names for the
+procedures that manipulate them.  There is a constructor,
+<a name="%_idx_3738"></a><tt>cons-stream</tt>, and two selectors, <a name="%_idx_3740"></a><tt>stream-car</tt> and <a name="%_idx_3742"></a><tt>stream-cdr</tt>, which satisfy the constraints
+<p><div align=left><img src="ch3-Z-G-34.gif" border="0"></div><p>
+There is a distinguishable object, <a name="%_idx_3744"></a><a name="%_idx_3746"></a><a name="%_idx_3748"></a><tt>the-empty-stream</tt>, which
+cannot be the result of any <tt>cons-stream</tt> operation, and which can
+be identified with the predicate <a name="%_idx_3750"></a><tt>stream-null?</tt>.<a name="call_footnote_Temp_444" href="#footnote_Temp_444"><sup><small>54</small></sup></a>
+Thus we can make and use streams, in just the same way as we can make
+and use lists, to represent aggregate data arranged in a sequence.  In
+particular, we can build stream analogs of the list operations from
+chapter&nbsp;2, such as <tt>list-ref</tt>, <tt>map</tt>, and <tt>for-each</tt>:<a name="call_footnote_Temp_445" href="#footnote_Temp_445"><sup><small>55</small></sup></a>
+<p><p><tt><a name="%_idx_3758"></a>(define&nbsp;(stream-ref&nbsp;s&nbsp;n)<br>
+&nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-car&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-ref&nbsp;(stream-cdr&nbsp;s)&nbsp;(-&nbsp;n&nbsp;1))))<br>
+<a name="%_idx_3760"></a>(define&nbsp;(stream-map&nbsp;proc&nbsp;s)<br>
+&nbsp;&nbsp;(if&nbsp;(stream-null?&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-empty-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(proc&nbsp;(stream-car&nbsp;s))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;proc&nbsp;(stream-cdr&nbsp;s)))))<br>
+<a name="%_idx_3762"></a>(define&nbsp;(stream-for-each&nbsp;proc&nbsp;s)<br>
+&nbsp;&nbsp;(if&nbsp;(stream-null?&nbsp;s)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'done<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(proc&nbsp;(stream-car&nbsp;s))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-for-each&nbsp;proc&nbsp;(stream-cdr&nbsp;s)))))<br>
+</tt><p><p>
+<tt>Stream-for-each</tt> is useful for viewing streams:
+<p><p><tt><a name="%_idx_3764"></a>(define&nbsp;(display-stream&nbsp;s)<br>
+&nbsp;&nbsp;(stream-for-each&nbsp;display-line&nbsp;s))<br>
+<br>
+<a name="%_idx_3766"></a>(define&nbsp;(display-line&nbsp;x)<br>
+&nbsp;&nbsp;(newline)<br>
+&nbsp;&nbsp;(display&nbsp;x))<br>
+</tt><p><p><p>
+
+To make the stream implementation automatically and transparently
+interleave the construction of a stream with its use, we will arrange
+for the <tt>cdr</tt> of a stream to be evaluated when it is accessed by
+the <tt>stream-cdr</tt> procedure rather than when the stream is
+constructed by <tt>cons-stream</tt>.  This implementation choice is
+reminiscent of our discussion of rational numbers in
+section&nbsp;<a href="book-Z-H-14.html#%_sec_2.1.2">2.1.2</a>, where we saw that we can
+choose to implement rational numbers so that the reduction of
+numerator and denominator to lowest terms is performed either at
+construction time or at selection time.  The two rational-number
+implementations produce the same data abstraction, but the choice has
+an effect on efficiency.  There is a similar relationship between
+streams and ordinary lists.  As a data abstraction, streams are the
+same as lists.  The difference is the time at which the elements are
+evaluated.  With ordinary lists, both the <tt>car</tt> and the <tt>cdr</tt>
+are evaluated at construction time.  With streams, the <tt>cdr</tt> is
+evaluated at selection time.<p>
+
+<a name="%_idx_3768"></a><a name="%_idx_3770"></a>Our implementation of streams will be based on a special form called
+<tt>delay</tt>.  Evaluating <tt>(delay &lt;<em>exp</em>&gt;)</tt> does not
+evaluate the expression &lt;<em>exp</em>&gt;, but rather returns a so-called <a name="%_idx_3772"></a><em>delayed object</em>, which we can think of as a ``promise'' to evaluate
+&lt;<em>exp</em>&gt; at some future time.  As a companion to <tt>delay</tt>, there is
+a procedure called <a name="%_idx_3774"></a><tt>force</tt> that takes a delayed object as
+argument and performs the evaluation -- in effect, forcing the
+<tt>delay</tt> to fulfill its promise.  We will see below how <tt>delay</tt>
+and <tt>force</tt> can be implemented, but first let us use these to
+construct streams.<p>
+
+<a name="%_idx_3776"></a><a name="%_idx_3778"></a><tt>Cons-stream</tt> is a special form defined so that<p>
+
+
+<p><p><tt>(cons-stream&nbsp;&lt;<em>a</em>&gt;&nbsp;&lt;<em>b</em>&gt;)<br>
+</tt><p><p>
+is equivalent to<p>
+
+
+<p><p><tt>(cons&nbsp;&lt;<em>a</em>&gt;&nbsp;(delay&nbsp;&lt;<em>b</em>&gt;))<br>
+</tt><p><p>
+What this means is that we will construct streams using pairs.  However,
+rather than placing the value of the rest of the stream
+into the <tt>cdr</tt> of the
+pair we will put there a promise to compute the rest if it is ever
+requested.  <tt>Stream-car</tt> and <tt>stream-cdr</tt> can now be defined as
+procedures:<p>
+
+<p><p><tt><a name="%_idx_3780"></a>(define&nbsp;(stream-car&nbsp;stream)&nbsp;(car&nbsp;stream))<br>
+<br>
+<a name="%_idx_3782"></a>(define&nbsp;(stream-cdr&nbsp;stream)&nbsp;(force&nbsp;(cdr&nbsp;stream)))<br>
+</tt><p><p>
+<tt>Stream-car</tt> selects the <tt>car</tt> of the pair; <tt>stream-cdr</tt>
+selects the <tt>cdr</tt> of the pair and evaluates the delayed expression
+found there to obtain the rest of the stream.<a name="call_footnote_Temp_446" href="#footnote_Temp_446"><sup><small>56</small></sup></a>
+
+<a name="%_sec_Temp_447"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_447">The stream implementation in action</a></h4><p>
+
+To see how this implementation behaves, let us analyze the
+``outrageous'' prime computation we saw above, reformulated in terms
+of streams:<p>
+
+<p><p><tt>(stream-car<br>
+&nbsp;(stream-cdr<br>
+&nbsp;&nbsp;(stream-filter&nbsp;prime?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-enumerate-interval&nbsp;10000&nbsp;1000000))))<br>
+</tt><p><p>
+We will see that it does indeed work efficiently.<p>
+
+
+We begin by calling <tt>stream-enumerate-interval</tt> with
+the arguments 10,000 and 1,000,000.  <tt>Stream-enumerate-interval</tt>
+is the stream analog of <tt>enumerate-interval</tt>
+(section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>):<p>
+
+<p><p><tt><a name="%_idx_3788"></a>(define&nbsp;(stream-enumerate-interval&nbsp;low&nbsp;high)<br>
+&nbsp;&nbsp;(if&nbsp;(&gt;&nbsp;low&nbsp;high)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-empty-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;low<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-enumerate-interval&nbsp;(+&nbsp;low&nbsp;1)&nbsp;high))))<br>
+</tt><p><p>
+and thus the result returned by <tt>stream-enumerate-interval</tt>,
+formed by the <tt>cons-stream</tt>, is<a name="call_footnote_Temp_448" href="#footnote_Temp_448"><sup><small>57</small></sup></a><p>
+
+
+<p><p><tt>(cons&nbsp;10000<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay&nbsp;(stream-enumerate-interval&nbsp;10001&nbsp;1000000)))<br>
+</tt><p><p>
+
+That is, <tt>stream-enumerate-interval</tt>
+returns a stream represented as a pair whose <tt>car</tt>
+is 10,000 and whose <tt>cdr</tt> is a promise to enumerate more of the
+interval if so requested.  This stream is now filtered for primes,
+using the stream analog of the <tt>filter</tt> procedure
+(section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>):<p>
+
+
+<p><p><tt><a name="%_idx_3790"></a>(define&nbsp;(stream-filter&nbsp;pred&nbsp;stream)<br>
+&nbsp;&nbsp;(cond&nbsp;((stream-null?&nbsp;stream)&nbsp;the-empty-stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((pred&nbsp;(stream-car&nbsp;stream))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(stream-car&nbsp;stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-filter&nbsp;pred<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;stream))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(stream-filter&nbsp;pred&nbsp;(stream-cdr&nbsp;stream)))))<br>
+</tt><p><p>
+<tt>Stream-filter</tt> tests the <tt>stream-car</tt> of the stream (the <tt>car</tt> of the pair, which is 10,000).  Since this is not prime,
+<tt>stream-filter</tt> examines the <tt>stream-cdr</tt> of its input
+stream.  The call to <tt>stream-cdr</tt> forces evaluation of the delayed
+<tt>stream-enumerate-interval</tt>, which now returns<p>
+
+
+<p><p><tt>(cons&nbsp;10001<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay&nbsp;(stream-enumerate-interval&nbsp;10002&nbsp;1000000)))<br>
+</tt><p><p>
+<tt>Stream-filter</tt> now looks at the <tt>stream-car</tt> of this stream,
+10,001, sees that this is not prime either, forces another <tt>stream-cdr</tt>, and so on, until <tt>stream-enumerate-interval</tt> yields
+the prime 10,007, whereupon <tt>stream-filter</tt>, according to its
+definition, returns<p>
+
+
+<p><p><tt>(cons-stream&nbsp;(stream-car&nbsp;stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-filter&nbsp;pred&nbsp;(stream-cdr&nbsp;stream)))<br>
+</tt><p><p>
+which in this case is<p>
+
+
+<p><p><tt>(cons&nbsp;10007<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-filter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prime?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;10008<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-enumerate-interval&nbsp;10009<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1000000))))))<br>
+</tt><p><p>
+This result is now passed to <tt>stream-cdr</tt> in our
+original expression.  This forces the delayed <tt>stream-filter</tt>, which in turn keeps forcing the delayed <tt>stream-enumerate-interval</tt> until it finds the next prime, which is
+10,009.  Finally, the result passed to <tt>stream-car</tt> in our
+original expression is<p>
+
+<p><p><tt>(cons&nbsp;10009<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-filter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prime?<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;10010<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(delay<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-enumerate-interval&nbsp;10011<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1000000))))))<br>
+</tt><p><p>
+<tt>Stream-car</tt> returns 10,009, and the computation is complete.  Only as
+many integers were tested for primality as were necessary to find the
+second prime, and the interval was enumerated only as far as was
+necessary to feed the prime filter.<p>
+
+In general, we can think of delayed evaluation as <a name="%_idx_3792"></a>``demand-driven''
+programming, whereby each stage in the stream process is activated
+only enough to satisfy the next stage.  What we have done is to
+<a name="%_idx_3794"></a>decouple the actual order of events in the computation from the
+apparent structure of our procedures.  We write procedures as if the
+streams existed ``all at once'' when, in reality, the computation is
+performed incrementally, as in traditional programming styles.<p>
+
+<a name="%_sec_Temp_449"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_449">Implementing <tt>delay</tt> and <tt>force</tt></a></h4><p>
+
+<a name="%_idx_3796"></a>Although <tt>delay</tt> and <tt>force</tt> may seem like mysterious
+operations, their implementation is really quite straightforward.
+<tt>Delay</tt> must package an expression so that it can be evaluated
+later on demand, and we can accomplish this simply by treating the
+expression as the body of a procedure.  <tt>Delay</tt> can be a special
+form such that<p>
+
+<p><p><tt>(delay&nbsp;&lt;<em>exp</em>&gt;)<br>
+</tt><p><p>
+is syntactic sugar for<p>
+
+<p><p><tt>(lambda&nbsp;()&nbsp;&lt;<em>exp</em>&gt;)<br>
+</tt><p><p>
+<tt>Force</tt> simply calls the procedure (of no
+arguments) produced by <tt>delay</tt>, so we can implement <tt>force</tt> as
+a procedure:<p>
+
+<p><p><tt><a name="%_idx_3798"></a>(define&nbsp;(force&nbsp;delayed-object)<br>
+&nbsp;&nbsp;(delayed-object))<br>
+</tt><p><p><p>
+
+<a name="%_idx_3800"></a><a name="%_idx_3802"></a>This implementation suffices for <tt>delay</tt> and <tt>force</tt> to work
+as advertised, but there is an important optimization that we can
+include.  In many applications, we end up forcing the same delayed object
+many times.  This can lead to serious inefficiency in recursive
+programs involving streams.  (See
+exercise&nbsp;<a href="#%_thm_3.57">3.57</a>.)  The solution is to build
+delayed objects so that the first time they are forced, they store the
+value that is computed.  Subsequent forcings will simply return the
+stored value without repeating the computation.  In other words, we
+implement <tt>delay</tt> as a special-purpose memoized procedure similar
+to the one described in exercise&nbsp;<a href="book-Z-H-22.html#%_thm_3.27">3.27</a>.  One way to
+accomplish this is to use the following procedure, which takes as
+argument a procedure (of no arguments) and returns a memoized version
+of the procedure.  The first time the memoized procedure is run, it
+saves the computed result.  On subsequent evaluations, it simply
+returns the result.<p>
+
+<p><p><tt><a name="%_idx_3804"></a>(define&nbsp;(memo-proc&nbsp;proc)<br>
+&nbsp;&nbsp;(let&nbsp;((already-run?&nbsp;false)&nbsp;(result&nbsp;false))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(not&nbsp;already-run?)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(begin&nbsp;(set!&nbsp;result&nbsp;(proc))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;already-run?&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;result))))<br>
+</tt><p><p>
+<tt>Delay</tt> is then defined so that <tt>(delay &lt;<em>exp</em>&gt;)</tt> is
+equivalent to<p>
+
+<p><p><tt>(memo-proc&nbsp;(lambda&nbsp;()&nbsp;&lt;<em>exp</em>&gt;))<br>
+</tt><p><p>
+and <tt>force</tt> is as defined previously.<a name="call_footnote_Temp_450" href="#footnote_Temp_450"><sup><small>58</small></sup></a><p>
+
+<p><a name="%_thm_3.50"></a>
+<b>Exercise 3.50.</b>&nbsp;&nbsp;Complete the following definition, which
+generalizes <tt>stream-map</tt> to allow procedures that
+take multiple arguments, analogous to <tt>map</tt> in
+section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>, footnote&nbsp;<a href="book-Z-H-15.html#footnote_Temp_166">12</a>.<p>
+
+<p><p><tt><a name="%_idx_3824"></a>(define&nbsp;(stream-map&nbsp;proc&nbsp;.&nbsp;argstreams)<br>
+&nbsp;&nbsp;(if&nbsp;(&lt;<em>??</em>&gt;&nbsp;(car&nbsp;argstreams))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-empty-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(&lt;<em>??</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;proc&nbsp;(map&nbsp;&lt;<em>??</em>&gt;&nbsp;argstreams))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(apply&nbsp;stream-map<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;proc&nbsp;(map&nbsp;&lt;<em>??</em>&gt;&nbsp;argstreams))))))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.51"></a>
+<b>Exercise 3.51.</b>&nbsp;&nbsp;<a name="%_idx_3826"></a>In order to take a closer look at delayed evaluation, we will use the
+following procedure, which simply returns its argument after printing it:<p>
+
+
+<p><p><tt>(define&nbsp;(show&nbsp;x)<br>
+&nbsp;&nbsp;(display-line&nbsp;x)<br>
+&nbsp;&nbsp;x)<br>
+</tt><p><p>
+What does the interpreter print in response to evaluating each
+expression in the following sequence?<a name="call_footnote_Temp_453" href="#footnote_Temp_453"><sup><small>59</small></sup></a><p>
+
+
+<p><p><tt>(define&nbsp;x&nbsp;(stream-map&nbsp;show&nbsp;(stream-enumerate-interval&nbsp;0&nbsp;10)))<br>
+(stream-ref&nbsp;x&nbsp;5)<br>
+(stream-ref&nbsp;x&nbsp;7)<br>
+</tt><p><p>
+<p>
+
+<p><a name="%_thm_3.52"></a>
+<b>Exercise 3.52.</b>&nbsp;&nbsp;<a name="%_idx_3830"></a>Consider the sequence of expressions<p>
+
+
+<p><p><tt>(define&nbsp;sum&nbsp;0)<br>
+(define&nbsp;(accum&nbsp;x)<br>
+&nbsp;&nbsp;(set!&nbsp;sum&nbsp;(+&nbsp;x&nbsp;sum))<br>
+&nbsp;&nbsp;sum)<br>
+(define&nbsp;seq&nbsp;(stream-map&nbsp;accum&nbsp;(stream-enumerate-interval&nbsp;1&nbsp;20)))<br>
+(define&nbsp;y&nbsp;(stream-filter&nbsp;even?&nbsp;seq))<br>
+(define&nbsp;z&nbsp;(stream-filter&nbsp;(lambda&nbsp;(x)&nbsp;(=&nbsp;(remainder&nbsp;x&nbsp;5)&nbsp;0))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;seq))<br>
+(stream-ref&nbsp;y&nbsp;7)<br>
+(display-stream&nbsp;z)<br>
+</tt><p><p>
+What is the value of <tt>sum</tt> after each of the above expressions is
+evaluated?  What is the printed response to evaluating the <tt>stream-ref</tt> and <tt>display-stream</tt> expressions?  Would these responses
+differ if we had implemented <tt>(delay&nbsp;&lt;<em>exp</em>&gt;)</tt> simply as
+<tt>(lambda () &lt;<em>exp</em>&gt;)</tt> without using the optimization provided by
+<tt>memo-proc</tt> ?  Explain.
+
+<p><p>
+
+<a name="%_sec_3.5.2"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.5.2">3.5.2&nbsp;&nbsp;Infinite Streams</a></h3><p>
+
+
+<a name="%_idx_3832"></a>
+We have seen how to support the illusion of manipulating streams
+as complete entities even though, in actuality, we compute only
+as much of the stream as we need to access.  We can exploit this
+technique to represent sequences efficiently as streams, even if the
+sequences are very long.  What is more striking, we can use streams to
+represent sequences that are infinitely long.  For instance, consider
+the following definition of the stream of positive integers:<p>
+
+<p><p><tt><a name="%_idx_3834"></a>(define&nbsp;(integers-starting-from&nbsp;n)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;n&nbsp;(integers-starting-from&nbsp;(+&nbsp;n&nbsp;1))))<br>
+<br>
+<a name="%_idx_3836"></a>(define&nbsp;integers&nbsp;(integers-starting-from&nbsp;1))<br>
+</tt><p><p>
+This makes sense because <tt>integers</tt> will be a pair whose <tt>car</tt>
+is 1 and whose <tt>cdr</tt> is a promise to produce the integers
+beginning with 2.  This is an infinitely long stream, but in any given
+time we can examine only a finite portion of it.  Thus, our programs
+will never know that the entire infinite stream is not there.<p>
+
+Using <tt>integers</tt> we can define other infinite streams, such as
+the stream of integers that are not divisible by 7:<p>
+
+<p><p><tt><a name="%_idx_3838"></a>(define&nbsp;(divisible?&nbsp;x&nbsp;y)&nbsp;(=&nbsp;(remainder&nbsp;x&nbsp;y)&nbsp;0))<br>
+(define&nbsp;no-sevens<br>
+&nbsp;&nbsp;(stream-filter&nbsp;(lambda&nbsp;(x)&nbsp;(not&nbsp;(divisible?&nbsp;x&nbsp;7)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;integers))<br>
+</tt><p><p>
+Then we can find integers not divisible by 7 simply by accessing
+elements of this stream:<p>
+
+<p><p><tt>(stream-ref&nbsp;no-sevens&nbsp;100)<br>
+<i>117</i><br>
+</tt><p><p>
+<p>
+
+In analogy with <tt>integers</tt>, we can define the infinite stream of
+Fibonacci numbers:<p>
+
+<p><p><tt>(define&nbsp;(fibgen&nbsp;a&nbsp;b)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;a&nbsp;(fibgen&nbsp;b&nbsp;(+&nbsp;a&nbsp;b))))<br>
+<a name="%_idx_3840"></a>(define&nbsp;fibs&nbsp;(fibgen&nbsp;0&nbsp;1))<br>
+</tt><p><p>
+<tt>Fibs</tt> is a pair whose <tt>car</tt> is 0 and whose <tt>cdr</tt> is a
+promise to evaluate <tt>(fibgen 1 1)</tt>.  When we evaluate this delayed
+<tt>(fibgen 1 1)</tt>, it
+will produce a pair whose <tt>car</tt> is 1 and whose <tt>cdr</tt> is a
+promise to evaluate <tt>(fibgen&nbsp;1&nbsp;2)</tt>, and so on.<p>
+
+<a name="%_idx_3842"></a>For a look at a more exciting infinite stream, we can generalize the
+<tt>no-sevens</tt> example to construct the infinite stream of prime
+numbers, using a method known as the <a name="%_idx_3844"></a><em>sieve of
+Eratosthenes</em>.<a name="call_footnote_Temp_455" href="#footnote_Temp_455"><sup><small>60</small></sup></a> We
+start with the integers beginning with 2, which is the first prime.
+To get the rest of the primes, we start by filtering the multiples of
+2 from the rest of the integers.  This leaves a stream beginning with
+3, which is the next prime.  Now we filter the multiples of 3 from the
+rest of this stream.  This leaves a stream beginning with 5, which is
+the next prime, and so on.  In other words, we construct the primes by
+a sieving process, described as follows: To sieve a stream <tt>S</tt>,
+form a stream whose first element is the first element of <tt>S</tt> and
+the rest of which is obtained by filtering all multiples of the first element
+of <tt>S</tt> out of the rest of <tt>S</tt> and sieving the result. This
+process is readily described in terms of stream operations:<p>
+
+<p><p><tt><a name="%_idx_3852"></a>(define&nbsp;(sieve&nbsp;stream)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(stream-car&nbsp;stream)<br>
+&nbsp;&nbsp;&nbsp;(sieve&nbsp;(stream-filter<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(x)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(not&nbsp;(divisible?&nbsp;x&nbsp;(stream-car&nbsp;stream))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;stream)))))<br>
+<br>
+<a name="%_idx_3854"></a>(define&nbsp;primes&nbsp;(sieve&nbsp;(integers-starting-from&nbsp;2)))<br>
+</tt><p><p>
+Now to find a particular prime we need only ask for it:<p>
+
+<p><p><tt>(stream-ref&nbsp;primes&nbsp;50)<br>
+<i>233</i><br>
+</tt><p><p><p>
+
+It is interesting to contemplate the signal-processing system set up
+by <tt>sieve</tt>, shown in the <a name="%_idx_3856"></a>``Henderson diagram'' in
+figure&nbsp;<a href="#%_fig_3.31">3.31</a>.<a name="call_footnote_Temp_456" href="#footnote_Temp_456"><sup><small>61</small></sup></a>
+The input stream feeds into an
+``un<tt>cons</tt>er'' that separates the first element of the stream from the
+rest of the stream.
+The first element is used to construct a divisibility filter, through
+which the rest is passed, and the output of the filter is fed to
+another sieve box.  Then the original first element is <tt>cons</tt>ed onto the
+output of the internal sieve to form the output stream.  Thus, not
+only is the stream infinite, but the signal processor is also
+infinite, because the sieve contains a sieve within it.<p>
+
+<a name="%_fig_3.31"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-35.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.31:</b>&nbsp;&nbsp;The prime sieve viewed as a signal-processing system.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+<a name="%_sec_Temp_457"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_457">Defining streams implicitly</a></h4><p>
+
+<a name="%_idx_3860"></a>
+The <tt>integers</tt> and <tt>fibs</tt> streams above were defined by
+specifying ``generating'' procedures that explicitly compute the
+stream elements one by one. An alternative way to specify streams is
+to take advantage of delayed evaluation to define streams implicitly.
+For example, the following expression defines the stream <tt>ones</tt> to
+be an infinite stream of ones:<p>
+
+<p><p><tt><a name="%_idx_3862"></a>(define&nbsp;ones&nbsp;(cons-stream&nbsp;1&nbsp;ones))<br>
+</tt><p><p>
+This works much like the definition of a recursive procedure: <tt>ones</tt> is a pair whose <tt>car</tt> is 1 and whose <tt>cdr</tt> is a promise
+to evaluate <tt>ones</tt>.  Evaluating the <tt>cdr</tt> gives us again a 1
+and a promise to evaluate <tt>ones</tt>, and so on.<p>
+
+We can do more interesting things by manipulating streams with
+operations such as <tt>add-streams</tt>, which produces the elementwise
+sum of two given streams:<a name="call_footnote_Temp_458" href="#footnote_Temp_458"><sup><small>62</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3864"></a>(define&nbsp;(add-streams&nbsp;s1&nbsp;s2)<br>
+&nbsp;&nbsp;(stream-map&nbsp;+&nbsp;s1&nbsp;s2))<br>
+</tt><p><p>
+Now we can define the integers as follows:<p>
+
+<p><p><tt><a name="%_idx_3866"></a>(define&nbsp;integers&nbsp;(cons-stream&nbsp;1&nbsp;(add-streams&nbsp;ones&nbsp;integers)))<br>
+</tt><p><p>
+This defines <tt>integers</tt> to be a stream whose first element is 1
+and the rest of which is the sum of <tt>ones</tt> and <tt>integers</tt>.  Thus, the
+second element of <tt>integers</tt> is 1 plus the first element of <tt>integers</tt>,
+or 2; the third element of <tt>integers</tt> is 1 plus the second
+element of <tt>integers</tt>, or 3; and so on.  This definition works
+because, at any point, enough of the <tt>integers</tt> stream has been
+generated so that we can feed it back into the definition to produce
+the next integer.<p>
+
+We can define the Fibonacci numbers in the same style:<p>
+
+<p><p><tt><a name="%_idx_3868"></a>(define&nbsp;fibs<br>
+&nbsp;&nbsp;(cons-stream&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-streams&nbsp;(stream-cdr&nbsp;fibs)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fibs))))<br>
+</tt><p><p>
+This definition says that <tt>fibs</tt> is a stream beginning with 0 and
+1, such that the rest of the stream can be generated by adding <tt>fibs</tt>
+to itself shifted by one place:<p>
+
+<table border=0><tr><td valign=top ></td><td valign=top ></td><td valign=top >1 </td><td valign=top >1 </td><td valign=top >2 </td><td valign=top >3 </td><td valign=top >5 </td><td valign=top >8 </td><td valign=top >13 </td><td valign=top >21 </td><td valign=top ><tt>...</tt> = <tt>(stream-cdr fibs)</tt></td></tr>
+<tr><td valign=top ></td><td valign=top ></td><td valign=top >0 </td><td valign=top >1 </td><td valign=top >1 </td><td valign=top >2 </td><td valign=top >3 </td><td valign=top >5 </td><td valign=top > 8 </td><td valign=top >13 </td><td valign=top ><tt>...</tt> = <tt>fibs</tt></td></tr>
+<tr><td valign=top >0 </td><td valign=top >1 </td><td valign=top >1 </td><td valign=top >2 </td><td valign=top >3 </td><td valign=top >5 </td><td valign=top >8 </td><td valign=top >13 </td><td valign=top >21 </td><td valign=top >34 </td><td valign=top ><tt>...</tt> = <tt>fibs</tt></td></tr>
+<tr><td valign=top ></td></tr></table><p>
+
+<tt>Scale-stream</tt> is another useful procedure in formulating such stream definitions.
+This multiplies each item in a stream by a given
+constant:<p>
+
+<p><p><tt><a name="%_idx_3870"></a>(define&nbsp;(scale-stream&nbsp;stream&nbsp;factor)<br>
+&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(x)&nbsp;(*&nbsp;x&nbsp;factor))&nbsp;stream))<br>
+</tt><p><p>
+For example,<p>
+
+<p><p><tt>(define&nbsp;double&nbsp;(cons-stream&nbsp;1&nbsp;(scale-stream&nbsp;double&nbsp;2)))<br>
+</tt><p><p>
+produces the stream of powers of 2: 1, 2, 4, 8, 16, 32, <tt>...</tt>.<p>
+
+An alternate definition of the stream of primes can be given by
+starting with the integers and filtering them by testing for
+primality.  We will need the first prime, 2, to get started:<p>
+
+<p><p><tt><a name="%_idx_3872"></a>(define&nbsp;primes<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;2<br>
+&nbsp;&nbsp;&nbsp;(stream-filter&nbsp;prime?&nbsp;(integers-starting-from&nbsp;3))))<br>
+</tt><p><p>
+This definition is not so straightforward as it appears, because we
+will test whether a number <em>n</em> is prime by checking whether <em>n</em> is
+divisible by a prime (not by just any integer) less than or equal to
+<img src="book-Z-G-D-13.gif" border="0"><em>n</em>:<p>
+
+<p><p><tt><a name="%_idx_3874"></a>(define&nbsp;(prime?&nbsp;n)<br>
+&nbsp;&nbsp;(define&nbsp;(iter&nbsp;ps)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((&gt;&nbsp;(square&nbsp;(stream-car&nbsp;ps))&nbsp;n)&nbsp;true)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((divisible?&nbsp;n&nbsp;(stream-car&nbsp;ps))&nbsp;false)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else&nbsp;(iter&nbsp;(stream-cdr&nbsp;ps)))))<br>
+&nbsp;&nbsp;(iter&nbsp;primes))<br>
+</tt><p><p>
+This is a recursive definition, since <tt>primes</tt> is defined in terms
+of the <tt>prime?</tt> predicate, which itself uses the <tt>primes</tt>
+stream.  The reason this procedure works is that, at any point, enough
+of the <tt>primes</tt> stream has been generated to test the primality of
+the numbers we need to check next.  That is, for every <em>n</em> we test for
+primality, either <em>n</em> is not prime (in which case there is a prime
+already generated that divides it) or <em>n</em> is prime (in which case
+there is a prime already generated -- i.e., a prime less than
+<em>n</em> -- that is greater than <img src="book-Z-G-D-13.gif" border="0"><em>n</em>).<a name="call_footnote_Temp_459" href="#footnote_Temp_459"><sup><small>63</small></sup></a>
+
+<p><a name="%_thm_3.53"></a>
+<b>Exercise 3.53.</b>&nbsp;&nbsp;Without running the program, describe the elements of the
+stream defined by
+<p><p><tt>(define&nbsp;s&nbsp;(cons-stream&nbsp;1&nbsp;(add-streams&nbsp;s&nbsp;s)))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.54"></a>
+<b>Exercise 3.54.</b>&nbsp;&nbsp;Define a procedure <a name="%_idx_3886"></a><a name="%_idx_3888"></a><a name="%_idx_3890"></a><tt>mul-streams</tt>, analogous to <tt>add-streams</tt>,
+that produces the elementwise product of its two input streams.
+Use this together with the stream of <tt>integers</tt> to complete the
+following definition of the stream whose <em>n</em>th element (counting from 0)
+is <em>n</em> + 1 factorial:
+
+<p><p><tt>(define&nbsp;factorials&nbsp;(cons-stream&nbsp;1&nbsp;(mul-streams&nbsp;&lt;<em>??</em>&gt;&nbsp;&lt;<em>??</em>&gt;)))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.55"></a>
+<b>Exercise 3.55.</b>&nbsp;&nbsp;Define a procedure <a name="%_idx_3892"></a><tt>partial-sums</tt> that takes as argument a
+stream <em>S</em> and returns the stream whose
+elements are <em>S</em><sub>0</sub>, <em>S</em><sub>0</sub> + <em>S</em><sub>1</sub>, <em>S</em><sub>0</sub> + <em>S</em><sub>1</sub> + <em>S</em><sub>2</sub>, <tt>...</tt>.  For example, <tt>(partial-sums integers)</tt> should be the stream
+1, 3, 6, 10, 15, <tt>...</tt>.
+
+<p><p>
+
+
+<p><a name="%_thm_3.56"></a>
+<b>Exercise 3.56.</b>&nbsp;&nbsp;A famous problem, first raised by <a name="%_idx_3894"></a>R. Hamming, is to enumerate, in
+ascending order with no repetitions, all positive integers with no
+prime factors other than 2, 3, or 5.  One obvious way to do this is to
+simply test each integer in turn to see whether it has any factors
+other than 2, 3, and 5.  But this is very inefficient, since, as the
+integers get larger, fewer and fewer of them fit the requirement.  As
+an alternative, let us call the required stream of numbers <tt>S</tt> and
+notice the following facts about it.
+<p><ul>
+<li><tt>S</tt> begins with 1.<p>
+
+<li>The elements of <tt>(scale-stream S 2)</tt> are also 
+elements of <tt>S</tt>.<p>
+
+<li>The same is true for <tt>(scale-stream S 3)</tt> 
+and <tt>(scale-stream 5 S)</tt>.<p>
+
+<li>These are all the elements of <tt>S</tt>.
+</ul><p><p>
+
+<a name="%_idx_3896"></a>Now all we have to do is combine elements from these sources.
+For this we define a procedure <tt>merge</tt> that combines two ordered
+streams into one ordered result stream, eliminating repetitions:<p>
+
+
+<p><p><tt><a name="%_idx_3898"></a>(define&nbsp;(merge&nbsp;s1&nbsp;s2)<br>
+&nbsp;&nbsp;(cond&nbsp;((stream-null?&nbsp;s1)&nbsp;s2)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((stream-null?&nbsp;s2)&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((s1car&nbsp;(stream-car&nbsp;s1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s2car&nbsp;(stream-car&nbsp;s2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cond&nbsp;((&lt;&nbsp;s1car&nbsp;s2car)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;s1car&nbsp;(merge&nbsp;(stream-cdr&nbsp;s1)&nbsp;s2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((&gt;&nbsp;s1car&nbsp;s2car)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;s2car&nbsp;(merge&nbsp;s1&nbsp;(stream-cdr&nbsp;s2))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;s1car<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(merge&nbsp;(stream-cdr&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;s2)))))))))<br>
+</tt><p><p>
+Then the required stream may be constructed with <tt>merge</tt>, as
+follows:<p>
+
+
+<p><p><tt>(define&nbsp;S&nbsp;(cons-stream&nbsp;1&nbsp;(merge&nbsp;&lt;<em>??</em>&gt;&nbsp;&lt;<em>??</em>&gt;)))<br>
+</tt><p><p>
+Fill in the missing expressions in the places marked &lt;<em>??</em>&gt; above.
+
+<p><p>
+
+<p><a name="%_thm_3.57"></a>
+<b>Exercise 3.57.</b>&nbsp;&nbsp;<a name="%_idx_3900"></a>How many additions are performed when we compute the <em>n</em>th Fibonacci
+number using the definition of <tt>fibs</tt> based on the <tt>add-streams</tt> procedure?  Show that the number of additions would be
+exponentially greater if we had implemented
+<tt>(delay &lt;<em>exp</em>&gt;)</tt> simply as <tt>(lambda () &lt;<em>exp</em>&gt;)</tt>, 
+without using the optimization provided by the <tt>memo-proc</tt>
+procedure described in section&nbsp;<a href="#%_sec_3.5.1">3.5.1</a>.<a name="call_footnote_Temp_465" href="#footnote_Temp_465"><sup><small>64</small></sup></a>
+
+<p><p>
+
+<p><a name="%_thm_3.58"></a>
+<b>Exercise 3.58.</b>&nbsp;&nbsp;Give an interpretation of the stream computed by the following
+procedure:<p>
+
+<p><p><tt>(define&nbsp;(expand&nbsp;num&nbsp;den&nbsp;radix)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(quotient&nbsp;(*&nbsp;num&nbsp;radix)&nbsp;den)<br>
+&nbsp;&nbsp;&nbsp;(expand&nbsp;(remainder&nbsp;(*&nbsp;num&nbsp;radix)&nbsp;den)&nbsp;den&nbsp;radix)))<br>
+</tt><p><p>
+<a name="%_idx_3906"></a><a name="%_idx_3908"></a>(<tt>Quotient</tt> is a primitive that returns the integer quotient of
+two integers.)  What are the successive elements produced by <tt>(expand 1 7 10)</tt> ?  What is produced by <tt>(expand 3 8 10)</tt> ?
+<p><p>
+
+
+<p><a name="%_thm_3.59"></a>
+<b>Exercise 3.59.</b>&nbsp;&nbsp;<a name="%_idx_3910"></a><a name="%_idx_3912"></a>In section&nbsp;<a href="book-Z-H-18.html#%_sec_2.5.3">2.5.3</a> we saw how to implement a
+polynomial arithmetic system representing polynomials as lists of
+terms.  In a similar way, we can work with <em>power series</em>, such as<p>
+
+<a name="%_idx_3914"></a><p><div align=left><img src="ch3-Z-G-36.gif" border="0"></div><p><p>
+
+<a name="%_idx_3916"></a><p><div align=left><img src="ch3-Z-G-37.gif" border="0"></div><p><p>
+
+<a name="%_idx_3918"></a><p><div align=left><img src="ch3-Z-G-38.gif" border="0"></div><p><p>
+
+represented as infinite streams.
+We will represent the series
+<em>a</em><sub>0</sub>  +  <em>a</em><sub>1</sub> <em>x</em>  +  <em>a</em><sub>2</sub> <em>x</em><sup>2</sup>  +  <em>a</em><sub>3</sub> <em>x</em><sup>3</sup>  +  <tt>&middot;&middot;&middot;</tt>
+as the stream whose elements are the coefficients <em>a</em><sub>0</sub>, <em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <em>a</em><sub>3</sub>, <tt>...</tt>.<p>
+
+<p><p><a name="%_idx_3920"></a><a name="%_idx_3922"></a>a. The integral of the series <em>a</em><sub>0</sub>  +  <em>a</em><sub>1</sub> <em>x</em>  +  <em>a</em><sub>2</sub> <em>x</em><sup>2</sup>  +  <em>a</em><sub>3</sub> <em>x</em><sup>3</sup>  +  <tt>&middot;&middot;&middot;</tt>
+is the series
+<p><div align=left><img src="ch3-Z-G-39.gif" border="0"></div><p>
+where <em>c</em> is any constant.
+Define a procedure <a name="%_idx_3924"></a><tt>integrate-series</tt> that takes as input a stream
+<em>a</em><sub>0</sub>, <em>a</em><sub>1</sub>, <em>a</em><sub>2</sub>, <tt>...</tt> representing a power series and returns the stream
+<em>a</em><sub>0</sub>, (1/2)<em>a</em><sub>1</sub>, (1/3)<em>a</em><sub>2</sub>, <tt>...</tt> of coefficients of
+the non-constant terms of the integral of the series.
+(Since the result has no constant term, it doesn't represent a power
+series; when we use <tt>integrate-series</tt>, we will <tt>cons</tt> on
+the appropriate constant.) <p>
+
+<p><p>b. The function <em>x</em> <img src="book-Z-G-D-17.gif" border="0">  <em>e</em><sup><em>x</em></sup> is its own
+derivative.  This implies that <em>e</em><sup><em>x</em></sup> and the integral of <em>e</em><sup><em>x</em></sup> are the
+same series, except for the constant term, which is <em>e</em><sup>0</sup>  = 1.
+Accordingly, we can generate the series for 
+<em>e</em><sup><em>x</em></sup> as
+<p><p><tt>(define&nbsp;exp-series<br>
+&nbsp;&nbsp;(cons-stream&nbsp;1&nbsp;(integrate-series&nbsp;exp-series)))<br>
+</tt><p><p>
+Show how to generate the series for sine and cosine, starting from the facts
+that the derivative of sine is cosine and the derivative of cosine is
+the negative of sine:
+<p><p><tt>(define&nbsp;cosine-series<br>
+&nbsp;&nbsp;(cons-stream&nbsp;1&nbsp;&lt;<em>??</em>&gt;))<br>
+(define&nbsp;sine-series<br>
+&nbsp;&nbsp;(cons-stream&nbsp;0&nbsp;&lt;<em>??</em>&gt;))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.60"></a>
+<b>Exercise 3.60.</b>&nbsp;&nbsp;<a name="%_idx_3926"></a><a name="%_idx_3928"></a><a name="%_idx_3930"></a><a name="%_idx_3932"></a>With power series represented as streams of coefficients as in
+exercise&nbsp;<a href="#%_thm_3.59">3.59</a>, adding series is implemented by <tt>add-streams</tt>.  Complete the definition of the following procedure for
+multiplying series:
+<p><p><tt>(define&nbsp;(mul-series&nbsp;s1&nbsp;s2)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;&lt;<em>??</em>&gt;&nbsp;(add-streams&nbsp;&lt;<em>??</em>&gt;&nbsp;&lt;<em>??</em>&gt;)))<br>
+</tt><p><p>
+You can test your procedure by verifying that
+<em>s</em><em>i</em><em>n</em><sup>2</sup> <em>x</em>  +  <em>c</em><em>o</em><em>s</em><sup>2</sup> <em>x</em>  =  1, using the series from exercise&nbsp;<a href="#%_thm_3.59">3.59</a>.
+
+<p><p>
+
+<p><a name="%_thm_3.61"></a>
+<b>Exercise 3.61.</b>&nbsp;&nbsp;Let <em>S</em> be a power series (exercise&nbsp;<a href="#%_thm_3.59">3.59</a>)
+whose constant term is 1.  Suppose we want
+to find the power series 1/<em>S</em>, that is, the series <em>X</em> such that
+<em>S</em> &middot;  <em>X</em> =  1.  Write <em>S</em> = 1 + <em>S</em><sub><em>R</em></sub> where <em>S</em><sub><em>R</em></sub> is the part of <em>S</em> after
+the constant term.  Then we can solve for <em>X</em> as follows:
+<p><div align=left><img src="ch3-Z-G-40.gif" border="0"></div><p>
+In other words, <em>X</em> is the power series whose constant term is 1 and
+whose higher-order terms are given by the negative of <em>S</em><sub><em>R</em></sub> times <em>X</em>.
+Use this idea to write a procedure <tt>invert-unit-series</tt> that computes 1/<em>S</em> for a power series <em>S</em> with
+constant term 1.
+You will need to use <tt>mul-series</tt> from exercise&nbsp;<a href="#%_thm_3.60">3.60</a>.
+
+<p><p>
+
+
+<p><a name="%_thm_3.62"></a>
+<b>Exercise 3.62.</b>&nbsp;&nbsp;<a name="%_idx_3934"></a><a name="%_idx_3936"></a><a name="%_idx_3938"></a>Use the results of exercises&nbsp;<a href="#%_thm_3.60">3.60</a>
+and&nbsp;<a href="#%_thm_3.61">3.61</a> to define a procedure <tt>div-series</tt>
+that divides two power series.  <tt>Div-series</tt> should work for any
+two series, provided that the denominator series begins with a
+nonzero constant term.  (If the denominator has a zero constant term,
+then <tt>div-series</tt> should signal an error.)
+Show how to use <tt>div-series</tt>
+together with the result of exercise&nbsp;<a href="#%_thm_3.59">3.59</a> to generate
+<a name="%_idx_3940"></a>the power series for tangent.
+<p>
+
+<a name="%_sec_3.5.3"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.5.3">3.5.3&nbsp;&nbsp;Exploiting the Stream Paradigm</a></h3><p>
+
+<p>
+
+Streams with delayed evaluation can be a powerful modeling tool,
+providing many of the benefits of local state and assignment.
+Moreover, they avoid some of the theoretical tangles that accompany
+the introduction of assignment into a programming language.<p>
+
+<a name="%_idx_3942"></a>The stream approach can be illuminating because it allows us to build
+systems with different module boundaries than systems organized around
+assignment to state variables.  For example, we can think of an entire
+time series (or signal) as a focus of interest, rather than the values
+of the state variables at individual moments.  This makes it
+convenient to combine and compare components of state from different
+moments.<p>
+
+<a name="%_sec_Temp_471"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_471">Formulating iterations as stream processes</a></h4><p>
+
+<a name="%_idx_3944"></a>
+In section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>, we introduced iterative
+processes, which proceed by updating state variables.  We know now
+that we can represent state as a ``timeless'' stream of values rather
+than as a set of variables to be updated.  Let's adopt this
+perspective in revisiting the square-root procedure from
+section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>.  Recall that the idea is to generate a
+sequence of better and better guesses for the square root of <em>x</em> by
+applying over and over again the procedure that improves guesses:<p>
+
+<p><p><tt>(define&nbsp;(sqrt-improve&nbsp;guess&nbsp;x)<br>
+&nbsp;&nbsp;(average&nbsp;guess&nbsp;(/&nbsp;x&nbsp;guess)))<br>
+</tt><p><p><p>
+
+<a name="%_idx_3946"></a>In our original <tt>sqrt</tt> procedure, we made these guesses be the
+successive values of a state variable. Instead we can generate the
+infinite stream of guesses, starting with an initial guess of 1:<a name="call_footnote_Temp_472" href="#footnote_Temp_472"><sup><small>65</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_3948"></a>(define&nbsp;(sqrt-stream&nbsp;x)<br>
+&nbsp;&nbsp;(define&nbsp;guesses<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;1.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt-improve&nbsp;guess&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;guesses)))<br>
+&nbsp;&nbsp;guesses)<br>
+(display-stream&nbsp;(sqrt-stream&nbsp;2))<br>
+<i>1.</i><br>
+<i>1.5</i><br>
+<i>1.4166666666666665</i><br>
+<i>1.4142156862745097</i><br>
+<i>1.4142135623746899</i><br>
+<tt>...</tt></tt><p><p>
+We can generate more and more terms of the stream to get better and
+better guesses.  If we like, we can write a procedure that keeps
+generating terms until the answer is good enough.  (See
+exercise&nbsp;<a href="#%_thm_3.64">3.64</a>.)<p>
+
+<a name="%_idx_3950"></a><a name="%_idx_3952"></a><a name="%_idx_3954"></a><a name="%_idx_3956"></a><a name="%_idx_3958"></a><a name="%_idx_3960"></a>Another iteration that we can treat in the same way is to generate an
+approximation to <img src="book-Z-G-D-9.gif" border="0">, based upon the alternating series that we saw
+in section&nbsp;<a href="book-Z-H-12.html#%_sec_1.3.1">1.3.1</a>:<p>
+
+<p><div align=left><img src="ch3-Z-G-41.gif" border="0"></div><p><p>
+
+
+We first generate the stream of summands of the series (the reciprocals
+of the odd integers, with alternating signs).  Then we take the stream
+of sums of more and more terms (using the <tt>partial-sums</tt> procedure
+of exercise&nbsp;<a href="#%_thm_3.55">3.55</a>) and scale the result by 4:
+
+<p><p><tt>(define&nbsp;(pi-summands&nbsp;n)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;(/&nbsp;1.0&nbsp;n)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;-&nbsp;(pi-summands&nbsp;(+&nbsp;n&nbsp;2)))))<br>
+<a name="%_idx_3962"></a>(define&nbsp;pi-stream<br>
+&nbsp;&nbsp;(scale-stream&nbsp;(partial-sums&nbsp;(pi-summands&nbsp;1))&nbsp;4))<br>
+(display-stream&nbsp;pi-stream)<br>
+<i>4.</i><br>
+<i>2.666666666666667</i><br>
+<i>3.466666666666667</i><br>
+<i>2.8952380952380956</i><br>
+<i>3.3396825396825403</i><br>
+<i>2.9760461760461765</i><br>
+<i>3.2837384837384844</i><br>
+<i>3.017071817071818</i><br>
+<tt>...</tt></tt><p><p>
+This gives us a stream of better and better approximations to <img src="book-Z-G-D-9.gif" border="0">,
+although the approximations converge rather slowly.  Eight terms of
+the sequence bound the value of <img src="book-Z-G-D-9.gif" border="0"> between 3.284 and 3.017.<p>
+
+<a name="%_idx_3964"></a>So far, our use of the stream of states approach is not much different
+from updating state variables.  But streams give us an opportunity to
+do some interesting tricks.  For example, we can transform a stream
+with a <a name="%_idx_3966"></a><em>sequence accelerator</em> that converts a sequence of
+approximations to a new sequence that converges to the same value as
+the original, only faster.<p>
+
+One such accelerator, due to the eighteenth-century Swiss mathematician
+<a name="%_idx_3968"></a>Leonhard Euler, works well with sequences that are partial sums of
+alternating series (series of terms with alternating signs).
+In Euler's technique, if <em>S</em><sub><em>n</em></sub> is the <em>n</em>th term
+of the original sum sequence, then the accelerated sequence has terms
+<p><div align=left><img src="ch3-Z-G-42.gif" border="0"></div><p> 
+Thus, if the original sequence is represented as a stream of values,
+the transformed sequence is given by<p>
+
+<p><p><tt><a name="%_idx_3970"></a>(define&nbsp;(euler-transform&nbsp;s)<br>
+&nbsp;&nbsp;(let&nbsp;((s0&nbsp;(stream-ref&nbsp;s&nbsp;0))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;<em>S</em><sub><em>n</em>-1</sub></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s1&nbsp;(stream-ref&nbsp;s&nbsp;1))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;<em>S</em><sub><em>n</em></sub></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(s2&nbsp;(stream-ref&nbsp;s&nbsp;2)))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em>;&nbsp;<em>S</em><sub><em>n</em>+1</sub></em><br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(-&nbsp;s2&nbsp;(/&nbsp;(square&nbsp;(-&nbsp;s2&nbsp;s1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;s0&nbsp;(*&nbsp;-2&nbsp;s1)&nbsp;s2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(euler-transform&nbsp;(stream-cdr&nbsp;s)))))<br>
+</tt><p><p><p>
+
+We can demonstrate Euler acceleration with our sequence of
+approximations to <img src="book-Z-G-D-9.gif" border="0">:<p>
+
+<p><p><tt>(display-stream&nbsp;(euler-transform&nbsp;pi-stream))<br>
+<i>3.166666666666667</i><br>
+<i>3.1333333333333337</i><br>
+<i>3.1452380952380956</i><br>
+<i>3.13968253968254</i><br>
+<i>3.1427128427128435</i><br>
+<i>3.1408813408813416</i><br>
+<i>3.142071817071818</i><br>
+<i>3.1412548236077655</i><br>
+<tt>...</tt></tt><p><p><p>
+
+Even better, we can accelerate the accelerated sequence, and
+recursively accelerate that, and so on.  Namely, we create a stream of
+streams (a structure we'll call a <a name="%_idx_3972"></a><em>tableau</em>) in which each stream
+is the transform of the preceding one:<p>
+
+<p><p><tt><a name="%_idx_3974"></a>(define&nbsp;(make-tableau&nbsp;transform&nbsp;s)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;s<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-tableau&nbsp;transform<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(transform&nbsp;s))))<br>
+</tt><p><p>
+The tableau has the form<p>
+
+<p><div align=left><img src="ch3-Z-G-43.gif" border="0"></div><p>
+Finally, we form a sequence by taking the first term in each row of
+the tableau:<p>
+
+<p><p><tt><a name="%_idx_3976"></a>(define&nbsp;(accelerated-sequence&nbsp;transform&nbsp;s)<br>
+&nbsp;&nbsp;(stream-map&nbsp;stream-car<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-tableau&nbsp;transform&nbsp;s)))<br>
+</tt><p><p><p>
+
+We can demonstrate this kind of ``super-acceleration'' of the <img src="book-Z-G-D-9.gif" border="0">
+sequence:<p>
+
+<p><p><tt>(display-stream&nbsp;(accelerated-sequence&nbsp;euler-transform<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pi-stream))<br>
+<i>4.</i><br>
+<i>3.166666666666667</i><br>
+<i>3.142105263157895</i><br>
+<i>3.141599357319005</i><br>
+<i>3.1415927140337785</i><br>
+<i>3.1415926539752927</i><br>
+<i>3.1415926535911765</i><br>
+<i>3.141592653589778</i><br>
+<tt>...</tt></tt><p><p>
+The result is impressive.  Taking eight terms of the sequence yields
+the correct value of <img src="book-Z-G-D-9.gif" border="0"> to 14 decimal places.  If we had used only
+the original <img src="book-Z-G-D-9.gif" border="0"> sequence, we would need to compute on the order of
+10<sup>13</sup> terms (i.e., expanding the series far enough so that the
+individual terms are less then 10<sup>-13</sup>) to get that much accuracy!
+
+We could have implemented these acceleration techniques without
+using streams.  But the stream formulation is particularly elegant and
+convenient because the entire sequence of states is available to us as a
+data structure that can be manipulated with a uniform set of
+operations.<p>
+
+<p><a name="%_thm_3.63"></a>
+<b>Exercise 3.63.</b>&nbsp;&nbsp;Louis Reasoner asks why the <tt>sqrt-stream</tt> procedure was not
+written in the following more straightforward way, without
+the local variable <tt>guesses</tt>:
+<p><p><tt>(define&nbsp;(sqrt-stream&nbsp;x)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;1.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(guess)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt-improve&nbsp;guess&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(sqrt-stream&nbsp;x))))<br>
+</tt><p><p>
+Alyssa P. Hacker replies that this version of the procedure is
+considerably less efficient because it performs redundant computation.
+Explain Alyssa's answer.  Would the two versions still differ in
+efficiency if our implementation of <tt>delay</tt> used only <tt>(lambda
+() &lt;<em>exp</em>&gt;)</tt> without using the optimization provided by <tt>memo-proc</tt> (section&nbsp;<a href="#%_sec_3.5.1">3.5.1</a>)?
+
+<p><p>
+
+<p><a name="%_thm_3.64"></a>
+<b>Exercise 3.64.</b>&nbsp;&nbsp;Write a procedure <a name="%_idx_3978"></a><tt>stream-limit</tt> that takes as arguments a stream
+and a number (the tolerance).  It should examine the stream until it
+finds two successive elements that differ in absolute value by less
+than the tolerance, and return the second of the two elements.  Using
+this, we could compute square roots up to a given tolerance by
+<p><p><tt><a name="%_idx_3980"></a>(define&nbsp;(sqrt&nbsp;x&nbsp;tolerance)<br>
+&nbsp;&nbsp;(stream-limit&nbsp;(sqrt-stream&nbsp;x)&nbsp;tolerance))<br>
+</tt><p><p>
+<p><p>
+
+<p><a name="%_thm_3.65"></a>
+<b>Exercise 3.65.</b>&nbsp;&nbsp;<a name="%_idx_3982"></a>Use the series
+<p><div align=left><img src="ch3-Z-G-44.gif" border="0"></div><p>
+to compute three sequences of approximations to the natural logarithm of 2,
+in the same way we did above for <img src="book-Z-G-D-9.gif" border="0">.
+How rapidly do these sequences converge?
+<p>
+
+<a name="%_sec_Temp_476"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_476">Infinite streams of pairs</a></h4><p>
+
+<a name="%_idx_3984"></a><a name="%_idx_3986"></a><a name="%_idx_3988"></a>
+In section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>, we saw how the sequence paradigm
+handles traditional nested loops as processes defined on sequences of
+pairs.  If we generalize this technique to infinite streams, then we
+can write programs that are not easily represented as loops, because
+the ``looping'' must range over an infinite set.<p>
+
+<a name="%_idx_3990"></a>For example, suppose we want to generalize the <tt>prime-sum-pairs</tt>
+procedure of section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a> to produce the stream
+of pairs of <em>all</em> integers (<em>i</em>,<em>j</em>) with <em>i</em> <u>&lt;</u> <em>j</em> such that <em>i</em> + <em>j</em>
+is prime.  If <tt>int-pairs</tt> is the sequence of all pairs of integers (<em>i</em>,<em>j</em>)
+with <em>i</em> <u>&lt;</u> <em>j</em>, then our required stream is simply<a name="call_footnote_Temp_477" href="#footnote_Temp_477"><sup><small>66</small></sup></a><p>
+
+<p><p><tt>(stream-filter&nbsp;(lambda&nbsp;(pair)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(prime?&nbsp;(+&nbsp;(car&nbsp;pair)&nbsp;(cadr&nbsp;pair))))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int-pairs)<br>
+</tt><p><p><p>
+
+Our problem, then, is to produce the stream <tt>int-pairs</tt>.  More
+generally, suppose we have two streams <em>S</em>  =  (<em>S</em><sub><em>i</em></sub>) and <em>T</em>  =  (<em>T</em><sub><em>j</em></sub>),
+and imagine the infinite rectangular array
+<p><div align=left><img src="ch3-Z-G-45.gif" border="0"></div><p>
+We wish to generate a stream that contains all the pairs in the array
+that lie on or above the diagonal, i.e., the pairs
+<p><div align=left><img src="ch3-Z-G-46.gif" border="0"></div><p>
+(If we take both <em>S</em> and <em>T</em> to be the stream of integers, then this
+will be our desired stream <tt>int-pairs</tt>.)  <p>
+
+Call the general stream of pairs <tt>(pairs S T)</tt>, and consider it to
+be composed of three parts: the pair (<em>S</em><sub>0</sub>,<em>T</em><sub>0</sub>), the
+rest of the pairs in the first row, and the remaining pairs:<a name="call_footnote_Temp_478" href="#footnote_Temp_478"><sup><small>67</small></sup></a>
+<p><div align=left><img src="ch3-Z-G-47.gif" border="0"></div><p>
+Observe that the third piece in this decomposition (pairs that are not in the
+first row) is (recursively) the pairs formed from <tt>(stream-cdr S)</tt>
+and <tt>(stream-cdr T)</tt>.  Also note that the second piece (the rest
+of the first row) is
+<p><p><tt>(stream-map&nbsp;(lambda&nbsp;(x)&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;t))<br>
+</tt><p><p>
+Thus we can form our stream of pairs as follows:
+<p><p><tt>(define&nbsp;(pairs&nbsp;s&nbsp;t)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;(stream-car&nbsp;t))<br>
+&nbsp;&nbsp;&nbsp;(&lt;<em>combine-in-some-way</em>&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(x)&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;t))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(pairs&nbsp;(stream-cdr&nbsp;s)&nbsp;(stream-cdr&nbsp;t)))))<br>
+</tt><p><p><p>
+
+<a name="%_idx_3992"></a>In order to complete the procedure, we must choose some way to combine
+the two inner streams.  One idea is to use the stream analog of the
+<tt>append</tt> procedure from section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.1">2.2.1</a>:<p>
+
+<p><p><tt><a name="%_idx_3994"></a>(define&nbsp;(stream-append&nbsp;s1&nbsp;s2)<br>
+&nbsp;&nbsp;(if&nbsp;(stream-null?&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(stream-car&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-append&nbsp;(stream-cdr&nbsp;s1)&nbsp;s2))))<br>
+</tt><p><p>
+This is unsuitable for infinite streams, however,
+because it takes all the elements from the first stream before
+incorporating the second stream.
+In particular, if we try to generate all pairs of positive integers using<p>
+
+<p><p><tt>(pairs&nbsp;integers&nbsp;integers)<br>
+</tt><p><p>
+our stream of results will first try to run through all pairs with the
+first integer equal to 1, and hence will never produce pairs with any
+other value of the first integer.<p>
+
+To handle infinite streams, we need to devise an order of combination
+that ensures that every element will eventually be reached if we let
+our program run long enough.  An elegant way to accomplish this is
+with the following <tt>interleave</tt> procedure:<a name="call_footnote_Temp_479" href="#footnote_Temp_479"><sup><small>68</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_4000"></a>(define&nbsp;(interleave&nbsp;s1&nbsp;s2)<br>
+&nbsp;&nbsp;(if&nbsp;(stream-null?&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(stream-car&nbsp;s1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(interleave&nbsp;s2&nbsp;(stream-cdr&nbsp;s1)))))<br>
+</tt><p><p>
+Since <tt>interleave</tt> takes elements alternately from the two streams,
+every element of the second stream will eventually find its way into
+the interleaved stream, even if the first stream is infinite.<p>
+
+We can thus generate the required stream of pairs as
+<p><p><tt><a name="%_idx_4002"></a>(define&nbsp;(pairs&nbsp;s&nbsp;t)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;(stream-car&nbsp;t))<br>
+&nbsp;&nbsp;&nbsp;(interleave<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(x)&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;t))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(pairs&nbsp;(stream-cdr&nbsp;s)&nbsp;(stream-cdr&nbsp;t)))))<br>
+</tt><p><p><p>
+
+<p><a name="%_thm_3.66"></a>
+<b>Exercise 3.66.</b>&nbsp;&nbsp;Examine the stream <tt>(pairs integers integers)</tt>. Can you make any general
+comments about the order in which the pairs are placed into the
+stream? For example, about how many pairs precede the pair (1,100)?
+the pair (99,100)? the pair (100,100)? (If you can make precise
+mathematical statements here, all the better. But feel free to give
+more qualitative answers if you find yourself getting bogged down.)
+<p><p>
+
+<p><a name="%_thm_3.67"></a>
+<b>Exercise 3.67.</b>&nbsp;&nbsp;Modify the <tt>pairs</tt> procedure so that <tt>(pairs integers
+integers)</tt> will produce the stream of <em>all</em> pairs of integers
+(<em>i</em>,<em>j</em>) (without the condition <em>i</em> <u>&lt;</u> <em>j</em>).  Hint: You will need to
+mix in an additional stream.
+<p><p>
+
+<p><a name="%_thm_3.68"></a>
+<b>Exercise 3.68.</b>&nbsp;&nbsp;Louis Reasoner thinks that building a stream of pairs from three
+parts is unnecessarily complicated.  Instead of separating the
+pair (<em>S</em><sub>0</sub>,<em>T</em><sub>0</sub>) from the rest of the pairs in the first row,
+he proposes to work with the whole first row, as follows:
+<p><p><tt>(define&nbsp;(pairs&nbsp;s&nbsp;t)<br>
+&nbsp;&nbsp;(interleave<br>
+&nbsp;&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(x)&nbsp;(list&nbsp;(stream-car&nbsp;s)&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t)<br>
+&nbsp;&nbsp;&nbsp;(pairs&nbsp;(stream-cdr&nbsp;s)&nbsp;(stream-cdr&nbsp;t))))<br>
+</tt><p><p>
+Does this work?  Consider what happens if we evaluate
+<tt>(pairs integers integers)</tt> using Louis's definition of <tt>pairs</tt>.
+
+<p><p>
+
+<p><a name="%_thm_3.69"></a>
+<b>Exercise 3.69.</b>&nbsp;&nbsp;Write a procedure <tt>triples</tt> that takes three infinite
+streams, <em>S</em>, <em>T</em>, and <em>U</em>, and produces the stream of triples
+(<em>S</em><sub><em>i</em></sub>,<em>T</em><sub><em>j</em></sub>,<em>U</em><sub><em>k</em></sub>) such that <em>i</em> <u>&lt;</u> <em>j</em> <u>&lt;</u> <em>k</em>.
+Use <tt>triples</tt> to
+generate the stream of all <a name="%_idx_4004"></a>Pythagorean triples of positive integers,
+i.e., the triples (<em>i</em>,<em>j</em>,<em>k</em>) such that <em>i</em> <u>&lt;</u> <em>j</em> and <em>i</em><sup>2</sup>  +  <em>j</em><sup>2</sup>  = <em>k</em><sup>2</sup>.
+
+<p><p>
+
+<p><a name="%_thm_3.70"></a>
+<b>Exercise 3.70.</b>&nbsp;&nbsp;<a name="%_idx_4006"></a><a name="%_idx_4008"></a>It would be nice to be able to generate streams in which the pairs
+appear in some useful order, rather than in the order that results
+from an <em>ad hoc</em> interleaving process.  We can use a technique
+similar to the <tt>merge</tt> procedure of exercise&nbsp;<a href="#%_thm_3.56">3.56</a>, if we
+define a way to say that one pair of integers is ``less than''
+another.  One way to do this is to define a ``weighting function''
+<em>W</em>(<em>i</em>,<em>j</em>) and stipulate that (<em>i</em><sub>1</sub>,<em>j</em><sub>1</sub>) is less than (<em>i</em><sub>2</sub>,<em>j</em><sub>2</sub>) if
+<em>W</em>(<em>i</em><sub>1</sub>,<em>j</em><sub>1</sub>) &lt; <em>W</em>(<em>i</em><sub>2</sub>,<em>j</em><sub>2</sub>).  Write a procedure <tt>merge-weighted</tt>
+that is like <tt>merge</tt>, except that <tt>merge-weighted</tt> takes an
+additional argument <tt>weight</tt>, which is a procedure that computes
+the weight of a pair, and is used to determine the order in which
+elements should appear in the resulting merged stream.<a name="call_footnote_Temp_485" href="#footnote_Temp_485"><sup><small>69</small></sup></a>
+Using this,
+generalize <tt>pairs</tt> to a procedure <tt>weighted-pairs</tt> that
+takes two streams, together with a procedure that computes a weighting
+function, and generates the stream of pairs, ordered according to
+weight.  Use your procedure to generate<p>
+
+<p><p>a. the stream of all pairs of positive integers (<em>i</em>,<em>j</em>) with <em>i</em> <u>&lt;</u>
+<em>j</em> ordered according to the sum <em>i</em>  +  <em>j</em><p>
+
+<p><p>b.  the stream of all pairs of positive integers (<em>i</em>,<em>j</em>) with <em>i</em> <u>&lt;</u>
+<em>j</em>, where neither <em>i</em> nor <em>j</em> is divisible by 2, 3, or 5, and the
+pairs are ordered according to the sum 2 <em>i</em>  +  3 <em>j</em>  +  5 <em>i</em> <em>j</em>.
+
+<p><p>
+
+
+<p><a name="%_thm_3.71"></a>
+<b>Exercise 3.71.</b>&nbsp;&nbsp;<a name="%_idx_4010"></a>Numbers that can be expressed as the sum of two cubes in more than one
+way are sometimes called <em>Ramanujan numbers</em>, in honor of the
+mathematician Srinivasa Ramanujan.<a name="call_footnote_Temp_487" href="#footnote_Temp_487"><sup><small>70</small></sup></a>
+Ordered streams of pairs provide an elegant solution to the problem of
+computing these numbers.  To find a number that can be written as the
+sum of two cubes in two different ways, we need only generate the
+stream of pairs of integers (<em>i</em>,<em>j</em>) weighted according to the sum <em>i</em><sup>3</sup>
+ +  <em>j</em><sup>3</sup> (see exercise&nbsp;<a href="#%_thm_3.70">3.70</a>),
+then search the stream for two consecutive pairs with the same
+weight.  Write a procedure to generate the Ramanujan numbers.  The first
+such number is 1,729.  What are the next five?
+
+<p><p>
+
+<p><a name="%_thm_3.72"></a>
+<b>Exercise 3.72.</b>&nbsp;&nbsp;In a similar way to exercise&nbsp;<a href="#%_thm_3.71">3.71</a> generate
+a stream of
+all numbers that can be written as the sum of two squares in three
+different ways (showing how they can be so written).
+<p>
+
+<a name="%_sec_Temp_489"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_489">Streams as signals</a></h4><p>
+
+<a name="%_idx_4018"></a><a name="%_idx_4020"></a>
+We began our discussion of streams by describing them as computational
+analogs of the ``signals'' in signal-processing systems.  In fact, we
+can use streams to model signal-processing systems in a very direct
+way, representing the values of a signal at successive time intervals
+as consecutive elements of a stream.  For instance, we can implement
+an <a name="%_idx_4022"></a><em>integrator</em> or <em>summer</em> that, for an input stream
+<em>x</em> = (<em>x</em><sub><em>i</em></sub>), an initial value <em>C</em>, and a small increment <em>d</em><em>t</em>,
+accumulates the sum
+<p><div align=left><img src="ch3-Z-G-48.gif" border="0"></div><p>
+and returns the stream of values <em>S</em> = (<em>S</em><sub><em>i</em></sub>).  The following <tt>integral</tt>
+procedure is reminiscent of the ``implicit style'' definition of the
+stream of integers (section&nbsp;<a href="#%_sec_3.5.2">3.5.2</a>):<p>
+
+<p><p><tt><a name="%_idx_4024"></a>(define&nbsp;(integral&nbsp;integrand&nbsp;initial-value&nbsp;dt)<br>
+&nbsp;&nbsp;(define&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;initial-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-streams&nbsp;(scale-stream&nbsp;integrand&nbsp;dt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int)))<br>
+&nbsp;&nbsp;int)<br>
+</tt><p><p><p>
+
+<a name="%_fig_3.32"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-49.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.32:</b>&nbsp;&nbsp;The <tt>integral</tt> procedure viewed as a
+signal-processing system.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Figure&nbsp;<a href="#%_fig_3.32">3.32</a> is a picture of a signal-processing system that
+corresponds to the <tt>integral</tt> procedure.  The input stream is
+scaled by <em>d</em><em>t</em> and passed through an adder, whose output is passed
+back through the same adder.  The self-reference in the definition of
+<tt>int</tt> is reflected in the figure by the feedback loop that
+connects the output of the adder to one of the inputs.<p>
+
+<p><a name="%_thm_3.73"></a>
+<b>Exercise 3.73.</b>&nbsp;&nbsp;<a name="%_fig_3.33"></a><p><div align=left><table width=100%><tr><td><div align=center>&nbsp;<img src="ch3-Z-G-50.gif" border="0">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<em>v</em>  =  <em>v</em><sub>0</sub>  +  (1/<em>C</em>)<img src="book-Z-G-D-19.gif" border="0"><sub>0</sub><sup><em>t</em></sup><em>i</em> <em>d</em><em>t</em>  +  <em>R</em> <em>i</em>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+
+<p><p><img src="ch3-Z-G-51.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.33:</b>&nbsp;&nbsp;An RC circuit and the associated signal-flow diagram.</div></caption><tr><td>
+<a name="%_idx_4026"></a>
+</td></tr></table></div><p>
+<a name="%_idx_4028"></a><a name="%_idx_4030"></a><a name="%_idx_4032"></a>We can model electrical circuits using streams to represent the values
+of currents or voltages at a sequence of times.  For instance, suppose
+we have an <em>RC circuit</em> consisting of a resistor of resistance <em>R</em>
+and a capacitor of capacitance <em>C</em> in series.  The voltage response
+<em>v</em> of the circuit to an injected current <em>i</em> is determined by the
+formula in figure&nbsp;<a href="#%_fig_3.33">3.33</a>, whose structure is shown by the accompanying
+signal-flow diagram.<p>
+
+Write a procedure <tt>RC</tt> that models this circuit.  <tt>RC</tt> should
+take as inputs the values of <em>R</em>, <em>C</em>, and <em>d</em><em>t</em> and should return a
+procedure that takes as inputs a stream representing the current <em>i</em>
+and an initial value for the capacitor voltage <em>v</em><sub>0</sub> and produces as
+output the stream of voltages <em>v</em>.  For example, you should be able to
+use <tt>RC</tt> to model an RC circuit with <em>R</em>  =  5 ohms, <em>C</em>  =  1 farad,
+and a 0.5-second time step by evaluating <tt>(define RC1 (RC 5 1
+0.5))</tt>.  This defines <tt>RC1</tt> as a procedure that takes a stream
+representing the time sequence of currents and an initial capacitor
+voltage and produces the output stream of voltages.
+
+<p>
+<p><a name="%_thm_3.74"></a>
+<b>Exercise 3.74.</b>&nbsp;&nbsp;<a name="%_idx_4034"></a><a name="%_idx_4036"></a>Alyssa P. Hacker is designing a system to process signals coming from
+physical sensors.  One important feature she wishes to produce is a
+signal that describes the <em>zero crossings</em> of the input signal.
+That is, the resulting signal should be  + 1 whenever the input signal
+changes from negative to positive,  - 1 whenever the input signal
+changes from positive to negative, and 0 otherwise.  (Assume that the
+sign of a 0 input is positive.)  For example, a typical input signal
+with its associated zero-crossing signal would be
+<p><p><tt><tt>...</tt>1&nbsp;&nbsp;2&nbsp;&nbsp;1.5&nbsp;&nbsp;1&nbsp;&nbsp;0.5&nbsp;&nbsp;-0.1&nbsp;&nbsp;-2&nbsp;&nbsp;-3&nbsp;&nbsp;-2&nbsp;&nbsp;-0.5&nbsp;&nbsp;0.2&nbsp;&nbsp;3&nbsp;&nbsp;4&nbsp;<tt>...</tt><tt>...</tt>&nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;0&nbsp;&nbsp;0&nbsp;<tt>...</tt></tt><p><p>
+In Alyssa's system, the signal from the sensor is represented as a
+stream <tt>sense-data</tt> and the stream <tt>zero-crossings</tt> is
+the corresponding stream of zero crossings.  Alyssa first writes a
+procedure <tt>sign-change-detector</tt> that takes two values as
+arguments and compares the signs of the values to produce an
+appropriate 0, 1, or  - 1.  She then constructs her zero-crossing
+stream as follows:<p>
+
+<p><p><tt>(define&nbsp;(make-zero-crossings&nbsp;input-stream&nbsp;last-value)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(sign-change-detector&nbsp;(stream-car&nbsp;input-stream)&nbsp;last-value)<br>
+&nbsp;&nbsp;&nbsp;(make-zero-crossings&nbsp;(stream-cdr&nbsp;input-stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-car&nbsp;input-stream))))<br>
+<br>
+(define&nbsp;zero-crossings&nbsp;(make-zero-crossings&nbsp;sense-data&nbsp;0))<br>
+</tt><p><p>
+Alyssa's boss, Eva Lu Ator, walks by and suggests that this program is
+approximately equivalent to the following one, which
+uses the generalized version
+of <tt>stream-map</tt> from exercise&nbsp;<a href="#%_thm_3.50">3.50</a>:<p>
+
+<p><p><tt>(define&nbsp;zero-crossings<br>
+&nbsp;&nbsp;(stream-map&nbsp;sign-change-detector&nbsp;sense-data&nbsp;&lt;<em>expression</em>&gt;))<br>
+</tt><p><p>
+Complete the program by supplying the indicated &lt;<em>expression</em>&gt;.
+
+<p>
+<p><a name="%_thm_3.75"></a>
+<b>Exercise 3.75.</b>&nbsp;&nbsp;<a name="%_idx_4038"></a><a name="%_idx_4040"></a><a name="%_idx_4042"></a><a name="%_idx_4044"></a>Unfortunately, Alyssa's zero-crossing detector in
+exercise&nbsp;<a href="#%_thm_3.74">3.74</a> proves to be insufficient, because the
+noisy signal from the sensor leads to spurious zero crossings.  Lem E.
+Tweakit, a hardware specialist, suggests that Alyssa smooth the signal
+to filter out the noise before extracting the zero crossings.  Alyssa
+takes his advice and decides to extract the zero crossings from the
+signal constructed by averaging each value of the sense data with the
+previous value.  She explains the problem to her assistant, Louis
+Reasoner, who attempts to implement the idea, altering Alyssa's program as
+follows:<p>
+
+<p><p><tt>(define&nbsp;(make-zero-crossings&nbsp;input-stream&nbsp;last-value)<br>
+&nbsp;&nbsp;(let&nbsp;((avpt&nbsp;(/&nbsp;(+&nbsp;(stream-car&nbsp;input-stream)&nbsp;last-value)&nbsp;2)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;(sign-change-detector&nbsp;avpt&nbsp;last-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-zero-crossings&nbsp;(stream-cdr&nbsp;input-stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;avpt))))<br>
+</tt><p><p>
+This does not correctly implement Alyssa's plan.
+Find the bug that Louis has installed
+and fix it without changing the structure of the program.  (Hint: You
+will need to increase the number of arguments to <tt>make-zero-crossings</tt>.)
+
+<p>
+<p><a name="%_thm_3.76"></a>
+<b>Exercise 3.76.</b>&nbsp;&nbsp;<a name="%_idx_4046"></a><a name="%_idx_4048"></a><a name="%_idx_4050"></a><a name="%_idx_4052"></a>Eva Lu Ator has a criticism of Louis's approach in
+exercise&nbsp;<a href="#%_thm_3.75">3.75</a>.  The program he wrote is not modular,
+because it intermixes the operation of smoothing with the
+zero-crossing extraction.  For example, the extractor should not have
+to be changed if Alyssa finds a better way to condition her input
+signal.  Help Louis by writing a procedure <tt>smooth</tt> that takes a
+stream as input and produces a stream in which each element is the
+average of two successive input stream elements.  Then use <tt>smooth</tt> as a component to implement the zero-crossing detector in a
+more modular style.
+<p>
+<a name="%_sec_3.5.4"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.5.4">3.5.4&nbsp;&nbsp;Streams and Delayed Evaluation</a></h3><p>
+
+
+<a name="%_idx_4054"></a><a name="%_idx_4056"></a>
+The <tt>integral</tt> procedure at the end of the preceding section shows
+how we can use streams to model signal-processing systems that contain
+<a name="%_idx_4058"></a>feedback loops.  The feedback loop for the adder shown in
+figure&nbsp;<a href="#%_fig_3.32">3.32</a> is modeled by the fact that <tt>integral</tt>'s
+<a name="%_idx_4060"></a>internal stream <tt>int</tt> is defined in terms of itself:<p>
+
+<p><p><tt>(define&nbsp;int<br>
+&nbsp;&nbsp;(cons-stream&nbsp;initial-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-streams&nbsp;(scale-stream&nbsp;integrand&nbsp;dt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int)))<br>
+</tt><p><p>
+The interpreter's ability to deal with such an implicit definition
+depends on the <tt>delay</tt> that is incorporated into <tt>cons-stream</tt>.  Without this <tt>delay</tt>, the interpreter could not
+construct <tt>int</tt> before evaluating both arguments to <tt>cons-stream</tt>, which would require that <tt>int</tt> already be defined.
+In general, <tt>delay</tt> is crucial for using streams to model
+signal-processing systems that contain loops.  Without <tt>delay</tt>,
+our models would have to be formulated so that the inputs to any
+signal-processing component would be fully evaluated before the output
+could be produced.  This would outlaw loops.<p>
+
+Unfortunately, stream models of systems with loops
+may require uses of <tt>delay</tt> beyond the ``hidden'' <tt>delay</tt>
+supplied by <tt>cons-stream</tt>.  For instance,
+figure&nbsp;<a href="#%_fig_3.34">3.34</a> shows a signal-processing system for
+solving the <a name="%_idx_4062"></a>differential equation <em>d</em><em>y</em>/<em>d</em><em>t</em> = <em>f</em>(<em>y</em>) where <em>f</em> is a given
+function.  The figure shows a mapping component, which
+applies <em>f</em> to its input signal, linked in a feedback loop to an
+integrator in a manner very similar to that of the analog computer
+circuits that are actually used to solve such equations.<p>
+
+<a name="%_fig_3.34"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-52.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.34:</b>&nbsp;&nbsp;An ``analog computer circuit'' that solves the
+equation
+<em>d</em><em>y</em>/<em>d</em><em>t</em> = <em>f</em>(<em>y</em>).</div></caption><tr><td>
+<a name="%_idx_4064"></a>
+</td></tr></table></div><p><p>
+
+Assuming we are given an initial value <em>y</em><sub>0</sub> for <em>y</em>, we
+could try to model this system using the procedure<p>
+
+<p><p><tt><a name="%_idx_4066"></a>(define&nbsp;(solve&nbsp;f&nbsp;y0&nbsp;dt)<br>
+&nbsp;&nbsp;(define&nbsp;y&nbsp;(integral&nbsp;dy&nbsp;y0&nbsp;dt))<br>
+&nbsp;&nbsp;(define&nbsp;dy&nbsp;(stream-map&nbsp;f&nbsp;y))<br>
+&nbsp;&nbsp;y)<br>
+</tt><p><p>
+This procedure does not work, because in the first line of <tt>solve</tt>
+the call to <tt>integral</tt> requires that the input <tt>dy</tt> be
+defined, which does not happen until the second line of <tt>solve</tt>.<p>
+
+On the other hand, the intent of our definition does make sense,
+because we can, in principle, begin to generate the <tt>y</tt> stream
+without knowing <tt>dy</tt>.  Indeed, <tt>integral</tt> and many other
+stream operations have properties similar to those of <tt>cons-stream</tt>, in that we can generate part of the answer given only
+partial information about the arguments.  For <tt>integral</tt>, the
+first element of the output stream is the specified <tt>initial-value</tt>.  Thus, we can generate the first element of the output
+stream without evaluating the integrand <tt>dy</tt>.  Once we know the
+first element of <tt>y</tt>, the <tt>stream-map</tt> in the second line of
+<tt>solve</tt> can begin working to generate the first element of <tt>dy</tt>, which will produce the next element of <tt>y</tt>, and so on.<p>
+
+To take advantage of this idea, we will redefine <tt>integral</tt> to
+expect the integrand stream to be a <a name="%_idx_4068"></a><a name="%_idx_4070"></a><a name="%_idx_4072"></a><em>delayed argument</em>.  <tt>Integral</tt> will <tt>force</tt> the integrand to be evaluated only when it
+is required to generate more than the first element of the output stream:<p>
+
+<p><p><tt><a name="%_idx_4074"></a>(define&nbsp;(integral&nbsp;delayed-integrand&nbsp;initial-value&nbsp;dt)<br>
+&nbsp;&nbsp;(define&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream&nbsp;initial-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;((integrand&nbsp;(force&nbsp;delayed-integrand)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(add-streams&nbsp;(scale-stream&nbsp;integrand&nbsp;dt)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int))))<br>
+&nbsp;&nbsp;int)<br>
+</tt><p><p>
+Now we can implement our <tt>solve</tt> procedure by delaying the
+evaluation of <tt>dy</tt> in the definition of <tt>y</tt>:<a name="call_footnote_Temp_494" href="#footnote_Temp_494"><sup><small>71</small></sup></a><p>
+
+<p><p><tt><a name="%_idx_4076"></a>(define&nbsp;(solve&nbsp;f&nbsp;y0&nbsp;dt)<br>
+&nbsp;&nbsp;(define&nbsp;y&nbsp;(integral&nbsp;(delay&nbsp;dy)&nbsp;y0&nbsp;dt))<br>
+&nbsp;&nbsp;(define&nbsp;dy&nbsp;(stream-map&nbsp;f&nbsp;y))<br>
+&nbsp;&nbsp;y)<br>
+</tt><p><p>
+In general, every caller of <tt>integral</tt> must now <tt>delay</tt> the
+integrand argument.  We can demonstrate that the <tt>solve</tt> procedure
+works by approximating <a name="%_idx_4078"></a><em>e</em> <img src="book-Z-G-D-20.gif" border="0">  2.718 by computing the value at
+<em>y</em> = 1 of the solution to the differential equation <em>d</em><em>y</em>/<em>d</em><em>t</em> = <em>y</em> with
+initial condition <em>y</em>(0) = 1:<p>
+
+<p><p><tt>(stream-ref&nbsp;(solve&nbsp;(lambda&nbsp;(y)&nbsp;y)&nbsp;1&nbsp;0.001)&nbsp;1000)<br>
+<i>2.716924</i></tt><p><p><p>
+
+<p><a name="%_thm_3.77"></a>
+<b>Exercise 3.77.</b>&nbsp;&nbsp;The <tt>integral</tt> procedure used above was analogous to the
+``implicit'' definition of the infinite stream of integers in
+section&nbsp;<a href="#%_sec_3.5.2">3.5.2</a>.  Alternatively, we can give a
+definition of <tt>integral</tt> that is more like <tt>integers-starting-from</tt> (also in section&nbsp;<a href="#%_sec_3.5.2">3.5.2</a>):<p>
+
+<p><p><tt><a name="%_idx_4080"></a>(define&nbsp;(integral&nbsp;integrand&nbsp;initial-value&nbsp;dt)<br>
+&nbsp;&nbsp;(cons-stream&nbsp;initial-value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;(stream-null?&nbsp;integrand)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the-empty-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(integral&nbsp;(stream-cdr&nbsp;integrand)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(+&nbsp;(*&nbsp;dt&nbsp;(stream-car&nbsp;integrand))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initial-value)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dt))))<br>
+</tt><p><p>
+When used in systems with loops, this procedure has the same problem
+as does our original version of <tt>integral</tt>.  Modify the procedure
+so that it expects the <tt>integrand</tt> as a delayed argument and hence
+can be used in the <tt>solve</tt> procedure shown above.
+<p><p>
+
+<p><a name="%_thm_3.78"></a>
+<b>Exercise 3.78.</b>&nbsp;&nbsp;<a name="%_fig_3.35"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-53.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.35:</b>&nbsp;&nbsp;Signal-flow diagram for the solution to a second-order
+linear differential equation.</div></caption><tr><td>
+
+</td></tr></table></div><p>
+<a name="%_idx_4082"></a>Consider the problem of designing a signal-processing system to study
+the homogeneous second-order linear differential equation
+<p><div align=left><img src="ch3-Z-G-54.gif" border="0"></div><p>
+The output stream, modeling <em>y</em>, is generated by a network that
+contains a loop. This is because the value of <em>d</em><sup>2</sup><em>y</em>/<em>d</em><em>t</em><sup>2</sup> depends
+upon the values of <em>y</em> and <em>d</em><em>y</em>/<em>d</em><em>t</em> and both of these are determined by
+integrating <em>d</em><sup>2</sup><em>y</em>/<em>d</em><em>t</em><sup>2</sup>.  The diagram we would like to encode is
+shown in figure&nbsp;<a href="#%_fig_3.35">3.35</a>.  Write a procedure <tt>solve-2nd</tt> that
+takes as arguments the constants <em>a</em>, <em>b</em>, and <em>d</em><em>t</em> and the initial
+values <em>y</em><sub>0</sub> and <em>d</em><em>y</em><sub>0</sub> for <em>y</em> and <em>d</em><em>y</em>/<em>d</em><em>t</em> and generates the
+stream of successive values of <em>y</em>.
+
+<p><p>
+
+<p><a name="%_thm_3.79"></a>
+<b>Exercise 3.79.</b>&nbsp;&nbsp;<a name="%_idx_4084"></a>Generalize the <tt>solve-2nd</tt> procedure of exercise&nbsp;<a href="#%_thm_3.78">3.78</a> so
+that it can be used to solve general second-order differential
+equations <em>d</em><sup>2</sup> <em>y</em>/<em>d</em><em>t</em><sup>2</sup> = <em>f</em>(<em>d</em><em>y</em>/<em>d</em><em>t</em>,  <em>y</em>).
+<p><p>
+
+<p><a name="%_thm_3.80"></a>
+<b>Exercise 3.80.</b>&nbsp;&nbsp;<a name="%_idx_4086"></a><a name="%_idx_4088"></a><a name="%_idx_4090"></a>A <em>series RLC circuit</em> consists of a resistor, a capacitor, and an
+inductor connected in series, as shown in figure&nbsp;<a href="#%_fig_3.36">3.36</a>.
+If <em>R</em>, <em>L</em>, and <em>C</em> are the resistance, inductance, and capacitance,
+then the relations between voltage (<em>v</em>) and current (<em>i</em>)
+for the three components are described by the equations
+<p><div align=left><img src="ch3-Z-G-55.gif" border="0"></div><p>
+<p>
+
+and the circuit connections dictate the relations
+<p><div align=left><img src="ch3-Z-G-56.gif" border="0"></div><p>
+Combining these equations shows that the state of the circuit
+(summarized by <em>v</em><sub><em>C</em></sub>, the voltage across the capacitor, and <em>i</em><sub><em>L</em></sub>, the
+current in the inductor)
+is described by the pair of differential equations
+<p><div align=left><img src="ch3-Z-G-57.gif" border="0"></div><p>
+The signal-flow diagram representing this system of differential
+equations is shown in figure&nbsp;<a href="#%_fig_3.37">3.37</a>.
+<a name="%_fig_3.36"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-58.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.36:</b>&nbsp;&nbsp;A series RLC circuit.</div></caption><tr><td>
+
+</td></tr></table></div><p>
+<a name="%_fig_3.37"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-59.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.37:</b>&nbsp;&nbsp;A signal-flow diagram for the solution
+to a series RLC circuit.</div></caption><tr><td>
+
+</td></tr></table></div><p><p>
+
+Write a procedure <tt>RLC</tt> that takes as arguments the parameters
+<em>R</em>, <em>L</em>, and <em>C</em> of the circuit and the time increment <em>d</em><em>t</em>.  In a
+manner similar to that of the <tt>RC</tt> procedure of
+exercise&nbsp;<a href="#%_thm_3.73">3.73</a>, <tt>RLC</tt> should produce a procedure
+that takes the initial values of the state variables, <em>v</em><sub><em>C</em><sub>0</sub></sub> and
+<em>i</em><sub><em>L</em><sub>0</sub></sub>, and produces a pair (using <tt>cons</tt>) of the streams of
+states <em>v</em><sub><em>C</em></sub> and <em>i</em><sub><em>L</em></sub>.  Using <tt>RLC</tt>, generate the pair of
+streams that models the behavior of a series RLC circuit with <em>R</em>  =  1
+ohm, <em>C</em> =  0.2 farad, <em>L</em>  =  1 henry, <em>d</em><em>t</em>  =  0.1 second, and initial
+values <em>i</em><sub><em>L</em><sub>0</sub></sub>  =  0 amps and <em>v</em><sub><em>C</em><sub>0</sub></sub>  =  10 volts.
+<p>
+<p>
+
+<a name="%_sec_Temp_499"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_499">Normal-order evaluation</a></h4><p>
+
+<a name="%_idx_4092"></a><a name="%_idx_4094"></a>
+The examples in this section illustrate how the explicit use of <tt>delay</tt> and <tt>force</tt> provides great programming flexibility, but the
+same examples also show how this can make our programs more complex.
+Our new <tt>integral</tt> procedure, for instance, gives us the power to
+model systems with loops, but we must now remember that <tt>integral</tt>
+should be called with a delayed integrand, and every procedure that
+uses <tt>integral</tt> must be aware of this.  In effect, we have created
+two classes of procedures: ordinary procedures and procedures that
+take delayed arguments.  In general, creating separate classes of
+procedures forces us to create separate classes of higher-order
+procedures as well.<a name="call_footnote_Temp_500" href="#footnote_Temp_500"><sup><small>72</small></sup></a><p>
+
+One way to avoid the need for two different classes of procedures is
+to make all procedures take delayed arguments.  We could adopt a model
+of evaluation in which all arguments to procedures are automatically
+delayed and arguments are forced only when they are actually needed
+(for example, when they are required by a primitive operation).  This
+would transform our language to use normal-order evaluation, which we
+first described when we introduced the substitution model for
+evaluation in section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>.  Converting to
+normal-order evaluation provides a uniform and elegant way to simplify
+the use of delayed evaluation, and this would be a natural strategy to
+adopt if we were concerned only with stream processing.  In
+section&nbsp;<a href="book-Z-H-27.html#%_sec_4.2">4.2</a>, after we have studied the evaluator, we
+will see how to transform our language in just this way.
+Unfortunately, including delays in procedure calls wreaks havoc with
+our ability to design programs that depend on the order of events,
+such as programs that use assignment, mutate data, or perform input or
+output.  Even the single <tt>delay</tt> in <tt>cons-stream</tt> can cause
+great confusion, as illustrated by exercises&nbsp;<a href="#%_thm_3.51">3.51</a>
+and&nbsp;<a href="#%_thm_3.52">3.52</a>.  As far as anyone knows, mutability and delayed
+evaluation do not mix well in programming languages, and devising ways
+to deal with both of these at once is an active area of research.
+
+<a name="%_sec_3.5.5"></a>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.5.5">3.5.5&nbsp;&nbsp;Modularity of Functional Programs and Modularity of Objects</a></h3><p>
+
+
+<a name="%_idx_4116"></a><a name="%_idx_4118"></a>
+As we saw in section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.2">3.1.2</a>, one of the
+major benefits of introducing assignment is that we can increase the
+modularity of our systems by encapsulating, or ``hiding,'' parts of
+the state of a large system within local variables.  Stream models can
+provide an equivalent modularity without the use of assignment.  As an
+<a name="%_idx_4120"></a><a name="%_idx_4122"></a>illustration, we can reimplement the Monte Carlo estimation of <img src="book-Z-G-D-9.gif" border="0">,
+which we examined in section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.2">3.1.2</a>, from a
+stream-processing point of view.<p>
+
+
+The key modularity issue was that we wished to hide the internal state
+of a random-number generator from programs that used random numbers.
+We began with a procedure <tt>rand-update</tt>, whose successive values
+furnished our supply of random numbers, and used this to produce a
+random-number generator:<p>
+
+
+<p><p><tt>(define&nbsp;rand<br>
+&nbsp;&nbsp;(let&nbsp;((x&nbsp;random-init))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;()<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;x&nbsp;(rand-update&nbsp;x))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x)))<br>
+</tt><p><p><p>
+
+In the stream formulation there is no random-number generator <em>per
+se</em>, just a stream of random numbers produced by successive calls to
+<tt>rand-update</tt>:<p>
+
+
+<p><p><tt><a name="%_idx_4124"></a><a name="%_idx_4126"></a>(define&nbsp;random-numbers<br>
+&nbsp;&nbsp;(cons-stream&nbsp;random-init<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-map&nbsp;rand-update&nbsp;random-numbers)))<br>
+</tt><p><p>
+We use this to construct the stream of outcomes of the Ces&agrave;ro
+experiment performed on consecutive pairs in the <tt>random-numbers</tt>
+stream:<p>
+
+<p><p><tt><a name="%_idx_4128"></a>(define&nbsp;cesaro-stream<br>
+&nbsp;&nbsp;(map-successive-pairs&nbsp;(lambda&nbsp;(r1&nbsp;r2)&nbsp;(=&nbsp;(gcd&nbsp;r1&nbsp;r2)&nbsp;1))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;random-numbers))<br>
+<br>
+<a name="%_idx_4130"></a>(define&nbsp;(map-successive-pairs&nbsp;f&nbsp;s)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;(f&nbsp;(stream-car&nbsp;s)&nbsp;(stream-car&nbsp;(stream-cdr&nbsp;s)))<br>
+&nbsp;&nbsp;&nbsp;(map-successive-pairs&nbsp;f&nbsp;(stream-cdr&nbsp;(stream-cdr&nbsp;s)))))<br>
+</tt><p><p>
+The <tt>cesaro-stream</tt> is now fed to a <tt>monte-carlo</tt> procedure,
+which produces a stream of estimates of probabilities.  The results
+are then converted into a stream of estimates of <img src="book-Z-G-D-9.gif" border="0">.  This version
+of the program doesn't need a parameter telling how many trials to
+perform.  Better estimates of <img src="book-Z-G-D-9.gif" border="0"> (from performing more experiments)
+are obtained by looking farther into the <tt>pi</tt> stream:<p>
+
+<p><p><tt><a name="%_idx_4132"></a>(define&nbsp;(monte-carlo&nbsp;experiment-stream&nbsp;passed&nbsp;failed)<br>
+&nbsp;&nbsp;(define&nbsp;(next&nbsp;passed&nbsp;failed)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(/&nbsp;passed&nbsp;(+&nbsp;passed&nbsp;failed))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(monte-carlo<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;experiment-stream)&nbsp;passed&nbsp;failed)))<br>
+&nbsp;&nbsp;(if&nbsp;(stream-car&nbsp;experiment-stream)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(next&nbsp;(+&nbsp;passed&nbsp;1)&nbsp;failed)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(next&nbsp;passed&nbsp;(+&nbsp;failed&nbsp;1))))<br>
+<br>
+(define&nbsp;pi<br>
+&nbsp;&nbsp;(stream-map&nbsp;(lambda&nbsp;(p)&nbsp;(sqrt&nbsp;(/&nbsp;6&nbsp;p)))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(monte-carlo&nbsp;cesaro-stream&nbsp;0&nbsp;0)))<br>
+</tt><p><p>
+<a name="%_idx_4134"></a>There is considerable modularity in this approach, because we still
+can formulate a general <tt>monte-carlo</tt> procedure that can deal with
+arbitrary experiments.  Yet there is no assignment or local state.<p>
+
+<p><a name="%_thm_3.81"></a>
+<b>Exercise 3.81.</b>&nbsp;&nbsp;<a name="%_idx_4136"></a>Exercise&nbsp;<a href="book-Z-H-20.html#%_thm_3.6">3.6</a>
+discussed generalizing the random-number generator to
+allow one to reset the random-number sequence so as to produce
+repeatable sequences of ``random'' numbers.  Produce a stream
+formulation of this same generator that operates on an input stream of
+requests to <tt>generate</tt> a new random number or to <tt>reset</tt> the
+sequence to a specified value and that produces the desired stream of
+random numbers.  Don't use assignment in your solution.
+<p><p>
+
+<p><a name="%_thm_3.82"></a>
+<b>Exercise 3.82.</b>&nbsp;&nbsp;<a name="%_idx_4138"></a><a name="%_idx_4140"></a><a name="%_idx_4142"></a>Redo exercise&nbsp;<a href="book-Z-H-20.html#%_thm_3.5">3.5</a> on Monte Carlo
+integration in terms of streams.  The stream version of <tt>estimate-integral</tt> will not have an argument telling how many trials
+to perform.  Instead, it will produce a stream of estimates based on
+successively more trials.
+<p><p>
+
+<a name="%_sec_Temp_503"></a>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_503">A functional-programming view of time</a></h4><p>
+
+<a name="%_idx_4144"></a><a name="%_idx_4146"></a>
+Let us now return to the issues of objects and state that were raised
+at the beginning of this chapter and examine them in a new light.  We
+introduced assignment and mutable objects to provide a mechanism for
+modular construction of programs that model systems with state.
+We constructed computational
+objects with local state variables and used assignment to modify these
+variables.  We modeled the temporal behavior of the objects in the
+world by the temporal behavior of the corresponding computational
+objects.<p>
+
+Now we have seen that streams provide an alternative way to model
+objects with local state.  We can model a changing quantity, such as
+the local state of some object, using a stream that represents the
+time history of successive states.  In essence, we represent time
+explicitly, using streams, so that we decouple time in our simulated
+world from the sequence of events that take place during evaluation.
+Indeed, because of the presence of <tt>delay</tt> there may be little
+relation between simulated time in the model and the order of events
+during the evaluation.<p>
+
+In order to contrast these two approaches to modeling, let us
+reconsider the implementation of a ``withdrawal processor'' that
+<a name="%_idx_4148"></a>monitors the balance in a bank account.  In
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> we implemented a simplified
+version of such a processor:<p>
+
+<p><p><tt><a name="%_idx_4150"></a>(define&nbsp;(make-simplified-withdraw&nbsp;balance)<br>
+&nbsp;&nbsp;(lambda&nbsp;(amount)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;balance&nbsp;(-&nbsp;balance&nbsp;amount))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;balance))<br>
+</tt><p><p>
+Calls to <tt>make-simplified-withdraw</tt> produce computational objects,
+each with a local state variable <tt>balance</tt> that is decremented by
+successive calls to the object.  The object takes an <tt>amount</tt> as
+an argument and returns the new balance.  We can imagine the user of a
+bank account typing a sequence of inputs to such an object and
+observing the sequence of returned values shown on a display screen.<p>
+
+Alternatively, we can model a withdrawal processor as a procedure that
+takes as input a balance and a stream of amounts to withdraw and
+produces the stream of successive balances in the account:<p>
+
+<p><p><tt><a name="%_idx_4152"></a>(define&nbsp;(stream-withdraw&nbsp;balance&nbsp;amount-stream)<br>
+&nbsp;&nbsp;(cons-stream<br>
+&nbsp;&nbsp;&nbsp;balance<br>
+&nbsp;&nbsp;&nbsp;(stream-withdraw&nbsp;(-&nbsp;balance&nbsp;(stream-car&nbsp;amount-stream))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(stream-cdr&nbsp;amount-stream))))<br>
+</tt><p><p>
+<tt>Stream-withdraw</tt> implements a well-defined mathematical function whose
+output is fully determined by its input.  Suppose, however, that the
+input <tt>amount-stream</tt> is the stream of successive values typed by
+the user and that the resulting stream of balances is displayed.
+Then, from the perspective of the user who is typing values and
+watching results, the stream process has the same behavior as the
+object created by <tt>make-simplified-withdraw</tt>.  However, with the
+stream version, there is no assignment, no local state variable, and
+consequently none of the theoretical difficulties that we encountered
+<a name="%_idx_4154"></a>in section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>.  Yet the system has state!<p>
+
+This is really remarkable.  Even though <tt>stream-withdraw</tt> implements a
+well-defined mathematical function whose behavior does not change, the
+user's perception here is one of interacting with a system that has a
+changing state.  One way to resolve this paradox is to realize that it
+is the user's temporal existence that imposes state on the system.  If
+the user could step back from the interaction and think in terms of
+streams of balances rather than individual transactions, the system
+would appear stateless.<a name="call_footnote_Temp_504" href="#footnote_Temp_504"><sup><small>73</small></sup></a><p>
+
+From the point of view of one part of a complex process, the other
+parts appear to change with time.  They have hidden time-varying local
+state.  If we wish to write programs that model this kind of natural
+decomposition in our world (as we see it from our viewpoint as a part of
+that world) with
+structures in our computer, we make computational objects that are not
+functional -- they must change with time.  We model state with local
+state variables, and we model the changes of state with assignments to
+those variables.  By doing this we make the time of execution of a
+computation model time in the world that we are part of, and thus we
+get ``objects'' in our computer.<p>
+
+Modeling with objects is powerful and intuitive, largely because this
+matches the perception of interacting with a world of which we are
+part.  However, as we've seen repeatedly throughout this chapter,
+these models raise thorny problems of constraining the order of events
+and of synchronizing multiple processes.  The possibility of avoiding
+these problems has stimulated the development of <a name="%_idx_4158"></a><a name="%_idx_4160"></a><em>functional
+programming languages</em>, which do not include any provision for
+assignment or mutable data.  In such a language, all procedures
+implement well-defined mathematical functions of their arguments,
+whose behavior does not change.  The functional approach is extremely
+<a name="%_idx_4162"></a><a name="%_idx_4164"></a>attractive for dealing with concurrent systems.<a name="call_footnote_Temp_505" href="#footnote_Temp_505"><sup><small>74</small></sup></a><p>
+
+On the other hand, if we look closely, we can see time-related
+problems creeping into functional models as well.  One particularly
+troublesome area arises when we wish to design interactive systems,
+especially ones that model interactions between independent entities.
+For instance, consider once more the implementation a banking system
+that permits joint bank accounts.  In a conventional system using
+assignment and objects, we would model the fact that Peter and Paul
+share an account by having both Peter and Paul send their transaction
+requests to the same bank-account object, as we saw in
+section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>.
+From the stream point of view, where there are no ``objects'' <em>per
+se</em>, we have already indicated that a bank account can be modeled as a
+process that operates on a stream of transaction requests to produce a
+stream of responses.  Accordingly, we could model the fact that Peter
+and Paul have a joint bank account by merging Peter's stream of
+transaction requests with Paul's stream of requests and feeding the
+result to the bank-account stream process, as shown in
+figure&nbsp;<a href="#%_fig_3.38">3.38</a>.<p>
+
+<a name="%_fig_3.38"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-60.gif" border="0">
+</td></tr><caption align=bottom><div align=left><b>Figure 3.38:</b>&nbsp;&nbsp;A joint bank account, modeled by merging two streams of
+transaction requests.</div></caption><tr><td>
+
+<a name="%_idx_4176"></a></td></tr></table></div><p><p>
+
+<a name="%_idx_4178"></a>The trouble with this formulation is in the notion of <em>merge</em>.  It
+will not do to merge the two streams by simply taking alternately one
+request from Peter and one request from Paul. Suppose Paul accesses
+the account only very rarely.  We could hardly force Peter to wait for
+Paul to access the account before he could issue a second transaction.
+However such a merge is implemented, it must interleave the two
+transaction streams in some way that is constrained by ``real
+time'' as perceived by Peter and Paul, in the sense that, if Peter and
+Paul meet, they can agree that certain transactions were processed
+before the meeting, and other transactions were processed after the
+meeting.<a name="call_footnote_Temp_506" href="#footnote_Temp_506"><sup><small>75</small></sup></a>
+This is precisely the same constraint that we had to deal with in
+section&nbsp;<a href="book-Z-H-23.html#%_sec_3.4.1">3.4.1</a>, where we found the need to introduce
+explicit synchronization to ensure a ``correct'' order of events in
+concurrent processing of objects with state.  Thus, in an attempt to
+support the functional style, the need to merge inputs from different
+agents reintroduces the same problems that the functional style was
+meant to eliminate.<p>
+
+We began this chapter with the goal of building computational models
+whose structure matches our perception of the real world we are trying
+to model.  We can model the world as a collection of separate,
+time-bound, interacting objects with state, or we can model the world
+as a single, timeless, stateless unity.  Each view has powerful
+advantages, but neither view alone is completely satisfactory.  A
+grand unification has yet to emerge.<a name="call_footnote_Temp_507" href="#footnote_Temp_507"><sup><small>76</small></sup></a>
+<p>
+
+
+<p><div class=smallprint><hr></div><p>
+<div class=footnote><p><a name="footnote_Temp_442" href="#call_footnote_Temp_442"><sup><small>52</small></sup></a> Physicists sometimes adopt this view by introducing the
+<a name="%_idx_3728"></a>``world lines'' of particles as a device for reasoning about motion.
+We've also already mentioned
+(section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>) that this is the
+natural way to think about signal-processing systems.  We will explore
+applications of streams to signal processing in
+section&nbsp;<a href="#%_sec_3.5.3">3.5.3</a>.
+
+<p><a name="footnote_Temp_443" href="#call_footnote_Temp_443"><sup><small>53</small></sup></a> Assume that we have a
+predicate <tt>prime?</tt> (e.g., as in section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>) that
+tests for primality.
+
+<p><a name="footnote_Temp_444" href="#call_footnote_Temp_444"><sup><small>54</small></sup></a> In the MIT implementation, <a name="%_idx_3752"></a><a name="%_idx_3754"></a><a name="%_idx_3756"></a><tt>the-empty-stream</tt> is the
+same as the empty list <tt>'()</tt>, and <tt>stream-null?</tt> is the same
+as <tt>null?</tt>.
+
+<p><a name="footnote_Temp_445" href="#call_footnote_Temp_445"><sup><small>55</small></sup></a> This should bother you.  The fact that we are defining such
+similar procedures for streams and lists indicates that we are missing some
+underlying abstraction.  Unfortunately, in order to exploit this
+abstraction, we will need to exert finer control over the process of
+evaluation than we can at present.  We will discuss this point further
+at the end of section&nbsp;<a href="#%_sec_3.5.4">3.5.4</a>.
+In section&nbsp;<a href="book-Z-H-27.html#%_sec_4.2">4.2</a>, we'll develop a framework that
+unifies lists and streams.
+
+<p><a name="footnote_Temp_446" href="#call_footnote_Temp_446"><sup><small>56</small></sup></a> Although <tt>stream-car</tt> and
+<a name="%_idx_3784"></a><a name="%_idx_3786"></a><tt>stream-cdr</tt> can be defined as procedures, <tt>cons-stream</tt> must
+be a special form.  If <tt>cons-stream</tt> were a procedure, then,
+according to our model of evaluation, evaluating <tt>(cons-stream
+&lt;<em>a</em>&gt; &lt;<em>b</em>&gt;)</tt> would automatically cause &lt;<em>b</em>&gt; to be evaluated, which is
+precisely what we do not want to happen.  For the same reason, <tt>delay</tt> must be a special form, though <tt>force</tt> can be an ordinary
+procedure.
+
+<p><a name="footnote_Temp_448" href="#call_footnote_Temp_448"><sup><small>57</small></sup></a> The numbers shown here do
+not really appear in the delayed expression.  What actually appears is
+the original expression, in an environment in which the variables are
+bound to the appropriate numbers.  For example, <tt>(+ low 1)</tt> with
+<tt>low</tt> bound to 10,000 actually appears where <tt>10001</tt> is
+shown.
+
+<p><a name="footnote_Temp_450" href="#call_footnote_Temp_450"><sup><small>58</small></sup></a> There are many
+possible implementations of streams other than the one described in
+this section.  Delayed evaluation, which is the key to making streams
+practical, was inherent in <a name="%_idx_3806"></a><a name="%_idx_3808"></a>Algol 60's <em>call-by-name</em>
+parameter-passing method.  The use of this mechanism to implement
+streams was first described by <a name="%_idx_3810"></a>Landin (1965).  Delayed evaluation for
+streams was introduced into Lisp by <a name="%_idx_3812"></a><a name="%_idx_3814"></a>Friedman and Wise (1976). In their
+implementation, <tt>cons</tt> always delays evaluating its arguments, so
+that lists automatically behave as streams.  The memoizing
+optimization is also known as <a name="%_idx_3816"></a><a name="%_idx_3818"></a><a name="%_idx_3820"></a><a name="%_idx_3822"></a><em>call-by-need</em>.  The Algol community
+would refer to our original delayed objects as <em>call-by-name
+thunks</em> and to the optimized versions as <em>call-by-need thunks</em>.
+
+<p><a name="footnote_Temp_453" href="#call_footnote_Temp_453"><sup><small>59</small></sup></a> Exercises such as&nbsp;<a href="#%_thm_3.51">3.51</a> and&nbsp;<a href="#%_thm_3.52">3.52</a>
+are valuable for testing our understanding of how <tt>delay</tt> works.
+On the other hand, intermixing delayed evaluation with printing -- and,
+even worse, with assignment -- is extremely confusing, and instructors
+of courses on computer languages have traditionally tormented their
+students with examination questions such as the ones in this section.
+Needless to say, writing programs that depend on such subtleties is
+<a name="%_idx_3828"></a>odious programming style.  Part of the power of stream processing is
+that it lets us ignore the order in which events actually happen in
+our programs.  Unfortunately, this is precisely what we cannot afford
+to do in the presence of assignment, which forces us to be concerned
+with time and change.
+
+<p><a name="footnote_Temp_455" href="#call_footnote_Temp_455"><sup><small>60</small></sup></a> Eratosthenes, a third-century <font size=-2>B</font>.<font size=-2>C</font>.
+<a name="%_idx_3846"></a><a name="%_idx_3848"></a>Alexandrian Greek philosopher, is famous for giving the first accurate
+estimate of the circumference of the Earth, which he computed by
+observing shadows cast at noon on the day of the summer solstice.
+Eratosthenes's sieve method, although ancient, has formed the basis
+for special-purpose hardware ``sieves'' that, until recently, were the
+most powerful tools in existence for locating large primes.  Since the
+70s, however, these methods have been superseded by outgrowths of the
+<a name="%_idx_3850"></a>probabilistic techniques discussed in section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>.
+
+<p><a name="footnote_Temp_456" href="#call_footnote_Temp_456"><sup><small>61</small></sup></a> We have named these figures after <a name="%_idx_3858"></a>Peter Henderson, who
+was the first person to show us diagrams of this sort as a way of
+thinking about stream processing.  Each solid line represents a stream
+of values being transmitted.  The dashed line from the <tt>car</tt> to
+the <tt>cons</tt> and the <tt>filter</tt> indicates that this is a single
+value rather than a stream.
+
+<p><a name="footnote_Temp_458" href="#call_footnote_Temp_458"><sup><small>62</small></sup></a> This uses the generalized version
+of <tt>stream-map</tt> from exercise&nbsp;<a href="#%_thm_3.50">3.50</a>.
+
+<p><a name="footnote_Temp_459" href="#call_footnote_Temp_459"><sup><small>63</small></sup></a> This last point is
+very subtle and relies on the fact that <em>p</em><sub><em>n</em>+1</sub> <u>&lt;</u> <em>p</em><sub><em>n</em></sub><sup>2</sup>.
+(Here, <em>p</em><sub><em>k</em></sub> denotes the <em>k</em>th prime.)  Estimates such as these are
+very difficult to establish.  The ancient proof by <a name="%_idx_3876"></a>Euclid that there
+are an infinite number of primes shows that <em>p</em><sub><em>n</em>+1</sub><u>&lt;</u> <em>p</em><sub>1</sub> <em>p</em><sub>2</sub> 
+<tt>&middot;&middot;&middot;</tt>   <em>p</em><sub><em>n</em></sub>  + 1, and no substantially better result was proved
+until 1851, when the Russian mathematician P. L. Chebyshev established
+<a name="%_idx_3878"></a><a name="%_idx_3880"></a><a name="%_idx_3882"></a><a name="%_idx_3884"></a>that <em>p</em><sub><em>n</em>+1</sub><u>&lt;</u> 2<em>p</em><sub><em>n</em></sub> for all <em>n</em>.  This result, originally
+conjectured in 1845, is known as <em>Bertrand's hypothesis</em>.  A proof
+can be found in section 22.3 of Hardy and Wright 1960.
+
+<p><a name="footnote_Temp_465" href="#call_footnote_Temp_465"><sup><small>64</small></sup></a> This exercise shows how call-by-need is closely related to
+<a name="%_idx_3902"></a><a name="%_idx_3904"></a>ordinary memoization as described in exercise&nbsp;<a href="book-Z-H-22.html#%_thm_3.27">3.27</a>.
+In that exercise, we used assignment to explicitly construct a local
+table.  Our call-by-need stream optimization effectively constructs
+such a table automatically, storing values in the previously forced
+parts of the stream.
+
+<p><a name="footnote_Temp_472" href="#call_footnote_Temp_472"><sup><small>65</small></sup></a> We can't use <tt>let</tt> to bind the local variable
+<tt>guesses</tt>, because the value of <tt>guesses</tt> depends on <tt>guesses</tt> itself.  Exercise&nbsp;<a href="#%_thm_3.63">3.63</a> addresses why
+we want a local variable here.
+
+<p><a name="footnote_Temp_477" href="#call_footnote_Temp_477"><sup><small>66</small></sup></a> As in section&nbsp;<a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a>,
+we represent a pair of integers as a list rather than a Lisp pair.
+
+<p><a name="footnote_Temp_478" href="#call_footnote_Temp_478"><sup><small>67</small></sup></a> See exercise&nbsp;<a href="#%_thm_3.68">3.68</a> for some insight
+into why we chose this decomposition.
+
+<p><a name="footnote_Temp_479" href="#call_footnote_Temp_479"><sup><small>68</small></sup></a> The precise statement of the
+required property on the order of combination is as follows: There
+should be a function <em>f</em> of two arguments such that the pair
+corresponding to element&nbsp;<em>i</em> of the first stream and element&nbsp;<em>j</em> of
+the second stream will appear as element number <em>f</em>(<em>i</em>,<em>j</em>) of the output
+stream.  The trick of using <tt>interleave</tt> to accomplish this was
+shown to us by <a name="%_idx_3996"></a>David Turner, who employed it in the language <a name="%_idx_3998"></a>KRC
+(Turner 1981).
+
+<p><a name="footnote_Temp_485" href="#call_footnote_Temp_485"><sup><small>69</small></sup></a> We will require that the weighting function be such that
+the weight of a pair increases as we move out along a row or down
+along a column of the array of pairs.
+
+<p><a name="footnote_Temp_487" href="#call_footnote_Temp_487"><sup><small>70</small></sup></a> To quote from G. H. Hardy's obituary of
+<a name="%_idx_4012"></a><a name="%_idx_4014"></a><a name="%_idx_4016"></a>Ramanujan (Hardy 1921): ``It was Mr. Littlewood (I believe) who remarked that
+`every positive integer was one of his friends.'  I remember once
+going to see him when he was lying ill at Putney.  I had ridden in
+taxi-cab No. 1729, and remarked that the number seemed to me a rather
+dull one, and that I hoped it was not an unfavorable omen.  `No,' he
+replied, `it is a very interesting number; it is the smallest number
+expressible as the sum of two cubes in two different ways.' ''
+The trick of using weighted pairs to generate the Ramanujan numbers
+was shown to us by Charles Leiserson.
+
+<p><a name="footnote_Temp_494" href="#call_footnote_Temp_494"><sup><small>71</small></sup></a> This procedure is not guaranteed to work in all Scheme
+implementations, although for any implementation there is a simple
+variation that will work.  The problem has to do with subtle
+differences in the ways that Scheme implementations handle internal
+definitions.  (See section&nbsp;<a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a>.)
+
+<p><a name="footnote_Temp_500" href="#call_footnote_Temp_500"><sup><small>72</small></sup></a> This is a small reflection, in Lisp, of the difficulties
+that conventional strongly typed languages such as <a name="%_idx_4096"></a><a name="%_idx_4098"></a><a name="%_idx_4100"></a><a name="%_idx_4102"></a><a name="%_idx_4104"></a>Pascal have in
+coping with higher-order procedures.  In such languages, the
+programmer must specify the data types of the arguments and the result
+of each procedure: number, logical value, sequence, and so on.
+Consequently, we could not express an abstraction such as ``map a
+given procedure <tt>proc</tt> over all the elements in a sequence'' by a
+single higher-order procedure such as <tt>stream-map</tt>.  Rather, we
+would need a different mapping procedure for each different
+combination of argument and result data types that might be specified
+for a <tt>proc</tt>.  Maintaining a practical notion of ``data type'' in
+the presence of higher-order procedures raises many difficult issues.
+One way of dealing with this problem is illustrated by the language ML
+<a name="%_idx_4106"></a><a name="%_idx_4108"></a><a name="%_idx_4110"></a><a name="%_idx_4112"></a>(Gordon, Milner, and Wadsworth 1979), whose ``polymorphic data types''
+include templates for higher-order transformations between data types.
+Moreover, data types for most procedures in ML are never explicitly
+declared by the programmer.  Instead, ML includes a <a name="%_idx_4114"></a><em>type-inferencing</em> mechanism that uses information in the environment
+to deduce the data types for newly defined procedures.
+
+<p><a name="footnote_Temp_504" href="#call_footnote_Temp_504"><sup><small>73</small></sup></a> Similarly in physics, when we observe a moving particle, we
+say that the position (state) of the particle is changing.  However,
+from the perspective of the particle's <a name="%_idx_4156"></a>world line in space-time there
+is no change involved.
+
+<p><a name="footnote_Temp_505" href="#call_footnote_Temp_505"><sup><small>74</small></sup></a> John Backus, the inventor of Fortran, gave high
+<a name="%_idx_4166"></a><a name="%_idx_4168"></a><a name="%_idx_4170"></a><a name="%_idx_4172"></a><a name="%_idx_4174"></a>visibility to functional programming when he was awarded
+the ACM Turing award in 1978.  His acceptance speech (Backus 1978)
+strongly advocated the functional approach.  A good overview of
+functional programming is given in Henderson 1980 and in Darlington,
+Henderson, and Turner 1982.
+
+<p><a name="footnote_Temp_506" href="#call_footnote_Temp_506"><sup><small>75</small></sup></a> Observe that, for any two streams, there is in general more than one
+<a name="%_idx_4180"></a><a name="%_idx_4182"></a>acceptable order of interleaving.  Thus, technically, ``merge'' is a
+relation rather than a function -- the answer is not a deterministic
+function of the inputs.  We already mentioned
+(footnote&nbsp;<a href="book-Z-H-23.html#footnote_Temp_411">39</a>) that nondeterminism is
+essential when dealing with concurrency.  The merge relation
+illustrates the same essential nondeterminism, from the functional
+perspective.  In section&nbsp;<a href="book-Z-H-28.html#%_sec_4.3">4.3</a>, we
+will look at nondeterminism from yet another point of view.
+
+<p><a name="footnote_Temp_507" href="#call_footnote_Temp_507"><sup><small>76</small></sup></a> The object model approximates the world by
+dividing it into separate pieces.  The functional model does not
+modularize along object boundaries.  The object model is useful when
+<a name="%_idx_4184"></a>the unshared state of the ``objects'' is much larger than the state
+that they share.  An example of a place where the object viewpoint
+fails is <a name="%_idx_4186"></a>quantum
+mechanics, where thinking of things as individual particles leads to
+paradoxes and confusions.  Unifying the object view with the
+functional view may have little to do with programming, but rather
+with fundamental epistemological issues.
+
+</div>
+
+<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-23.html">previous</a></span><span>, <a href="book-Z-H-25.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
+</body>
+</html>
