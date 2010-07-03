@@ -583,7 +583,7 @@ explicitly expand <tt>let*</tt> in terms of non-derived expressions?
 </p><p></p><p>
 
 </p><p><a name="%_thm_4.8" id="%_thm_4.8"></a>
-<b>Exercise 4.8.</b>  <a name="%_idx_4414" id="%_idx_4414"></a><a name="%_idx_4416" id="%_idx_4416"></a><a name="%_idx_4418" id="%_idx_4418"></a><a name="%_idx_4420" id="%_idx_4420"></a>``Named <tt>let</tt>'' is a variant of <tt>let</tt> that has the form
+<b>Exercise 4.8.</b>  <a name="%_idx_4414" id="%_idx_4414"></a><a name="%_idx_4416" id="%_idx_4416"></a><a name="%_idx_4418" id="%_idx_4418"></a><a name="%_idx_4420" id="%_idx_4420"></a>“Named <tt>let</tt>” is a variant of <tt>let</tt> that has the form
 </p><p></p><p><tt>(let &lt;<em>var</em>&gt; &lt;<em>bindings</em>&gt; &lt;<em>body</em>&gt;)<br /></tt></p><p></p><p>
 The &lt;<em>bindings</em>&gt; and &lt;<em>body</em>&gt; are just as in ordinary <tt>let</tt>, except that &lt;<em>var</em>&gt; is bound within &lt;<em>body</em>&gt; to a
 procedure whose body is &lt;<em>body</em>&gt; and whose parameters are the
@@ -727,8 +727,8 @@ To look up a variable in an environment, we scan the list of variables
 in the first frame.  If we find the desired variable, we return
 the corresponding element in the list of values.  If we do not find
 the variable in the current frame, we search the enclosing environment,
-and so on.  If we reach the empty environment, we signal an ``unbound
-variable'' error.</p><p>
+and so on.  If we reach the empty environment, we signal an “unbound
+variable” error.</p><p>
 
 
 </p><p></p><p><tt><a name="%_idx_4480" id="%_idx_4480"></a>(define (lookup-variable-value var env)<br />
@@ -788,7 +788,7 @@ rest of the evaluator from the detailed choice of representation, we
 could change the environment representation if we wanted to.  (See
 exercise <a href="#%_thm_4.11">4.11</a>.)  In a
 production-quality Lisp system, the speed of the evaluator's
-environment operations -- especially that of variable lookup -- has a
+environment operations – especially that of variable lookup – has a
 major impact on the performance of the system.  The representation
 described here, although conceptually simple, is not efficient and
 would not ordinarily be used in a production system.<a name="call_footnote_Temp_545" href="#footnote_Temp_545" id="call_footnote_Temp_545"><sup><small>15</small></sup></a></p><p>
@@ -1016,7 +1016,7 @@ will both return 25.<a name="call_footnote_Temp_556" href="#footnote_Temp_556" i
 
 </p><p><a name="%_thm_4.15" id="%_thm_4.15"></a>
 <b>Exercise 4.15.</b>  <a name="%_idx_4588" id="%_idx_4588"></a>Given a one-argument procedure <tt>p</tt> and an object <tt>a</tt>, <tt>p</tt>
-is said to ``halt'' on <tt>a</tt> if evaluating the expression <tt>(p
+is said to “halt” on <tt>a</tt> if evaluating the expression <tt>(p
 a)</tt> returns a value (as opposed to terminating with an error message
 or running forever).  Show that it is impossible to write a procedure
 <tt>halts?</tt> that correctly determines whether <tt>p</tt> halts on <tt>a</tt> for any procedure <tt>p</tt> and object <tt>a</tt>.  Use the following
@@ -1066,8 +1066,8 @@ defined after <tt>even?</tt>.  The scope of the name <tt>odd?</tt> is the
 entire body of <tt>f</tt>, not just the portion of the body of <tt>f</tt>
 starting at the point where the <tt>define</tt> for <tt>odd?</tt> occurs.
 Indeed, when we consider that <tt>odd?</tt> is itself defined in terms of
-<tt>even?</tt> -- so that <tt>even?</tt> and <tt>odd?</tt> are mutually
-recursive procedures -- we see that the only satisfactory
+<tt>even?</tt> – so that <tt>even?</tt> and <tt>odd?</tt> are mutually
+recursive procedures – we see that the only satisfactory
 interpretation of the two <tt>define</tt>s is to regard them as if the
 names <tt>even?</tt> and <tt>odd?</tt> were being added to the environment
 simultaneously.
@@ -1076,7 +1076,7 @@ entire procedure body in which the <tt>define</tt> is evaluated.</p><p>
 
 
 As it happens, our interpreter will evaluate calls to <tt>f</tt>
-correctly, but for an ``accidental'' reason: Since the definitions of
+correctly, but for an “accidental” reason: Since the definitions of
 the internal procedures come first, no calls to these procedures will
 be evaluated until all of them have been defined.  Hence, <tt>odd?</tt>
 will have been defined by the time <tt>even?</tt> is executed.  In fact,
@@ -1090,11 +1090,11 @@ so that sequential definition isn't equivalent to simultaneous definition,
 see exercise <a href="#%_thm_4.19">4.19</a>.)<a name="call_footnote_Temp_559" href="#footnote_Temp_559" id="call_footnote_Temp_559"><sup><small>24</small></sup></a></p><p>
 
 There is, however, a simple way to treat definitions so that
-internally defined names have truly simultaneous scope -- just create
+internally defined names have truly simultaneous scope – just create
 all local variables that will be in the current environment before
 evaluating any of the value expressions.  One way to do this is by a
 syntax transformation on <tt>lambda</tt> expressions.  Before evaluating
-the body of a <tt>lambda</tt> expression, we <a name="%_idx_4606" id="%_idx_4606"></a><a name="%_idx_4608" id="%_idx_4608"></a>``scan out'' and eliminate
+the body of a <tt>lambda</tt> expression, we <a name="%_idx_4606" id="%_idx_4606"></a><a name="%_idx_4608" id="%_idx_4608"></a>“scan out” and eliminate
 all the internal definitions in the body.  The internally defined
 variables will be created with a <tt>let</tt> and then set to their
 values by assignment.  For example, the procedure</p><p>
@@ -1148,7 +1148,7 @@ how it will be structured if definitions are scanned out as described.
 Why is there an extra frame in the transformed program?  Explain why
 this difference in environment structure can never make a difference
 in the behavior of a correct program.  Design a way to make the
-interpreter implement the ``simultaneous'' scope rule for internal
+interpreter implement the “simultaneous” scope rule for internal
 definitions without constructing the extra frame.
 </p><p></p><p>
 
@@ -1545,8 +1545,8 @@ register machine.
 </p><p><a name="footnote_Temp_511" href="#call_footnote_Temp_511" id="footnote_Temp_511"><sup><small>4</small></sup></a> If we grant ourselves the ability to apply primitives,
 <a name="%_idx_4222" id="%_idx_4222"></a>then what remains for us to implement in the evaluator?  The job of
 the evaluator is not to specify the primitives of the language, but rather
-to provide the connective tissue -- the means of combination and the
-means of abstraction -- that binds a collection of primitives to form a
+to provide the connective tissue – the means of combination and the
+means of abstraction – that binds a collection of primitives to form a
 language.  Specifically:
 </p><p></p><ul><li>The evaluator enables us to deal with nested expressions.  For
 example, although simply applying primitives
@@ -1594,7 +1594,7 @@ solve it in section <a href="#%_sec_4.1.6">4.1.6</a>.
 
 </p><p><a name="footnote_Temp_524" href="#call_footnote_Temp_524" id="footnote_Temp_524"><sup><small>8</small></sup></a> As we said when we
 introduced <tt>define</tt> and <tt>set!</tt>, these values
-are implementation-dependent in Scheme -- that is, the implementor
+are implementation-dependent in Scheme – that is, the implementor
 can choose what value to return.
 
 </p><p><a name="footnote_Temp_526" href="#call_footnote_Temp_526" id="footnote_Temp_526"><sup><small>9</small></sup></a> As mentioned in
@@ -1612,8 +1612,8 @@ in expressions to be evaluated by binding them in the global
 environment.  See section <a href="#%_sec_4.1.4">4.1.4</a>.
 
 
-</p><p><a name="footnote_Temp_528" href="#call_footnote_Temp_528" id="footnote_Temp_528"><sup><small>11</small></sup></a> These selectors for a list of expressions -- and the
-corresponding ones for a list of operands -- are not intended as a data
+</p><p><a name="footnote_Temp_528" href="#call_footnote_Temp_528" id="footnote_Temp_528"><sup><small>11</small></sup></a> These selectors for a list of expressions – and the
+corresponding ones for a list of operands – are not intended as a data
 abstraction.  They are introduced as mnemonic names for the basic list
 operations in order to make it easier to understand the explicit-control
 evaluator in section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a>.
@@ -1683,22 +1683,22 @@ some other language, say C, the Lisp evaluator will emulate the C
 evaluator, which in turn can emulate any machine described as a C
 program.  Similarly, writing a Lisp evaluator in C produces a C
 program that can execute any Lisp program.  The deep idea here is that
-any evaluator can emulate any other.  Thus, the notion of ``what can
-in principle be computed'' (ignoring practicalities of time and
+any evaluator can emulate any other.  Thus, the notion of “what can
+in principle be computed” (ignoring practicalities of time and
 memory required) is independent of the language or the computer, and
 instead reflects an underlying notion of <a name="%_idx_4554" id="%_idx_4554"></a><em>computability</em>.  This
 was first demonstrated in a clear way by <a name="%_idx_4556" id="%_idx_4556"></a>Alan M. Turing (1912-1954),
 whose 1936 paper laid the foundations for theoretical <a name="%_idx_4558" id="%_idx_4558"></a>computer
 science.  In the paper, Turing presented a simple computational
-model -- now known as a <a name="%_idx_4560" id="%_idx_4560"></a><em>Turing machine</em> -- and argued that any
-``effective process'' can be formulated as a program for such a
+model – now known as a <a name="%_idx_4560" id="%_idx_4560"></a><em>Turing machine</em> – and argued that any
+“effective process” can be formulated as a program for such a
 machine.  (This argument is known as the <a name="%_idx_4562" id="%_idx_4562"></a><em>Church-Turing thesis</em>.)
 Turing then implemented a universal machine, i.e., a Turing machine
 that behaves as an evaluator for Turing-machine programs.  He used
 this framework to demonstrate that there are well-posed problems that
 cannot be computed by Turing machines (see
 exercise <a href="#%_thm_4.15">4.15</a>), and so by implication cannot be
-formulated as ``effective processes.''  Turing went on to make
+formulated as “effective processes.”  Turing went on to make
 fundamental contributions to practical computer science as well.  For
 example, he invented the idea of <a name="%_idx_4564" id="%_idx_4564"></a>structuring programs using
 general-purpose subroutines.  See <a name="%_idx_4566" id="%_idx_4566"></a>Hodges 1983 for a biography of
@@ -1739,14 +1739,14 @@ well-posed task that cannot be carried out as a computational
 procedure.
 
 </p><p><a name="footnote_Temp_559" href="#call_footnote_Temp_559" id="footnote_Temp_559"><sup><small>24</small></sup></a> Wanting programs to not depend on this evaluation
-mechanism is the reason for the ``management is not
-responsible'' remark in footnote <a href="book-Z-H-10.html#footnote_Temp_45">28</a> of chapter 1.
+mechanism is the reason for the “management is not
+responsible” remark in footnote <a href="book-Z-H-10.html#footnote_Temp_45">28</a> of chapter 1.
 By insisting that internal definitions come first and do not use each
 other while the definitions are being evaluated, the IEEE standard
 for Scheme leaves implementors some choice in the mechanism used to
 evaluate these definitions.  The choice of one evaluation rule rather
 than another here may seem like a small issue, affecting only the
-interpretation of ``badly formed'' programs.  However, we will see in
+interpretation of “badly formed” programs.  However, we will see in
 section <a href="book-Z-H-35.html#%_sec_5.5.6">5.5.6</a> that moving to a model of
 simultaneous scoping for internal definitions avoids some nasty
 difficulties that would otherwise arise in implementing a compiler.
@@ -1759,7 +1759,7 @@ implementation to enforce it.  Some Scheme implementations, including
 that don't obey this restriction will in fact run in such implementations.
 
 </p><p><a name="footnote_Temp_565" href="#call_footnote_Temp_565" id="footnote_Temp_565"><sup><small>26</small></sup></a> The MIT implementors of Scheme support Alyssa on
-the following grounds: Eva is in principle correct -- the definitions
+the following grounds: Eva is in principle correct – the definitions
 should be regarded as simultaneous.  But it seems difficult to
 implement a general, efficient mechanism that does what Eva requires.
 In the absence of such a mechanism, it is better to generate an error
@@ -1769,7 +1769,7 @@ than to produce an incorrect answer (as Ben would have it).
 </p><p><a name="footnote_Temp_568" href="#call_footnote_Temp_568" id="footnote_Temp_568"><sup><small>27</small></sup></a> This example illustrates a programming trick for
 formulating recursive procedures without using <tt>define</tt>.  The
 <a name="%_idx_4628" id="%_idx_4628"></a>most general trick of this sort is the <em>Y</em> <em>operator</em>, which can
-be used to give a ``pure λ-calculus'' implementation of
+be used to give a “pure λ-calculus” implementation of
 <a name="%_idx_4630" id="%_idx_4630"></a><a name="%_idx_4632" id="%_idx_4632"></a>recursion.  (See Stoy 1977 for details on the lambda calculus, and
 Gabriel 1988 for an exposition of the <em>Y</em> operator in Scheme.)
 

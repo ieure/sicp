@@ -19,9 +19,9 @@
 <a name="%_idx_2836" id="%_idx_2836"></a><a name="%_idx_2838" id="%_idx_2838"></a>
 We ordinarily view the world as populated by independent objects, each
 of which has a state that changes over time.  An object is said to
-``have state'' if its behavior is influenced by its history.  A bank
+“have state” if its behavior is influenced by its history.  A bank
 account, for example, has state in that the answer to the question
-``Can I withdraw $100?''  depends upon the history of deposit and
+“Can I withdraw $100?”  depends upon the history of deposit and
 withdrawal transactions.  We can characterize an object's state by one
 or more <a name="%_idx_2840" id="%_idx_2840"></a><em>state variables</em>, which among them maintain enough
 information about history to determine the object's current behavior.
@@ -137,8 +137,8 @@ What we have done here is use <tt>let</tt> to establish an environment
 with a local variable <tt>balance</tt>, bound to the initial value 100.
 Within this local environment, we use <tt>lambda</tt> to create a
 procedure that takes <tt>amount</tt> as an argument and behaves like our
-previous <tt>withdraw</tt> procedure.  This procedure -- returned as the
-result of evaluating the <tt>let</tt> expression -- is <tt>new-withdraw</tt>,
+previous <tt>withdraw</tt> procedure.  This procedure – returned as the
+result of evaluating the <tt>let</tt> expression – is <tt>new-withdraw</tt>,
 which behaves in precisely the same way as <tt>withdraw</tt> but whose
 variable <tt>balance</tt> is not accessible by any other
 procedure.<a name="call_footnote_Temp_324" href="#footnote_Temp_324" id="call_footnote_Temp_324"><sup><small>4</small></sup></a></p><p>
@@ -164,8 +164,8 @@ together with an explanation of <tt>set!</tt> and local variables.
 First, however, we examine some variations on the theme established by
 <tt>new-withdraw</tt>.</p><p>
 
-The following procedure, <tt>make-withdraw</tt>, creates ``withdrawal
-processors.''  The formal parameter <tt>balance</tt> in <tt>make-withdraw</tt> specifies the initial amount of money in the
+The following procedure, <tt>make-withdraw</tt>, creates “withdrawal
+processors.”  The formal parameter <tt>balance</tt> in <tt>make-withdraw</tt> specifies the initial amount of money in the
 account.<a name="call_footnote_Temp_325" href="#footnote_Temp_325" id="call_footnote_Temp_325"><sup><small>5</small></sup></a></p><p>
 
 </p><p></p><p><tt><a name="%_idx_2894" id="%_idx_2894"></a>(define (make-withdraw balance)<br />
@@ -189,7 +189,7 @@ from one do not affect the other.</p><p>
 
 We can also create objects that handle deposits as well as
 withdrawals, and thus we can represent simple bank accounts.  Here is
-a procedure that returns a ``bank-account object'' with
+a procedure that returns a “bank-account object” with
 a specified initial balance:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_2896" id="%_idx_2896"></a><a name="%_idx_2898" id="%_idx_2898"></a>(define (make-account balance)<br />
@@ -210,7 +210,7 @@ a specified initial balance:</p><p>
 Each call to <tt>make-account</tt> sets up an environment with a local
 state variable <tt>balance</tt>.  Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt>
 that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt>
-that takes a ``message'' as input and returns one of the two local
+that takes a “message” as input and returns one of the two local
 procedures.  The <tt>dispatch</tt> procedure itself is returned as the
 value that represents the bank-account object.
 This is precisely the <a name="%_idx_2900" id="%_idx_2900"></a><em>message-passing</em>
@@ -299,7 +299,7 @@ powerful technique for maintaining a modular design.  As a simple
 example, consider the design of a procedure <tt>rand</tt> that, whenever
 it is called, returns an integer chosen at random.</p><p>
 
-<a name="%_idx_2922" id="%_idx_2922"></a>It is not at all clear what is meant by ``chosen at random.''  What we
+<a name="%_idx_2922" id="%_idx_2922"></a>It is not at all clear what is meant by “chosen at random.”  What we
 presumably want is for successive calls to <tt>rand</tt> to produce a
 sequence of numbers that has statistical properties of uniform
 distribution.  We will not discuss methods for generating suitable
@@ -485,7 +485,7 @@ that have local state.  However, this advantage comes at a price.  Our
 programming language can no longer be interpreted in terms of the
 substitution model of procedure application that we introduced in
 section <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>.  Moreover, no simple model with
-``nice'' mathematical properties can be an adequate framework for
+“nice” mathematical properties can be an adequate framework for
 dealing with objects and assignment in programming languages.</p><p>
 
 So long as we do not use assignments, two evaluations of the same
@@ -569,7 +569,7 @@ value of a variable can change, a variable can no longer be simply a
 name.  Now a variable somehow refers to a place where a value can be
 stored, and the value stored at this place can change.  In
 section <a href="book-Z-H-21.html#%_sec_3.2">3.2</a>
-we will see how environments play this role of ``place'' in our
+we will see how environments play this role of “place” in our
 computational model.
 </p><p>
 
@@ -581,7 +581,7 @@ The issue surfacing here is more profound than the mere breakdown of a
 particular model of computation.  As soon as we introduce change into
 our computational models, many notions that were previously
 straightforward become problematical.  Consider the concept of two
-things being ``the same.''</p><p>
+things being “the same.”</p><p>
 
 Suppose we call <tt>make-decrementer</tt> twice with the same argument to
 create two procedures:</p><p>
@@ -590,7 +590,7 @@ create two procedures:</p><p>
 (define D2 (make-decrementer 25))<br /></tt></p><p></p><p>
 Are <tt>D1</tt> and <tt>D2</tt> the same?  An acceptable answer is yes,
 because <tt>D1</tt> and <tt>D2</tt> have the same computational
-behavior -- each is a procedure that subtracts its input from 25.  In
+behavior – each is a procedure that subtracts its input from 25.  In
 fact, <tt>D1</tt> could be substituted for <tt>D2</tt> in any computation
 without changing the result.</p><p>
 
@@ -604,13 +604,13 @@ sequence of interactions:</p><p>
 </p><p></p><p><tt>(W1 20)<br /><i>5</i><br />
 (W1 20)<br /><i> - 15</i><br />
 (W2 20)<br /><i>5</i><br /></tt></p><p></p><p>
-Even though <tt>W1</tt> and <tt>W2</tt> are ``equal'' in the sense that they
+Even though <tt>W1</tt> and <tt>W2</tt> are “equal” in the sense that they
 are both created by evaluating the same expression, <tt>(make-simplified-withdraw 25)</tt>, it is not true that <tt>W1</tt> could be
 substituted for <tt>W2</tt> in any expression without changing the result
 of evaluating the expression.</p><p>
 
-A language that supports the concept that ``equals can be substituted
-for equals'' in an expresssion
+A language that supports the concept that “equals can be substituted
+for equals” in an expresssion
 without changing the value of the expression is said to be
 <a name="%_idx_2990" id="%_idx_2990"></a><a name="%_idx_2992" id="%_idx_2992"></a><a name="%_idx_2994" id="%_idx_2994"></a><em>referentially transparent</em>.  Referential transparency is violated
 when we include <tt>set!</tt> in our computer language.  This makes it
@@ -619,16 +619,16 @@ equivalent expressions.  Consequently, reasoning about programs that
 use assignment becomes drastically more difficult.</p><p>
 
 Once we forgo referential transparency, the notion of what it means
-for computational objects to be ``the same'' becomes difficult to
-capture in a formal way.  Indeed, the meaning of ``same'' in the real
+for computational objects to be “the same” becomes difficult to
+capture in a formal way.  Indeed, the meaning of “same” in the real
 world that our programs model is hardly clear in itself.  In general,
 we can determine that two apparently identical objects are indeed
-``the same one'' only by modifying one object and then observing
+“the same one” only by modifying one object and then observing
 whether the other object has changed in the same way.  But how can we
-tell if an object has ``changed'' other than by observing the ``same''
+tell if an object has “changed” other than by observing the “same”
 object twice and seeing whether some property of the object differs
 from one observation to the next?  Thus, we cannot determine
-``change'' without some <em>a priori</em> notion of ``sameness,'' and we
+“change” without some <em>a priori</em> notion of “sameness,” and we
 cannot determine sameness without observing the effects of change.</p><p>
 
 <a name="%_idx_2996" id="%_idx_2996"></a>As an example of how this issue arises in programming, consider the
@@ -654,7 +654,7 @@ where <tt>paul-acc</tt> can be changed, we must remember to look also at
 things that change <tt>peter-acc</tt>.<a name="call_footnote_Temp_337" href="#footnote_Temp_337" id="call_footnote_Temp_337"><sup><small>10</small></sup></a></p><p>
 
 
-With reference to the above remarks on ``sameness'' and ``change,''
+With reference to the above remarks on “sameness” and “change,”
 observe that if Peter and Paul could only examine their bank balances,
 and could not perform operations that changed the balance, then the
 issue of whether the two accounts are distinct would be moot.  In
@@ -662,16 +662,16 @@ general, so long as we never modify data objects, we can regard a
 compound data object to be precisely the totality of its pieces.  For
 example, a rational number is determined by giving its numerator and
 its denominator.  But this view is no longer valid in the presence of
-change, where a compound data object has an ``identity'' that is
+change, where a compound data object has an “identity” that is
 something different from the pieces of which it is composed.  A bank
-account is still ``the same'' bank account even if we change the
+account is still “the same” bank account even if we change the
 balance by making a withdrawal; conversely, we could have two
 different bank accounts with the same state information.  This
 complication is a consequence, not of our programming language, but of
 our perception of a bank account as an object.  We do not, for
 example, ordinarily regard a rational number as a changeable object
 with identity, such that we could change the numerator and still have
-``the same'' rational number.
+“the same” rational number.
 
 <a name="%_sec_Temp_338" id="%_sec_Temp_338"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_338">Pitfalls of imperative programming</a></h4><p>
@@ -791,7 +791,7 @@ single expression.
 system-design principle known as the <a name="%_idx_2890" id="%_idx_2890"></a><a name="%_idx_2892" id="%_idx_2892"></a><em>hiding principle</em>: One can
 make a system more modular and robust by protecting parts of the
 system from each other; that is, by providing information access only
-to those parts of the system that have a ``need to know.''
+to those parts of the system that have a “need to know.”
 
 </p><p><a name="footnote_Temp_325" href="#call_footnote_Temp_325" id="footnote_Temp_325"><sup><small>5</small></sup></a> In contrast with <tt>new-withdraw</tt> above, we do not
 have to use <tt>let</tt> to make <tt>balance</tt> a local variable, since
@@ -807,9 +807,9 @@ for generating sequences of random numbers and establishing their
 statistical properties.  Notice that the <tt>rand-update</tt> procedure
 computes a mathematical function: Given the same input twice, it
 produces the same output.  Therefore, the number sequence produced by
-<tt>rand-update</tt> certainly is not ``random,'' if by ``random'' we
+<tt>rand-update</tt> certainly is not “random,” if by “random” we
 insist that each number in the sequence is unrelated to the preceding
-number.  The relation between ``real randomness'' and so-called <a name="%_idx_2926" id="%_idx_2926"></a><em>pseudo-random</em> sequences, which are produced by well-determined
+number.  The relation between “real randomness” and so-called <a name="%_idx_2926" id="%_idx_2926"></a><em>pseudo-random</em> sequences, which are produced by well-determined
 computations and yet have suitable statistical properties, is a
 complex question involving difficult issues in mathematics and
 philosophy.  <a name="%_idx_2928" id="%_idx_2928"></a><a name="%_idx_2930" id="%_idx_2930"></a><a name="%_idx_2932" id="%_idx_2932"></a>Kolmogorov, Solomonoff, and Chaitin have made great
@@ -835,10 +835,10 @@ If we did substitute for it, we would get
 single computational object being accessed by more than one name is
 known as <a name="%_idx_2998" id="%_idx_2998"></a><em>aliasing</em>.  The joint bank account situation illustrates
 a very simple example of an alias.  In section <a href="book-Z-H-22.html#%_sec_3.3">3.3</a>
-we will see much more complex examples, such as ``distinct'' compound
+we will see much more complex examples, such as “distinct” compound
 data structures that share parts.  Bugs can occur in our programs if
-<a name="%_idx_3000" id="%_idx_3000"></a><a name="%_idx_3002" id="%_idx_3002"></a><a name="%_idx_3004" id="%_idx_3004"></a>we forget that a change to an object may also, as a ``side effect,''
-change a ``different'' object because the two ``different'' objects
+<a name="%_idx_3000" id="%_idx_3000"></a><a name="%_idx_3002" id="%_idx_3002"></a><a name="%_idx_3004" id="%_idx_3004"></a>we forget that a change to an object may also, as a “side effect,”
+change a “different” object because the two “different” objects
 are actually a single object appearing under different aliases.  These
 so-called <em>side-effect bugs</em> are so difficult to locate and to
 analyze that some people have proposed that programming languages be
@@ -853,7 +853,7 @@ programs that perform assignments.  (Steele (1977) <a name="%_idx_3024" id="%_id
 argument.)  Alternatively it may reflect a view that step-by-step
 assignment is easier for beginners to visualize than procedure call.
 Whatever the reason, it often saddles beginning programmers with
-``should I set this variable before or after that one'' concerns that can
+“should I set this variable before or after that one” concerns that can
 complicate programming and obscure the important ideas.
 
 </p></div>

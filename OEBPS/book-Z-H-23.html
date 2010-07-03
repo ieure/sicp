@@ -48,7 +48,7 @@ programming.</p><p>
 
 We can go further in structuring computational models to match our
 perception of the physical world.  Objects in the world do not change
-one at a time in sequence.  Rather we perceive them as acting <em>concurrently</em> -- all at once.  So it is often natural to model systems
+one at a time in sequence.  Rather we perceive them as acting <em>concurrently</em> – all at once.  So it is often natural to model systems
 as collections of computational processes that execute concurrently.
 Just as we can make our programs modular by organizing models in
 terms of objects with separate local state, it is often appropriate to
@@ -212,7 +212,7 @@ figure <a href="#%_fig_3.30">3.30</a>, the designer of the bank account
 system can safely allow Paul's deposit and Peter's withdrawal to
 happen concurrently, because the net result will be the same as if the
 two operations had happened sequentially.  Second, there may be more
-than one possible ``correct'' result produced by a concurrent program,
+than one possible “correct” result produced by a concurrent program,
 because we require only that the result be the same as for <em>some</em>
 sequential order.
 For example, suppose that Peter and Paul's joint account starts out
@@ -315,7 +315,7 @@ As an example of how this is used, consider</p><p>
 </p><p></p><p><tt>(define x 10)<br /><br />
 (parallel-execute (lambda () (set! x (* x x)))<br />
                   (lambda () (set! x (+ x 1))))<br /></tt></p><p></p><p>
-This creates two concurrent processes -- <em>P</em><sub>1</sub>, which sets <tt>x</tt> to
+This creates two concurrent processes – <em>P</em><sub>1</sub>, which sets <tt>x</tt> to
 <tt>x</tt> times <tt>x</tt>, and <em>P</em><sub>2</sub>, which increments <tt>x</tt>.  After
 execution is complete, <tt>x</tt> will be left with one of five possible
 values, depending on the interleaving of the events of <em>P</em><sub>1</sub> and
@@ -634,7 +634,7 @@ consider what happens when <tt>serialized-exchange</tt> is called.
 <a name="%_idx_3638" id="%_idx_3638"></a>
 We implement serializers in terms of a more primitive synchronization
 mechanism called a <a name="%_idx_3640" id="%_idx_3640"></a><em>mutex</em>.  A mutex is an object that supports
-two operations -- the mutex can be <a name="%_idx_3642" id="%_idx_3642"></a><em>acquired</em>, and the mutex can be
+two operations – the mutex can be <a name="%_idx_3642" id="%_idx_3642"></a><em>acquired</em>, and the mutex can be
 <a name="%_idx_3644" id="%_idx_3644"></a><em>released</em>.  Once a mutex has been acquired, no other acquire
 operations on that mutex may proceed until the mutex is released.<a name="call_footnote_Temp_428" href="#footnote_Temp_428" id="call_footnote_Temp_428"><sup><small>44</small></sup></a> In our implementation, each
 serializer has an associated mutex.  Given a procedure <tt>p</tt>, the
@@ -790,7 +790,7 @@ ordering of events when different processes access shared
 state, and we've seen how to achieve this control through judicious
 use of serializers.  But the problems of concurrency
 lie deeper than this, because, from a fundamental point of view, it's
-not always clear what is meant by ``shared state.''</p><p>
+not always clear what is meant by “shared state.”</p><p>
 
 Mechanisms such as <tt>test-and-set!</tt> require processes to examine a
 global shared flag at arbitrary times.  This is problematic and
@@ -808,20 +808,20 @@ instance, imagine a
 distributed banking system where individual branch banks maintain
 local values for bank balances and periodically compare these with
 values maintained by other branches.  In such a system the value of
-``the account balance'' would be undetermined, except right after
+“the account balance” would be undetermined, except right after
 synchronization.
 If Peter deposits money in an account he holds
 jointly with Paul, when should we say that the account balance has
-changed -- when the balance in the local branch changes, or not until
+changed – when the balance in the local branch changes, or not until
 after the synchronization?
 And if Paul accesses the account from a
 different branch, what are the reasonable constraints to place on the
-banking system such that the behavior is ``correct''?
+banking system such that the behavior is “correct”?
 The only thing that might matter for
 correctness is the behavior observed by Peter and Paul individually
-and the ``state'' of the account immediately after synchronization.
+and the “state” of the account immediately after synchronization.
 Questions about the
-``real'' account balance or the order of events between synchronizations
+“real” account balance or the order of events between synchronizations
 may be irrelevant or meaningless.<a name="call_footnote_Temp_440" href="#footnote_Temp_440" id="call_footnote_Temp_440"><sup><small>50</small></sup></a></p><p>
 
 
@@ -846,8 +846,8 @@ of a sequential instruction stream, while retaining the behavior of
 the sequential program.
 
 </p><p><a name="footnote_Temp_406" href="#call_footnote_Temp_406" id="footnote_Temp_406"><sup><small>35</small></sup></a> To quote some graffiti seen on a Cambridge
-<a name="%_idx_3586" id="%_idx_3586"></a>building wall: ``Time is a device that was invented to keep everything
-from happening at once.''
+<a name="%_idx_3586" id="%_idx_3586"></a>building wall: “Time is a device that was invented to keep everything
+from happening at once.”
 
 </p><p><a name="footnote_Temp_407" href="#call_footnote_Temp_407" id="footnote_Temp_407"><sup><small>36</small></sup></a> An even worse failure for this system
 could occur if the two <tt>set!</tt> operations attempt to change the
@@ -860,7 +860,7 @@ however, raises implementation challenges in the design of
 multiprocessing computers, where elaborate <a name="%_idx_3594" id="%_idx_3594"></a><em>cache-coherence</em>
 protocols are required to ensure that the various processors will
 maintain a consistent view of memory contents, despite the fact that
-data may be replicated (``cached'') among the different processors to
+data may be replicated (“cached”) among the different processors to
 increase the speed of memory access.
 
 </p><p><a name="footnote_Temp_409" href="#call_footnote_Temp_409" id="footnote_Temp_409"><sup><small>37</small></sup></a> The factorial program in
@@ -902,11 +902,11 @@ sufficient to guarantee this.  See exercise <a href="#%_thm_3.43">3.43</a>.
 deposits and withdrawals are no longer automatically serialized
 by the account.
 
-</p><p><a name="footnote_Temp_428" href="#call_footnote_Temp_428" id="footnote_Temp_428"><sup><small>44</small></sup></a> The term ``mutex'' is an abbreviation for <a name="%_idx_3646" id="%_idx_3646"></a><em>mutual
+</p><p><a name="footnote_Temp_428" href="#call_footnote_Temp_428" id="footnote_Temp_428"><sup><small>44</small></sup></a> The term “mutex” is an abbreviation for <a name="%_idx_3646" id="%_idx_3646"></a><em>mutual
 exclusion</em>.  The general problem of arranging a mechanism that permits
 concurrent processes to safely share resources is called the mutual
 exclusion problem.  Our mutex is a simple variant of the <a name="%_idx_3648" id="%_idx_3648"></a><em>semaphore</em> mechanism (see exercise <a href="#%_thm_3.47">3.47</a>), which was
-introduced in the <a name="%_idx_3650" id="%_idx_3650"></a>``THE'' Multiprogramming System developed at the
+introduced in the <a name="%_idx_3650" id="%_idx_3650"></a>“THE” Multiprogramming System developed at the
 <a name="%_idx_3652" id="%_idx_3652"></a>Technological University of Eindhoven and named for the university's
 initials in Dutch (Dijkstra 1968a).  The acquire and
 release operations were originally called <a name="%_idx_3654" id="%_idx_3654"></a><a name="%_idx_3656" id="%_idx_3656"></a><a name="%_idx_3658" id="%_idx_3658"></a>P and V, from the Dutch
@@ -918,7 +918,7 @@ handle a variety of concurrency problems.
 
 </p><p><a name="footnote_Temp_429" href="#call_footnote_Temp_429" id="footnote_Temp_429"><sup><small>45</small></sup></a> In most
 time-shared operating systems, processes that are <a name="%_idx_3664" id="%_idx_3664"></a>blocked by a mutex do
-<a name="%_idx_3666" id="%_idx_3666"></a>not waste time ``busy-waiting'' as above.  Instead, the system
+<a name="%_idx_3666" id="%_idx_3666"></a>not waste time “busy-waiting” as above.  Instead, the system
 schedules another process to run while the first is waiting, and the blocked
 process is awakened when the mutex becomes available.
 
@@ -935,8 +935,8 @@ model, <tt>test-and-set!</tt> can be implemented as follows:
 time-slicing interrupts while its procedure argument is being executed.
 
 </p><p><a name="footnote_Temp_431" href="#call_footnote_Temp_431" id="footnote_Temp_431"><sup><small>47</small></sup></a> There are many variants of such
-<a name="%_idx_3682" id="%_idx_3682"></a>instructions -- including test-and-set, test-and-clear, swap,
-compare-and-exchange, load-reserve, and store-conditional -- whose
+<a name="%_idx_3682" id="%_idx_3682"></a>instructions – including test-and-set, test-and-clear, swap,
+compare-and-exchange, load-reserve, and store-conditional – whose
 design must be carefully matched to the machine's processor-memory
 interface.
 One issue that arises here is to determine what happens
@@ -957,7 +957,7 @@ to death, because it is incapable of deciding which to go to first.
 
 </p><p><a name="footnote_Temp_435" href="#call_footnote_Temp_435" id="footnote_Temp_435"><sup><small>48</small></sup></a> The general technique for avoiding deadlock by numbering the
 <a name="%_idx_3700" id="%_idx_3700"></a>shared resources and acquiring them in order is due to <a name="%_idx_3702" id="%_idx_3702"></a><a name="%_idx_3704" id="%_idx_3704"></a><a name="%_idx_3706" id="%_idx_3706"></a>Havender
-(1968).  Situations where deadlock cannot be avoided require <em>deadlock-recovery</em> methods, which entail having processes ``back out''
+(1968).  Situations where deadlock cannot be avoided require <em>deadlock-recovery</em> methods, which entail having processes “back out”
 of the deadlocked state and try again.  Deadlock-recovery
 mechanisms are widely used in database management systems, a topic that
 is treated in detail in Gray and Reuter 1993.
@@ -965,7 +965,7 @@ is treated in detail in Gray and Reuter 1993.
 </p><p><a name="footnote_Temp_439" href="#call_footnote_Temp_439" id="footnote_Temp_439"><sup><small>49</small></sup></a> One such alternative to serialization is called <a name="%_idx_3710" id="%_idx_3710"></a><em>barrier
 synchronization</em>.  The programmer permits concurrent processes to
 execute as they please, but establishes certain synchronization points
-(``barriers'') through which no process can proceed until all the
+(“barriers”) through which no process can proceed until all the
 processes have reached the barrier.  Modern processors provide machine
 instructions that permit programmers to establish synchronization
 points at places where consistency is required.  The <a name="%_idx_3712" id="%_idx_3712"></a>PowerPC<sup><em>T</em><em>M</em></sup>, for example, includes for this purpose two instructions called
@@ -980,7 +980,7 @@ different countries.
 
 </p><p><a name="footnote_Temp_441" href="#call_footnote_Temp_441" id="footnote_Temp_441"><sup><small>51</small></sup></a> For distributed
 systems, this perspective was pursued by <a name="%_idx_3722" id="%_idx_3722"></a>Lamport (1978), who showed how
-to use communication to establish ``global clocks'' that can be used
+to use communication to establish “global clocks” that can be used
 to establish orderings on events in distributed systems.
 
 </p></div>

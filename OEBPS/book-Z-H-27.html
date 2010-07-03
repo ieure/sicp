@@ -14,7 +14,7 @@
 
 
 <a name="%_sec_4.2" id="%_sec_4.2"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_4.2">4.2  Variations on a Scheme -- Lazy Evaluation</a></h2><p>
+<h2><a href="book-Z-H-4.html#%_toc_%_sec_4.2">4.2  Variations on a Scheme – Lazy Evaluation</a></h2><p>
 
 
 <a name="%_idx_4666" id="%_idx_4666"></a><a name="%_idx_4668" id="%_idx_4668"></a>
@@ -456,7 +456,7 @@ to memoize or not, as appropriate.
 
 <a name="%_idx_4754" id="%_idx_4754"></a><a name="%_idx_4756" id="%_idx_4756"></a><a name="%_idx_4758" id="%_idx_4758"></a><a name="%_idx_4760" id="%_idx_4760"></a><a name="%_idx_4762" id="%_idx_4762"></a>
 <a name="%_idx_4764" id="%_idx_4764"></a><a name="%_idx_4766" id="%_idx_4766"></a><a name="%_idx_4768" id="%_idx_4768"></a><a name="%_idx_4770" id="%_idx_4770"></a>In section <a href="book-Z-H-24.html#%_sec_3.5.1">3.5.1</a>, we showed how to implement streams
-as delayed lists.  We introduced special forms <tt>delay</tt> and <tt>cons-stream</tt>, which allowed us to construct a ``promise'' to compute
+as delayed lists.  We introduced special forms <tt>delay</tt> and <tt>cons-stream</tt>, which allowed us to construct a “promise” to compute
 the <tt>cdr</tt> of a stream, without actually fulfilling that promise
 until later.  We could use this general technique of introducing
 special forms whenever we need more control over the evaluation process,
@@ -510,7 +510,7 @@ chapter 3:  The <tt>car</tt> of the list, as well as the <tt>cdr</tt>, is
 delayed.<a name="call_footnote_Temp_594" href="#footnote_Temp_594" id="call_footnote_Temp_594"><sup><small>41</small></sup></a>
 In fact, even accessing the <tt>car</tt> or <tt>cdr</tt> of a lazy
 pair need not force the value of a list element.  The value will be
-forced only when it is really needed -- e.g., for use as the
+forced only when it is really needed – e.g., for use as the
 argument of a primitive, or to be printed as an answer.</p><p>
 
 Lazy pairs also help with the problem that arose with streams in
@@ -536,7 +536,7 @@ section <a href="book-Z-H-24.html#%_sec_3.5.4">3.5.4</a>:</p><p>
 
 </p><p><a name="%_thm_4.32" id="%_thm_4.32"></a>
 <b>Exercise 4.32.</b>  Give some examples that illustrate the difference between the streams
-of chapter 3 and the ``lazier'' lazy lists described in this section.
+of chapter 3 and the “lazier” lazy lists described in this section.
 How can you take advantage of this extra laziness?
 </p><p></p><p>
 
@@ -545,7 +545,7 @@ How can you take advantage of this extra laziness?
 evaluating the expression
 </p><p></p><p><tt>(car '(a b c))<br /></tt></p><p></p><p>
 To his surprise, this produces an error.  After some thought, he
-realizes that the ``lists'' obtained by reading in quoted expressions
+realizes that the “lists” obtained by reading in quoted expressions
 are different from the lists manipulated by the new definitions of
 <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.  Modify the evaluator's
 treatment of quoted expressions so that quoted lists typed at the
@@ -563,32 +563,32 @@ to print them.
 </p><p></p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_575" href="#call_footnote_Temp_575" id="footnote_Temp_575"><sup><small>31</small></sup></a> Snarf: ``To grab, especially a large document or
+</p><div class="footnote"><p><a name="footnote_Temp_575" href="#call_footnote_Temp_575" id="footnote_Temp_575"><sup><small>31</small></sup></a> Snarf: “To grab, especially a large document or
 <a name="%_idx_4674" id="%_idx_4674"></a><a name="%_idx_4676" id="%_idx_4676"></a><a name="%_idx_4678" id="%_idx_4678"></a>file for the purpose of using it either with or without the owner's
-permission.''  Snarf down: ``To snarf, sometimes with the connotation
-of absorbing, processing, or understanding.''  (These definitions were
+permission.”  Snarf down: “To snarf, sometimes with the connotation
+of absorbing, processing, or understanding.”  (These definitions were
 snarfed from Steele et al. 1983.  See also Raymond 1993.)
 
-</p><p><a name="footnote_Temp_576" href="#call_footnote_Temp_576" id="footnote_Temp_576"><sup><small>32</small></sup></a> The difference between the ``lazy'' terminology and
-the ``normal-order'' terminology is somewhat fuzzy.  Generally, ``lazy''
-refers to the mechanisms of particular evaluators, while ``normal-order''
+</p><p><a name="footnote_Temp_576" href="#call_footnote_Temp_576" id="footnote_Temp_576"><sup><small>32</small></sup></a> The difference between the “lazy” terminology and
+the “normal-order” terminology is somewhat fuzzy.  Generally, “lazy”
+refers to the mechanisms of particular evaluators, while “normal-order”
 refers to the semantics of languages, independent of any particular
 evaluation strategy.  But this is not a hard-and-fast distinction, and
 the two terminologies are often used interchangeably.
 
-</p><p><a name="footnote_Temp_577" href="#call_footnote_Temp_577" id="footnote_Temp_577"><sup><small>33</small></sup></a> The ``strict'' versus ``non-strict'' terminology means essentially the
-same thing as ``applicative-order'' versus ``normal-order,'' except that
+</p><p><a name="footnote_Temp_577" href="#call_footnote_Temp_577" id="footnote_Temp_577"><sup><small>33</small></sup></a> The “strict” versus “non-strict” terminology means essentially the
+same thing as “applicative-order” versus “normal-order,” except that
 it refers to individual procedures and arguments rather than to the
 language as a whole.  At a conference on programming languages you
-might hear someone say, ``The normal-order language <a name="%_idx_4690" id="%_idx_4690"></a>Hassle has certain
+might hear someone say, “The normal-order language <a name="%_idx_4690" id="%_idx_4690"></a>Hassle has certain
 strict primitives.  Other procedures take their arguments by lazy
-evaluation.''
+evaluation.”
 
 </p><p><a name="footnote_Temp_580" href="#call_footnote_Temp_580" id="footnote_Temp_580"><sup><small>34</small></sup></a> The word <em>thunk</em> was invented by an informal
 <a name="%_idx_4698" id="%_idx_4698"></a><a name="%_idx_4700" id="%_idx_4700"></a><a name="%_idx_4702" id="%_idx_4702"></a>working group that was discussing the implementation of call-by-name
-in Algol 60.  They observed that most of the analysis of (``thinking
-about'') the expression could be done at compile time; thus, at run
-time, the expression would already have been ``thunk'' about (Ingerman
+in Algol 60.  They observed that most of the analysis of (“thinking
+about”) the expression could be done at compile time; thus, at run
+time, the expression would already have been “thunk” about (Ingerman
 et al. 1960).
 
 </p><p><a name="footnote_Temp_581" href="#call_footnote_Temp_581" id="footnote_Temp_581"><sup><small>35</small></sup></a> This is analogous to the use of <tt>force</tt>
@@ -643,7 +643,7 @@ exercises <a href="#%_thm_4.33">4.33</a> and <a href="#%_thm_4.34">4.34</a>.)
 
 </p><p><a name="footnote_Temp_594" href="#call_footnote_Temp_594" id="footnote_Temp_594"><sup><small>41</small></sup></a> This permits us to create delayed versions of more general kinds of
 <a name="%_idx_4792" id="%_idx_4792"></a>list structures, not just sequences.  Hughes 1990 discusses some
-<a name="%_idx_4794" id="%_idx_4794"></a><a name="%_idx_4796" id="%_idx_4796"></a>applications of ``lazy trees.''
+<a name="%_idx_4794" id="%_idx_4794"></a><a name="%_idx_4796" id="%_idx_4796"></a>applications of “lazy trees.”
 
 </p></div>
 

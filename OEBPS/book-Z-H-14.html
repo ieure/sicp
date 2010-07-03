@@ -31,10 +31,10 @@ enables us to isolate how a compound data object is used from the
 details of how it is constructed from more primitive data objects.</p><p>
 
 The basic idea of data abstraction is to structure the programs that
-are to use compound data objects so that they operate on <a name="%_idx_1282" id="%_idx_1282"></a><a name="%_idx_1284" id="%_idx_1284"></a>``abstract
-data.'' That is, our programs should use data in such a way as to make
+are to use compound data objects so that they operate on <a name="%_idx_1282" id="%_idx_1282"></a><a name="%_idx_1284" id="%_idx_1284"></a>“abstract
+data.” That is, our programs should use data in such a way as to make
 no assumptions about the data that are not strictly necessary for
-performing the task at hand.  At the same time, a <a name="%_idx_1286" id="%_idx_1286"></a><a name="%_idx_1288" id="%_idx_1288"></a>``concrete'' data
+performing the task at hand.  At the same time, a <a name="%_idx_1286" id="%_idx_1286"></a><a name="%_idx_1288" id="%_idx_1288"></a>“concrete” data
 representation is defined independent of the programs that use
 the data.  The interface between these two parts of our system will be
 a set of procedures, called <a name="%_idx_1290" id="%_idx_1290"></a><em>selectors</em> and <a name="%_idx_1292" id="%_idx_1292"></a><em>constructors</em>,
@@ -210,11 +210,11 @@ data.</p><p>
 We can envision the structure of the rational-number system as
 shown in figure <a href="#%_fig_2.1">2.1</a>.  The
 horizontal lines represent <em>abstraction barriers</em> that isolate
-different ``levels'' of the system.  At each level, the barrier
+different “levels” of the system.  At each level, the barrier
 separates the programs (above) that use the data abstraction from the
 programs (below) that implement the data abstraction.  Programs that
 use rational numbers manipulate them solely in terms of the procedures
-supplied ``for public use'' by the rational-number package: <tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, <tt>div-rat</tt>, and <tt>equal-rat?</tt>. These, in turn, are implemented solely in terms of the
+supplied “for public use” by the rational-number package: <tt>add-rat</tt>, <tt>sub-rat</tt>, <tt>mul-rat</tt>, <tt>div-rat</tt>, and <tt>equal-rat?</tt>. These, in turn, are implemented solely in terms of the
 <a name="%_idx_1382" id="%_idx_1382"></a><a name="%_idx_1384" id="%_idx_1384"></a>constructor and selectors <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>, which themselves are implemented in terms of pairs.  The
 details of how pairs are implemented are irrelevant to the rest of the
 rational-number package so long as pairs can be manipulated by the use
@@ -319,11 +319,11 @@ section <a href="#%_sec_2.1.1">2.1.1</a> by implementing the rational-number
 operations <tt>add-rat</tt>, <tt>sub-rat</tt>, and so on in terms of three
 unspecified procedures: <tt>make-rat</tt>, <tt>numer</tt>, and <tt>denom</tt>.
 At that point, we could think of the operations as being defined in
-terms of data objects -- numerators, denominators, and rational
-numbers -- whose behavior was specified by the latter three procedures.</p><p>
+terms of data objects – numerators, denominators, and rational
+numbers – whose behavior was specified by the latter three procedures.</p><p>
 
 But exactly what is meant by <em>data</em>?  It is not enough to say
-``whatever is implemented by the given selectors and constructors.''
+“whatever is implemented by the given selectors and constructors.”
 Clearly, not every arbitrary set of three procedures can serve as an
 appropriate basis for the rational-number implementation.  We need to
 guarantee that, <a name="%_idx_1416" id="%_idx_1416"></a><a name="%_idx_1418" id="%_idx_1418"></a><a name="%_idx_1420" id="%_idx_1420"></a>if we construct a rational number <tt>x</tt> from a pair
@@ -344,7 +344,7 @@ with specified conditions that these procedures must fulfill in order
 to be a valid representation.<a name="call_footnote_Temp_140" href="#footnote_Temp_140" id="call_footnote_Temp_140"><sup><small>5</small></sup></a></p><p>
 
 
-<a name="%_idx_1446" id="%_idx_1446"></a><a name="%_idx_1448" id="%_idx_1448"></a>This point of view can serve to define not only ``high-level'' data
+<a name="%_idx_1446" id="%_idx_1446"></a><a name="%_idx_1448" id="%_idx_1448"></a>This point of view can serve to define not only “high-level” data
 objects, such as rational numbers, but lower-level objects as well.
 <a name="%_idx_1450" id="%_idx_1450"></a>Consider the notion of a pair, which we used in order to define our
 rational numbers.  We never actually said what a pair was, only that
@@ -374,14 +374,14 @@ show that this is a valid way to represent pairs is to verify that
 these procedures satisfy the condition given above.</p><p>
 
 The subtle point to notice is that the value returned by <tt>(cons x
-y)</tt> is a procedure -- namely the internally defined procedure <tt>dispatch</tt>, which takes one argument and returns either <tt>x</tt> or <tt>y</tt> depending on whether the argument is 0 or 1.  Correspondingly, <tt>(car z)</tt> is defined to apply <tt>z</tt> to 0.  Hence, if <tt>z</tt> is the
+y)</tt> is a procedure – namely the internally defined procedure <tt>dispatch</tt>, which takes one argument and returns either <tt>x</tt> or <tt>y</tt> depending on whether the argument is 0 or 1.  Correspondingly, <tt>(car z)</tt> is defined to apply <tt>z</tt> to 0.  Hence, if <tt>z</tt> is the
 procedure formed by <tt>(cons x y)</tt>, then <tt>z</tt> applied to 0 will
 yield <tt>x</tt>. Thus, we have shown that <tt>(car (cons x y))</tt> yields
 <tt>x</tt>, as desired.  Similarly, <tt>(cdr (cons x y))</tt> applies the
 procedure returned by <tt>(cons x y)</tt> to 1, which returns <tt>y</tt>.
 Therefore, this procedural implementation of pairs is a valid
 implementation, and if we access pairs using only <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> we cannot distinguish this implementation from one
-that uses ``real'' data structures.</p><p>
+that uses “real” data structures.</p><p>
 
 The point of exhibiting the procedural representation of pairs is not
 that our language works this way (Scheme, and Lisp systems in general,
@@ -457,7 +457,7 @@ resistors <em>R</em><sub>1</sub> and <em>R</em><sub>2</sub> using the formula
 
 Resistance values are usually known only up to some <a name="%_idx_1484" id="%_idx_1484"></a>tolerance
 guaranteed by the manufacturer of the resistor.  For example, if you
-buy a resistor labeled ``6.8 ohms with 10% tolerance'' you can only
+buy a resistor labeled “6.8 ohms with 10% tolerance” you can only
 be sure that the resistor has a resistance between 6.8 - 0.68 = 6.12 and
 6.8 + 0.68 = 7.48 ohms.  Thus, if you have a 6.8-ohm 10% resistor in
 parallel with a 4.7-ohm 5% resistor, the resistance of the
@@ -465,15 +465,15 @@ combination can range from about 2.58 ohms (if the two resistors are
 at the lower bounds) to about 2.97 ohms (if the two resistors are at
 the upper bounds).</p><p>
 
-Alyssa's idea is to implement ``interval arithmetic'' as a set of
-arithmetic operations for combining ``intervals'' (objects
+Alyssa's idea is to implement “interval arithmetic” as a set of
+arithmetic operations for combining “intervals” (objects
 that represent the range of possible values of an inexact quantity).
 The result of adding, subtracting, multiplying, or dividing two
 intervals is itself an interval, representing the range of the
 result.</p><p>
 
 Alyssa postulates the existence of an abstract object called an
-``interval'' that has two endpoints: a lower bound and an upper bound.
+“interval” that has two endpoints: a lower bound and an upper bound.
 She also presumes that, given the endpoints of an interval, she can
 construct the interval using the data constructor <a name="%_idx_1486" id="%_idx_1486"></a><tt>make-interval</tt>.
 Alyssa first writes a procedure for adding two intervals.  She
@@ -544,9 +544,9 @@ check for this condition and to signal an error if it occurs.
 </p><p></p><p>
 
 </p><p><a name="%_thm_2.11" id="%_thm_2.11"></a>
-<b>Exercise 2.11.</b>  <a name="%_idx_1514" id="%_idx_1514"></a>In passing, Ben also cryptically comments: ``By testing the signs of
+<b>Exercise 2.11.</b>  <a name="%_idx_1514" id="%_idx_1514"></a>In passing, Ben also cryptically comments: “By testing the signs of
 the endpoints of the intervals, it is possible to break <tt>mul-interval</tt> into nine cases, only one of which requires more than
-two multiplications.''  Rewrite this procedure using Ben's
+two multiplications.”  Rewrite this procedure using Ben's
 suggestion.
 </p><p></p><p>
 
@@ -630,7 +630,7 @@ computed by different but algebraically equivalent expressions. She
 says that a formula to compute with intervals using Alyssa's system
 will produce tighter error bounds if it can be written in such a form
 that no variable that represents an uncertain number is repeated.
-Thus, she says, <tt>par2</tt> is a ``better'' program for parallel
+Thus, she says, <tt>par2</tt> is a “better” program for parallel
 resistances than <tt>par1</tt>.  Is she right?  Why?
 </p><p></p><p>
 
@@ -643,13 +643,13 @@ This problem is very difficult.)
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_133" href="#call_footnote_Temp_133" id="footnote_Temp_133"><sup><small>2</small></sup></a> The name <a name="%_idx_1332" id="%_idx_1332"></a><tt>cons</tt> stands for ``construct.''  The
+</p><div class="footnote"><p><a name="footnote_Temp_133" href="#call_footnote_Temp_133" id="footnote_Temp_133"><sup><small>2</small></sup></a> The name <a name="%_idx_1332" id="%_idx_1332"></a><tt>cons</tt> stands for “construct.”  The
 names <a name="%_idx_1334" id="%_idx_1334"></a><tt>car</tt> and <a name="%_idx_1336" id="%_idx_1336"></a><tt>cdr</tt> derive from the original implementation of
 Lisp on the <a name="%_idx_1338" id="%_idx_1338"></a><a name="%_idx_1340" id="%_idx_1340"></a>IBM 704.  That machine had an addressing scheme that
-allowed one to reference the ``address'' and ``decrement'' parts of a
-memory location.  <tt>Car</tt> stands for ``Contents of Address part of
-Register'' and <tt>cdr</tt> (pronounced ``could-er'') stands for
-``Contents of Decrement part of Register.''
+allowed one to reference the “address” and “decrement” parts of a
+memory location.  <tt>Car</tt> stands for “Contents of Address part of
+Register” and <tt>cdr</tt> (pronounced “could-er”) stands for
+“Contents of Decrement part of Register.”
 
 </p><p><a name="footnote_Temp_135" href="#call_footnote_Temp_135" id="footnote_Temp_135"><sup><small>3</small></sup></a> Another way to define the selectors and constructor is
 </p><p></p><p><tt>(define make-rat cons)<br />
@@ -681,7 +681,7 @@ not what the interpreter prints as the value returned by <tt>print-rat</tt>.
 difficult to formulate rigorously. There are two approaches to giving
 such a formulation.  One, pioneered by <a name="%_idx_1422" id="%_idx_1422"></a>C. A. R. Hoare (1972), is known
 as the method of <a name="%_idx_1424" id="%_idx_1424"></a><a name="%_idx_1426" id="%_idx_1426"></a><em>abstract models</em>.  It formalizes the
-``procedures plus conditions'' specification as outlined in the
+“procedures plus conditions” specification as outlined in the
 rational-number example above.  Note that the condition on the
 rational-number representation was stated in terms of facts about
 integers (equality and division).  In general, abstract models define
@@ -690,9 +690,9 @@ objects.  Assertions about data objects can therefore be checked by
 reducing them to assertions about previously defined data objects.
 Another approach, introduced by <a name="%_idx_1428" id="%_idx_1428"></a>Zilles at MIT, by <a name="%_idx_1430" id="%_idx_1430"></a>Goguen, <a name="%_idx_1432" id="%_idx_1432"></a>Thatcher,
 <a name="%_idx_1434" id="%_idx_1434"></a>Wagner, and <a name="%_idx_1436" id="%_idx_1436"></a>Wright at IBM (see Thatcher, Wagner, and Wright 1978), and by <a name="%_idx_1438" id="%_idx_1438"></a>Guttag at Toronto (see Guttag 1977),
-is called <a name="%_idx_1440" id="%_idx_1440"></a><a name="%_idx_1442" id="%_idx_1442"></a><em>algebraic specification</em>.  It regards the ``procedures''
+is called <a name="%_idx_1440" id="%_idx_1440"></a><a name="%_idx_1442" id="%_idx_1442"></a><em>algebraic specification</em>.  It regards the “procedures”
 as elements of an abstract algebraic system whose behavior is
-specified by axioms that correspond to our ``conditions,'' and uses
+specified by axioms that correspond to our “conditions,” and uses
 the techniques of abstract algebra to check assertions about data
 objects.  Both methods are surveyed in the paper by <a name="%_idx_1444" id="%_idx_1444"></a>Liskov and Zilles
 (1975).

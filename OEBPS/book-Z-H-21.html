@@ -32,7 +32,7 @@ Once we admit assignment into our programming language, such a
 definition is no longer adequate.  In particular,
 section <a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> argued that, in the presence of
 assignment, a variable can no longer be considered to be merely a name
-for a value.  Rather, a variable must somehow designate a ``place'' in
+for a value.  Rather, a variable must somehow designate a “place” in
 which values can be stored.  In our new model of evaluation, these
 places will be maintained in structures called <a name="%_idx_3038" id="%_idx_3038"></a><em>environments</em>.</p><p>
 
@@ -314,7 +314,7 @@ using each version of the <tt>factorial</tt> procedure.<a name="call_footnote_Te
 <a name="%_idx_3098" id="%_idx_3098"></a><a name="%_idx_3100" id="%_idx_3100"></a><a name="%_idx_3102" id="%_idx_3102"></a>
 <a name="%_idx_3104" id="%_idx_3104"></a>We can turn to the environment model to see how procedures and
 assignment can be used to represent objects with local state.  As an
-example, consider the ``withdrawal processor'' from
+example, consider the “withdrawal processor” from
 section <a href="book-Z-H-20.html#%_sec_3.1.1">3.1.1</a> created by calling the
 procedure</p><p>
 
@@ -395,7 +395,7 @@ relevant, since the procedure call that constructed it has terminated,
 and there are no pointers to that frame from other parts of the
 environment.  The next time <tt>W1</tt> is called, this will build a new
 frame that binds <tt>amount</tt> and whose enclosing environment is E1.
-We see that E1 serves as the ``place'' that holds the local state
+We see that E1 serves as the “place” that holds the local state
 variable for the procedure object <tt>W1</tt>.  Figure <a href="#%_fig_3.9">3.9</a>
 shows the situation after the call to <tt>W1</tt>.</p><p>
 
@@ -403,7 +403,7 @@ shows the situation after the call to <tt>W1</tt>.</p><p>
 
 </td></tr></table></div><p></p><p>
 
-Observe what happens when we create a second ``withdraw'' object by
+Observe what happens when we create a second “withdraw” object by
 making another call to <tt>make-withdraw</tt>:</p><p>
 
 </p><p></p><p><tt>(define W2 (make-withdraw 100))<br /></tt></p><p></p><p>

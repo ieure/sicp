@@ -18,10 +18,10 @@
 
 </p><p>
 
-As we have seen, pairs provide a primitive ``glue'' that we can use to
+As we have seen, pairs provide a primitive “glue” that we can use to
 construct compound data objects.
 Figure <a href="#%_fig_2.2">2.2</a> shows a standard way to
-visualize a <a name="%_idx_1526" id="%_idx_1526"></a>pair -- in this case, the pair formed by <tt>(cons 1 2)</tt>.
+visualize a <a name="%_idx_1526" id="%_idx_1526"></a>pair – in this case, the pair formed by <tt>(cons 1 2)</tt>.
 In this representation, which is called <a name="%_idx_1528" id="%_idx_1528"></a><em>box-and-pointer
 notation</em>, each object is shown as a <a name="%_idx_1530" id="%_idx_1530"></a><em>pointer</em> to a box.  The box
 for a primitive object contains a representation of the object.  For
@@ -53,7 +53,7 @@ an operation for combining data objects satisfies the closure property
 if the results of combining things with that operation can themselves
 be combined using the same operation.<a name="call_footnote_Temp_154" href="#footnote_Temp_154" id="call_footnote_Temp_154"><sup><small>6</small></sup></a>
 Closure is the key to power in
-any means of combination because it permits us to create <a name="%_idx_1538" id="%_idx_1538"></a><a name="%_idx_1540" id="%_idx_1540"></a><em>hierarchical</em> structures -- structures made up of parts, which
+any means of combination because it permits us to create <a name="%_idx_1538" id="%_idx_1538"></a><a name="%_idx_1540" id="%_idx_1540"></a><em>hierarchical</em> structures – structures made up of parts, which
 themselves are made up of parts, and so on.</p><p>
 
 From the outset of chapter 1, we've made essential use of closure in
@@ -73,7 +73,7 @@ language that illustrates closure in a vivid way.<a name="call_footnote_Temp_155
 
 </td></tr></table></div><p></p><p>
 
-One of the useful structures we can build with pairs is a <a name="%_idx_1554" id="%_idx_1554"></a><a name="%_idx_1556" id="%_idx_1556"></a><a name="%_idx_1558" id="%_idx_1558"></a><em>sequence</em> -- an ordered collection of data objects.  There are, of
+One of the useful structures we can build with pairs is a <a name="%_idx_1554" id="%_idx_1554"></a><a name="%_idx_1556" id="%_idx_1556"></a><a name="%_idx_1558" id="%_idx_1558"></a><em>sequence</em> – an ordered collection of data objects.  There are, of
 course, many ways to represent sequences in terms of pairs.  One
 particularly straightforward representation is illustrated in
 figure <a href="#%_fig_2.4">2.4</a>, where the sequence 1, 2, 3, 4 is
@@ -134,7 +134,7 @@ but with an additional item at the beginning.</p><p>
 The value of <tt>nil</tt>, used to terminate the chain of pairs, can be
 thought of as a sequence of no elements, the <a name="%_idx_1594" id="%_idx_1594"></a><a name="%_idx_1596" id="%_idx_1596"></a><em>empty list</em>.  The
 word <em>nil</em> is a contraction of the Latin word <em>nihil</em>, which
-means ``nothing.''<a name="call_footnote_Temp_158" href="#footnote_Temp_158" id="call_footnote_Temp_158"><sup><small>10</small></sup></a></p><p>
+means “nothing.”<a name="call_footnote_Temp_158" href="#footnote_Temp_158" id="call_footnote_Temp_158"><sup><small>10</small></sup></a></p><p>
 
 <a name="%_sec_Temp_159" id="%_sec_Temp_159"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_159">List operations</a></h4><p>
@@ -142,7 +142,7 @@ means ``nothing.''<a name="call_footnote_Temp_158" href="#footnote_Temp_158" id=
 <a name="%_idx_1602" id="%_idx_1602"></a><a name="%_idx_1604" id="%_idx_1604"></a>
 The use of pairs to represent sequences of elements as lists is
 accompanied by conventional programming techniques for manipulating
-lists by successively <a name="%_idx_1606" id="%_idx_1606"></a><a name="%_idx_1608" id="%_idx_1608"></a>``<tt>cdr</tt>ing down'' the lists.  For example,
+lists by successively <a name="%_idx_1606" id="%_idx_1606"></a><a name="%_idx_1608" id="%_idx_1608"></a>“<tt>cdr</tt>ing down” the lists.  For example,
 the procedure <a name="%_idx_1610" id="%_idx_1610"></a><tt>list-ref</tt> takes as arguments a list and a number
 <em>n</em> and returns the <em>n</em>th item of the list.  It is customary to
 number the elements of the list beginning with 0.  The method for
@@ -194,7 +194,7 @@ We could also compute <tt>length</tt> in an iterative style:</p><p>
         (length-iter (cdr a) (+ 1 count))))<br />
   (length-iter items 0))<br /></tt></p><p></p><p></p><p>
 
-Another conventional programming technique is to <a name="%_idx_1628" id="%_idx_1628"></a><a name="%_idx_1630" id="%_idx_1630"></a>``<tt>cons</tt> up'' an
+Another conventional programming technique is to <a name="%_idx_1628" id="%_idx_1628"></a><a name="%_idx_1630" id="%_idx_1630"></a>“<tt>cons</tt> up” an
 answer list while <tt>cdr</tt>ing down a list, as in the procedure <a name="%_idx_1632" id="%_idx_1632"></a><a name="%_idx_1634" id="%_idx_1634"></a><tt>append</tt>, which takes two lists as arguments and combines their
 elements to make a new list:</p><p>
 
@@ -413,7 +413,7 @@ arguments a procedure and a list of elements.  However, rather than
 forming a list of the  results, <tt>for-each</tt> just applies the procedure
 to each of the elements in turn, from left to right.  The values
 returned by applying the procedure to the elements are not used at
-all -- <tt>for-each</tt> is used with procedures that perform an action,
+all – <tt>for-each</tt> is used with procedures that perform an action,
 such as printing.  For example,
 </p><p></p><p><tt>(for-each (lambda (x) (newline) (display x))<br />
           (list 57 321 88))<br /><i>57</i><br /><i>321</i><br /><i>88</i><br /></tt></p><p></p><p>
@@ -699,7 +699,7 @@ permits us to design programs without becoming enmeshed in the details
 of data representations, and how abstraction preserves for us the
 flexibility to experiment with alternative representations.  In this
 section, we introduce another powerful design principle for working
-with data structures -- the use of <em>conventional interfaces</em>.</p><p>
+with data structures – the use of <em>conventional interfaces</em>.</p><p>
 
 In section <a href="book-Z-H-12.html#%_sec_1.3">1.3</a> we saw how program
 abstractions, implemented as higher-order procedures, can capture
@@ -751,11 +751,11 @@ empty list.
 these processes in terms of signals flowing through a cascade of
 stages, each of which implements part of the program plan, as shown in
 figure <a href="#%_fig_2.7">2.7</a>.  In <tt>sum-odd-squares</tt>, we
-begin with an <a name="%_idx_1730" id="%_idx_1730"></a><em>enumerator</em>, which generates a ``signal''
+begin with an <a name="%_idx_1730" id="%_idx_1730"></a><em>enumerator</em>, which generates a “signal”
 consisting of the leaves of a given tree.  This signal is passed
 through a <a name="%_idx_1732" id="%_idx_1732"></a><em>filter</em>, which eliminates all but the odd elements.
 The resulting signal is in turn passed through a <a name="%_idx_1734" id="%_idx_1734"></a><em>map</em>, which is a
-``transducer'' that applies the <tt>square</tt> procedure to each
+“transducer” that applies the <tt>square</tt> procedure to each
 element.  The output of the map is then fed to an <a name="%_idx_1736" id="%_idx_1736"></a><em>accumulator</em>,
 which combines the elements using <tt>+</tt>, starting from an initial 0.
 The plan for <tt>even-fibs</tt> is analogous.</p><p>
@@ -786,7 +786,7 @@ code.</p><p>
 
 <a name="%_idx_1738" id="%_idx_1738"></a>
 The key to organizing programs so as to more clearly reflect the
-signal-flow structure is to concentrate on the ``signals'' that flow
+signal-flow structure is to concentrate on the “signals” that flow
 from one stage in the process to the next.  If we represent these
 signals as lists, then we can use list operations to implement the
 processing at each of the stages.  For instance, we can implement the
@@ -1133,7 +1133,7 @@ equal to a given integer <em>n</em> that sum to a given integer <em>s</em>.
 <b>Exercise 2.42.</b>  <a name="%_fig_2.8" id="%_fig_2.8"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-23.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.8:</b>  A solution to the eight-queens puzzle.</div></caption><tr><td>
 
 </td></tr></table></div><p>
-The <a name="%_idx_1846" id="%_idx_1846"></a><a name="%_idx_1848" id="%_idx_1848"></a><a name="%_idx_1850" id="%_idx_1850"></a>``eight-queens puzzle'' asks how to place eight queens on a
+The <a name="%_idx_1846" id="%_idx_1846"></a><a name="%_idx_1848" id="%_idx_1848"></a><a name="%_idx_1850" id="%_idx_1850"></a>“eight-queens puzzle” asks how to place eight queens on a
 chessboard so that no queen is in check from any other (i.e., no two
 queens are in the same row, column, or diagonal).  One possible
 solution is shown in figure <a href="#%_fig_2.8">2.8</a>.  One way to solve the
@@ -1180,7 +1180,7 @@ represents an empty set of positions.  You must also write the
 procedure <tt>safe?</tt>, which determines for a set of positions,
 whether the queen in the <em>k</em>th column is safe with respect to the
 others.  (Note that we need only check whether the new queen is
-safe -- the other queens are already guaranteed safe with respect to
+safe – the other queens are already guaranteed safe with respect to
 each other.)
 
 </p><p></p><p>
@@ -1248,7 +1248,7 @@ draws an image that is shifted and scaled to fit within a designated
 <a name="%_idx_1864" id="%_idx_1864"></a>parallelogram-shaped frame.  For example, there's a primitive painter
 we'll call <tt>wave</tt> that makes a crude line drawing, as
 shown in figure <a href="#%_fig_2.10">2.10</a>.
-The actual shape of the drawing depends on the frame -- all
+The actual shape of the drawing depends on the frame – all
 four images in figure <a href="#%_fig_2.10">2.10</a> are produced by the same <tt>wave</tt> painter, but with respect to four different frames.  Painters
 can be more elaborate than this:
 The primitive
@@ -1424,7 +1424,7 @@ roles of <tt>below</tt> and <tt>beside</tt>.
 In addition to abstracting patterns of combining painters, we can work
 at a higher level, abstracting patterns of combining painter operations.
 That is, we can view the painter operations as elements to manipulate
-and can write means of combination for these elements -- procedures that
+and can write means of combination for these elements – procedures that
 take painter operations as arguments and create new painter operations.</p><p>
 
 For example, <tt>flipped-pairs</tt> and <tt>square-limit</tt> each
@@ -1474,7 +1474,7 @@ behaviors as the ones already defined.
 <a name="%_idx_1910" id="%_idx_1910"></a>
 Before we can show how to implement painters and their
 means of combination, we must first consider
-<a name="%_idx_1912" id="%_idx_1912"></a>frames.  A frame can be described by three vectors -- an origin vector
+<a name="%_idx_1912" id="%_idx_1912"></a>frames.  A frame can be described by three vectors – an origin vector
 and two edge vectors.  The origin vector specifies the offset of the
 frame's origin from some absolute origin in the plane, and the edge
 vectors specify the offsets of the frame's corners from its origin.
@@ -1488,7 +1488,7 @@ there is a constructor <a name="%_idx_1914" id="%_idx_1914"></a><tt>make-frame</
 produces a frame, and three corresponding selectors <a name="%_idx_1916" id="%_idx_1916"></a><tt>origin-frame</tt>, <a name="%_idx_1918" id="%_idx_1918"></a><tt>edge1-frame</tt>, and <a name="%_idx_1920" id="%_idx_1920"></a><tt>edge2-frame</tt> (see
 exercise <a href="#%_thm_2.47">2.47</a>).</p><p>
 
-<a name="%_fig_2.15" id="%_fig_2.15"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-42.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.15:</b>  A frame is described by three vectors -- an
+<a name="%_fig_2.15" id="%_fig_2.15"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-42.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.15:</b>  A frame is described by three vectors – an
 origin and two edges.</div></caption><tr><td>
 
 </td></tr></table></div><p> </p><p>
@@ -1581,7 +1581,7 @@ argument and draws something scaled to fit the frame.<a name="call_footnote_Temp
 
 </p><p><a name="%_thm_2.48" id="%_thm_2.48"></a>
 <b>Exercise 2.48.</b>  <a name="%_idx_1952" id="%_idx_1952"></a>A directed line segment in the
-plane can be represented as a pair of vectors -- the
+plane can be represented as a pair of vectors – the
 vector running from the origin to the start-point of the segment, and
 the vector running from the origin to the end-point of the segment.
 Use your vector representation from exercise <a href="#%_thm_2.46">2.46</a> to
@@ -1594,7 +1594,7 @@ define a representation for segments with a constructor <a name="%_idx_1954" id=
 
 a.  The painter that draws the outline of the designated frame.</p><p>
 
-b.  The painter that draws an ``X'' by connecting opposite corners of
+b.  The painter that draws an “X” by connecting opposite corners of
 the frame.</p><p>
 
 c.  The painter that draws a diamond shape by connecting the midpoints of
@@ -1612,7 +1612,7 @@ An operation on painters (such as <tt>flip-vert</tt> or <tt>beside</tt>)
 works by creating a painter that invokes the original painters
 with respect to frames derived from the argument frame.
 Thus, for example, <tt>flip-vert</tt> doesn't have to know how a painter
-works in order to flip it -- it just has to know how to turn a frame
+works in order to flip it – it just has to know how to turn a frame
 upside down:
 The flipped painter just uses the original painter,
 but in the inverted frame.</p><p>
@@ -1710,7 +1710,7 @@ painters counterclockwise by 180 degrees and 270 degrees.
 <b>Exercise 2.51.</b>  Define the <a name="%_idx_1976" id="%_idx_1976"></a><tt>below</tt> operation for painters.  <tt>Below</tt> takes two
 painters as arguments.  The resulting painter, given a frame,
 draws with the first painter in the
-bottom of the frame and with the second painter in the top.  Define <tt>below</tt> in two different ways -- first by writing a procedure that is
+bottom of the frame and with the second painter in the top.  Define <tt>below</tt> in two different ways – first by writing a procedure that is
 analogous to the <tt>beside</tt> procedure given above, and
 again in terms of <tt>beside</tt> and suitable
 rotation operations (from exercise <a href="#%_thm_2.50">2.50</a>).
@@ -1795,13 +1795,13 @@ might make the big Mr. Rogers look outward from each corner of the square.)
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_154" href="#call_footnote_Temp_154" id="footnote_Temp_154"><sup><small>6</small></sup></a> The use of the word <a name="%_idx_1536" id="%_idx_1536"></a>``closure'' here comes from abstract algebra,
+</p><div class="footnote"><p><a name="footnote_Temp_154" href="#call_footnote_Temp_154" id="footnote_Temp_154"><sup><small>6</small></sup></a> The use of the word <a name="%_idx_1536" id="%_idx_1536"></a>“closure” here comes from abstract algebra,
 where a set of elements is said to be closed under an operation if
 applying the operation to elements in the set produces an element that
 is again an element of the set.  The Lisp community
-also (unfortunately) uses the word ``closure'' to describe a totally unrelated
+also (unfortunately) uses the word “closure” to describe a totally unrelated
 concept: A closure is an implementation technique for representing
-procedures with free variables.  We do not use the word ``closure'' in
+procedures with free variables.  We do not use the word “closure” in
 this second sense in this book.
 
 </p><p><a name="footnote_Temp_155" href="#call_footnote_Temp_155" id="footnote_Temp_155"><sup><small>7</small></sup></a> The notion that a means of
@@ -1809,7 +1809,7 @@ this second sense in this book.
 Unfortunately, the data combiners provided in many popular programming
 languages do not satisfy closure, or make closure cumbersome to
 exploit.  In <a name="%_idx_1544" id="%_idx_1544"></a>Fortran or <a name="%_idx_1546" id="%_idx_1546"></a>Basic, one typically combines data elements by
-assembling them into arrays -- but one cannot form arrays whose
+assembling them into arrays – but one cannot form arrays whose
 elements are themselves arrays.  <a name="%_idx_1548" id="%_idx_1548"></a>Pascal and <a name="%_idx_1550" id="%_idx_1550"></a>C admit structures whose
 elements are structures.  However, this requires that the programmer
 manipulate pointers explicitly, and adhere to the restriction that
@@ -1818,11 +1818,11 @@ Unlike
 Lisp with its pairs, these languages have no built-in general-purpose
 glue that makes it easy to manipulate compound data in a uniform way.
 This limitation lies behind Alan <a name="%_idx_1552" id="%_idx_1552"></a>Perlis's comment in his foreword to
-this book: ``In Pascal the plethora of declarable data structures
+this book: “In Pascal the plethora of declarable data structures
 induces a specialization within functions that inhibits and penalizes
 casual cooperation.  It is better to have 100 functions operate on one
 data structure than to have 10 functions operate on 10 data
-structures.''
+structures.”
 
 </p><p><a name="footnote_Temp_156" href="#call_footnote_Temp_156" id="footnote_Temp_156"><sup><small>8</small></sup></a> In this book, we use <em>list</em> to mean a chain of
 pairs terminated by the end-of-list marker.  In contrast, the term
@@ -1831,7 +1831,7 @@ not just to lists.
 
 </p><p><a name="footnote_Temp_157" href="#call_footnote_Temp_157" id="footnote_Temp_157"><sup><small>9</small></sup></a> Since nested applications of <tt>car</tt> and <tt>cdr</tt>
 are cumbersome to write, Lisp dialects provide abbreviations for
-them -- for instance,
+them – for instance,
 <a name="%_idx_1584" id="%_idx_1584"></a><a name="%_idx_1586" id="%_idx_1586"></a></p><p></p><div align="left"><img src="images/ch2-Z-G-14.gif" border="0" /></div><p>
 The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a name="%_idx_1588" id="%_idx_1588"></a><a name="%_idx_1590" id="%_idx_1590"></a><tt>car</tt> operation and
 each <tt>d</tt> for a <tt>cdr</tt> operation, to be applied in the same order
@@ -1923,7 +1923,7 @@ approach generalizes to infinite sequences.
 
 </p><p><a name="footnote_Temp_195" href="#call_footnote_Temp_195" id="footnote_Temp_195"><sup><small>19</small></sup></a> We're
 representing a pair here as a list of two elements rather than as a
-Lisp pair.  Thus, the ``pair'' (<em>i</em>,<em>j</em>) is represented as <tt>(list i
+Lisp pair.  Thus, the “pair” (<em>i</em>,<em>j</em>) is represented as <tt>(list i
 j)</tt>, not <tt>(cons i j)</tt>.
 
 </p><p><a name="footnote_Temp_196" href="#call_footnote_Temp_196" id="footnote_Temp_196"><sup><small>20</small></sup></a> The set <em>S</em> - <em>x</em> is the set of all elements
@@ -1937,7 +1937,7 @@ descriptive names.
 
 </p><p><a name="footnote_Temp_202" href="#call_footnote_Temp_202" id="footnote_Temp_202"><sup><small>22</small></sup></a> The picture language is based on the language
 <a name="%_idx_1856" id="%_idx_1856"></a>Peter Henderson created to construct
-images like <a name="%_idx_1858" id="%_idx_1858"></a>M.C. Escher's ``Square Limit'' woodcut (see Henderson 1982).
+images like <a name="%_idx_1858" id="%_idx_1858"></a>M.C. Escher's “Square Limit” woodcut (see Henderson 1982).
 The woodcut incorporates a
 repeated scaled pattern, similar to the arrangements drawn using
 the <tt>square-limit</tt> procedure in this section.
@@ -1946,15 +1946,15 @@ the <tt>square-limit</tt> procedure in this section.
 of MIT.  A geologist and talented teacher, he taught at William and
 Mary College and at the University of Virginia.  In 1859 he moved to
 Boston, where he had more time for research, worked on a plan
-for establishing a ``polytechnic institute,'' and served as
+for establishing a “polytechnic institute,” and served as
 Massachusetts's first State Inspector of Gas Meters.</p><p>
 
 When MIT was established in 1861, Rogers was elected its first
-president.  Rogers espoused an ideal of ``useful learning'' that was
+president.  Rogers espoused an ideal of “useful learning” that was
 different from the university education of the time, with its
-overemphasis on the classics, which, as he wrote, ``stand in the way of
+overemphasis on the classics, which, as he wrote, “stand in the way of
 the broader, higher and more practical instruction and discipline of
-the natural and social sciences.''  This education was likewise to be
+the natural and social sciences.”  This education was likewise to be
 different from narrow trade-school education.  In Rogers's words:
 </p><blockquote>
 <p>The world-enforced distinction between the practical and the
@@ -1973,16 +1973,16 @@ Rogers collapsed and died while addressing MIT's graduating class at
 the commencement exercises of 1882.  Runkle quoted Rogers's last
 words in a memorial address delivered that same year:
 </p><blockquote>
-<p>``As I stand here today and see what the Institute is, <tt>...</tt> I call
+<p>“As I stand here today and see what the Institute is, <tt>...</tt> I call
 to mind the beginnings of science.  I remember one hundred and fifty
 years ago Stephen Hales published a pamphlet on the subject of
 illuminating gas, in which he stated that his researches had
-demonstrated that 128 grains of bituminous coal -- ''
-<a name="%_idx_1872" id="%_idx_1872"></a></p><p>``Bituminous coal,'' these were his last words on earth.  Here he bent
+demonstrated that 128 grains of bituminous coal – ”
+<a name="%_idx_1872" id="%_idx_1872"></a></p><p>“Bituminous coal,” these were his last words on earth.  Here he bent
 forward, as if consulting some notes on the table before him, then
 slowly regaining an erect position, threw up his hands, and was
-translated from the scene of his earthly labors and triumphs to ``the
-tomorrow of death,'' where the mysteries of life are solved, and the
+translated from the scene of his earthly labors and triumphs to “the
+tomorrow of death,” where the mysteries of life are solved, and the
 disembodied spirit finds unending satisfaction in contemplating the
 new and still unfathomable mysteries of the infinite future.
 </p></blockquote>

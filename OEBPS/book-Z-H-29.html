@@ -30,7 +30,7 @@ computation will progress.</p><p>
 
 Most programming languages, including Lisp, are organized around
 computing the values of mathematical functions.  Expression-oriented
-languages (such as Lisp, Fortran, and Algol) capitalize on the ``pun''
+languages (such as Lisp, Fortran, and Algol) capitalize on the “pun”
 that an expression that describes the value of a function may also be
 interpreted as a means of computing that value.  Because of this, most
 programming languages are strongly biased toward unidirectional
@@ -40,7 +40,7 @@ relax this bias.  We saw one such example in
 section <a href="book-Z-H-22.html#%_sec_3.3.5">3.3.5</a>, where the objects of computation were
 arithmetic constraints.  In a constraint system the direction and the
 order of computation are not so well specified; in carrying out a
-computation the system must therefore provide more detailed ``how to''
+computation the system must therefore provide more detailed “how to”
 knowledge than would be the case with an ordinary arithmetic
 computation.  This does not mean, however, that the user is released
 altogether from the responsibility of providing imperative knowledge.
@@ -61,9 +61,9 @@ combining a relational vision of programming with a powerful kind of
 symbolic pattern matching called <em>unification</em>.<a name="call_footnote_Temp_645" href="#footnote_Temp_645" id="call_footnote_Temp_645"><sup><small>58</small></sup></a></p><p>
 
 <a name="%_idx_5070" id="%_idx_5070"></a><a name="%_idx_5072" id="%_idx_5072"></a>This approach, when it works, can be a very powerful way to write
-programs.  Part of the power comes from the fact that a single ``what
-is'' fact can be used to solve a number of different problems that
-would have different ``how to'' components.  As an example, consider
+programs.  Part of the power comes from the fact that a single “what
+is” fact can be used to solve a number of different problems that
+would have different “how to” components.  As an example, consider
 the <a name="%_idx_5074" id="%_idx_5074"></a><tt>append</tt> operation, which takes two lists as arguments and
 combines their elements to form a single list.  In a procedural
 language such as Lisp, we could define <tt>append</tt> in terms of the
@@ -104,14 +104,14 @@ d)</tt>.
 </p></blockquote><p>
 
 <a name="%_idx_5076" id="%_idx_5076"></a><a name="%_idx_5078" id="%_idx_5078"></a>In a logic programming language, the programmer writes an <tt>append</tt>
-``procedure'' by stating the two rules about <tt>append</tt> given above.
-``How to'' knowledge is provided automatically by the interpreter to
+“procedure” by stating the two rules about <tt>append</tt> given above.
+“How to” knowledge is provided automatically by the interpreter to
 allow this single pair of rules to be used to answer all three types
 of questions about <tt>append</tt>.<a name="call_footnote_Temp_647" href="#footnote_Temp_647" id="call_footnote_Temp_647"><sup><small>60</small></sup></a></p><p>
 
 Contemporary logic programming languages (including the one we
 implement here) have substantial deficiencies, in that their general
-``how to'' methods can lead them into spurious infinite loops or other
+“how to” methods can lead them into spurious infinite loops or other
 undesirable behavior.
 Logic programming is an active field of research in computer science.<a name="call_footnote_Temp_648" href="#footnote_Temp_648" id="call_footnote_Temp_648"><sup><small>61</small></sup></a></p><p>
 
@@ -133,8 +133,8 @@ for a logic programming language is considerably more complex than an
 interpreter for a language like Lisp.  Nevertheless, we will see
 <a name="%_idx_5094" id="%_idx_5094"></a>that our query-language interpreter contains many of the same elements
 found in the interpreter of section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a>.  In particular,
-there will be an ``eval'' part that classifies expressions according
-to type and an ``apply'' part that implements the language's
+there will be an “eval” part that classifies expressions according
+to type and an “apply” part that implements the language's
 abstraction mechanism (procedures in the case of Lisp, and <em>rules</em>
 in the case of logic programming).  Also, a central role is played in
 the implementation by a frame data structure, which determines the
@@ -259,12 +259,12 @@ The system will respond with the following items:</p><p>
 base that match a certain <em>pattern</em>.  In this example, the pattern
 specifies entries consisting of three items, of which the first is the
 literal symbol <tt>job</tt>, the second can be anything, and the third is
-the literal list <tt>(computer programmer)</tt>.  The ``anything'' that
+the literal list <tt>(computer programmer)</tt>.  The “anything” that
 can be the second item in the matching list is specified by a <a name="%_idx_5114" id="%_idx_5114"></a><em>pattern variable</em>, <tt>?x</tt>.  The general form of a pattern variable
 is a symbol, taken to be the name of the variable, preceded by a
 question mark.  We will see below why it is useful to specify names
 for pattern variables rather than just putting <tt>?</tt> into patterns
-to represent ``anything.''  The system responds to a simple query by
+to represent “anything.”  The system responds to a simple query by
 showing all entries in the data base that match the specified pattern.</p><p>
 
 A pattern can have more than one variable.  For example, the query
@@ -276,7 +276,7 @@ determines whether that pattern is an entry in the data base.  If so,
 there will be one match; if not, there will be no matches.</p><p>
 
 The same pattern variable can appear more than once in a query,
-specifying that the same ``anything'' must appear in each position.
+specifying that the same “anything” must appear in each position.
 This is why variables have names.  For example,</p><p>
 
 </p><p></p><p><tt>(supervisor ?x ?x)<br /></tt></p><p></p><p>
@@ -318,7 +318,7 @@ We can describe the query language's processing of simple queries as
 follows:</p><p>
 
 </p><p></p><ul><li>The system finds all assignments to variables in the query
-<a name="%_idx_5118" id="%_idx_5118"></a>pattern that <em>satisfy</em> the pattern -- that is, all sets of values
+<a name="%_idx_5118" id="%_idx_5118"></a>pattern that <em>satisfy</em> the pattern – that is, all sets of values
 for the variables such that if the pattern variables are <a name="%_idx_5120" id="%_idx_5120"></a><em>instantiated with</em> (replaced by) the values, the result is in the data
 base.<p>
 
@@ -454,7 +454,7 @@ defined by a very simple rule:<a name="call_footnote_Temp_658" href="#footnote_T
 
 </p><p></p><p><tt><a name="%_idx_5142" id="%_idx_5142"></a>(rule (same ?x ?x))<br /></tt></p><p></p><p></p><p>
 
-The following rule declares that a person is a ``wheel'' in an
+The following rule declares that a person is a “wheel” in an
 organization if he supervises someone who is in turn a supervisor:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_5144" id="%_idx_5144"></a>(rule (wheel ?person)<br />
@@ -513,7 +513,7 @@ are, together with the two salaries.
 </p><p></p><p>
 
 </p><p><a name="%_thm_4.58" id="%_thm_4.58"></a>
-<b>Exercise 4.58.</b>  Define a rule that says that a person is a ``big shot'' in a division
+<b>Exercise 4.58.</b>  Define a rule that says that a person is a “big shot” in a division
 if the person works in the division but does not have a supervisor who
 works in the division.
 </p><p></p><p>
@@ -589,8 +589,8 @@ if <tt>v</tt> and <tt>y</tt> <tt>append</tt> to form <tt>z</tt>.
 To express this in our query language, we define two rules for a
 relation
 </p><p></p><p><tt>(append-to-form x y z)<br /></tt></p><p></p><p>
-which we can interpret to mean ``<tt>x</tt> and <tt>y</tt> <tt>append</tt> to
-form <tt>z</tt>'':</p><p>
+which we can interpret to mean “<tt>x</tt> and <tt>y</tt> <tt>append</tt> to
+form <tt>z</tt>”:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_5158" id="%_idx_5158"></a>(rule (append-to-form () ?y ?y))<br />
 (rule (append-to-form (?u . ?v) ?y (?u . ?z))<br />
@@ -605,7 +605,7 @@ Given these two rules, we can formulate queries that compute the <tt>append</tt>
 (append-to-form (a b) (c d) ?z)<br /><i>;;; Query results:</i><br />
 (append-to-form (a b) (c d) (a b c d))<br /></tt></p><p></p><p>
 What is more striking, we can use the same rules to ask the question
-``Which list, when <tt>append</tt>ed to <tt>(a b)</tt>, yields <tt>(a b c d)</tt>?''
+“Which list, when <tt>append</tt>ed to <tt>(a b)</tt>, yields <tt>(a b c d)</tt>?”
 This is done as follows:
 
 </p><p></p><p><tt><i>;;; Query input:</i><br />
@@ -664,9 +664,9 @@ descendants of Ada back to Adam, by way of Cain:</p><p>
 (wife Lamech Ada)<br />
 (son Ada Jabal)<br />
 (son Ada Jubal)<br /></tt></p><p></p><p>
-Formulate rules such as ``If <em>S</em> is the son of <em>F</em>, and <em>F</em> is the son of <em>G</em>, then <em>S</em> is the grandson of <em>G</em>''
-and ``If <em>W</em> is the wife of <em>M</em>, and <em>S</em> is the son of
-<em>W</em>, then <em>S</em> is the son of <em>M</em>'' (which was supposedly
+Formulate rules such as “If <em>S</em> is the son of <em>F</em>, and <em>F</em> is the son of <em>G</em>, then <em>S</em> is the grandson of <em>G</em>”
+and “If <em>W</em> is the wife of <em>M</em>, and <em>S</em> is the son of
+<em>W</em>, then <em>S</em> is the son of <em>M</em>” (which was supposedly
 more true in biblical times than today) that will enable the query
 system to find the grandson of Cain; the sons of Lamech; the grandsons
 of Methushael.
@@ -796,8 +796,8 @@ queries makes use of the ability of our matcher to demand that a match
 
 </p><p></p><p><tt>(and (can-do-job ?x (computer programmer trainee))<br />
      (job ?person ?x))<br /></tt></p><p></p><p>
-(informally, ``Find all people who can do the job of a computer
-programmer trainee''), we first find all entries that match the
+(informally, “Find all people who can do the job of a computer
+programmer trainee”), we first find all entries that match the
 pattern</p><p>
 
 </p><p></p><p><tt>(can-do-job ?x (computer programmer trainee))<br /></tt></p><p></p><p>
@@ -873,8 +873,8 @@ In order to handle rules in the query language, we must be able to
 find the rules whose conclusions match a given query pattern.  Rule
 conclusions are like assertions except that they can contain
 variables, so we will need a generalization of pattern
-matching -- called <em>unification</em> -- in which both the ``pattern''
-and the ``datum'' may contain variables.</p><p>
+matching – called <em>unification</em> – in which both the “pattern”
+and the “datum” may contain variables.</p><p>
 
 A unifier takes two patterns, each containing constants and variables,
 and determines whether it is possible to assign values to the
@@ -1080,19 +1080,19 @@ because the data base must be scanned for each intermediate result
 
 <a name="%_idx_5256" id="%_idx_5256"></a><a name="%_idx_5258" id="%_idx_5258"></a>The aim of logic programming is to provide the programmer with
 techniques for decomposing a computational problem into two separate
-problems: ``what'' is to be computed, and ``how'' this should be
+problems: “what” is to be computed, and “how” this should be
 computed.  This is accomplished by selecting a subset of the
 statements of mathematical logic that is powerful enough to be able to
 describe anything one might want to compute, yet weak enough to have a
 controllable procedural interpretation.  The intention here is that,
 on the one hand, a program specified in a logic programming language
 should be an effective program that can be carried out by a computer.
-Control (``how'' to compute) is effected by using the order of
+Control (“how” to compute) is effected by using the order of
 evaluation of the language.  We should be able to arrange the order of
 clauses and the order of subgoals within each clause so that the
 computation is done in an order deemed to be effective and efficient.
 At the same time, we should be able to view the result of the
-computation (``what'' to compute) as a simple consequence of the laws
+computation (“what” to compute) as a simple consequence of the laws
 of logic.</p><p>
 
 Our query language can be regarded as just such a procedurally
@@ -1103,7 +1103,7 @@ rule body holds.  A rule has a natural procedural interpretation: To
 establish the conclusion of the rule, establish the body of the rule.
 Rules, therefore, specify computations.  However, because rules can
 also be regarded as statements of mathematical logic, we can justify
-any ``inference'' accomplished by a logic program by asserting that
+any “inference” accomplished by a logic program by asserting that
 the same result could be obtained by working entirely within
 mathematical logic.<a name="call_footnote_Temp_684" href="#footnote_Temp_684" id="call_footnote_Temp_684"><sup><small>76</small></sup></a></p><p>
 
@@ -1139,7 +1139,7 @@ that is, the rule conclusion <tt>(married ?x ?y)</tt> successfully
 unifies with the query pattern <tt>(married Mickey ?who)</tt> to produce
 a frame in which <tt>?x</tt> is bound to <tt>Mickey</tt> and <tt>?y</tt> is
 bound to <tt>?who</tt>.  So the interpreter proceeds to evaluate the rule
-body <tt>(married ?y ?x)</tt> in this frame -- in effect, to process the
+body <tt>(married ?y ?x)</tt> in this frame – in effect, to process the
 query <tt>(married ?who Mickey)</tt>.<p>
 
 </p></li><li>One answer appears directly as an assertion in the data
@@ -1190,13 +1190,13 @@ serve as a filter on values for the variables.  If a <tt>not</tt> clause
 is processed with a frame in which some of the variables remain
 unbound (as does <tt>?x</tt> in the example above), the system will
 produce unexpected results. Similar problems occur with the use of
-<a name="%_idx_5270" id="%_idx_5270"></a><tt>lisp-value</tt> -- the Lisp predicate can't work if some of its
+<a name="%_idx_5270" id="%_idx_5270"></a><tt>lisp-value</tt> – the Lisp predicate can't work if some of its
 arguments are unbound.  See exercise <a href="#%_thm_4.77">4.77</a>.</p><p>
 
 There is also a much more serious way in which the <tt>not</tt> of the
 query language differs from the <tt>not</tt> of mathematical logic.  In
-logic, we interpret the statement ``not <em>P</em>'' to mean that <em>P</em> is not
-true.  In the query system, however, ``not <em>P</em>'' means that <em>P</em> is not
+logic, we interpret the statement “not <em>P</em>” to mean that <em>P</em> is not
+true.  In the query system, however, “not <em>P</em>” means that <em>P</em> is not
 deducible from the knowledge in the data base.  For example, given the
 personnel data base of section <a href="#%_sec_4.4.1">4.4.1</a>, the
 system would happily deduce all sorts of <tt>not</tt> statements, such as
@@ -1265,8 +1265,8 @@ resulting stream of values to the accumulation function.  Just as Ben
 completes the implementation and is about to try it out, Cy walks by,
 still puzzling over the <tt>wheel</tt> query result in
 exercise <a href="#%_thm_4.65">4.65</a>.  When Cy shows Ben the system's
-response, Ben groans, ``Oh, no, my simple accumulation scheme won't
-work!''</p><p>
+response, Ben groans, “Oh, no, my simple accumulation scheme won't
+work!”</p><p>
 
 What has Ben just realized?  Outline a method he can use to
 salvage the situation.
@@ -1296,7 +1296,7 @@ Can your rules answer both
 
 </p><p><a name="%_thm_4.69" id="%_thm_4.69"></a>
 <b>Exercise 4.69.</b>  Beginning with the data base and the rules you formulated in
-exercise <a href="#%_thm_4.63">4.63</a>, devise a rule for adding ``greats'' to
+exercise <a href="#%_thm_4.63">4.63</a>, devise a rule for adding “greats” to
 a grandson relationship. This should enable the system to deduce that
 Irad is the great-grandson of Adam, or that Jabal and Jubal are
 the great-great-great-great-great-grandsons of Adam.  (Hint: Represent
@@ -1748,9 +1748,9 @@ included with the syntax procedures in section <a href="#%_sec_4.4.4.7">4.4.4.7
 inputs two patterns and a frame and returns either the extended frame
 or the symbol <tt>failed</tt>.
 The unifier is like the pattern matcher except that it is
-symmetrical -- variables are allowed on both sides of the match.
+symmetrical – variables are allowed on both sides of the match.
 <tt>Unify-match</tt> is basically the same as <tt>pattern-match</tt>,
-except that there is extra code (marked ``<tt>***</tt>'' below) to handle
+except that there is extra code (marked “<tt>***</tt>” below) to handle
 the case where the object on the right side of the match is a variable.</p><p>
 
 </p><p></p><p><tt><a name="%_idx_5364" id="%_idx_5364"></a>(define (unify-match p1 p2 frame)<br />
@@ -1770,7 +1770,7 @@ In unification, as in one-sided pattern matching, we want to accept a
 proposed extension of the frame only if it is consistent with existing
 bindings.  The procedure <tt>extend-if-possible</tt> used in unification
 is the same as the <tt>extend-if-consistent</tt> used in pattern matching
-except for two special checks, marked ``<tt>***</tt>'' in the program
+except for two special checks, marked “<tt>***</tt>” in the program
 below.  In the first case, if the variable we are trying to match is
 not bound, but the value we are trying to match it with
 is itself a (different) variable, it is
@@ -2275,7 +2275,7 @@ frame produced by the first query will require <em>N</em><sup>2</sup>/<em>k</em>
 pattern matcher.  Another approach would be to process the two clauses
 of the <tt>and</tt> separately, then look for all pairs of output frames
 that are compatible.  If each query produces <em>N</em>/<em>k</em> output frames, then
-this means that we must perform <em>N</em><sup>2</sup>/<em>k</em><sup>2</sup> compatibility checks -- a
+this means that we must perform <em>N</em><sup>2</sup>/<em>k</em><sup>2</sup> compatibility checks – a
 factor of <em>k</em> fewer than the number of matches required in our current
 method.</p><p>
 
@@ -2288,11 +2288,11 @@ is similar to unification.
 </p><p></p><p>
 
 </p><p><a name="%_thm_4.77" id="%_thm_4.77"></a>
-<b>Exercise 4.77.</b>  <a name="%_idx_5432" id="%_idx_5432"></a><a name="%_idx_5434" id="%_idx_5434"></a><a name="%_idx_5436" id="%_idx_5436"></a><a name="%_idx_5438" id="%_idx_5438"></a><a name="%_idx_5440" id="%_idx_5440"></a>In section <a href="#%_sec_4.4.3">4.4.3</a> we saw that <tt>not</tt> and <tt>lisp-value</tt> can cause the query language to give ``wrong'' answers if
+<b>Exercise 4.77.</b>  <a name="%_idx_5432" id="%_idx_5432"></a><a name="%_idx_5434" id="%_idx_5434"></a><a name="%_idx_5436" id="%_idx_5436"></a><a name="%_idx_5438" id="%_idx_5438"></a><a name="%_idx_5440" id="%_idx_5440"></a>In section <a href="#%_sec_4.4.3">4.4.3</a> we saw that <tt>not</tt> and <tt>lisp-value</tt> can cause the query language to give “wrong” answers if
 these filtering operations are applied to frames in which variables
 are unbound.  Devise a way to fix this shortcoming.  One idea is to
-perform the filtering in a ``delayed'' manner by appending to the
-frame a ``promise'' to filter that is fulfilled only when enough
+perform the filtering in a “delayed” manner by appending to the
+frame a “promise” to filter that is fulfilled only when enough
 variables have been bound to make the operation possible.  We could
 wait to perform filtering until all other operations have been
 performed.  However, for efficiency's sake, we would like to perform
@@ -2341,8 +2341,8 @@ environments rather than renaming.  See if you can build on your
 environment structure to create constructs in the query language for
 dealing with large systems, such as the rule analog of
 block-structured procedures.  Can you relate any of this to the
-problem of making deductions in a context (e.g., ``If I supposed that
-<em>P</em> were true, then I would be able to deduce <em>A</em> and <em>B</em>.'') as a
+problem of making deductions in a context (e.g., “If I supposed that
+<em>P</em> were true, then I would be able to deduce <em>A</em> and <em>B</em>.”) as a
 method of problem solving?  (This problem is open-ended.  A good
 answer is probably worth a Ph.D.)
 
@@ -2390,7 +2390,7 @@ relieve the user of the entire problem of how to compute the answer.
 There are many different mathematically equivalent sets of rules for
 formulating the <tt>append</tt> relation, only some of which can be
 turned into effective devices for computing in any direction.  In
-addition, sometimes ``what is'' information gives no clue ``how to''
+addition, sometimes “what is” information gives no clue “how to”
 compute an answer.  For example, consider the problem of computing the
 <em>y</em> such that <em>y</em><sup>2</sup>  =  <em>x</em>.
 
@@ -2423,7 +2423,7 @@ query language is designed to do) or inequality (since that can
 be done with the <tt>same</tt> rule shown below).
 
 </p><p><a name="footnote_Temp_658" href="#call_footnote_Temp_658" id="footnote_Temp_658"><sup><small>65</small></sup></a> Notice that we do not need <tt>same</tt> in order to make two things be
-the same: We just use the same pattern variable for each -- in effect,
+the same: We just use the same pattern variable for each – in effect,
 we have one thing instead of two things in the first place.  For
 example, see <tt>?town</tt> in the <tt>lives-near</tt> rule and <tt>?middle-manager</tt> in the <tt>wheel</tt> rule below.
 <tt>Same</tt> is useful when we want to force two things to be
@@ -2493,7 +2493,7 @@ true and <em>A implies B</em> is true, then we may conclude that <em>B</em>
 is true.
 
 </p><p><a name="footnote_Temp_684" href="#call_footnote_Temp_684" id="footnote_Temp_684"><sup><small>76</small></sup></a> We must qualify this statement by
-agreeing that, in speaking of the ``inference'' accomplished by a
+agreeing that, in speaking of the “inference” accomplished by a
 logic program, we assume that the computation terminates.
 Unfortunately, even this qualified statement is false for our
 implementation of the query language (and also false for programs in
@@ -2522,7 +2522,7 @@ detectors for particular kinds of loops
 (exercise <a href="#%_thm_4.67">4.67</a>).  However, there can be no
 general scheme for reliably preventing a system from going down
 infinite paths in performing deductions.  Imagine a diabolical rule of
-the form ``To show <em>P</em>(<em>x</em>) is true, show that <em>P</em>(<em>f</em>(<em>x</em>)) is true,'' for
+the form “To show <em>P</em>(<em>x</em>) is true, show that <em>P</em>(<em>f</em>(<em>x</em>)) is true,” for
 some suitably chosen function <em>f</em>.
 
 </p><p><a name="footnote_Temp_688" href="#call_footnote_Temp_688" id="footnote_Temp_688"><sup><small>78</small></sup></a> Consider the query <tt>(not (baseball-fan (Bitdiddle Ben)))</tt>.  The system finds that <tt>(baseball-fan (Bitdiddle Ben))</tt> is not in the data base, so the empty

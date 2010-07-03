@@ -187,7 +187,7 @@ figure <a href="#%_fig_5.13">5.13</a>, constructs an object whose local
 state consists of a stack, an initially empty instruction sequence, a
 list of operations that initially contains an operation to <a name="%_idx_5656" id="%_idx_5656"></a>initialize
 the stack, and a <a name="%_idx_5658" id="%_idx_5658"></a><em>register table</em> that initially contains two
-<a name="%_idx_5660" id="%_idx_5660"></a><a name="%_idx_5662" id="%_idx_5662"></a>registers, named <tt>flag</tt> and <tt>pc</tt> <a name="%_idx_5664" id="%_idx_5664"></a>(for ``program counter'').
+<a name="%_idx_5660" id="%_idx_5660"></a><a name="%_idx_5662" id="%_idx_5662"></a>registers, named <tt>flag</tt> and <tt>pc</tt> <a name="%_idx_5664" id="%_idx_5664"></a>(for “program counter”).
 The internal procedure <tt>allocate-register</tt> adds new entries to the
 register table, and the internal procedure <tt>lookup-register</tt> looks
 up registers in the table.</p><p>
@@ -300,7 +300,7 @@ given name in a given machine:
 The assembler transforms the sequence of controller expressions for a
 machine into a corresponding list of machine instructions, each with
 its execution procedure.  Overall, the assembler is much like the
-evaluators we studied in chapter 4 -- there is an input language (in
+evaluators we studied in chapter 4 – there is an input language (in
 this case, the register-machine language) and we must perform an
 appropriate action for each type of expression in the language.</p><p>
 
@@ -563,7 +563,7 @@ also that the label is looked up at assembly time, not each time the
 
 <a name="%_idx_5746" id="%_idx_5746"></a>A <tt>goto</tt> instruction is similar to a branch, except that the
 destination may be specified either as a label or as a register, and
-there is no condition to check -- the <tt>pc</tt> is always set to the
+there is no condition to check – the <tt>pc</tt> is always set to the
 new destination.
 </p><p></p><p><tt><a name="%_idx_5748" id="%_idx_5748"></a>(define (make-goto inst machine labels pc)<br />
   (let ((dest (goto-dest inst)))<br />
@@ -652,7 +652,7 @@ may include the application of a machine operation (specified by
 an <tt>op</tt> expression) to some operands (specified by <tt>reg</tt>
 and <tt>const</tt> expressions).
 The following procedure produces an execution procedure
-for an ``operation expression'' -- a list containing the operation and
+for an “operation expression” – a list containing the operation and
 operand expressions from the instruction:
 </p><p></p><p><tt><a name="%_idx_5790" id="%_idx_5790"></a>(define (make-operation-exp exp machine labels operations)<br />
   (let ((op (lookup-prim (operation-exp-op exp) operations))<br />
@@ -766,7 +766,7 @@ instructions.
 <a name="%_idx_5806" id="%_idx_5806"></a>Simulation is useful not only for verifying the correctness of a
 proposed machine design but also for measuring the machine's
 performance.  For example, we can install in our simulation program a
-``meter'' that measures the number of stack operations used in a
+“meter” that measures the number of stack operations used in a
 computation.  To do this, we modify our simulated stack to keep track
 of the number of times registers are saved on the stack and the
 maximum depth reached by the stack, and add a message to the stack's
@@ -908,8 +908,8 @@ or to remove all breakpoints by means of</p><p>
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_727" href="#call_footnote_Temp_727" id="footnote_Temp_727"><sup><small>4</small></sup></a> <a name="%_idx_5690" id="%_idx_5690"></a>Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values -- <tt>labels</tt> and
-<tt>insts</tt> -- without explicitly making a compound data structure to
+</p><div class="footnote"><p><a name="footnote_Temp_727" href="#call_footnote_Temp_727" id="footnote_Temp_727"><sup><small>4</small></sup></a> <a name="%_idx_5690" id="%_idx_5690"></a>Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values – <tt>labels</tt> and
+<tt>insts</tt> – without explicitly making a compound data structure to
 hold them.  An alternative implementation, which returns an explicit
 pair of values, is
 </p><p></p><p><tt><a name="%_idx_5692" id="%_idx_5692"></a>(define (extract-labels text)<br />
@@ -932,7 +932,7 @@ which would be called by <tt>assemble</tt> as follows:
 <a name="%_idx_5696" id="%_idx_5696"></a><a name="%_idx_5698" id="%_idx_5698"></a><a name="%_idx_5700" id="%_idx_5700"></a>You can consider our use of <tt>receive</tt> as demonstrating an elegant
 way to return multiple values, or simply an excuse to show off a
 programming trick.  An argument like <tt>receive</tt> that is the next
-procedure to be invoked is called a ``continuation.''  Recall that we
+procedure to be invoked is called a “continuation.”  Recall that we
 also used continuations to implement the backtracking control
 structure in the <tt>amb</tt> evaluator in section <a href="book-Z-H-28.html#%_sec_4.3.3">4.3.3</a>.
 

@@ -36,7 +36,7 @@ constructed.</p><p>
 
 Figure <a href="#%_fig_2.23">2.23</a> shows the structure of the system we
 shall build.  Notice the <a name="%_idx_2498" id="%_idx_2498"></a>abstraction barriers.  From the perspective
-of someone using ``numbers,'' there is a single procedure <tt>add</tt>
+of someone using “numbers,” there is a single procedure <tt>add</tt>
 that operates on whatever numbers are supplied.  <tt>Add</tt> is part of
 a generic interface that allows the separate ordinary-arithmetic,
 rational-arithmetic, and complex-arithmetic packages to be accessed
@@ -209,7 +209,7 @@ The outer tag (<tt>complex</tt>) is used to direct the number to the
 complex package.  Once within the complex package, the next tag (<tt>rectangular</tt>) is used to direct the number to the rectangular package.
 In a large and complicated system there might be many levels, each
 interfaced with the next by means of generic operations.  As a data
-object is passed ``downward,'' the outer tag that is used to direct
+object is passed “downward,” the outer tag that is used to direct
 it to the appropriate package is stripped off (by applying <tt>contents</tt>) and the next level of tag (if any) becomes visible to be used for
 further dispatching.</p><p>
 
@@ -233,10 +233,10 @@ he gets an error message from <tt>apply-generic</tt>,
 saying there is no method for the operation <tt>magnitude</tt>
 on the types <tt>(complex)</tt>.
 He shows this interaction to Alyssa P. Hacker, who says
-``The problem is that the complex-number selectors were never
+“The problem is that the complex-number selectors were never
 defined for <tt>complex</tt> numbers, just for <tt>polar</tt> and <tt>rectangular</tt>
 numbers.  All you have to do to make this work is add the following
-to the <tt>complex</tt> package:''</p><p>
+to the <tt>complex</tt> package:”</p><p>
 
 </p><p></p><p><tt>(put 'real-part '(complex) real-part)<br />
 (put 'imag-part '(complex) imag-part)<br />
@@ -434,7 +434,7 @@ types, as we discuss next.</p><p>
 
 <a name="%_idx_2592" id="%_idx_2592"></a><a name="%_idx_2594" id="%_idx_2594"></a>
 The coercion scheme presented above relied on the existence of natural
-relations between pairs of types.  Often there is more ``global''
+relations between pairs of types.  Often there is more “global”
 structure in how the different types relate to each other.  For
 instance, suppose we are building a generic arithmetic system to
 handle integers, rational numbers, real numbers, and complex numbers.
@@ -468,7 +468,7 @@ then add the two complex numbers.</p><p>
 
 <a name="%_idx_2608" id="%_idx_2608"></a><a name="%_idx_2610" id="%_idx_2610"></a>We can redesign our <tt>apply-generic</tt> procedure in the following
 way: For each type, we need to supply a <tt>raise</tt> procedure, which
-``raises'' objects of that type one level in the tower.  Then when the
+“raises” objects of that type one level in the tower.  Then when the
 system is required to operate on objects of different types it can
 successively raise the lower types until all the objects are at
 the same level in the tower.  (Exercises <a href="#%_thm_2.83">2.83</a>
@@ -476,7 +476,7 @@ and  <a href="#%_thm_2.84">2.84</a>
 concern the details of implementing such a strategy.)</p><p>
 
 Another advantage of a tower is that we can easily implement the
-notion that every type ``inherits'' all operations defined on a
+notion that every type “inherits” all operations defined on a
 supertype.  For instance, if we do not supply a special procedure for
 finding the real part of an integer, we should nevertheless expect
 that <tt>real-part</tt> will be defined for integers by virtue of the
@@ -488,7 +488,7 @@ go, until we either find a level at which the desired operation can be
 performed or hit the top (in which case we give up).</p><p>
 
 <a name="%_idx_2612" id="%_idx_2612"></a>Yet another advantage of a tower over a more general hierarchy is that
-it gives us a simple way to ``lower'' a data object to the simplest
+it gives us a simple way to “lower” a data object to the simplest
 representation.  For example, if we add 2 + 3<em>i</em> to 4 - 3<em>i</em>, it would be
 nice to obtain the answer as the integer 6 rather than as the complex
 number 6 + 0<em>i</em>.  Exercise <a href="#%_thm_2.85">2.85</a> discusses a way to implement
@@ -516,11 +516,11 @@ for instance, are both subtypes of polygons.  In addition, a type may
 have more than one supertype.  For example, an isosceles right
 triangle may be regarded either as an isosceles triangle or as a right
 triangle.  This multiple-supertypes issue is particularly thorny,
-since it means that there is no unique way to ``raise'' a type in the
-hierarchy.  Finding the ``correct'' supertype in which to apply an
+since it means that there is no unique way to “raise” a type in the
+hierarchy.  Finding the “correct” supertype in which to apply an
 operation to an object may involve considerable searching through the
 entire type network on the part of a procedure such as <tt>apply-generic</tt>.  Since there generally are multiple subtypes for a
-type, there is a similar problem in coercing a value ``down'' the type
+type, there is a similar problem in coercing a value “down” the type
 hierarchy.  Dealing with large numbers of interrelated types while
 still preserving modularity in the design of large systems is very
 difficult, and is an area of much current research.<a name="call_footnote_Temp_289" href="#footnote_Temp_289" id="call_footnote_Temp_289"><sup><small>52</small></sup></a></p><p>
@@ -591,14 +591,14 @@ that type one level in the tower.  Show how to install a generic <tt>raise</tt> 
 <b>Exercise 2.84.</b>  <a name="%_idx_2636" id="%_idx_2636"></a>Using the <tt>raise</tt> operation of exercise <a href="#%_thm_2.83">2.83</a>, modify the <tt>apply-generic</tt> procedure so that it coerces its arguments to have the
 same type by the method of successive raising, as discussed in this
 section.  You will need to devise a way to test which of two types is
-higher in the tower.  Do this in a manner that is ``compatible'' with
+higher in the tower.  Do this in a manner that is “compatible” with
 the rest of the system and will not lead to problems in adding new
 levels to the tower.
 
 </p><p></p><p>
 
 </p><p><a name="%_thm_2.85" id="%_thm_2.85"></a>
-<b>Exercise 2.85.</b>  <a name="%_idx_2638" id="%_idx_2638"></a><a name="%_idx_2640" id="%_idx_2640"></a>This section mentioned a method for ``simplifying'' a data object
+<b>Exercise 2.85.</b>  <a name="%_idx_2638" id="%_idx_2638"></a><a name="%_idx_2640" id="%_idx_2640"></a>This section mentioned a method for “simplifying” a data object
 by lowering it in the tower of types as far as possible.  Design
 a procedure <tt>drop</tt> that accomplishes this for the tower described
 in exercise <a href="#%_thm_2.83">2.83</a>.  The key is to decide, in some general way, whether
@@ -607,7 +607,7 @@ can be lowered as far as <tt>real</tt>, the complex number 1 + 0<em>i</em> can b
 lowered as far as <tt>integer</tt>, and the complex number 2 + 3<em>i</em> cannot
 be lowered at all.  Here is a plan for determining whether an object
 can be lowered: Begin by defining a generic operation <tt>project</tt>
-that ``pushes'' an object down in the tower.  For example, projecting
+that “pushes” an object down in the tower.  For example, projecting
 a complex number would involve throwing away the imaginary part.  Then
 a number can be dropped if, when we <tt>project</tt> it and <tt>raise</tt>
 the result back to the type we started with, we end up with something
@@ -618,7 +618,7 @@ operations<a name="call_footnote_Temp_295" href="#footnote_Temp_295" id="call_fo
 the system.  You will also need to make use of a generic equality
 predicate, such as described in exercise <a href="#%_thm_2.79">2.79</a>.  Finally, use <tt>drop</tt>
 to rewrite <tt>apply-generic</tt> from exercise <a href="#%_thm_2.84">2.84</a> so that it
-``simplifies'' its answers.
+“simplifies” its answers.
 
 </p><p> </p><p>
 
@@ -648,7 +648,7 @@ as addition and multiplication.  As in other languages, we form
 abstractions that enable us to refer to compound objects in simple
 terms.  Typical abstractions in symbolic algebra are ideas such as
 linear combination, polynomial, rational function, or trigonometric
-function.  We can regard these as compound ``types,'' which are often
+function.  We can regard these as compound “types,” which are often
 useful for directing the processing of expressions.  For example, we
 could describe the expression</p><p>
 
@@ -684,17 +684,17 @@ is a polynomial in <em>x</em> whose coefficients are polynomials in <em>y</em>.<
 
 Already we are skirting some thorny issues.  Is the first of these
 polynomials the same as the polynomial 5<em>y</em><sup>2</sup>  + 3<em>y</em>  + 7, or not?  A
-reasonable answer might be ``yes, if we are considering a polynomial
+reasonable answer might be “yes, if we are considering a polynomial
 purely as a mathematical function, but no, if we are considering a
-polynomial to be a syntactic form.''  The second polynomial is
+polynomial to be a syntactic form.”  The second polynomial is
 algebraically equivalent to a polynomial in <em>y</em> whose coefficients are
 polynomials in <em>x</em>.  Should our system recognize this, or not?
-Furthermore, there are other ways to represent a polynomial -- for
+Furthermore, there are other ways to represent a polynomial – for
 example, as a product of factors, or (for a univariate polynomial) as
 the set of roots, or as a listing of the values of the polynomial at a
 specified set of points.<a name="call_footnote_Temp_299" href="#footnote_Temp_299" id="call_footnote_Temp_299"><sup><small>55</small></sup></a>
 We can finesse these questions by deciding that in our
-algebraic-manipulation system a ``polynomial'' will be a
+algebraic-manipulation system a “polynomial” will be a
 particular syntactic form, not its underlying mathematical meaning.</p><p>
 
 Now we must consider how to go about doing arithmetic on polynomials.
@@ -848,8 +848,8 @@ automatically able to handle polynomial operations such as
 
 The reason is that when the system tries to combine coefficients, it
 will dispatch through <tt>add</tt> and <tt>mul</tt>.  Since the coefficients
-are themselves polynomials (in <em>y</em>), these will be combined using <tt>add-poly</tt> and <tt>mul-poly</tt>.  The result is a kind of <a name="%_idx_2720" id="%_idx_2720"></a><a name="%_idx_2722" id="%_idx_2722"></a>``data-directed
-recursion'' in which, for example, a call to <tt>mul-poly</tt> will result
+are themselves polynomials (in <em>y</em>), these will be combined using <tt>add-poly</tt> and <tt>mul-poly</tt>.  The result is a kind of <a name="%_idx_2720" id="%_idx_2720"></a><a name="%_idx_2722" id="%_idx_2722"></a>“data-directed
+recursion” in which, for example, a call to <tt>mul-poly</tt> will result
 in recursive calls to <tt>mul-poly</tt> in order to multiply the
 coefficients.  If the coefficients of the coefficients were themselves
 polynomials (as might be used to represent polynomials in three
@@ -871,7 +871,7 @@ access term lists sequentially from highest to lowest order.  Thus, we
 will use some kind of ordered list representation.</p><p>
 
 How should we structure the list that represents a term list?  One
-consideration is the ``density'' of the polynomials we intend to
+consideration is the “density” of the polynomials we intend to
 manipulate.  A polynomial is said to be <a name="%_idx_2726" id="%_idx_2726"></a><a name="%_idx_2728" id="%_idx_2728"></a><em>dense</em> if it has nonzero
 coefficients in terms of most orders.  If it has many zero terms it
 is said to be <a name="%_idx_2730" id="%_idx_2730"></a><a name="%_idx_2732" id="%_idx_2732"></a><em>sparse</em>.  For example,
@@ -997,7 +997,7 @@ different types as parts.  This poses no real difficulty in defining
 generic operations.  We need only install appropriate generic operations
 for performing the necessary manipulations of the parts of the
 compound types.  In fact, we saw that polynomials form a kind of
-``recursive data abstraction,'' in that parts of a polynomial may
+“recursive data abstraction,” in that parts of a polynomial may
 themselves be polynomials.  Our generic operations and our
 data-directed programming style can handle this complication without
 much trouble.</p><p>
@@ -1007,13 +1007,13 @@ types cannot be naturally arranged in a tower.  For instance, it is
 possible to have polynomials in <em>x</em> whose coefficients are polynomials
 in <em>y</em>.  It is also possible to have polynomials in <em>y</em> whose
 coefficients are polynomials in <em>x</em>.  Neither of these types is
-``above'' the other in any natural way, yet it is often necessary to
+“above” the other in any natural way, yet it is often necessary to
 add together elements from each set.  There are several ways to do
 this.  One possibility is to convert one polynomial to the type of the
 other by expanding and rearranging terms so that both polynomials have
 the same principal variable.  One can impose a towerlike structure on
 this by ordering the variables and thus always converting any
-polynomial to a <a name="%_idx_2770" id="%_idx_2770"></a><a name="%_idx_2772" id="%_idx_2772"></a>``canonical form'' with the highest-priority variable
+polynomial to a <a name="%_idx_2770" id="%_idx_2770"></a><a name="%_idx_2772" id="%_idx_2772"></a>“canonical form” with the highest-priority variable
 dominant and the lower-priority variables buried in the coefficients.
 This strategy works fairly well, except that the conversion may expand
 a polynomial unnecessarily, making it hard to read and perhaps less
@@ -1041,7 +1041,7 @@ in different variables.  (This is not easy!)
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_312">Extended exercise: Rational functions</a></h4><p>
 
 <a name="%_idx_2776" id="%_idx_2776"></a><a name="%_idx_2778" id="%_idx_2778"></a><a name="%_idx_2780" id="%_idx_2780"></a>We can extend our generic arithmetic system to include <em>rational
-functions</em>.  These are ``fractions'' whose numerator and denominator
+functions</em>.  These are “fractions” whose numerator and denominator
 are polynomials, such as</p><p>
 
 </p><p></p><div align="left"><img src="images/ch2-Z-G-77.gif" border="0" /></div><p>
@@ -1049,7 +1049,7 @@ The system should be able to add, subtract, multiply, and divide
 rational functions, and to perform such computations as
 </p><p></p><div align="left"><img src="images/ch2-Z-G-78.gif" border="0" /></div><p>
 (Here the sum has been simplified by removing common factors.
-Ordinary ``cross multiplication'' would have produced a
+Ordinary “cross multiplication” would have produced a
 fourth-degree polynomial over a fifth-degree polynomial.)</p><p>
 
 If we modify our rational-arithmetic package so that it uses generic
@@ -1074,7 +1074,7 @@ this addition procedure does not reduce fractions to lowest terms.
 We can reduce polynomial fractions to lowest terms using the same idea
 we used with integers: modifying <tt>make-rat</tt> to divide both the
 numerator and the denominator by their greatest common divisor.  The
-notion of <a name="%_idx_2782" id="%_idx_2782"></a><a name="%_idx_2784" id="%_idx_2784"></a>``greatest common divisor'' makes sense for polynomials.  In
+notion of <a name="%_idx_2782" id="%_idx_2782"></a><a name="%_idx_2784" id="%_idx_2784"></a>“greatest common divisor” makes sense for polynomials.  In
 fact, we can compute the GCD of two polynomials using essentially the
 same Euclid's Algorithm that works for integers.<a name="call_footnote_Temp_314" href="#footnote_Temp_314" id="call_footnote_Temp_314"><sup><small>60</small></sup></a>  The
 integer version is</p><p>
@@ -1257,7 +1257,7 @@ type 2 and from type 2 to type 3, then we can use this knowledge to
 convert from type 1 to type 3.  This can greatly decrease the number
 of coercion procedures we need to supply explicitly when we add a new
 type to the system.  If we are willing to build the required amount of
-sophistication into our system, we can have it search the ``graph'' of
+sophistication into our system, we can have it search the “graph” of
 relations among types and automatically generate those coercion
 procedures that can be inferred from the ones that are supplied
 explicitly.
@@ -1266,19 +1266,19 @@ explicitly.
 is just as true now as it was when we wrote it twelve years ago.
 Developing a useful, general framework for expressing the relations
 among different types of entities (what philosophers call
-``ontology'') seems intractably difficult.  The main difference
+“ontology”) seems intractably difficult.  The main difference
 between the confusion that existed ten years ago and the confusion
 that exists now is that now a variety of inadequate ontological
 theories have been embodied in a plethora of correspondingly
 inadequate programming languages.  For example, much of the complexity
-of <a name="%_idx_2622" id="%_idx_2622"></a><a name="%_idx_2624" id="%_idx_2624"></a>object-oriented programming languages -- and the subtle and
+of <a name="%_idx_2622" id="%_idx_2622"></a><a name="%_idx_2624" id="%_idx_2624"></a>object-oriented programming languages – and the subtle and
 confusing differences among contemporary object-oriented
-languages -- centers on the treatment of generic operations on
+languages – centers on the treatment of generic operations on
 interrelated types.  Our own discussion of computational objects in
 chapter 3 avoids these issues entirely.  Readers familiar with
 object-oriented programming will notice that we have much to say in
-chapter 3 about local state, but we do not even mention ``classes'' or
-``inheritance.''  In fact, we suspect that these problems cannot be
+chapter 3 about local state, but we do not even mention “classes” or
+“inheritance.”  In fact, we suspect that these problems cannot be
 adequately addressed in terms of computer-language design alone,
 without also drawing on work in knowledge representation and automated
 reasoning.
@@ -1311,7 +1311,7 @@ produces the term list for a sum is almost identical to <tt>union-set</tt>.
 
 </p><p><a name="footnote_Temp_301" href="#call_footnote_Temp_301" id="footnote_Temp_301"><sup><small>57</small></sup></a> To make
 this work completely smoothly, we should also add to our generic
-arithmetic system the ability to coerce a ``number'' to a polynomial
+arithmetic system the ability to coerce a “number” to a polynomial
 by regarding it as a polynomial of degree zero whose coefficient is
 the number.  This is necessary if we are going to perform operations
 such as
@@ -1341,7 +1341,7 @@ by saying that polynomials form a kind of algebraic domain called a
 <a name="%_idx_2790" id="%_idx_2790"></a><a name="%_idx_2792" id="%_idx_2792"></a><em>Euclidean ring</em>.  A Euclidean ring is a domain that admits
 addition, subtraction, and commutative multiplication, together with a
 way of assigning to each element <em>x</em> of the ring a positive integer
-``measure'' <em>m</em>(<em>x</em>) with the properties that <em>m</em>(<em>x</em><em>y</em>)<u>&gt;</u> <em>m</em>(<em>x</em>) for
+“measure” <em>m</em>(<em>x</em>) with the properties that <em>m</em>(<em>x</em><em>y</em>)<u>&gt;</u> <em>m</em>(<em>x</em>) for
 any nonzero <em>x</em> and <em>y</em> and that, given any <em>x</em> and <em>y</em>, there exists
 a <em>q</em> such that <em>y</em> = <em>q</em><em>x</em> + <em>r</em> and either <em>r</em> = 0 or <em>m</em>(<em>r</em>)&lt; <em>m</em>(<em>x</em>).  From an
 abstract point of view, this is what is needed to prove that Euclid's

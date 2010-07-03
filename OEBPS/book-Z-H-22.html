@@ -40,7 +40,7 @@ that changes the balance of the designated account to the designated
 new value.  Data objects for which mutators are defined are known as
 <em>mutable data objects</em>.</p><p>
 
-Chapter 2 introduced pairs as a general-purpose ``glue'' for
+Chapter 2 introduced pairs as a general-purpose “glue” for
 synthesizing compound data.  We begin this section by defining basic
 mutators for pairs, so that pairs can serve as building blocks for
 constructing mutable data objects.  These mutators greatly enhance the
@@ -56,7 +56,7 @@ objects with local state.</p><p>
 
 <a name="%_idx_3132" id="%_idx_3132"></a><a name="%_idx_3134" id="%_idx_3134"></a>
 <a name="%_idx_3136" id="%_idx_3136"></a><a name="%_idx_3138" id="%_idx_3138"></a>
-The basic operations on pairs -- <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> -- can be used to construct list structure and to select parts
+The basic operations on pairs – <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt> – can be used to construct list structure and to select parts
 from list structure, but they are incapable of modifying list
 structure.  The same is true of the list operations we have used so
 far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined
@@ -192,7 +192,7 @@ What happens if we try to compute <tt>(last-pair z)</tt>?
           (set-cdr! x y)<br />
           (loop temp x))))<br />
   (loop x '()))<br /></tt></p><p></p><p>
-<tt>Loop</tt> uses the ``temporary'' variable <tt>temp</tt> to hold
+<tt>Loop</tt> uses the “temporary” variable <tt>temp</tt> to hold
 the old value of the <tt>cdr</tt> of <tt>x</tt>, since the <tt>set-cdr!</tt>
 on the next line destroys the <tt>cdr</tt>.  Explain what <tt>mystery</tt>
 does in general.  Suppose <tt>v</tt> is defined by <tt>(define v (list 'a
@@ -209,7 +209,7 @@ would be printed as the values of <tt>v</tt> and <tt>w</tt> ?
 
 <a name="%_idx_3176" id="%_idx_3176"></a><a name="%_idx_3178" id="%_idx_3178"></a>
 <a name="%_idx_3180" id="%_idx_3180"></a><a name="%_idx_3182" id="%_idx_3182"></a>We mentioned in section <a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a> the theoretical
-issues of ``sameness'' and ``change'' raised by the introduction of
+issues of “sameness” and “change” raised by the introduction of
 assignment.  These issues arise in practice when individual pairs are
 <em>shared</em> among different data objects.  For example, consider the
 structure formed by</p><p>
@@ -242,8 +242,8 @@ the structure created by</p><p>
 In this structure, the pairs in the two <tt>(a b)</tt> lists are
 distinct, although the actual symbols are shared.<a name="call_footnote_Temp_356" href="#footnote_Temp_356" id="call_footnote_Temp_356"><sup><small>19</small></sup></a></p><p>
 
-When thought of as a list, <tt>z1</tt> and <tt>z2</tt> both represent ``the
-same'' list, <tt>((a b) a b)</tt>.  In general, sharing is completely
+When thought of as a list, <tt>z1</tt> and <tt>z2</tt> both represent “the
+same” list, <tt>((a b) a b)</tt>.  In general, sharing is completely
 undetectable if we operate on lists using only <tt>cons</tt>, <tt>car</tt>,
 and <tt>cdr</tt>.  However, if we allow mutators on list structure,
 sharing becomes significant.  As an example of the difference that
@@ -253,7 +253,7 @@ sharing can make, consider the following procedure, which modifies the
 </p><p></p><p><tt>(define (set-to-wow! x)<br />
   (set-car! (car x) 'wow)<br />
   x)<br /></tt></p><p></p><p>
-Even though <tt>z1</tt> and <tt>z2</tt> are ``the same'' structure,
+Even though <tt>z1</tt> and <tt>z2</tt> are “the same” structure,
 applying <tt>set-to-wow!</tt> to them yields different results.  With
 <tt>z1</tt>, altering the <tt>car</tt> also changes the <tt>cdr</tt>, because
 in <tt>z1</tt> the <tt>car</tt> and the <tt>cdr</tt> are the same pair.  With
@@ -287,9 +287,9 @@ are shared, mutation can have unanticipated results.<a name="call_footnote_Temp_
 
 </p><p><a name="%_thm_3.16" id="%_thm_3.16"></a>
 <b>Exercise 3.16.</b>  Ben Bitdiddle decides to write a procedure to count the number of
-pairs in any list structure.  ``It's easy,'' he reasons.  ``The number
+pairs in any list structure.  “It's easy,” he reasons.  “The number
 of pairs in any structure is the number in the <tt>car</tt> plus the
-number in the <tt>cdr</tt> plus one more to count the current pair.''
+number in the <tt>cdr</tt> plus one more to count the current pair.”
 So Ben writes the following procedure:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_3192" id="%_idx_3192"></a>(define (count-pairs x)<br />
@@ -538,15 +538,15 @@ proceeds to try them out:</p><p>
 (insert-queue! q1 'b)<br /><i>((a b) b)</i><br />
 (delete-queue! q1)<br /><i>((b) b)</i><br />
 (delete-queue! q1)<br /><i>(() b)</i><br /></tt></p><p></p><p>
-``It's all wrong!'' he complains.  ``The interpreter's response shows
+“It's all wrong!” he complains.  “The interpreter's response shows
 that the last item is inserted into the queue twice.  And when I
 delete both items, the second <tt>b</tt> is still there, so the queue
-isn't empty, even though it's supposed to be.''  Eva Lu Ator suggests
-that Ben has misunderstood what is happening.  ``It's not that the
-items are going into the queue twice,'' she explains.  ``It's just
+isn't empty, even though it's supposed to be.”  Eva Lu Ator suggests
+that Ben has misunderstood what is happening.  “It's not that the
+items are going into the queue twice,” she explains.  “It's just
 that the standard Lisp printer doesn't know how to make sense of the
 queue representation.  If you want to see the queue printed correctly,
-you'll have to define your own print procedure for queues.'' Explain
+you'll have to define your own print procedure for queues.” Explain
 what Eva Lu is talking about.  In particular, show why Ben's examples
 produce the printed results that they do.  Define a procedure <a name="%_idx_3260" id="%_idx_3260"></a><tt>print-queue</tt> that takes a queue as input and prints the sequence of
 items in the queue.
@@ -569,7 +569,7 @@ implementations of the queue operations using this representation.
 </p><p></p><p>
 
 </p><p><a name="%_thm_3.23" id="%_thm_3.23"></a>
-<b>Exercise 3.23.</b>  <a name="%_idx_3264" id="%_idx_3264"></a><a name="%_idx_3266" id="%_idx_3266"></a>A <em>deque</em> (``double-ended queue'') is a sequence in which items
+<b>Exercise 3.23.</b>  <a name="%_idx_3264" id="%_idx_3264"></a><a name="%_idx_3266" id="%_idx_3266"></a>A <em>deque</em> (“double-ended queue”) is a sequence in which items
 can be inserted and deleted at either the front or the rear.
 Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>.  Show how to represent deques using pairs, and
 give implementations of the operations.<a name="call_footnote_Temp_370" href="#footnote_Temp_370" id="call_footnote_Temp_370"><sup><small>23</small></sup></a>
@@ -599,7 +599,7 @@ gluing pairs are called the <a name="%_idx_3274" id="%_idx_3274"></a><em>backbon
 have a place that we can change when we add a new record to the table,
 we build the table as a <a name="%_idx_3276" id="%_idx_3276"></a><a name="%_idx_3278" id="%_idx_3278"></a><em>headed list</em>.  A headed list has a
 special backbone pair at the beginning, which holds a dummy
-``record'' -- in this case the arbitrarily chosen symbol <tt>*table*</tt>.
+“record” – in this case the arbitrarily chosen symbol <tt>*table*</tt>.
 Figure <a href="#%_fig_3.22">3.22</a> shows the box-and-pointer diagram for the table</p><p>
 
 </p><p></p><p><tt>a:  1<br />
@@ -720,7 +720,7 @@ more than one table.  Another way to deal with multiple tables is to
 have separate <tt>lookup</tt> and <tt>insert!</tt> procedures for each
 table.  We can do this by representing a table procedurally, as an
 object that maintains an internal table as part of its local state.
-When sent an appropriate message, this ``table object'' supplies the
+When sent an appropriate message, this “table object” supplies the
 procedure with which to operate on the internal table.  Here is a
 generator for two-dimensional tables represented in this fashion:</p><p>
 
@@ -772,7 +772,7 @@ instance, we might have a table with numeric keys in which we don't
 need an exact match to the number we're looking up,
 but only a number within some tolerance of it.
 Design a table constructor <tt>make-table</tt> that takes as an argument a <tt>same-key?</tt> procedure
-that will be used to test ``equality'' of keys.  <tt>Make-table</tt> should
+that will be used to test “equality” of keys.  <tt>Make-table</tt> should
 return a <tt>dispatch</tt> procedure that can be used to access
 appropriate <tt>lookup</tt> and <tt>insert!</tt> procedures for a local
 table.
@@ -858,7 +858,7 @@ behavior.  Computer simulation of proposed circuit designs is an
 important tool used by digital systems engineers.  In this section we
 design a system for performing digital logic simulations.  This system
 typifies a kind of program called an <a name="%_idx_3330" id="%_idx_3330"></a><a name="%_idx_3332" id="%_idx_3332"></a><em>event-driven simulation</em>, in
-which actions (``events'') trigger further events that happen at a
+which actions (“events”) trigger further events that happen at a
 later time, which in turn trigger more events, and so so.</p><p>
 
 
@@ -909,7 +909,7 @@ this fact.</p><p>
 
 We will now build a program for modeling the digital logic circuits we
 wish to study.  The program will construct computational objects
-modeling the wires, which will ``hold'' the signals.  Function boxes
+modeling the wires, which will “hold” the signals.  Function boxes
 will be modeled by procedures that enforce the correct relationships
 among the signals.</p><p>
 
@@ -977,7 +977,7 @@ serves as a means of abstraction.</p><p>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_380">Primitive function boxes</a></h4><p>
 
 <a name="%_idx_3368" id="%_idx_3368"></a>
-The primitive function boxes implement the ``forces'' by which a
+The primitive function boxes implement the “forces” by which a
 change in the signal on one wire influences the signals on other
 wires.  To build function boxes, we use the following operations on
 wires:</p><p>
@@ -1052,7 +1052,7 @@ is a 0 or a 1).  The circuit generates S<sub>1</sub>, S<sub>2</sub>, S<sub>3</su
 <tt>...</tt>, S<sub><em>n</em></sub>, the <em>n</em> bits of the sum, and C, the carry from
 the addition.  Write a procedure <tt>ripple-carry-adder</tt> that
 generates this circuit.  The procedure should take as arguments three
-lists of <em>n</em> wires each -- the A<sub><em>k</em></sub>, the B<sub><em>k</em></sub>, and the S<sub><em>k</em></sub> -- and
+lists of <em>n</em> wires each – the A<sub><em>k</em></sub>, the B<sub><em>k</em></sub>, and the S<sub><em>k</em></sub> – and
 also another wire C.  The major drawback of the ripple-carry adder is
 the need to wait for the carry signals to propagate.  What is the
 delay needed to obtain the complete output from an <em>n</em>-bit
@@ -1188,7 +1188,7 @@ as long as there are items on the agenda:</p><p>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_387">A sample simulation</a></h4><p>
 
 <a name="%_idx_3428" id="%_idx_3428"></a><a name="%_idx_3430" id="%_idx_3430"></a>
-The following procedure, which places a ``probe'' on a wire, shows the
+The following procedure, which places a “probe” on a wire, shows the
 simulator in action.  The probe tells the wire that, whenever its
 signal changes value, it should print the new signal value, together
 with the current time and a name that identifies the wire:</p><p>
@@ -1392,7 +1392,7 @@ be 3.14.</p><p>
 Our language provides a means of combining primitive constraints in
 order to express more complex relations.  We combine constraints by
 constructing <a name="%_idx_3514" id="%_idx_3514"></a><em>constraint networks</em>, in which constraints are
-joined by <a name="%_idx_3516" id="%_idx_3516"></a><em>connectors</em>.  A connector is an object that ``holds'' a
+joined by <a name="%_idx_3516" id="%_idx_3516"></a><em>connectors</em>.  A connector is an object that “holds” a
 value that may participate in one or more constraints.  For example,
 we know that the relationship between Fahrenheit and Celsius
 temperatures is</p><p>
@@ -1584,7 +1584,7 @@ below):</p><p>
 <tt>Adder</tt> connects the new adder to the designated connectors and
 returns it as its value.  The procedure <tt>me</tt>, which represents the
 adder, acts as a dispatch to the local procedures.  The following
-``syntax interfaces'' (see footnote <a href="#footnote_Temp_385">27</a> in
+“syntax interfaces” (see footnote <a href="#footnote_Temp_385">27</a> in
 section <a href="#%_sec_3.3.4">3.3.4</a>) are used in conjunction with the
 dispatch:</p><p>
 
@@ -1835,7 +1835,7 @@ compared with a more expression-oriented style of definition, such as</p><p>
       (cv 32)))<br />
 (define C (make-connector))<br />
 (define F (celsius-fahrenheit-converter C))<br /></tt></p><p></p><p>
-Here <tt>c+</tt>, <tt>c*</tt>, etc. are the ``constraint'' versions of the
+Here <tt>c+</tt>, <tt>c*</tt>, etc. are the “constraint” versions of the
 arithmetic operations.  For example, <tt>c+</tt> takes two connectors as
 arguments and returns a connector that is related to these by an adder
 constraint:
@@ -1855,7 +1855,7 @@ the converter example above.<a name="call_footnote_Temp_404" href="#footnote_Tem
 <a name="%_idx_3148" id="%_idx_3148"></a><a name="%_idx_3150" id="%_idx_3150"></a><a name="%_idx_3152" id="%_idx_3152"></a><a name="%_idx_3154" id="%_idx_3154"></a>values.  Like <tt>set!</tt>, they should be used only for their effect.
 
 </p><p><a name="footnote_Temp_350" href="#call_footnote_Temp_350" id="footnote_Temp_350"><sup><small>17</small></sup></a> We see from this that mutation operations on lists
-can create ``garbage'' that is not part of any accessible structure.
+can create “garbage” that is not part of any accessible structure.
 We will see in section <a href="book-Z-H-33.html#%_sec_5.3.2">5.3.2</a> that Lisp memory-management
 systems include a <a name="%_idx_3156" id="%_idx_3156"></a><em>garbage collector</em>, which identifies and
 recycles the memory space used by unneeded pairs.
@@ -1874,18 +1874,18 @@ pointers.
 
 </p><p><a name="footnote_Temp_357" href="#call_footnote_Temp_357" id="footnote_Temp_357"><sup><small>20</small></sup></a> The
 subtleties of dealing with sharing of mutable data objects reflect the
-underlying issues of ``sameness'' and ``change'' that were raised in
+underlying issues of “sameness” and “change” that were raised in
 section <a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>.  We mentioned there that
 admitting change to our language requires that a compound object must
-have an ``identity'' that is something different from the pieces from
-which it is composed.  In Lisp, we consider this ``identity'' to be
+have an “identity” that is something different from the pieces from
+which it is composed.  In Lisp, we consider this “identity” to be
 the quality that is tested by <tt>eq?</tt>, i.e., by equality of
 pointers.  Since in most Lisp implementations a pointer is
-essentially a memory address, we are ``solving the problem'' of
+essentially a memory address, we are “solving the problem” of
 defining the identity of objects by stipulating that a data object
-``itself'' is the information stored in some particular set of memory
+“itself” is the information stored in some particular set of memory
 locations in the computer.  This suffices for simple Lisp programs,
-but is hardly a general way to resolve the issue of ``sameness'' in
+but is hardly a general way to resolve the issue of “sameness” in
 computational models.
 
 </p><p><a name="footnote_Temp_364" href="#call_footnote_Temp_364" id="footnote_Temp_364"><sup><small>21</small></sup></a> On the other hand, from the
@@ -1909,7 +1909,7 @@ uses <tt>equal?</tt>, it can recognize keys that are symbols, numbers,
 or list structure.
 
 </p><p><a name="footnote_Temp_372" href="#call_footnote_Temp_372" id="footnote_Temp_372"><sup><small>25</small></sup></a> Thus, the first backbone pair is the
-object that represents the table ``itself''; that is, a pointer to the
+object that represents the table “itself”; that is, a pointer to the
 table is a pointer to this pair.  This same backbone pair always
 starts the table.  If we did not arrange things in this way, <tt>insert!</tt> would have to return a new value for the start of the table
 when it added a new record.
@@ -1925,13 +1925,13 @@ carry bit to be propagated to the left.
 </p><p><a name="footnote_Temp_385" href="#call_footnote_Temp_385" id="footnote_Temp_385"><sup><small>27</small></sup></a> These procedures are simply syntactic sugar that allow
 <a name="%_idx_3400" id="%_idx_3400"></a><a name="%_idx_3402" id="%_idx_3402"></a>us to use ordinary procedural syntax to access the local procedures of
 objects.  It is striking that we can interchange the role of
-``procedures'' and ``data'' in such a simple way.  For example, if we
+“procedures” and “data” in such a simple way.  For example, if we
 write <tt>(wire 'get-signal)</tt> we think of <tt>wire</tt> as a procedure
 that is called with the message <tt>get-signal</tt> as input.
 Alternatively, writing <tt>(get-signal wire)</tt> encourages us to think
 of <tt>wire</tt> as a data object that is the input to a procedure <tt>get-signal</tt>.  The truth of the matter is that, in a language in which
 we can deal with procedures as objects, there is no fundamental
-difference between ``procedures'' and ``data,'' and we can choose our
+difference between “procedures” and “data,” and we can choose our
 syntactic sugar to allow us to program in whatever style we choose.
 
 
@@ -1942,7 +1942,7 @@ dummy header (such as the <tt>*table*</tt> symbol used with tables).
 
 </p><p><a name="footnote_Temp_391" href="#call_footnote_Temp_391" id="footnote_Temp_391"><sup><small>29</small></sup></a> Observe that the <tt>if</tt> expression in
 this procedure has no
-&lt;<em>alternative</em>&gt; expression.  Such a ``one-armed <tt>if</tt> statement''
+&lt;<em>alternative</em>&gt; expression.  Such a “one-armed <tt>if</tt> statement”
 <a name="%_idx_3474" id="%_idx_3474"></a><a name="%_idx_3476" id="%_idx_3476"></a>is used to decide whether to do something, rather than to select
 between two expressions.  An <tt>if</tt> expression returns an
 unspecified value if the predicate is false and there is no
@@ -1972,7 +1972,7 @@ expressions in a computation.  Our original formulation of the
 <a name="%_idx_3568" id="%_idx_3568"></a><a name="%_idx_3570" id="%_idx_3570"></a><a name="%_idx_3572" id="%_idx_3572"></a><a name="%_idx_3574" id="%_idx_3574"></a><a name="%_idx_3576" id="%_idx_3576"></a>constraint language is cumbersome in the same way that many languages
 are cumbersome when dealing with operations on compound data.  For
 example, if we wanted to compute the product (<em>a</em> + <em>b</em>) · (<em>c</em> + <em>d</em>), where the
-variables represent vectors, we could work in ``imperative style,''
+variables represent vectors, we could work in “imperative style,”
 using procedures that set the values of designated vector arguments
 but do not themselves return vectors as values:
 </p><p></p><p><tt>(v-sum a b temp1)<br />

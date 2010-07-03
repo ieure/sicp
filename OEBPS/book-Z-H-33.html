@@ -32,7 +32,7 @@ conventional computer memories.</p><p>
 
 There are two considerations in implementing list structure.  The
 first is purely an issue of representation: how to represent the
-``box-and-pointer'' structure of Lisp pairs, using only the storage
+“box-and-pointer” structure of Lisp pairs, using only the storage
 and addressing capabilities of typical computer memories.  The second
 issue concerns the management of memory as a computation proceeds.
 The operation of a Lisp system depends crucially on the ability to
@@ -102,8 +102,8 @@ representation for objects other than pairs (such as numbers and
 symbols) and a way to distinguish one kind of data from another.
 There are many methods of accomplishing this, but they all reduce to
 using <a name="%_idx_5860" id="%_idx_5860"></a><a name="%_idx_5862" id="%_idx_5862"></a><em>typed pointers</em>, that is, to extending the notion of
-``pointer'' to include information on data type.<a name="call_footnote_Temp_747" href="#footnote_Temp_747" id="call_footnote_Temp_747"><sup><small>7</small></sup></a> The data type enables the system to
-distinguish a pointer to a pair (which consists of the ``pair'' data
+“pointer” to include information on data type.<a name="call_footnote_Temp_747" href="#footnote_Temp_747" id="call_footnote_Temp_747"><sup><small>7</small></sup></a> The data type enables the system to
+distinguish a pointer to a pair (which consists of the “pair” data
 type and an index into the memory vectors) from pointers to other
 kinds of data (which consist of some other data type and whatever is
 being used to represent data of that type).  Two data objects are
@@ -137,7 +137,7 @@ stored.<a name="call_footnote_Temp_750" href="#footnote_Temp_750" id="call_footn
 sequence of the characters that form the symbol's printed representation.
 This sequence is constructed by the Lisp reader when the character string
 is initially encountered in input.  Since we want two instances of a
-symbol to be recognized as the ``same'' symbol by <tt>eq?</tt> and we
+symbol to be recognized as the “same” symbol by <tt>eq?</tt> and we
 <a name="%_idx_5884" id="%_idx_5884"></a>want <tt>eq?</tt> to be a simple test for equality of pointers, we must
 ensure that if the reader sees the same character string twice, it
 will use the same pointer (to the same sequence of characters) to
@@ -159,7 +159,7 @@ unique pointers is called <a name="%_idx_5888" id="%_idx_5888"></a><a name="%_id
 </p><p>
 
 <a name="%_idx_5892" id="%_idx_5892"></a><a name="%_idx_5894" id="%_idx_5894"></a>Given the above representation scheme, we can replace each
-``primitive'' list operation of a register machine with one or more
+“primitive” list operation of a register machine with one or more
 primitive vector operations.  We will use two registers, <tt>the-cars</tt> and <tt>the-cdrs</tt>, to identify the memory vectors, and will
 assume that <tt>vector-ref</tt> and <tt>vector-set!</tt> are available as
 primitive operations.  We also assume that numeric operations on
@@ -290,7 +290,7 @@ With a real computer we will eventually run out of free space in which
 to construct new pairs.<a name="call_footnote_Temp_758" href="#footnote_Temp_758" id="call_footnote_Temp_758"><sup><small>13</small></sup></a>
 However, most of the pairs generated in a typical
 computation are used only to hold intermediate results.  After these
-results are accessed, the pairs are no longer needed -- they are <em>garbage</em>.  For instance, the computation</p><p>
+results are accessed, the pairs are no longer needed – they are <em>garbage</em>.  For instance, the computation</p><p>
 
 </p><p></p><p><tt>(accumulate + 0 (filter odd? (enumerate-interval 0 n)))<br /></tt></p><p></p><p>
 constructs two lists: the enumeration and the result of filtering
@@ -314,8 +314,8 @@ that is not so accessible may be recycled.</p><p>
 
 There are many ways to perform garbage collection.  The method we
 shall examine here is called <a name="%_idx_5932" id="%_idx_5932"></a><a name="%_idx_5934" id="%_idx_5934"></a><em>stop-and-copy</em>.  The basic idea is
-to divide memory into two halves: ``working memory'' and ``free
-memory.''  When <tt>cons</tt> constructs pairs, it allocates these in
+to divide memory into two halves: “working memory” and “free
+memory.”  When <tt>cons</tt> constructs pairs, it allocates these in
 working memory.  When working memory is full, we perform garbage
 collection by locating all the useful pairs in working memory and
 copying these into consecutive locations in free memory.  (The useful
@@ -352,7 +352,7 @@ vector.  When the garbage-collection process is complete, the <tt>root</tt> poin
 from the <tt>root</tt> will have been moved to the new memory, and the
 <tt>free</tt> pointer will indicate the next place in the new memory
 where a new pair can be allocated.  In addition, the roles of working
-memory and new memory will have been interchanged -- new pairs will be
+memory and new memory will have been interchanged – new pairs will be
 constructed in the new memory, beginning at the place indicated by
 <tt>free</tt>, and the (previous) working memory will be available as the
 new memory for the next garbage collection.
@@ -467,7 +467,7 @@ follows: If the object to be relocated (pointed at by <tt>old</tt>) is
 not a pair, then we return the same pointer to the object unchanged
 (in <tt>new</tt>).  (For example, we may be scanning a pair whose <tt>car</tt> is the number 4.  If we represent the <tt>car</tt> by <tt>n4</tt>, as
 described in section <a href="#%_sec_5.3.1">5.3.1</a>, then we want the
-``relocated'' <tt>car</tt> pointer to still be <tt>n4</tt>.)  Otherwise, we
+“relocated” <tt>car</tt> pointer to still be <tt>n4</tt>.)  Otherwise, we
 must perform the relocation.  If the <tt>car</tt> position of the pair to
 be relocated contains a broken-heart tag, then the pair has in fact
 already been moved, so we retrieve the forwarding address (from the
@@ -534,7 +534,7 @@ application we will use vectors only to model fixed divisions of the
 computer memory.
 
 </p><p><a name="footnote_Temp_747" href="#call_footnote_Temp_747" id="footnote_Temp_747"><sup><small>7</small></sup></a> This is
-precisely the same <a name="%_idx_5864" id="%_idx_5864"></a><a name="%_idx_5866" id="%_idx_5866"></a>``tagged data'' idea we introduced in chapter 2 for
+precisely the same <a name="%_idx_5864" id="%_idx_5864"></a><a name="%_idx_5866" id="%_idx_5866"></a>“tagged data” idea we introduced in chapter 2 for
 dealing with generic operations.  Here, however, the data types are
 included at the primitive machine level rather than constructed
 through the use of lists.
@@ -564,7 +564,7 @@ equal pointers only if we are careful never to store the same number
 in more than one location.
 
 </p><p><a name="footnote_Temp_750" href="#call_footnote_Temp_750" id="footnote_Temp_750"><sup><small>10</small></sup></a> This is just like writing a number as a sequence of
-digits, except that each ``digit'' is a number between 0 and the
+digits, except that each “digit” is a number between 0 and the
 largest number that can be stored in a single pointer.
 
 </p><p><a name="footnote_Temp_752" href="#call_footnote_Temp_752" id="footnote_Temp_752"><sup><small>11</small></sup></a> There are other ways
@@ -600,7 +600,7 @@ accessible via the pointer in the stack register.
 <a name="%_idx_5940" id="%_idx_5940"></a>MIT Research Laboratory of Electronics.  It was further developed by
 <a name="%_idx_5942" id="%_idx_5942"></a><a name="%_idx_5944" id="%_idx_5944"></a>Fenichel and Yochelson (1969) for use in the Lisp implementation for
 <a name="%_idx_5946" id="%_idx_5946"></a>the Multics time-sharing system.  Later, <a name="%_idx_5948" id="%_idx_5948"></a>Baker (1978) developed a
-``real-time'' version of the method, which does not require the
+“real-time” version of the method, which does not require the
 computation to stop during garbage collection.  Baker's idea was
 extended by <a name="%_idx_5950" id="%_idx_5950"></a><a name="%_idx_5952" id="%_idx_5952"></a><a name="%_idx_5954" id="%_idx_5954"></a>Hewitt, Lieberman, and Moon (see Lieberman and Hewitt
 1983) to take advantage of the fact that some structure is more volatile
@@ -609,7 +609,7 @@ and other structure is more permanent.  </p><p>
 An alternative commonly used garbage-collection technique is the <a name="%_idx_5956" id="%_idx_5956"></a><a name="%_idx_5958" id="%_idx_5958"></a><em>mark-sweep</em> method.  This consists of tracing all the structure
 accessible from the machine registers and marking each pair we reach.
 We then scan all of memory, and any location that is unmarked is
-``swept up'' as garbage and made available for reuse.  A full
+“swept up” as garbage and made available for reuse.  A full
 <a name="%_idx_5960" id="%_idx_5960"></a>discussion of the mark-sweep method can be found in Allen 1978.</p><p>
 
 The Minsky-Fenichel-Yochelson algorithm is the dominant algorithm in
@@ -625,7 +625,7 @@ widely separated memory addresses may require extra paging
 operations.
 
 </p><p><a name="footnote_Temp_762" href="#call_footnote_Temp_762" id="footnote_Temp_762"><sup><small>16</small></sup></a> This list of registers does not include
-the registers used by the storage-allocation system -- <tt>root</tt>, <tt>the-cars</tt>, <tt>the-cdrs</tt>, and the other registers that will be
+the registers used by the storage-allocation system – <tt>root</tt>, <tt>the-cars</tt>, <tt>the-cdrs</tt>, and the other registers that will be
 introduced in this section.
 
 </p><p><a name="footnote_Temp_763" href="#call_footnote_Temp_763" id="footnote_Temp_763"><sup><small>17</small></sup></a> The term <em><a name="%_idx_5982" id="%_idx_5982"></a>broken heart</em> was coined by David Cressey, who wrote a garbage
@@ -637,7 +637,7 @@ collector for <a name="%_idx_5984" id="%_idx_5984"></a><a name="%_idx_5986" id="
 operation because in a real system there might be various things
 that are treated as pairs for garbage-collection purposes.
 For example, in a Scheme system that conforms to the IEEE standard
-a procedure object may be implemented as a special kind of ``pair''
+a procedure object may be implemented as a special kind of “pair”
 that doesn't satisfy the <tt>pair?</tt> predicate.
 For simulation purposes, <tt>pointer-to-pair?</tt> can be implemented as
 <tt>pair?</tt>.

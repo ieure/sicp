@@ -47,7 +47,7 @@ It would be convenient if these replacements could be done
 simultaneously, but in our model of register machines we will assume
 that only one register can be assigned a new value at each step.  To
 accomplish the replacements, our machine will use a third
-``temporary'' register, which we call <tt>t</tt>.  (First the remainder
+“temporary” register, which we call <tt>t</tt>.  (First the remainder
 will be placed in <tt>t</tt>, then the contents of <tt>b</tt> will be placed
 in <tt>a</tt>, and finally the remainder stored in <tt>t</tt> will be placed
 in <tt>b</tt>.)</p><p>
@@ -59,7 +59,7 @@ diagram, the registers (<tt>a</tt>, <tt>b</tt>, and <tt>t</tt>) are represented
 by rectangles.  Each way to assign a value to a register is
 indicated by an arrow with an <tt>X</tt> behind the head, pointing from
 the source of data to the register.  We can think of the <tt>X</tt> as a
-button that, when pushed, allows the value at the source to ``flow''
+button that, when pushed, allows the value at the source to “flow”
 into the designated register.  The label next to each button is the
 name we will use to refer to the button.  The names are arbitrary, and
 can be chosen to have mnemonic value (for example, <tt>a&lt;-b</tt> denotes
@@ -223,16 +223,16 @@ descriptions so that we see it all together.</p><p>
 
 To obtain this form of description, we will replace the arbitrary
 button and operation names by the definitions of their behavior.  That
-is, instead of saying (in the controller) ``Push button <tt>t&lt;-r</tt>''
-and separately saying (in the data paths) ``Button <tt>t&lt;-r</tt> assigns
-the value of the <tt>rem</tt> operation to register <tt>t</tt>'' and ``The
+is, instead of saying (in the controller) “Push button <tt>t&lt;-r</tt>”
+and separately saying (in the data paths) “Button <tt>t&lt;-r</tt> assigns
+the value of the <tt>rem</tt> operation to register <tt>t</tt>” and “The
 <tt>rem</tt> operation's inputs are the contents of registers
-<a name="%_idx_5516" id="%_idx_5516"></a><a name="%_idx_5518" id="%_idx_5518"></a><a name="%_idx_5520" id="%_idx_5520"></a><a name="%_idx_5522" id="%_idx_5522"></a><a name="%_idx_5524" id="%_idx_5524"></a><a name="%_idx_5526" id="%_idx_5526"></a><tt>a</tt> and <tt>b</tt>,'' we will say (in the controller) ``Push the
+<a name="%_idx_5516" id="%_idx_5516"></a><a name="%_idx_5518" id="%_idx_5518"></a><a name="%_idx_5520" id="%_idx_5520"></a><a name="%_idx_5522" id="%_idx_5522"></a><a name="%_idx_5524" id="%_idx_5524"></a><a name="%_idx_5526" id="%_idx_5526"></a><tt>a</tt> and <tt>b</tt>,” we will say (in the controller) “Push the
 button that assigns to register <tt>t</tt> the value of the <tt>rem</tt>
-operation on the contents of registers <tt>a</tt> and <tt>b</tt>.''
-Similarly, instead of saying (in the controller) ``Perform the <tt>=</tt> test'' and separately saying (in the data paths) ``The <tt>=</tt> test operates on the contents of register <tt>b</tt> and the
-constant 0,'' we will say ``Perform the <tt>=</tt> test on the
-<a name="%_idx_5528" id="%_idx_5528"></a><a name="%_idx_5530" id="%_idx_5530"></a>contents of register <tt>b</tt> and the constant 0.''  We will omit the
+operation on the contents of registers <tt>a</tt> and <tt>b</tt>.”
+Similarly, instead of saying (in the controller) “Perform the <tt>=</tt> test” and separately saying (in the data paths) “The <tt>=</tt> test operates on the contents of register <tt>b</tt> and the
+constant 0,” we will say “Perform the <tt>=</tt> test on the
+<a name="%_idx_5528" id="%_idx_5528"></a><a name="%_idx_5530" id="%_idx_5530"></a>contents of register <tt>b</tt> and the constant 0.”  We will omit the
 data-path description, leaving only the controller sequence.  Thus,
 the GCD machine is described as follows:</p><p>
 
@@ -303,7 +303,7 @@ to be stored in a register.  Though it has an effect, this effect is
 not on a part of the machine we are designing.  We will refer to this
 kind of operation as an <em>action</em>.  We will represent an action in
 a data-path diagram just as we represent an operation that computes a
-value -- as a trapezoid that contains the name of the action.
+value – as a trapezoid that contains the name of the action.
 Arrows point to the action box from any inputs (registers or
 constants).  We also associate a button with the action.  Pushing the
 button makes the action happen.  To make a controller push an action
@@ -342,7 +342,7 @@ chapter 4.</p><p>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.1.2">5.1.2  Abstraction in Machine Design</a></h3><p>
 
 <a name="%_idx_5546" id="%_idx_5546"></a>
-We will often define a machine to include ``primitive'' operations that are
+We will often define a machine to include “primitive” operations that are
 actually very complex.  For example, in sections <a href="book-Z-H-34.html#%_sec_5.4">5.4</a> and
 <a href="book-Z-H-35.html#%_sec_5.5">5.5</a> we will treat Scheme's environment
 manipulations as primitive.  Such abstraction is valuable because it
@@ -350,7 +350,7 @@ allows us to ignore the details of parts of a machine so that we can
 concentrate on other aspects of the design.  The fact that we have
 swept a lot of complexity under the rug, however, does not mean that a
 machine design is unrealistic.  We can always replace the complex
-``primitives'' by simpler primitive operations.</p><p>
+“primitives” by simpler primitive operations.</p><p>
 
 Consider the GCD machine. The machine has an instruction that computes
 the remainder of the contents of registers <tt>a</tt> and <tt>b</tt> and
@@ -430,7 +430,7 @@ definition in the register-machine language.
 When designing a machine to perform a computation, we would often
 prefer to arrange for components to be shared by different parts of
 the computation rather than duplicate the components.  Consider a
-machine that includes two GCD computations -- one that finds the GCD of
+machine that includes two GCD computations – one that finds the GCD of
 the contents of registers <tt>a</tt> and <tt>b</tt> and one that finds the
 GCD of the contents of registers <tt>c</tt> and <tt>d</tt>.  We might start
 by assuming we have a primitive <tt>gcd</tt> operation, then expand the
@@ -481,7 +481,7 @@ We have removed the duplicate data-path components
 but the controller
 now has two GCD sequences that differ only in their entry-point
 labels.  It would be better to replace these two sequences by branches
-to a single sequence -- a <tt>gcd</tt> <em>subroutine</em> -- at the end of
+to a single sequence – a <tt>gcd</tt> <em>subroutine</em> – at the end of
 which we branch back to the correct place in the main instruction
 sequence.  We can accomplish this as follows: Before branching to <tt>gcd</tt>, we place a distinguishing value (such as 0 or 1) into a special
 register, <a name="%_idx_5554" id="%_idx_5554"></a><tt>continue</tt>.  At the end of the <tt>gcd</tt> subroutine we
@@ -680,7 +680,7 @@ recursive calls, we may need to save an arbitrary number of register
 values.  These values must be restored in the reverse of the order in
 which they were saved, since in a nest of recursions the last
 subproblem to be entered is the first to be finished.  This dictates
-the use of a <em>stack</em>, or ``last in, first out'' data structure, to
+the use of a <em>stack</em>, or “last in, first out” data structure, to
 save register values.  We can extend the register-machine language to
 include a stack by adding two kinds of instructions: Values are placed
 <a name="%_idx_5574" id="%_idx_5574"></a><a name="%_idx_5576" id="%_idx_5576"></a><a name="%_idx_5578" id="%_idx_5578"></a><a name="%_idx_5580" id="%_idx_5580"></a>on the stack using a <tt>save</tt> instruction and restored from the
@@ -705,7 +705,7 @@ solves a subproblem and then continue where it left off on the main
 problem.  We can thus make a factorial subroutine that returns to the
 entry point stored in the <tt>continue</tt> register.  Around each subroutine
 call, we save and restore <tt>continue</tt> just as we do the <tt>n</tt>
-register, since each ``level'' of the factorial computation will use
+register, since each “level” of the factorial computation will use
 the same <tt>continue</tt> register.  That is, the factorial subroutine
 must put a new value in <tt>continue</tt> when it calls itself for a
 subproblem, but it will need the old value in order to return to the
@@ -761,7 +761,7 @@ Just as with factorial, we can implement the recursive Fibonacci
 computation as a register machine with registers <tt>n</tt>, <tt>val</tt>,
 and <tt>continue</tt>.  The machine is more complex than the one for
 factorial, because there are two places in the controller sequence
-where we need to perform recursive calls -- once to compute Fib(<em>n</em> - 1)
+where we need to perform recursive calls – once to compute Fib(<em>n</em> - 1)
 and once to compute Fib(<em>n</em> - 2).  To set up for each of these calls, we
 save the registers whose values will be needed later, set the <tt>n</tt>
 register to the number whose Fib we need to compute recursively (<em>n</em> - 1

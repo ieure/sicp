@@ -39,7 +39,7 @@ which compound elements can be named and manipulated as units.<p>
 
 In programming, we deal with two kinds of elements: <a name="%_idx_128" id="%_idx_128"></a>procedures and
 <a name="%_idx_130" id="%_idx_130"></a>data. (Later we will discover that they are really not so distinct.)
-Informally, data is ``stuff'' that we want to manipulate, and
+Informally, data is “stuff” that we want to manipulate, and
 procedures are descriptions of the rules for manipulating the data.
 Thus, any powerful programming language should be able to describe
 primitive data and primitive procedures and should have methods for
@@ -233,8 +233,8 @@ Viewing evaluation in terms of the tree, we can imagine that the
 values of the operands percolate upward, starting from the terminal
 nodes and then combining at higher and higher levels.  In general, we
 shall see that recursion is a very powerful technique for dealing with
-hierarchical, treelike objects.  In fact, the ``percolate values
-upward'' form of the evaluation rule is an example of a general kind
+hierarchical, treelike objects.  In fact, the “percolate values
+upward” form of the evaluation rule is an example of a general kind
 of process known as <a name="%_idx_262" id="%_idx_262"></a><em>tree accumulation</em>.</p><p>
 
 <a name="%_fig_1.1" id="%_fig_1.1"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch1-Z-G-1.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 1.1:</b>  Tree representation, showing the value of each subcombination.</div></caption><tr><td>
@@ -258,7 +258,7 @@ with those names in the environment.
 We may regard the second rule as a special case of the third one by
 stipulating that symbols such as <tt>+</tt> and <tt>*</tt> are also included
 in the global environment, and are associated with the sequences of
-machine instructions that are their ``values.''  The key point to
+machine instructions that are their “values.”  The key point to
 notice is the role of the <a name="%_idx_268" id="%_idx_268"></a>environment in determining the meaning of
 the symbols in expressions.  In an interactive language such as
 Lisp, it is meaningless to speak of the value of an expression such as
@@ -312,8 +312,8 @@ Now we will learn about
 technique by which a compound operation can be given a name and then
 referred to as a unit.</p><p>
 
-We begin by examining how to express the idea of ``squaring.''  We
-might say, ``To square something, multiply it by itself.''  This is
+We begin by examining how to express the idea of “squaring.”  We
+might say, “To square something, multiply it by itself.”  This is
 expressed in our language as </p><p>
 
 </p><p></p><p><tt><a name="%_idx_294" id="%_idx_294"></a>(define (square x) (* x x))<br /></tt></p><p></p><p></p><p>
@@ -433,7 +433,7 @@ and finally to</p><p>
 
 The process we have just described is called the <em>substitution
 model</em> for procedure application.  It can be taken as a model that
-determines the ``meaning'' of procedure application, insofar as the
+determines the “meaning” of procedure application, insofar as the
 procedures in this chapter are concerned.  However, there are two
 points that should be stressed:</p><p>
 
@@ -442,7 +442,7 @@ procedure application, not to provide a description of how
 the interpreter really works.  Typical interpreters do not evaluate
 procedure applications by manipulating the text of a procedure to
 substitute values for the formal parameters.  In practice, the
-``substitution'' is accomplished by using a local environment for the
+“substitution” is accomplished by using a local environment for the
 formal parameters.  We will discuss this more fully in chapters 3 and
 4 when we examine the implementation of an interpreter in detail.<p>
 
@@ -450,13 +450,13 @@ formal parameters.  We will discuss this more fully in chapters 3 and
 increasingly elaborate models of how interpreters work, culminating
 with a complete implementation of an interpreter and compiler in
 chapter 5.  The substitution model is only the first of these
-models -- a way to get started thinking formally about the evaluation
+models – a way to get started thinking formally about the evaluation
 process.  In general, when <a name="%_idx_336" id="%_idx_336"></a>modeling phenomena in science and
 engineering, we begin with simplified, incomplete models.  As we
 examine things in greater detail, these simple models become
 inadequate and must be replaced by more refined models.  The
 substitution model is no exception.  In particular, when we address in
-chapter 3 the use of procedures with ``mutable data,'' we will see that
+chapter 3 the use of procedures with “mutable data,” we will see that
 the substitution model breaks down and must be replaced by a more
 complicated model of procedure application.<a name="call_footnote_Temp_21" href="#footnote_Temp_21" id="call_footnote_Temp_21"><sup><small>15</small></sup></a>
 </li></ul><p></p><p>
@@ -494,16 +494,16 @@ corresponding to the reduction of the expression</p><p>
 </p><p></p><p><tt>(* x x)<br /></tt></p><p></p><p>
 with <tt>x</tt> replaced respectively by <tt>(+ 5 1)</tt> and <tt>(* 5 2)</tt>.</p><p>
 
-This alternative ``fully expand and then reduce'' evaluation method is
-known as <a name="%_idx_340" id="%_idx_340"></a><em>normal-order evaluation</em>, in contrast to the ``evaluate
-the arguments and then apply'' method that the interpreter actually
+This alternative “fully expand and then reduce” evaluation method is
+known as <a name="%_idx_340" id="%_idx_340"></a><em>normal-order evaluation</em>, in contrast to the “evaluate
+the arguments and then apply” method that the interpreter actually
 uses, which is called <a name="%_idx_342" id="%_idx_342"></a><em>applicative-order evaluation</em>.  It can be
 shown that, for procedure applications that can be modeled using
 substitution (including all the procedures in the first two chapters
 of this book) and that yield legitimate values, normal-order and
 applicative-order evaluation produce the same value.  (See
 exercise <a href="#%_thm_1.5">1.5</a> for an instance of
-an ``illegitimate'' value where normal-order and applicative-order
+an “illegitimate” value where normal-order and applicative-order
 evaluation do not give the same result.)</p><p>
 
 <a name="%_idx_344" id="%_idx_344"></a><a name="%_idx_346" id="%_idx_346"></a>Lisp uses applicative-order evaluation, partly because of the
@@ -533,7 +533,7 @@ to the rule</p><p>
 <a name="%_idx_350" id="%_idx_350"></a>This construct is called a <em>case analysis</em>, and
 there is a special form in Lisp for notating such a case
 analysis.  It is called <a name="%_idx_352" id="%_idx_352"></a><a name="%_idx_354" id="%_idx_354"></a><a name="%_idx_356" id="%_idx_356"></a><tt>cond</tt> (which stands for
-``conditional''), and it is used as follows:</p><p>
+“conditional”), and it is used as follows:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_358" id="%_idx_358"></a>(define (abs x)<br />
   (cond ((&gt; x 0) x)<br />
@@ -547,7 +547,7 @@ The general form of a conditional expression is</p><p>
       (&lt;<em>p<sub><em>n</em></sub></em>&gt; &lt;<em>e<sub><em>n</em></sub></em>&gt;))<br /></tt></p><p></p><p>
 consisting of the symbol <tt>cond</tt> followed by
 <a name="%_idx_360" id="%_idx_360"></a>parenthesized pairs of expressions <tt>(&lt;<em>p</em>&gt; &lt;<em>e</em>&gt;)</tt>
-called <a name="%_idx_362" id="%_idx_362"></a><a name="%_idx_364" id="%_idx_364"></a><em>clauses</em>. The first expression in each pair is a <a name="%_idx_366" id="%_idx_366"></a><em>predicate</em> -- that is, an expression whose value is interpreted as
+called <a name="%_idx_362" id="%_idx_362"></a><a name="%_idx_364" id="%_idx_364"></a><em>clauses</em>. The first expression in each pair is a <a name="%_idx_366" id="%_idx_366"></a><em>predicate</em> – that is, an expression whose value is interpreted as
 either true or false.<a name="call_footnote_Temp_24" href="#footnote_Temp_24" id="call_footnote_Temp_24"><sup><small>17</small></sup></a></p><p>
 
 <a name="%_idx_384" id="%_idx_384"></a><a name="%_idx_386" id="%_idx_386"></a>Conditional expressions are evaluated as follows.  The predicate
@@ -573,8 +573,8 @@ Another way to write the absolute-value procedure is</p><p>
 </p><p></p><p><tt><a name="%_idx_414" id="%_idx_414"></a>(define (abs x)<br />
   (cond ((&lt; x 0) (- x))<br />
         (else x)))<br /></tt></p><p></p><p>
-which could be expressed in English as ``If <em>x</em> is less than zero
-return  - <em>x</em>; otherwise return <em>x</em>.''  <a name="%_idx_416" id="%_idx_416"></a><tt>Else</tt> is a special symbol
+which could be expressed in English as “If <em>x</em> is less than zero
+return  - <em>x</em>; otherwise return <em>x</em>.”  <a name="%_idx_416" id="%_idx_416"></a><tt>Else</tt> is a special symbol
 that can be used in place of the &lt;<em>p</em>&gt; in the final clause of a <tt>cond</tt>.  This causes the <tt>cond</tt> to return as its value the value of
 the corresponding &lt;<em>e</em>&gt; whenever all previous clauses have been
 bypassed.  In fact, any expression that always evaluates to a true
@@ -785,7 +785,7 @@ where</p><p>
 
 </p><p></p><p><tt><a name="%_idx_516" id="%_idx_516"></a>(define (average x y)<br />
   (/ (+ x y) 2))<br /></tt></p><p></p><p>
-We also have to say what we mean by ``good enough.''  The
+We also have to say what we mean by “good enough.”  The
 following will do for illustration, but it is not really a very good
 test.  (See exercise <a href="#%_thm_1.7">1.7</a>.)
 The idea is to improve the answer until it is close enough so that its
@@ -820,8 +820,8 @@ procedure.<a name="call_footnote_Temp_36" href="#footnote_Temp_36" id="call_foot
 
 </p><p><a name="%_thm_1.6" id="%_thm_1.6"></a>
 <b>Exercise 1.6.</b>  <a name="%_idx_556" id="%_idx_556"></a><a name="%_idx_558" id="%_idx_558"></a>Alyssa P. Hacker doesn't see why <tt>if</tt> needs
-to be provided as a special form.  ``Why can't I just define it as an
-ordinary procedure in terms of <tt>cond</tt>?'' she asks.
+to be provided as a special form.  “Why can't I just define it as an
+ordinary procedure in terms of <tt>cond</tt>?” she asks.
 Alyssa's friend Eva Lu Ator claims this can indeed be done, and
 she defines a new version of <tt>if</tt>:</p><p>
 
@@ -878,7 +878,7 @@ of these square-root and cube-root procedures.)
 mutually defined procedures.  Notice that the definition of <tt>sqrt-iter</tt> is <a name="%_idx_564" id="%_idx_564"></a><em>recursive</em>; that is, the procedure is defined in
 terms of itself.  The idea of being able to define a procedure in
 terms of itself may be disturbing; it may seem unclear how such a
-``circular'' definition could make sense at all, much less specify a
+“circular” definition could make sense at all, much less specify a
 well-defined process to be carried out by a computer.  This will be
 addressed more carefully in
 section <a href="book-Z-H-11.html#%_sec_1.2">1.2</a>.  But first let's consider
@@ -898,12 +898,12 @@ the problem into subproblems.</p><p>
 
 <a name="%_idx_568" id="%_idx_568"></a>The importance of this decomposition strategy is not simply that one
 is dividing the program into parts.  After all, we could take any
-large program and divide it into parts -- the first ten lines, the next
+large program and divide it into parts – the first ten lines, the next
 ten lines, the next ten lines, and so on.  Rather, it is crucial that
 each procedure accomplishes an identifiable task that can be used as a
 module in defining other procedures.  <a name="%_idx_570" id="%_idx_570"></a>For example, when we define the
 <tt>good-enough?</tt> procedure in terms of <tt>square</tt>, we are able to
-regard the <tt>square</tt> procedure as a <a name="%_idx_572" id="%_idx_572"></a>``black box.''  We are not at
+regard the <tt>square</tt> procedure as a <a name="%_idx_572" id="%_idx_572"></a>“black box.”  We are not at
 that moment concerned with <em>how</em> the procedure computes its
 result, only with the fact that it computes the square.  The details
 of how the square is computed can be suppressed, to be considered at a
@@ -940,8 +940,8 @@ not be distinguishable:</p><p>
 
 </p><p></p><p><tt>(define (square x) (* x x))<br /><br />
 (define (square y) (* y y))<br /></tt></p><p></p><p>
-This principle -- that the meaning of a procedure should be independent
-of the parameter names used by its author -- seems on the surface to be
+This principle – that the meaning of a procedure should be independent
+of the parameter names used by its author – seems on the surface to be
 self-evident, but its consequences are profound.  The simplest
 consequence is that the parameter names of a procedure must be local
 to the body of the procedure.  For example, we used <tt>square</tt> in
@@ -1077,7 +1077,7 @@ the construction of large programs.</p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
 </p><div class="footnote"><p><a name="footnote_Temp_10" href="#call_footnote_Temp_10" id="footnote_Temp_10"><sup><small>4</small></sup></a> The
-characterization of numbers as ``simple data'' is a barefaced bluff.
+characterization of numbers as “simple data” is a barefaced bluff.
 In fact, the treatment of numbers is one of the trickiest and most
 confusing aspects of any programming language.  Some typical issues
 involved are these:
@@ -1090,7 +1090,7 @@ divided by 2 produce 3, or 3.0?  How large a number can we represent?
 How many decimal places of accuracy can we represent?  Is the range of
 integers the same as the range of real numbers?  <a name="%_idx_142" id="%_idx_142"></a><a name="%_idx_144" id="%_idx_144"></a><a name="%_idx_146" id="%_idx_146"></a>Above and beyond
 these questions, of course, lies a collection of issues concerning
-roundoff and truncation errors -- the entire science of numerical
+roundoff and truncation errors – the entire science of numerical
 analysis.  Since our focus in this book is on large-scale program
 design rather than on numerical techniques, we are going to ignore
 these problems.  The numerical examples in this chapter will exhibit
@@ -1114,8 +1114,8 @@ is typed.
 expression has a value. This convention, together with the old
 reputation of Lisp as an inefficient language, is the source of the
 quip by Alan Perlis (paraphrasing Oscar Wilde)
-that ``Lisp programmers know the value of
-everything but the cost of nothing.''
+that “Lisp programmers know the value of
+everything but the cost of nothing.”
 
 </p><p><a name="footnote_Temp_14" href="#call_footnote_Temp_14" id="footnote_Temp_14"><sup><small>8</small></sup></a> <a name="%_idx_228" id="%_idx_228"></a><a name="%_idx_230" id="%_idx_230"></a>In this book, we do not show the interpreter's response to
 evaluating definitions, since this is highly
@@ -1142,22 +1142,22 @@ matters of syntax.  (By contrast, examine any Pascal manual and notice
 how much of it is devoted to descriptions of syntax.)  This disdain
 for syntax is due partly to the flexibility of Lisp, which makes it
 easy to change surface syntax, and partly to the observation that many
-``convenient'' syntactic constructs, which make the language less
+“convenient” syntactic constructs, which make the language less
 uniform, end up causing more trouble than they are worth when programs
-become large and complex.  In the words of Alan Perlis, ``Syntactic
-sugar causes cancer of the semicolon.''
+become large and complex.  In the words of Alan Perlis, “Syntactic
+sugar causes cancer of the semicolon.”
 
 </p><p><a name="footnote_Temp_18" href="#call_footnote_Temp_18" id="footnote_Temp_18"><sup><small>12</small></sup></a> Observe that there are two different operations
 being combined here: we are creating the procedure, and we are giving
 it the name <tt>square</tt>.  It is possible, indeed important, to be
-able to separate these two notions -- to create procedures without
+able to separate these two notions – to create procedures without
 naming them, and to give names to procedures that have already been
 created.  We will see how to do this in section <a href="book-Z-H-12.html#%_sec_1.3.2">1.3.2</a>.
 
 </p><p><a name="footnote_Temp_19" href="#call_footnote_Temp_19" id="footnote_Temp_19"><sup><small>13</small></sup></a> Throughout this book, we will
 <a name="%_idx_314" id="%_idx_314"></a><a name="%_idx_316" id="%_idx_316"></a>describe the general syntax of expressions by using italic symbols
-delimited by angle brackets -- e.g., &lt;<em>name</em>&gt; -- to denote the
-``slots'' in the expression to be filled in when such an expression is
+delimited by angle brackets – e.g., &lt;<em>name</em>&gt; – to denote the
+“slots” in the expression to be filled in when such an expression is
 actually used.
 
 </p><p><a name="footnote_Temp_20" href="#call_footnote_Temp_20" id="footnote_Temp_20"><sup><small>14</small></sup></a> More
@@ -1179,12 +1179,12 @@ careful discussion of substitution.
 
 </p><p><a name="footnote_Temp_23" href="#call_footnote_Temp_23" id="footnote_Temp_23"><sup><small>16</small></sup></a> In
 chapter 3 we will introduce <em>stream processing</em>, which is a way of
-handling apparently ``infinite'' data structures by incorporating a
+handling apparently “infinite” data structures by incorporating a
 limited form of normal-order evaluation.  In
 section <a href="book-Z-H-27.html#%_sec_4.2">4.2</a> we will modify the Scheme
 interpreter to produce a normal-order variant of Scheme.
 
-</p><p><a name="footnote_Temp_24" href="#call_footnote_Temp_24" id="footnote_Temp_24"><sup><small>17</small></sup></a> <a name="%_idx_368" id="%_idx_368"></a><a name="%_idx_370" id="%_idx_370"></a><a name="%_idx_372" id="%_idx_372"></a><a name="%_idx_374" id="%_idx_374"></a><a name="%_idx_376" id="%_idx_376"></a><a name="%_idx_378" id="%_idx_378"></a><a name="%_idx_380" id="%_idx_380"></a><a name="%_idx_382" id="%_idx_382"></a>``Interpreted as either true or false''
+</p><p><a name="footnote_Temp_24" href="#call_footnote_Temp_24" id="footnote_Temp_24"><sup><small>17</small></sup></a> <a name="%_idx_368" id="%_idx_368"></a><a name="%_idx_370" id="%_idx_370"></a><a name="%_idx_372" id="%_idx_372"></a><a name="%_idx_374" id="%_idx_374"></a><a name="%_idx_376" id="%_idx_376"></a><a name="%_idx_378" id="%_idx_378"></a><a name="%_idx_380" id="%_idx_380"></a><a name="%_idx_382" id="%_idx_382"></a>“Interpreted as either true or false”
 means this: In Scheme, there are two distinguished values that are
 denoted by the constants <tt>#t</tt> and <tt>#f</tt>.  When the interpreter
 checks a predicate's value, it interprets <tt>#f</tt> as false.  Any other value
@@ -1194,7 +1194,7 @@ names <tt>true</tt> and <tt>false</tt>, which are associated
 with the values <tt>#t</tt> and <tt>#f</tt> respectively.
 
 </p><p><a name="footnote_Temp_25" href="#call_footnote_Temp_25" id="footnote_Temp_25"><sup><small>18</small></sup></a> <tt>Abs</tt> also uses
-<a name="%_idx_410" id="%_idx_410"></a><a name="%_idx_412" id="%_idx_412"></a>the ``minus'' operator <tt>-</tt>, which, when used with a single
+<a name="%_idx_410" id="%_idx_410"></a><a name="%_idx_412" id="%_idx_412"></a>the “minus” operator <tt>-</tt>, which, when used with a single
 operand, as in <tt>(- x)</tt>, indicates negation.
 
 </p><p><a name="footnote_Temp_26" href="#call_footnote_Temp_26" id="footnote_Temp_26"><sup><small>19</small></sup></a> A minor difference
@@ -1209,7 +1209,7 @@ In an <tt>if</tt> expression, however, the &lt;<em>consequent</em>&gt; and
 </p><p><a name="footnote_Temp_32" href="#call_footnote_Temp_32" id="footnote_Temp_32"><sup><small>20</small></sup></a> Declarative and
 imperative descriptions are intimately related, as indeed are
 mathematics and computer science.  For instance, to say that the
-answer produced by a program is <a name="%_idx_500" id="%_idx_500"></a>``correct'' is to make a declarative
+answer produced by a program is <a name="%_idx_500" id="%_idx_500"></a>“correct” is to make a declarative
 statement about the program.  There is a large amount of research
 aimed at establishing techniques for <a name="%_idx_502" id="%_idx_502"></a>proving that programs are
 correct, and much of the technical difficulty of this subject has to
@@ -1219,8 +1219,8 @@ be used to deduce things).  In a related vein, an important current
 area in programming-language design is the exploration of so-called
 <a name="%_idx_504" id="%_idx_504"></a><a name="%_idx_506" id="%_idx_506"></a>very high-level languages, in which one actually programs in terms of
 declarative statements.  The idea is to make interpreters
-sophisticated enough so that, given ``what is'' knowledge specified by
-the programmer, they can generate ``how to'' knowledge automatically.
+sophisticated enough so that, given “what is” knowledge specified by
+the programmer, they can generate “how to” knowledge automatically.
 This cannot be done in general, but there are important areas where
 progress has been made.  We shall revisit this idea in chapter 4.
 
@@ -1253,12 +1253,12 @@ initial guess of 1.0 forces all subsequent values to be decimals.
 
 </p><p><a name="footnote_Temp_36" href="#call_footnote_Temp_36" id="footnote_Temp_36"><sup><small>24</small></sup></a> Readers who are worried about the efficiency
 issues involved in using procedure calls to implement iteration should
-note the remarks on ``tail recursion'' in
+note the remarks on “tail recursion” in
 section <a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>.
 
 </p><p><a name="footnote_Temp_40" href="#call_footnote_Temp_40" id="footnote_Temp_40"><sup><small>25</small></sup></a> It is not even clear which of these procedures is a
 more efficient implementation.  This depends upon the hardware
-available.  There are machines for which the ``obvious''
+available.  There are machines for which the “obvious”
 implementation is the less efficient one.  Consider a machine that has
 extensive tables of logarithms and antilogarithms stored in a very
 efficient manner.

@@ -101,14 +101,14 @@ each of the procedures by filling in slots in the same template:</p><p>
 <a name="%_idx_980" id="%_idx_980"></a>The presence of such a common pattern is strong evidence that there is
 a useful abstraction waiting to be brought to the surface.  Indeed,
 mathematicians long ago identified the abstraction of
-<a name="%_idx_982" id="%_idx_982"></a><a name="%_idx_984" id="%_idx_984"></a><em>summation of a series</em> and invented ``sigma
-<a name="%_idx_986" id="%_idx_986"></a><a name="%_idx_988" id="%_idx_988"></a>notation,'' for example</p><p>
+<a name="%_idx_982" id="%_idx_982"></a><a name="%_idx_984" id="%_idx_984"></a><em>summation of a series</em> and invented “sigma
+<a name="%_idx_986" id="%_idx_986"></a><a name="%_idx_988" id="%_idx_988"></a>notation,” for example</p><p>
 
 </p><p></p><div align="left"><img src="images/ch1-Z-G-27.gif" border="0" /></div><p></p><p>
 
 to express this concept.  The power of sigma notation is that it
 allows mathematicians to deal with the concept of summation
-itself rather than only with particular sums -- for example, to
+itself rather than only with particular sums – for example, to
 formulate general results about sums that are independent of the
 particular series being summed.</p><p>
 
@@ -117,7 +117,7 @@ be powerful enough so that we can write a procedure that expresses the
 concept of summation itself rather than only procedures
 that compute particular sums.  We can do so readily in our
 procedural language by taking the common template shown above and
-transforming the ``slots'' into formal parameters:</p><p>
+transforming the “slots” into formal parameters:</p><p>
 
 </p><p></p><p><tt><a name="%_idx_990" id="%_idx_990"></a>(define (sum term a next b)<br />
   (if (&gt; a b)<br />
@@ -279,9 +279,9 @@ In using <tt>sum</tt> as in section <a href="#%_sec_1.3.1">1.3.1</a>,
 it seems terribly awkward to have to define trivial procedures such as
 <tt>pi-term</tt> and <tt>pi-next</tt> just so we can use them as arguments to
 our higher-order procedure.  Rather than define <tt>pi-next</tt> and <tt>pi-term</tt>, it would be more convenient
-to have a way to directly specify ``the procedure that returns its
-input incremented by 4'' and ``the procedure that returns the
-reciprocal of its input times its input plus 2.''  We can do this by
+to have a way to directly specify “the procedure that returns its
+input incremented by 4” and “the procedure that returns the
+reciprocal of its input times its input plus 2.”  We can do this by
 introducing the special form <tt>lambda</tt>, which creates procedures.
 Using <tt>lambda</tt> we can describe what we want as</p><p>
 
@@ -483,8 +483,8 @@ section <a href="#%_sec_1.3.1">1.3.1</a>, we began to see a more
 powerful kind of abstraction: procedures used to express general
 methods of computation, independent of the particular functions
 involved.  In this section we discuss two more elaborate
-examples -- general methods for finding zeros and fixed points of
-functions -- and show how these methods can be expressed directly as
+examples – general methods for finding zeros and fixed points of
+functions – and show how these methods can be expressed directly as
 procedures.</p><p>
 
 <a name="%_sec_Temp_103" id="%_sec_Temp_103"></a>
@@ -504,7 +504,7 @@ the interval is small enough, the process stops.  Since the interval
 of uncertainty is reduced by half at each step of the process, the
 number of steps required grows as θ(<tt>log</tt>( <em>L</em>/<em>T</em>)), where <em>L</em> is the
 length of the original interval and <em>T</em> is the error tolerance
-(that is, the size of the interval we will consider ``small enough'').
+(that is, the size of the interval we will consider “small enough”).
 Here is a procedure that implements this strategy:</p><p>
 
 
@@ -532,7 +532,7 @@ Finally, there is the possibility that the test value is 0, in which
 case the midpoint is itself the root we are searching for.</p><p>
 
 
-To test whether the endpoints are ``close enough'' we can use a
+To test whether the endpoints are “close enough” we can use a
 procedure similar to the one used in section <a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a> for
 computing square roots:<a name="call_footnote_Temp_104" href="#footnote_Temp_104" id="call_footnote_Temp_104"><sup><small>55</small></sup></a></p><p>
 
@@ -688,8 +688,8 @@ expansion with the <em>N</em><sub><em>i</em></sub> and the <em>D</em><sub><em>i<
 section <a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>).
 One way to approximate an
 infinite continued fraction is to truncate the expansion after a given
-number of terms.  Such a truncation -- a so-called <em><em>k</em>-term finite
-continued fraction</em> -- has the form
+number of terms.  Such a truncation – a so-called <em><em>k</em>-term finite
+continued fraction</em> – has the form
 </p><p></p><div align="left"><img src="images/ch1-Z-G-35.gif" border="0" /></div><p>
 Suppose that <tt>n</tt> and <tt>d</tt> are procedures of one argument (the
 term index <em>i</em>) that return the <em>N</em><sub><em>i</em></sub> and <em>D</em><sub><em>i</em></sub> of the terms of the
@@ -821,7 +821,7 @@ For many functions <em>g</em> and for sufficiently good initial guesses for
 <em>g</em>(<em>x</em>) = 0.<a name="call_footnote_Temp_118" href="#footnote_Temp_118" id="call_footnote_Temp_118"><sup><small>62</small></sup></a></p><p>
 
 <a name="%_idx_1186" id="%_idx_1186"></a><a name="%_idx_1188" id="%_idx_1188"></a><a name="%_idx_1190" id="%_idx_1190"></a>In order to implement Newton's method as a procedure, we must first
-express the idea of derivative.  Note that ``derivative,'' like
+express the idea of derivative.  Note that “derivative,” like
 average damping, is something that transforms a function into another
 function.  For instance, the derivative of the function <em>x</em> ⟼
 <em>x</em><sup>3</sup> is the function <em>x</em>  ⟼  3<em>x</em><sup>2</sup>.  In general, if <em>g</em> is a
@@ -930,7 +930,7 @@ be handled just like other computational elements.</p><p>
 In general, programming languages impose restrictions on the ways in
 which computational elements can be manipulated.  Elements with the
 fewest restrictions are said to have <a name="%_idx_1218" id="%_idx_1218"></a><em>first-class</em> status.  Some
-of the ``rights and privileges'' of first-class elements are:<a name="call_footnote_Temp_121" href="#footnote_Temp_121" id="call_footnote_Temp_121"><sup><small>64</small></sup></a>
+of the “rights and privileges” of first-class elements are:<a name="call_footnote_Temp_121" href="#footnote_Temp_121" id="call_footnote_Temp_121"><sup><small>64</small></sup></a>
 </p><p></p><ul><li>They may be named by variables.
 </li><li>They may be passed as arguments to procedures.
 </li><li>They may be returned as the results of procedures.
@@ -1012,7 +1012,7 @@ that attempting to compute square roots by naively finding a
 fixed point of <em>y</em> ⟼  <em>x</em>/<em>y</em> does not converge, and that this can be
 fixed by average damping.  The same method works for finding cube
 roots as fixed points of the average-damped <em>y</em> ⟼  <em>x</em>/<em>y</em><sup>2</sup>.
-Unfortunately, the process does not work for <a name="%_idx_1238" id="%_idx_1238"></a><a name="%_idx_1240" id="%_idx_1240"></a>fourth roots -- a single
+Unfortunately, the process does not work for <a name="%_idx_1238" id="%_idx_1238"></a><a name="%_idx_1240" id="%_idx_1240"></a>fourth roots – a single
 average damp is not enough to make a fixed-point search for <em>y</em> ⟼
 <em>x</em>/<em>y</em><sup>3</sup> converge.  On the other hand, if we average damp twice (i.e.,
 use the average damp of the average damp of <em>y</em> ⟼  <em>x</em>/<em>y</em><sup>3</sup>) the
@@ -1090,7 +1090,7 @@ procedures, however.  We will return to this issue in
 section <a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a>, after we learn more about
 evaluation.
 
-</p><p><a name="footnote_Temp_104" href="#call_footnote_Temp_104" id="footnote_Temp_104"><sup><small>55</small></sup></a> We have used 0.001 as a representative ``small'' number to indicate a
+</p><p><a name="footnote_Temp_104" href="#call_footnote_Temp_104" id="footnote_Temp_104"><sup><small>55</small></sup></a> We have used 0.001 as a representative “small” number to indicate a
 tolerance for the acceptable error in a calculation.  The appropriate
 tolerance for a real calculation depends upon the problem to be solved
 and the limitations of the computer and the algorithm.  This is often
@@ -1107,7 +1107,7 @@ messages.
 obtain the fixed point.
 
 </p><p><a name="footnote_Temp_108" href="#call_footnote_Temp_108" id="footnote_Temp_108"><sup><small>58</small></sup></a>  ⟼
-<a name="%_idx_1122" id="%_idx_1122"></a><a name="%_idx_1124" id="%_idx_1124"></a>(pronounced ``maps to'') is
+<a name="%_idx_1122" id="%_idx_1122"></a><a name="%_idx_1124" id="%_idx_1124"></a>(pronounced “maps to”) is
 the mathematician's way of writing <tt>lambda</tt>.
 <em>y</em>  ⟼  <em>x</em>/<em>y</em> means <tt>(lambda(y) (/ x y))</tt>, that is, the
 function whose value at <em>y</em> is <em>x</em>/<em>y</em>.
@@ -1116,7 +1116,7 @@ function whose value at <em>y</em> is <em>x</em>/<em>y</em>.
 <a name="%_idx_1162" id="%_idx_1162"></a><a name="%_idx_1164" id="%_idx_1164"></a><a name="%_idx_1166" id="%_idx_1166"></a>a combination.  Exercise <a href="book-Z-H-10.html#%_thm_1.4">1.4</a> already demonstrated
 the ability to form such combinations, but that was only a toy
 example.  Here we begin to see the real need for such
-combinations -- when applying a procedure that is obtained as the value
+combinations – when applying a procedure that is obtained as the value
 returned by a higher-order procedure.
 
 </p><p><a name="footnote_Temp_115" href="#call_footnote_Temp_115" id="footnote_Temp_115"><sup><small>60</small></sup></a> See exercise <a href="#%_thm_1.45">1.45</a> for a further
