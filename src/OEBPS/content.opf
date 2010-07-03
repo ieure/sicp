@@ -12,6 +12,7 @@
     </metadata>
     <manifest>
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+        <item id="book" href="book.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-1" href="book-Z-H-1.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-2" href="book-Z-H-2.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-3" href="book-Z-H-3.html" media-type="application/xhtml+xml"/>
@@ -53,6 +54,7 @@
         <item id="css" href="stylesheet.css" media-type="text/css"/>
     </manifest>
     <spine toc="ncx">
+        <itemref idref="book" linear="yes"/>
         <itemref idref="book-Z-H-1" linear="yes"/>
         <itemref idref="book-Z-H-2" linear="yes"/>
         <itemref idref="book-Z-H-3" linear="yes"/>
@@ -93,6 +95,6 @@
         <itemref idref="book-Z-H-38" linear="yes"/>
     </spine>
     <guide>
-        <reference href=".html" type="cover" title="Cover"/>
+        <reference href="book.html" type="cover" title="Cover"/>
     </guide>
 </package>
