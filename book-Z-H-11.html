@@ -71,13 +71,13 @@ practical examples in their own right.<p>
 
 <a name="%_idx_640"></a>We begin by considering the factorial function, defined by<p>
 
-<p><div align=left><img src="ch1-Z-G-8.gif" border="0"></div><p><p>
+<p><em>n</em>! = <em>n</em> · (<em>n</em> - 1) · (<em>n</em> - 2) ⋯ 3 · 2 · 1</p>
 
 There are many ways to compute factorials.  One way is to make use of
 the observation that <em>n</em>! is equal to <em>n</em> times (<em>n</em> - 1)! for
 any positive integer&nbsp;<em>n</em>:<p>
 
-<p><div align=left><img src="ch1-Z-G-9.gif" border="0"></div><p><p>
+<p><em>n</em>! = <em>n</em> · [(<em>n</em> - 1) · (<em>n</em> - 2) ⋯ 3 · 2 · 1] = <em>n</em> · (<em>n</em> - 1)!</p>
 
 Thus, we can compute <em>n</em>! by computing (<em>n</em> - 1)! and multiplying the
 result by <em>n</em>.  If we add the stipulation that 1! is equal to 1,
@@ -274,7 +274,7 @@ Another common pattern of computation is called <em>tree recursion</em>.
 As an example, consider computing the sequence of <a name="%_idx_718"></a>Fibonacci numbers,
 in which each number is the sum of the preceding two:<p>
 
-<p><div align=left><img src="ch1-Z-G-11.gif" border="0"></div><p><p>
+<p>0, 1, 1, 2, 3, 5, 8, 13, 21, …</p>
 
 In general, the Fibonacci numbers can be defined by the rule
 <p><div align=left><img src="ch1-Z-G-12.gif" border="0"></div><p>
@@ -332,7 +332,11 @@ Fibonacci numbers.  The idea is to use a pair of integers <em>a</em> and
 <em>b</em>, initialized to  <em>F</em><em>i</em><em>b</em>(1) = 1 and  <em>F</em><em>i</em><em>b</em>(0) = 0,
 and to repeatedly apply the simultaneous
 transformations
-<p><div align=left><img src="ch1-Z-G-16.gif" border="0"></div><p>
+<p>
+    <em>a</em> ⟵ <em>a</em> + <em>b</em><br>
+    <em>b</em> ⟵ <em>a</em>
+</p>
+
 It is not hard to show that, after applying this transformation <em>n</em>
 times, <em>a</em> and <em>b</em> will be equal, respectively, to  <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1) and
  <em>F</em><em>i</em><em>b</em>(<em>n</em>).  Thus, we can compute Fibonacci numbers iteratively using
@@ -510,7 +514,7 @@ operations performed.<p>
 <a name="%_idx_758"></a><a name="%_idx_760"></a>We say that <em>R</em>(<em>n</em>) has order of growth θ(<em>f</em>(<em>n</em>)), written
 <em>R</em>(<em>n</em>) = θ(<em>f</em>(<em>n</em>)) (pronounced ``theta of <em>f</em>(<em>n</em>)''), if there are
 positive constants <em>k</em><sub>1</sub> and <em>k</em><sub>2</sub> independent of <em>n</em> such that
-<p><div align=left><img src="ch1-Z-G-18.gif" border="0"></div><p>
+<p><em>k</em><sub>1</sub> <em>f</em>(<em>n</em>) ≤ <em>R</em>(<em>n</em>) ≤ <em>k</em><sub>2</sub> <em>f</em>(<em>n</em>)</p>
 for any sufficiently large value of <em>n</em>.  (In other
 words, for large <em>n</em>, the value <em>R</em>(<em>n</em>) is sandwiched between <em>k</em><sub>1</sub><em>f</em>(<em>n</em>)
 and <em>k</em><sub>2</sub><em>f</em>(<em>n</em>).)<p>
@@ -585,8 +589,12 @@ Consider the problem of computing the exponential of a given number.
 We would like a procedure that takes as arguments a base <em>b</em> and a
 positive integer exponent <em>n</em> and computes <em>b</em><sup><em>n</em></sup>.  One way to do this
 is via the recursive definition
-<p><div align=left><img src="ch1-Z-G-20.gif" border="0"></div><p>
-which translates readily into the procedure <p>
+<p>
+    <em>b<sup>n</sup></em> = <em>b</em> · <em>b</em><sup><em>n</em>-1</sup><br>
+    <em>b</em><sup>0</sup> = 1
+</p>
+
+<p>which translates readily into the procedure <p>
 
 <p><p><tt><a name="%_idx_792"></a>(define&nbsp;(expt&nbsp;b&nbsp;n)<br>
 &nbsp;&nbsp;(if&nbsp;(=&nbsp;n&nbsp;0)<br>
@@ -612,9 +620,14 @@ This version requires θ(<em>n</em>) steps and θ(1) space.<p>
 
 <a name="%_idx_796"></a>We can compute exponentials in fewer steps by using successive
 squaring.  For instance, rather than computing <em>b</em><sup>8</sup> as
-<p><div align=left><img src="ch1-Z-G-21.gif" border="0"></div><p>
+<p><em>b</em> · (<em>b</em> · (<em>b</em> · (<em>b</em> · (<em>b</em> · (<em>b</em> · (<em>b</em> · <em>b</em>))))))</p>
 we can compute it using three multiplications:
-<p><div align=left><img src="ch1-Z-G-22.gif" border="0"></div><p><p>
+
+<p>
+    <em>b</em><sup>2</sup> = <em>b</em> · <em>b</em><br>
+    <em>b</em><sup>4</sup> = <em>b</em><sup>2</sup> · <em>b</em><sup>2</sup><br>
+    <em>b</em><sup>8</sup> = <em>b</em><sup>4</sup> · <em>b</em><sup>4</sup>
+</p>
 
 This method works fine for exponents that are powers of 2.  We can
 also take advantage of successive squaring in computing exponentials
@@ -762,7 +775,8 @@ factors, but there is a famous algorithm that is much more efficient.<p>
 the remainder when <em>a</em> is divided by <em>b</em>, then the common divisors of
 <em>a</em> and <em>b</em> are precisely the same as the common divisors of <em>b</em> and
 <em>r</em>.  Thus, we can use the equation
-<p><div align=left><img src="ch1-Z-G-24.gif" border="0"></div><p>
+<p>GCD(<em>a</em>, <em>b</em>) = GCD(<em>b</em>, <em>r</em>)</p>
+
 to successively reduce the problem of computing a GCD to the
 problem of computing the GCD of smaller and smaller pairs of
 integers.  For example,
