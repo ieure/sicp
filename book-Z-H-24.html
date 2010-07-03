@@ -1,18 +1,14 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<!-- Generated from TeX source by tex2page, v 4o, 
+<!-- Generated from TeX source by tex2page, v 4o,
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
 <head>
-<title>
-Structure and Interpretation 
-of Computer Programs
-</title>
+<title>Structure and Interpretation of Computer Programs</title>
 <link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
-<meta name=robots content="noindex,follow">
 </head>
 <body>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-23.html">previous</a></span><span>, <a href="book-Z-H-25.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 <a name="%_sec_3.5"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_3.5">3.5&nbsp;&nbsp;Streams</a></h2><p>
@@ -696,10 +692,10 @@ notice the following facts about it.
 <p><ul>
 <li><tt>S</tt> begins with 1.<p>
 
-<li>The elements of <tt>(scale-stream S 2)</tt> are also 
+<li>The elements of <tt>(scale-stream S 2)</tt> are also
 elements of <tt>S</tt>.<p>
 
-<li>The same is true for <tt>(scale-stream S 3)</tt> 
+<li>The same is true for <tt>(scale-stream S 3)</tt>
 and <tt>(scale-stream 5 S)</tt>.<p>
 
 <li>These are all the elements of <tt>S</tt>.
@@ -739,7 +735,7 @@ Fill in the missing expressions in the places marked &lt;<em>??</em>&gt; above.
 <b>Exercise 3.57.</b>&nbsp;&nbsp;<a name="%_idx_3900"></a>How many additions are performed when we compute the <em>n</em>th Fibonacci
 number using the definition of <tt>fibs</tt> based on the <tt>add-streams</tt> procedure?  Show that the number of additions would be
 exponentially greater if we had implemented
-<tt>(delay &lt;<em>exp</em>&gt;)</tt> simply as <tt>(lambda () &lt;<em>exp</em>&gt;)</tt>, 
+<tt>(delay &lt;<em>exp</em>&gt;)</tt> simply as <tt>(lambda () &lt;<em>exp</em>&gt;)</tt>,
 without using the optimization provided by the <tt>memo-proc</tt>
 procedure described in section&nbsp;<a href="#%_sec_3.5.1">3.5.1</a>.<a name="call_footnote_Temp_465" href="#footnote_Temp_465"><sup><small>64</small></sup></a>
 
@@ -790,7 +786,7 @@ the appropriate constant.) <p>
 <p><p>b. The function <em>x</em> <img src="book-Z-G-D-17.gif" border="0">  <em>e</em><sup><em>x</em></sup> is its own
 derivative.  This implies that <em>e</em><sup><em>x</em></sup> and the integral of <em>e</em><sup><em>x</em></sup> are the
 same series, except for the constant term, which is <em>e</em><sup>0</sup>  = 1.
-Accordingly, we can generate the series for 
+Accordingly, we can generate the series for
 <em>e</em><sup><em>x</em></sup> as
 <p><p><tt>(define&nbsp;exp-series<br>
 &nbsp;&nbsp;(cons-stream&nbsp;1&nbsp;(integrate-series&nbsp;exp-series)))<br>
@@ -946,7 +942,7 @@ One such accelerator, due to the eighteenth-century Swiss mathematician
 alternating series (series of terms with alternating signs).
 In Euler's technique, if <em>S</em><sub><em>n</em></sub> is the <em>n</em>th term
 of the original sum sequence, then the accelerated sequence has terms
-<p><div align=left><img src="ch3-Z-G-42.gif" border="0"></div><p> 
+<p><div align=left><img src="ch3-Z-G-42.gif" border="0"></div><p>
 Thus, if the original sequence is represented as a stream of values,
 the transformed sequence is given by<p>
 
@@ -1943,7 +1939,7 @@ of <tt>stream-map</tt> from exercise&nbsp;<a href="#%_thm_3.50">3.50</a>.
 very subtle and relies on the fact that <em>p</em><sub><em>n</em>+1</sub> <u>&lt;</u> <em>p</em><sub><em>n</em></sub><sup>2</sup>.
 (Here, <em>p</em><sub><em>k</em></sub> denotes the <em>k</em>th prime.)  Estimates such as these are
 very difficult to establish.  The ancient proof by <a name="%_idx_3876"></a>Euclid that there
-are an infinite number of primes shows that <em>p</em><sub><em>n</em>+1</sub><u>&lt;</u> <em>p</em><sub>1</sub> <em>p</em><sub>2</sub> 
+are an infinite number of primes shows that <em>p</em><sub><em>n</em>+1</sub><u>&lt;</u> <em>p</em><sub>1</sub> <em>p</em><sub>2</sub>
 <tt>&middot;&middot;&middot;</tt>   <em>p</em><sub><em>n</em></sub>  + 1, and no substantially better result was proved
 until 1851, when the Russian mathematician P. L. Chebyshev established
 <a name="%_idx_3878"></a><a name="%_idx_3880"></a><a name="%_idx_3882"></a><a name="%_idx_3884"></a>that <em>p</em><sub><em>n</em>+1</sub><u>&lt;</u> 2<em>p</em><sub><em>n</em></sub> for all <em>n</em>.  This result, originally
@@ -2051,7 +2047,7 @@ with fundamental epistemological issues.
 
 </div>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-23.html">previous</a></span><span>, <a href="book-Z-H-25.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 </body>
 </html>

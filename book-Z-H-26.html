@@ -1,18 +1,14 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<!-- Generated from TeX source by tex2page, v 4o, 
+<!-- Generated from TeX source by tex2page, v 4o,
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
 <head>
-<title>
-Structure and Interpretation 
-of Computer Programs
-</title>
+<title>Structure and Interpretation of Computer Programs</title>
 <link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
-<meta name=robots content="noindex,follow">
 </head>
 <body>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-25.html">previous</a></span><span>, <a href="book-Z-H-27.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 <a name="%_sec_4.1"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_4.1">4.1&nbsp;&nbsp;The Metacircular Evaluator</a></h2><p>
@@ -34,7 +30,7 @@ section&nbsp;<a href="book-Z-H-21.html#%_sec_3.2">3.2</a>.  Recall that the mode
 basic parts:<p>
 
 <blockquote>
-<p>1. To evaluate a combination (a compound expression other than a 
+<p>1. To evaluate a combination (a compound expression other than a
 special form), evaluate the subexpressions and then apply the value of
 the operator subexpression to the values of the operand
 subexpressions.<p>
@@ -305,7 +301,7 @@ evaluates operands from left to right or from right to left.  Its evaluation
 order is inherited from the underlying Lisp:
 If the arguments to <tt>cons</tt> in <tt>list-of-values</tt>
 are evaluated from left to right, then <tt>list-of-values</tt> will
-evaluate operands from left to right; and 
+evaluate operands from left to right; and
 if the arguments to <tt>cons</tt>
 are evaluated from right to left, then <tt>list-of-values</tt> will
 evaluate operands from right to left.<p>
@@ -1667,7 +1663,7 @@ versions compare for a sequence with two expressions?
 <p><p>
 
 <p><a name="%_thm_4.24"></a>
-<b>Exercise 4.24.</b>&nbsp;&nbsp;Design and carry out some experiments to 
+<b>Exercise 4.24.</b>&nbsp;&nbsp;Design and carry out some experiments to
 compare the speed of the original metacircular evaluator
 with the version in this section.  Use your results to estimate the fraction
 of time that is spent in analysis versus execution for various
@@ -1784,7 +1780,7 @@ procedures is to make the environment-manipulation procedures easy to read.
 exercise&nbsp;<a href="#%_thm_4.11">4.11</a>) is that the evaluator
 may have to search through many frames in order to find the binding
 for a given variable.
-<a name="%_idx_4488"></a><a name="%_idx_4490"></a>(Such an approach is referred to as <em>deep binding</em>.) 
+<a name="%_idx_4488"></a><a name="%_idx_4490"></a>(Such an approach is referred to as <em>deep binding</em>.)
 One way to avoid
 this inefficiency is to make use of a strategy called <em>lexical
 addressing</em>, which will be discussed in
@@ -1936,7 +1932,7 @@ into the processing of sequences.
 
 </div>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-25.html">previous</a></span><span>, <a href="book-Z-H-27.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 </body>
 </html>

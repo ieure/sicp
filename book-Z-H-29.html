@@ -1,18 +1,14 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<!-- Generated from TeX source by tex2page, v 4o, 
+<!-- Generated from TeX source by tex2page, v 4o,
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
 <head>
-<title>
-Structure and Interpretation 
-of Computer Programs
-</title>
+<title>Structure and Interpretation of Computer Programs</title>
 <link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
-<meta name=robots content="noindex,follow">
 </head>
 <body>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-28.html">previous</a></span><span>, <a href="book-Z-H-30.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 <a name="%_sec_4.4"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_4.4">4.4&nbsp;&nbsp;Logic Programming</a></h2><p>
@@ -99,7 +95,7 @@ But the same two rules are also sufficient for answering the following
 sorts of questions, which the procedure can't answer:<p>
 
 <blockquote>
-Find a list <tt>y</tt> that <tt>append</tt>s with <tt>(a b)</tt> 
+Find a list <tt>y</tt> that <tt>append</tt>s with <tt>(a b)</tt>
 to produce <tt>(a b c d)</tt>.<p>
 
 Find all <tt>x</tt> and <tt>y</tt> that <tt>append</tt> to form <tt>(a b c
@@ -365,7 +361,7 @@ data base:<p>
 
 <p><p>b. the names and jobs of all people in the accounting division;<p>
 
-<p><p>c. the names and addresses of all people who live 
+<p><p>c. the names and addresses of all people who live
 in Slumerville.
 <p>
 
@@ -590,7 +586,7 @@ Fill in the body of Alyssa's rule.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>rule-body</em>&gt;)<br>
 </tt><p><p><p>
 
-c. Alyssa arrives at work on Wednesday morning and wonders what meetings she 
+c. Alyssa arrives at work on Wednesday morning and wonders what meetings she
 has to attend that day.  Having defined the above rule,
 what query should she make to find this out?
 <p><p>
@@ -894,7 +890,7 @@ query.  The two resulting streams are then merged to produce the final
 output stream.<p>
 
 <a name="%_fig_4.6"></a><p><div align=left><table width=100%><tr><td><img src="ch4-Z-G-6.gif" border="0">
-</td></tr><caption align=bottom><div align=left><b>Figure 4.6:</b>&nbsp;&nbsp;The <tt>or</tt> combination of two queries is produced by 
+</td></tr><caption align=bottom><div align=left><b>Figure 4.6:</b>&nbsp;&nbsp;The <tt>or</tt> combination of two queries is produced by
 operating on the stream of frames in parallel and merging the
 results.</div></caption><tr><td>
 
@@ -952,7 +948,7 @@ A unifier takes two patterns, each containing constants and variables,
 and determines whether it is possible to assign values to the
 variables that will make the two patterns equal.  If so, it returns a
 frame containing these bindings.  For example, unifying <tt>(?x a
-?y)</tt> and <tt>(?y ?z a)</tt> will specify a frame in which <tt>?x</tt>, 
+?y)</tt> and <tt>(?y ?z a)</tt> will specify a frame in which <tt>?x</tt>,
 <tt>?y</tt>, and <tt>?z</tt> must all be bound to <tt>a</tt>.  On the other
 hand, unifying <tt>(?x ?y a)</tt> and <tt>(?x b ?y)</tt> will fail, because
 there is no value for <tt>?y</tt> that can make the two patterns equal.
@@ -1350,7 +1346,7 @@ In general, Ben's new system allows expressions of the form<p>
 <p><p><tt>(accumulation-function&nbsp;&lt;<em>variable</em>&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;<em>query&nbsp;pattern</em>&gt;)<br>
 </tt><p><p>
-where <tt>accumulation-function</tt> can be things like <tt>sum</tt>,  
+where <tt>accumulation-function</tt> can be things like <tt>sum</tt>,
 <tt>average</tt>, or <tt>maximum</tt>.  Ben reasons that it should be a
 cinch to implement this.  He will simply feed the query pattern to
 <tt>qeval</tt>.  This will produce a stream of frames.  He will then pass
@@ -2706,7 +2702,7 @@ However, if we try the same manipulation beginning with the
 observation that  - 1 is the solution to the equation <em>y</em>  =  1  +  2<em>y</em>, we
 obtain
 <p><div align=left><img src="ch4-Z-G-9.gif" border="0"></div><p>
-which leads to 
+which leads to
 <p><div align=left><img src="ch4-Z-G-10.gif" border="0"></div><p>
 Although the formal manipulations used in deriving these two equations
 are identical, the first result is a valid assertion about infinite
@@ -2731,7 +2727,7 @@ These are Scheme primitives.
 
 </div>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-28.html">previous</a></span><span>, <a href="book-Z-H-30.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 </body>
 </html>

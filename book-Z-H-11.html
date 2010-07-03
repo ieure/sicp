@@ -1,18 +1,14 @@
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
-<!-- Generated from TeX source by tex2page, v 4o, 
+<!-- Generated from TeX source by tex2page, v 4o,
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
 <head>
-<title>
-Structure and Interpretation 
-of Computer Programs
-</title>
+<title>Structure and Interpretation of Computer Programs</title>
 <link rel="stylesheet" type="text/css" href="book-Z-C.css" title=default>
-<meta name=robots content="noindex,follow">
 </head>
 <body>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-10.html">previous</a></span><span>, <a href="book-Z-H-12.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 <a name="%_sec_1.2"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_1.2">1.2&nbsp;&nbsp;Procedures and the Processes They Generate</a></h2><p>
@@ -115,7 +111,7 @@ and stipulating that <em>n</em>! is the value of the product when
 the counter exceeds <em>n</em>.<p>
 
 <a name="%_fig_1.4"></a><p><div align=left><table width=100%><tr><td><img src="ch1-Z-G-10.gif" border="0">
-</td></tr><caption align=bottom><div align=left><b>Figure 1.4:</b>&nbsp;&nbsp;A linear iterative process for computing 6!.</div></caption><tr><td> 
+</td></tr><caption align=bottom><div align=left><b>Figure 1.4:</b>&nbsp;&nbsp;A linear iterative process for computing 6!.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
 
@@ -149,7 +145,7 @@ Consider the first process.  The substitution model reveals a shape of
 expansion followed by contraction, indicated by the arrow in
 figure&nbsp;<a href="#%_fig_1.3">1.3</a>.  The expansion occurs as the
 process builds up a chain of <a name="%_idx_652"></a><em>deferred operations</em> (in this case,
-a chain of multiplications).  The contraction occurs as 
+a chain of multiplications).  The contraction occurs as
 the operations are
 actually performed.  This type of process, characterized by a chain of
 deferred operations, is called a <a name="%_idx_654"></a><a name="%_idx_656"></a><em>recursive process</em>.  Carrying
@@ -253,7 +249,7 @@ What are the values of the following expressions?<p>
 <br>
 (A&nbsp;3&nbsp;3)<br>
 </tt><p><p>
-Consider the following procedures, where <tt>A</tt> is the procedure  
+Consider the following procedures, where <tt>A</tt> is the procedure
 defined above:
 <p><p><tt>(define&nbsp;(f&nbsp;n)&nbsp;(A&nbsp;0&nbsp;n))<br>
 <br>
@@ -311,7 +307,7 @@ redundant computation.  Notice in figure&nbsp;<a href="#%_fig_1.5">1.5</a> that
 the entire computation of <tt>(fib 3)</tt> -- almost half the work -- is
 duplicated.  In fact, it is not hard to show that the number of times
 the procedure will compute <tt>(fib 1)</tt> or <tt>(fib 0)</tt> (the number
-of leaves in the above tree, in general) is precisely 
+of leaves in the above tree, in general) is precisely
 <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1).  To get an idea of how bad this is, one can show that the
 value of  <em>F</em><em>i</em><em>b</em>(<em>n</em>) <a name="%_idx_722"></a>grows exponentially with <em>n</em>.  More precisely
 (see exercise&nbsp;<a href="#%_thm_1.13">1.13</a>),  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest
@@ -555,8 +551,8 @@ increases?
 radians) can be computed by making use of the approximation
 <tt>sin</tt> <em>x</em> <img src="book-Z-G-D-20.gif" border="0">  <em>x</em>
 if <em>x</em> is
-sufficiently small, and the trigonometric identity 
-<p><div align=left><img src="ch1-Z-G-19.gif" border="0"></div><p> 
+sufficiently small, and the trigonometric identity
+<p><div align=left><img src="ch1-Z-G-19.gif" border="0"></div><p>
 to reduce the size of the argument of <tt>sin</tt>.  (For
 purposes of this exercise an angle is considered ``sufficiently
 small'' if its magnitude is not greater than 0.1 radians.) These
@@ -570,7 +566,7 @@ ideas are incorporated in the following procedures:<p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(p&nbsp;(sine&nbsp;(/&nbsp;angle&nbsp;3.0)))))<br>
 </tt><p><p><p>
 
-a.&nbsp;&nbsp;How many times is the procedure <tt>p</tt> 
+a.&nbsp;&nbsp;How many times is the procedure <tt>p</tt>
 applied when <tt>(sine 12.15)</tt> is evaluated?<p>
 
 b.&nbsp;&nbsp;What is the order of growth in space and number of steps (as a
@@ -693,7 +689,7 @@ This algorithm takes a number of steps that is linear in <tt>b</tt>.
 Now suppose we include, together with addition, operations <tt>double</tt>,
 which doubles an integer, and <tt>halve</tt>, which divides an (even)
 integer by 2.  Using these, design a multiplication procedure analogous
-to <tt>fast-expt</tt> that uses a logarithmic number of steps. 
+to <tt>fast-expt</tt> that uses a logarithmic number of steps.
 <p><p>
 
 <p><a name="%_thm_1.18"></a>
@@ -710,7 +706,7 @@ halving and uses a logarithmic number of steps.<a name="call_footnote_Temp_68" h
 a logarithmic number of steps.
 Recall the transformation of the state variables
 <em>a</em> and <em>b</em> in the <tt>fib-iter</tt> process of
-section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>: <em>a</em> <img src="book-Z-G-D-14.gif" border="0">  <em>a</em> + <em>b</em> and <em>b</em> <img src="book-Z-G-D-14.gif" border="0"> 
+section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>: <em>a</em> <img src="book-Z-G-D-14.gif" border="0">  <em>a</em> + <em>b</em> and <em>b</em> <img src="book-Z-G-D-14.gif" border="0">
 <em>a</em>.  Call this transformation <em>T</em>, and observe that applying <em>T</em> over
 and over again <em>n</em> times, starting with 1 and 0, produces the pair
  <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1) and  <em>F</em><em>i</em><em>b</em>(<em>n</em>).  In other words, the Fibonacci
@@ -799,7 +795,7 @@ number.<a name="call_footnote_Temp_72" href="#footnote_Temp_72"><sup><small>43</
 
 We can use this theorem to get an order-of-growth estimate for Euclid's
 Algorithm.  Let <em>n</em> be the smaller of the two inputs to the
-procedure.  If the process takes <em>k</em> steps, then we must have 
+procedure.  If the process takes <em>k</em> steps, then we must have
 <em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) <img src="book-Z-G-D-20.gif" border="0"> <img src="book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/<img src="book-Z-G-D-13.gif" border="0">5.  Therefore
 the number of steps <em>k</em> grows as the logarithm (to the base
 <img src="book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is <img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt> <em>n</em>).<p>
@@ -872,14 +868,14 @@ means that the algorithm need only test divisors between 1 and
 <a name="%_idx_868"></a><a name="%_idx_870"></a>The <img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt> <em>n</em>) primality test is based on a result from number
 theory known as Fermat's Little Theorem.<a name="call_footnote_Temp_77" href="#footnote_Temp_77"><sup><small>45</small></sup></a><p>
 
-<p><p><a name="%_idx_886"></a><strong>Fermat's Little Theorem:</strong> If <em>n</em> is a prime number and 
+<p><p><a name="%_idx_886"></a><strong>Fermat's Little Theorem:</strong> If <em>n</em> is a prime number and
 <em>a</em> is any positive integer less than <em>n</em>, then <em>a</em> raised to the
 <em>n</em>th power is congruent to <em>a</em> modulo <em>n</em>.<p>
 
 <p><p><a name="%_idx_888"></a>(Two numbers are said to be <em>congruent modulo</em> <em>n</em> if
 they both have the same remainder when divided by <em>n</em>.  The
 remainder of a number <em>a</em> when divided by <em>n</em> is also referred to as
-the <a name="%_idx_890"></a><a name="%_idx_892"></a><em>remainder of</em> <em>a</em> <em>modulo</em> <em>n</em>, or simply as <em>a</em> 
+the <a name="%_idx_890"></a><a name="%_idx_892"></a><em>remainder of</em> <em>a</em> <em>modulo</em> <em>n</em>, or simply as <em>a</em>
 <em>modulo</em> <em>n</em>.)<p>
 
 If <em>n</em> is not prime, then, in general, most of the numbers <em>a</em>&lt; <em>n</em> will not
@@ -1242,16 +1238,16 @@ terminates in <em>k</em> steps.  The proof is based on the claim that, if
  <img src="book-Z-G-D-15.gif" border="0">  (<em>a</em><sub><em>k</em>-1</sub>, <em>b</em><sub><em>k</em>-1</sub>) are three successive pairs in the
 reduction process, then we must have <em>b</em><sub><em>k</em>+1</sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>.
 To verify the claim, consider that a reduction step is defined by
-applying the transformation <em>a</em><sub><em>k</em>-1</sub>  =  <em>b</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em>-1</sub>  = 
- remainder of  <em>a</em><sub><em>k</em></sub> divided by <em>b</em><sub><em>k</em></sub>.  
+applying the transformation <em>a</em><sub><em>k</em>-1</sub>  =  <em>b</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em>-1</sub>  =
+ remainder of  <em>a</em><sub><em>k</em></sub> divided by <em>b</em><sub><em>k</em></sub>.
 The second equation means that <em>a</em><sub><em>k</em></sub>  =  <em>q</em><em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub> for some
 positive integer <em>q</em>.  And since <em>q</em> must be at least 1 we have <em>a</em><sub><em>k</em></sub>
  =  <em>q</em><em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub> <u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>.  But in the previous
-reduction step we have <em>b</em><sub><em>k</em>+1</sub> =  <em>a</em><sub><em>k</em></sub>.  Therefore, <em>b</em><sub><em>k</em>+1</sub>  = 
+reduction step we have <em>b</em><sub><em>k</em>+1</sub> =  <em>a</em><sub><em>k</em></sub>.  Therefore, <em>b</em><sub><em>k</em>+1</sub>  =
 <em>a</em><sub><em>k</em></sub><u>&gt;</u> <em>b</em><sub><em>k</em></sub>  +  <em>b</em><sub><em>k</em>-1</sub>.  This verifies the claim.  Now we can
 prove the theorem by induction on <em>k</em>, the number of steps that the
 algorithm requires to terminate.  The result is true for <em>k</em> = 1, since
-this merely requires that <em>b</em> be at least as large as 
+this merely requires that <em>b</em> be at least as large as
 <em>F</em><em>i</em><em>b</em>(1) = 1.  Now, assume that the result is true for all integers less
 than or equal to <em>k</em> and establish the result for <em>k</em> + 1.  Let
 (<em>a</em><sub><em>k</em>+1</sub>, <em>b</em><sub><em>k</em>+1</sub>) <img src="book-Z-G-D-15.gif" border="0"> (<em>a</em><sub><em>k</em></sub>, <em>b</em><sub><em>k</em></sub>)
@@ -1318,7 +1314,7 @@ electronic funds transfer, and information retrieval.
 
 </div>
 
-<p><div class=navigation>[Go to <span><a href="book.html">first</a>, <a href="book-Z-H-10.html">previous</a></span><span>, <a href="book-Z-H-12.html">next</a></span> page<span>; &nbsp;&nbsp;</span><span><a href="book-Z-H-4.html#%_toc_start">contents</a></span><span><span>; &nbsp;&nbsp;</span><a href="book-Z-H-38.html#%_index_start">index</a></span>]</div><p>
+
 
 </body>
 </html>
