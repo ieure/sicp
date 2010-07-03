@@ -1580,7 +1580,7 @@ the constant boxes to 9, 5, and 32, respectively.  The connectors
 awaken the multipliers and the adder, which determine that there is
 not enough information to proceed.  If the user (or some other part of
 the network) sets <em>C</em> to a value (say 25), the leftmost multiplier
-will be awakened, and it will set <em>u</em> to 25 &middot;  9 = 225.  Then <em>u</em>
+will be awakened, and it will set <em>u</em> to 25 ·  9 = 225.  Then <em>u</em>
 awakens the second multiplier, which sets <em>v</em> to 45, and <em>v</em> awakens
 the adder, which sets <em>F</em> to 77.<p>
 
@@ -2159,7 +2159,7 @@ is convenient because it avoids the need to name the intermediate
 expressions in a computation.  Our original formulation of the
 <a name="%_idx_3568"></a><a name="%_idx_3570"></a><a name="%_idx_3572"></a><a name="%_idx_3574"></a><a name="%_idx_3576"></a>constraint language is cumbersome in the same way that many languages
 are cumbersome when dealing with operations on compound data.  For
-example, if we wanted to compute the product (<em>a</em> + <em>b</em>) &middot; (<em>c</em> + <em>d</em>), where the
+example, if we wanted to compute the product (<em>a</em> + <em>b</em>) · (<em>c</em> + <em>d</em>), where the
 variables represent vectors, we could work in ``imperative style,''
 using procedures that set the values of designated vector arguments
 but do not themselves return vectors as values:
