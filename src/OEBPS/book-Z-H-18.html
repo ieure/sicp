@@ -448,13 +448,24 @@ automatically be applied to an integer).  Conversely, we say that
 rational numbers form a <a name="%_idx_2600" id="%_idx_2600"></a><a name="%_idx_2602" id="%_idx_2602"></a><em>supertype</em> of integers.  The particular
 hierarchy we have here is of a very simple kind, in which each type
 has at most one supertype and at most one subtype.  Such a structure,
-called a <em>tower</em>, is illustrated in figure <a href="#%_fig_2.25">2.25</a>.</p><p>
+called a <em>tower</em>, is illustrated in figure <a href="#%_fig_2.25">2.25</a>.</p>
 
-<a name="%_fig_2.25" id="%_fig_2.25"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-66.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.25:</b>  A tower of types.</div></caption><tr><td>
+<p><a name="%_fig_2.25" id="%_fig_2.25"></a>
+<p class="centered">
+    complex<br/>
+    ↑<br/>
+    real<br/>
+    ↑<br/>
+    rational<br/>
+    ↑<br/>
+    integer<br/>
+</p>
+
+<div><b>Figure 2.25:</b>  A tower of types.</div>
 <a name="%_idx_2604" id="%_idx_2604"></a><a name="%_idx_2606" id="%_idx_2606"></a>
-</td></tr></table></div><p></p><p>
+</p>
 
-If we have a tower structure, then we can greatly simplify the problem
+<p>If we have a tower structure, then we can greatly simplify the problem
 of adding a new type to the hierarchy, for we need only specify how
 the new type is embedded in the next supertype above it and how it is
 the supertype of the type below it.  For example, if we want to add an
@@ -650,10 +661,11 @@ terms.  Typical abstractions in symbolic algebra are ideas such as
 linear combination, polynomial, rational function, or trigonometric
 function.  We can regard these as compound “types,” which are often
 useful for directing the processing of expressions.  For example, we
-could describe the expression</p><p>
+could describe the expression</p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-68.gif" border="0" /></div><p>
-as a polynomial in <em>x</em> with coefficients that are trigonometric
+<p><em>x</em><sup>2</sup> sin(<em>y</em><sup>2</sup> + 1) + <em>x</em> cos 2<em>y</em> + cos(<em>y</em><sup>3</sup> - 2<em>y</em><sup>2</sup>)</p>
+
+<p>as a polynomial in <em>x</em> with coefficients that are trigonometric
 functions of polynomials in <em>y</em> whose coefficients are integers.</p><p>
 
 We will not attempt to develop a complete algebraic-manipulation
@@ -676,11 +688,15 @@ sum of terms, each of which is either a coefficient, a power of the
 indeterminate, or a product of a coefficient and a power of the
 indeterminate.  A coefficient is defined as an algebraic expression
 that is not dependent upon the indeterminate of the polynomial.  For
-example,
-</p><p></p><div align="left"><img src="images/ch2-Z-G-69.gif" border="0" /></div><p>
-is a simple polynomial in <em>x</em>, and
-</p><p></p><div align="left"><img src="images/ch2-Z-G-70.gif" border="0" /></div><p>
-is a polynomial in <em>x</em> whose coefficients are polynomials in <em>y</em>.</p><p>
+example,</p>
+
+<p>5<em>x</em><sup>2</sup> + 3<em>x</em> + 7</p>
+
+<p>is a simple polynomial in <em>x</em>, and</p>
+
+<p>(<em>y</em><sup>2</sup> + 1)<em>x</em><sup>3</sup> + (2<em>y</em>)<em>x</em> + 1</p>
+
+<p>is a polynomial in <em>x</em> whose coefficients are polynomials in <em>y</em>.</p><p>
 
 Already we are skirting some thorny issues.  Is the first of these
 polynomials the same as the polynomial 5<em>y</em><sup>2</sup>  + 3<em>y</em>  + 7, or not?  A
@@ -836,17 +852,19 @@ to handle any type of coefficient that is known about by the generic
 arithmetic package.  If we include a <a name="%_idx_2718" id="%_idx_2718"></a>coercion mechanism such as one of
 those discussed in section <a href="#%_sec_2.5.2">2.5.2</a>,
 then we also are automatically able to handle operations on
-polynomials of different coefficient types, such as
-</p><p></p><div align="left"><img src="images/ch2-Z-G-71.gif" border="0" /></div><p></p><p>
+polynomials of different coefficient types, such as</p>
 
-Because we installed the polynomial addition and
+<div align="left"><img src="images/ch2-Z-G-71.gif" border="0" /></div>
+
+<p>Because we installed the polynomial addition and
 multiplication procedures <tt>add-poly</tt> and <tt>mul-poly</tt> in the generic
 arithmetic system as the <tt>add</tt> and <tt>mul</tt> operations
 for type <tt>polynomial</tt>, our system is also
-automatically able to handle polynomial operations such as
-</p><p></p><div align="left"><img src="images/ch2-Z-G-72.gif" border="0" /></div><p></p><p>
+automatically able to handle polynomial operations such as</p>
 
-The reason is that when the system tries to combine coefficients, it
+<p>[(<em>y</em> + 1)<em>x</em><sup>2</sup> + (<em>y</em><sup>2</sup> + 1)<em>x</em> + (<em>y</em> - 1)] · [(<em>y</em> - 2)<em>x</em> + (<em>y</em><sup>3</sup>) + 7]</p>
+
+<p>The reason is that when the system tries to combine coefficients, it
 will dispatch through <tt>add</tt> and <tt>mul</tt>.  Since the coefficients
 are themselves polynomials (in <em>y</em>), these will be combined using <tt>add-poly</tt> and <tt>mul-poly</tt>.  The result is a kind of <a name="%_idx_2720" id="%_idx_2720"></a><a name="%_idx_2722" id="%_idx_2722"></a>“data-directed
 recursion” in which, for example, a call to <tt>mul-poly</tt> will result
@@ -874,13 +892,17 @@ How should we structure the list that represents a term list?  One
 consideration is the “density” of the polynomials we intend to
 manipulate.  A polynomial is said to be <a name="%_idx_2726" id="%_idx_2726"></a><a name="%_idx_2728" id="%_idx_2728"></a><em>dense</em> if it has nonzero
 coefficients in terms of most orders.  If it has many zero terms it
-is said to be <a name="%_idx_2730" id="%_idx_2730"></a><a name="%_idx_2732" id="%_idx_2732"></a><em>sparse</em>.  For example,
-</p><p></p><div align="left"><img src="images/ch2-Z-G-74.gif" border="0" /></div><p>
-is a dense polynomial, whereas
-</p><p></p><div align="left"><img src="images/ch2-Z-G-75.gif" border="0" /></div><p>
-is sparse.</p><p>
+is said to be <a name="%_idx_2730" id="%_idx_2730"></a><a name="%_idx_2732" id="%_idx_2732"></a><em>sparse</em>.  For example,</p>
 
-The term lists of dense polynomials are most efficiently represented
+<p>A:     <em>x</em><sup>5</sup> + 2<em>x</em><sup>4</sup> + 3<em>x</em><sup>2</sup> - 2<em>x</em> - 5</p>
+
+<p>is a dense polynomial, whereas</p>
+
+<p>B:     <em>x</em><sup>100</sup> + 2<em>x</em><sup>2</sup> + 1</p>
+
+<p>is sparse.</p>
+
+<p>The term lists of dense polynomials are most efficiently represented
 as lists of the coefficients.  For example, <em>A</em> above would be nicely
 represented as <tt>(1 2 0 3 -2 -5)</tt>.  The order of a term in this
 representation is the length of the sublist beginning with that term's
@@ -1111,15 +1133,13 @@ and check your result by hand.
 </p><p> </p><p>
 
 </p><p><a name="%_thm_2.95" id="%_thm_2.95"></a>
-<b>Exercise 2.95.</b>  Define <em>P</em><sub>1</sub>, <em>P</em><sub>2</sub>, and <em>P</em><sub>3</sub> to be the polynomials</p><p>
+<b>Exercise 2.95.</b>  Define <em>P</em><sub>1</sub>, <em>P</em><sub>2</sub>, and <em>P</em><sub>3</sub> to be the polynomials</p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-79.gif" border="0" /></div><p></p><p>
+<p><em>P</em><sub>1</sub>:    <em>x</em><sup>2</sup> - 2<em>x</em> + 1</p>
+<p><em>P</em><sub>2</sub>:    11<em>x</em><sup>2</sup> + 7</p>
+<p><em>P</em><sub>3</sub>:    13<em>x</em> + 5</p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-80.gif" border="0" /></div><p></p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-81.gif" border="0" /></div><p></p><p>
-
-Now define <em>Q</em><sub>1</sub> to be the product of <em>P</em><sub>1</sub> and <em>P</em><sub>2</sub> and <em>Q</em><sub>2</sub> to
+<p>Now define <em>Q</em><sub>1</sub> to be the product of <em>P</em><sub>1</sub> and <em>P</em><sub>2</sub> and <em>Q</em><sub>2</sub> to
 be the product of <em>P</em><sub>1</sub> and <em>P</em><sub>3</sub>, and use <tt>greatest-common-divisor</tt>
 (exercise <a href="#%_thm_2.94">2.94</a>) to
 compute the GCD of <em>Q</em><sub>1</sub> and <em>Q</em><sub>2</sub>.
@@ -1314,9 +1334,11 @@ this work completely smoothly, we should also add to our generic
 arithmetic system the ability to coerce a “number” to a polynomial
 by regarding it as a polynomial of degree zero whose coefficient is
 the number.  This is necessary if we are going to perform operations
-such as
-</p><p></p><div align="left"><img src="images/ch2-Z-G-73.gif" border="0" /></div><p>
-which requires adding the coefficient <em>y</em> + 1 to the coefficient 2.
+such as</p>
+
+<p>[<em>x</em><sup>2</sup> + (<em>y</em> + 1)<em>x</em> + 5] + [<em>x</em><sup>2</sup> + 2<em>x</em> + 1]</p>
+
+<p>which requires adding the coefficient <em>y</em> + 1 to the coefficient 2.
 
 </p><p><a name="footnote_Temp_303" href="#call_footnote_Temp_303" id="footnote_Temp_303"><sup><small>58</small></sup></a> In these polynomial examples,
 we assume that we have implemented the generic arithmetic system using
