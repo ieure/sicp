@@ -683,7 +683,7 @@ criterion.  In fact, we can readily formulate the <a name="%_idx_1120"></a>squar
 computation as a fixed-point search.  Computing the square root of
 some number <em>x</em> requires finding a <em>y</em> such that <em>y</em><sup>2</sup>  =  <em>x</em>.  Putting
 this equation into the equivalent form <em>y</em>  =  <em>x</em>/<em>y</em>, we recognize that we
-are looking for a fixed point of the function<a name="call_footnote_Temp_108" href="#footnote_Temp_108"><sup><small>58</small></sup></a> <em>y</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em>, and we
+are looking for a fixed point of the function<a name="call_footnote_Temp_108" href="#footnote_Temp_108"><sup><small>58</small></sup></a> <em>y</em>  ⟼  <em>x</em>/<em>y</em>, and we
 can therefore try to compute square roots as<p>
 
 
@@ -705,7 +705,7 @@ and <em>x</em>/<em>y</em>, we can make a new guess that is not as far from <em>y
 by averaging <em>y</em> with <em>x</em>/<em>y</em>, so that the next guess after
 <em>y</em> is (1/2)(<em>y</em> + <em>x</em>/<em>y</em>) instead of <em>x</em>/<em>y</em>.
 The process of making such a sequence of guesses is simply the process
-of looking for a fixed point of <em>y</em>  <img src="book-Z-G-D-17.gif" border="0">  (1/2)(<em>y</em> + <em>x</em>/<em>y</em>):<p>
+of looking for a fixed point of <em>y</em>  ⟼  (1/2)(<em>y</em> + <em>x</em>/<em>y</em>):<p>
 
 <p><p><tt><a name="%_idx_1126"></a>(define&nbsp;(sqrt&nbsp;x)<br>
 &nbsp;&nbsp;(fixed-point&nbsp;(lambda&nbsp;(y)&nbsp;(average&nbsp;y&nbsp;(/&nbsp;x&nbsp;y)))<br>
@@ -726,7 +726,7 @@ searches.<p>
 
 <p><a name="%_thm_1.35"></a>
 <b>Exercise 1.35.</b>&nbsp;&nbsp;<a name="%_idx_1130"></a><a name="%_idx_1132"></a>Show that the golden ratio <img src="book-Z-G-D-11.gif" border="0"> (section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>)
-is a fixed point of the transformation <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  1  +  1/<em>x</em>, and use
+is a fixed point of the transformation <em>x</em>  ⟼  1  +  1/<em>x</em>, and use
 this fact to compute <img src="book-Z-G-D-11.gif" border="0"> by means of the <tt>fixed-point</tt>
 procedure.
 <p><p>
@@ -736,7 +736,7 @@ procedure.
 approximations it generates, using
 the <tt>newline</tt> and <tt>display</tt> primitives shown in
 exercise&nbsp;<a href="book-Z-H-11.html#%_thm_1.22">1.22</a>.  Then find a solution to <em>x</em><sup><em>x</em></sup>  =
-1000 by finding a fixed point of <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  <tt>log</tt>(1000)/<tt>log</tt>(<em>x</em>).  (Use
+1000 by finding a fixed point of <em>x</em>  ⟼  <tt>log</tt>(1000)/<tt>log</tt>(<em>x</em>).  (Use
 Scheme's <a name="%_idx_1134"></a><a name="%_idx_1136"></a>primitive <tt>log</tt> procedure, which computes natural
 logarithms.)  Compare the number of steps this takes with and without
 average damping.  (Note that you cannot start <tt>fixed-point</tt> with a
@@ -815,7 +815,7 @@ example described at the end of
 section&nbsp;<a href="#%_sec_1.3.3">1.3.3</a>.  We formulated a new version
 of the square-root procedure as a fixed-point search, starting with
 the observation that √<em>x</em> is a fixed-point of the function
-<em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em>.  Then we used average damping to make the
+<em>y</em> ⟼  <em>x</em>/<em>y</em>.  Then we used average damping to make the
 approximations converge.  Average damping is a useful general
 technique in itself.  Namely, given a function&nbsp;<em>f</em>, we consider the
 function whose value at <em>x</em> is equal to the average of <em>x</em> and <em>f</em>(<em>x</em>).<p>
@@ -850,7 +850,7 @@ as follows:<p>
 </tt><p><p>
 Notice how this formulation makes explicit the three ideas in the
 method: fixed-point search, average damping, and the function
-<em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em>.  It is instructive to compare this formulation of the
+<em>y</em> ⟼  <em>x</em>/<em>y</em>.  It is instructive to compare this formulation of the
 square-root method with the original version given in
 section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>.  Bear in mind that these procedures express
 the same process, and notice how much clearer the idea becomes when we
@@ -860,7 +860,7 @@ programmers know how to choose procedural formulations that are
 particularly perspicuous, and where useful elements of the process are
 exposed as separate entities that can be reused in other applications.
 As a simple example of reuse, notice that the cube root of <em>x</em> is a
-fixed point of the function <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em><sup>2</sup>, so we can immediately
+fixed point of the function <em>y</em> ⟼  <em>x</em>/<em>y</em><sup>2</sup>, so we can immediately
 generalize our square-root procedure to one that extracts <a name="%_idx_1172"></a><a name="%_idx_1174"></a>cube
 roots:<a name="call_footnote_Temp_115" href="#footnote_Temp_115"><sup><small>60</small></sup></a><p>
 
@@ -878,8 +878,8 @@ roots:<a name="call_footnote_Temp_115" href="#footnote_Temp_115"><sup><small>60<
 When we first introduced the square-root procedure, in
 section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>, we mentioned that this was a special case of
 <em>Newton's method</em>.
-If <em>x</em> <img src="book-Z-G-D-17.gif" border="0">  <em>g</em>(<em>x</em>) is a differentiable function, then a solution of
-the equation <em>g</em>(<em>x</em>) = 0 is a fixed point of the function <em>x</em> <img src="book-Z-G-D-17.gif" border="0">  <em>f</em>(<em>x</em>)
+If <em>x</em> ⟼  <em>g</em>(<em>x</em>) is a differentiable function, then a solution of
+the equation <em>g</em>(<em>x</em>) = 0 is a fixed point of the function <em>x</em> ⟼  <em>f</em>(<em>x</em>)
 where
 <p><div align=left><img src="ch1-Z-G-37.gif" border="0"></div><p>
 and
@@ -894,8 +894,8 @@ For many functions <em>g</em> and for sufficiently good initial guesses for
 <a name="%_idx_1186"></a><a name="%_idx_1188"></a><a name="%_idx_1190"></a>In order to implement Newton's method as a procedure, we must first
 express the idea of derivative.  Note that ``derivative,'' like
 average damping, is something that transforms a function into another
-function.  For instance, the derivative of the function <em>x</em> <img src="book-Z-G-D-17.gif" border="0">
-<em>x</em><sup>3</sup> is the function <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  3<em>x</em><sup>2</sup>.  In general, if <em>g</em> is a
+function.  For instance, the derivative of the function <em>x</em> ⟼
+<em>x</em><sup>3</sup> is the function <em>x</em>  ⟼  3<em>x</em><sup>2</sup>.  In general, if <em>g</em> is a
 function and <em>d</em><em>x</em> is a small number, then the derivative <em>D</em><em>g</em> of <em>g</em> is
 the function whose value at any number <em>x</em> is given (in the limit of
 small <em>d</em><em>x</em>) by
@@ -915,7 +915,7 @@ along with the definition<p>
 
 Like <tt>average-damp</tt>, <tt>deriv</tt> is a procedure that takes a
 procedure as argument and returns a procedure as value.  For example,
-to approximate the derivative of <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em><sup>3</sup> at 5 (whose exact
+to approximate the derivative of <em>x</em>  ⟼  <em>x</em><sup>3</sup> at 5 (whose exact
 value is 75) we can evaluate<p>
 
 <p><p><tt><a name="%_idx_1194"></a>(define&nbsp;(cube&nbsp;x)&nbsp;(*&nbsp;x&nbsp;x&nbsp;x))<br>
@@ -937,7 +937,7 @@ beginning of this section, and <tt>newtons-method</tt> is readily defined
 in terms of this.  It takes as arguments a procedure that computes the
 function for which we want to find a zero, together with an initial
 guess.  For instance, to find the <a name="%_idx_1200"></a>square root of <em>x</em>, we can use
-Newton's method to find a zero of the function <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>y</em><sup>2</sup> - <em>x</em> starting with
+Newton's method to find a zero of the function <em>y</em> ⟼  <em>y</em><sup>2</sup> - <em>x</em> starting with
 an initial guess of 1.<a name="call_footnote_Temp_119" href="#footnote_Temp_119"><sup><small>63</small></sup></a>
 This provides yet another form of the square-root
 procedure:<p>
@@ -969,7 +969,7 @@ transformed function.<p>
 
 <a name="%_idx_1208"></a>Using this abstraction, we can recast the first square-root
 computation from this section (where we look for
-a fixed point of the average-damped version of <em>y</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em>)
+a fixed point of the average-damped version of <em>y</em>  ⟼  <em>x</em>/<em>y</em>)
 as an instance of this general method:<p>
 
 <p><p><tt><a name="%_idx_1210"></a>(define&nbsp;(sqrt&nbsp;x)<br>
@@ -980,7 +980,7 @@ as an instance of this general method:<p>
 <a name="%_idx_1212"></a>Similarly, we can express the second square-root computation from this section
 (an instance
 of Newton's method that finds a fixed point of the
-Newton transform of <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>y</em><sup>2</sup> - <em>x</em>) as<p>
+Newton transform of <em>y</em> ⟼  <em>y</em><sup>2</sup> - <em>x</em>) as<p>
 
 <p><p><tt><a name="%_idx_1214"></a><a name="%_idx_1216"></a>(define&nbsp;(sqrt&nbsp;x)<br>
 &nbsp;&nbsp;(fixed-point-of-transform&nbsp;(lambda&nbsp;(y)&nbsp;(-&nbsp;(square&nbsp;y)&nbsp;x))<br>
@@ -1047,7 +1047,7 @@ value is returned by<p>
 
 <p><a name="%_thm_1.42"></a>
 <b>Exercise 1.42.</b>&nbsp;&nbsp;<a name="%_idx_1226"></a><a name="%_idx_1228"></a>Let <em>f</em> and <em>g</em> be two one-argument functions.  The <em>composition</em>
-<em>f</em> after <em>g</em> is defined to be the function <em>x</em> <img src="book-Z-G-D-17.gif" border="0">  <em>f</em>(<em>g</em>(<em>x</em>)).
+<em>f</em> after <em>g</em> is defined to be the function <em>x</em> ⟼  <em>f</em>(<em>g</em>(<em>x</em>)).
 Define a procedure <tt>compose</tt> that implements composition.  For
 example, if <tt>inc</tt> is a procedure that adds 1 to its argument,
 
@@ -1061,9 +1061,9 @@ example, if <tt>inc</tt> is a procedure that adds 1 to its argument,
 <b>Exercise 1.43.</b>&nbsp;&nbsp;<a name="%_idx_1230"></a>If <em>f</em> is a numerical function and <em>n</em> is a positive integer, then we
 can form the <em>n</em>th repeated application of <em>f</em>, which is defined to be
 the function whose value at <em>x</em> is <em>f</em>(<em>f</em>(<tt>...</tt>(<em>f</em>(<em>x</em>))<tt>...</tt>)).  For
-example, if <em>f</em> is the function <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em> + 1,
+example, if <em>f</em> is the function <em>x</em>  ⟼  <em>x</em> + 1,
 then the <em>n</em>th repeated application of <em>f</em> is
-the function <em>x</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em> + <em>n</em>.  If <em>f</em> is the operation of
+the function <em>x</em>  ⟼  <em>x</em> + <em>n</em>.  If <em>f</em> is the operation of
 squaring a number, then the <em>n</em>th repeated application of <em>f</em> is the
 function that raises its argument to the 2<sup><em>n</em></sup>th power.  Write a
 procedure that takes as inputs a procedure that computes <em>f</em> and a
@@ -1097,16 +1097,16 @@ from exercise&nbsp;<a href="#%_thm_1.43">1.43</a>.
 <p><a name="%_thm_1.45"></a>
 <b>Exercise 1.45.</b>&nbsp;&nbsp;We saw in section&nbsp;<a href="#%_sec_1.3.3">1.3.3</a>
 that attempting to compute square roots by naively finding a
-fixed point of <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em> does not converge, and that this can be
+fixed point of <em>y</em> ⟼  <em>x</em>/<em>y</em> does not converge, and that this can be
 fixed by average damping.  The same method works for finding cube
-roots as fixed points of the average-damped <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em><sup>2</sup>.
+roots as fixed points of the average-damped <em>y</em> ⟼  <em>x</em>/<em>y</em><sup>2</sup>.
 Unfortunately, the process does not work for <a name="%_idx_1238"></a><a name="%_idx_1240"></a>fourth roots -- a single
-average damp is not enough to make a fixed-point search for <em>y</em> <img src="book-Z-G-D-17.gif" border="0">
+average damp is not enough to make a fixed-point search for <em>y</em> ⟼
 <em>x</em>/<em>y</em><sup>3</sup> converge.  On the other hand, if we average damp twice (i.e.,
-use the average damp of the average damp of <em>y</em> <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em><sup>3</sup>) the
+use the average damp of the average damp of <em>y</em> ⟼  <em>x</em>/<em>y</em><sup>3</sup>) the
 fixed-point search does converge.  Do some experiments to determine
 how many average damps are required to compute <a name="%_idx_1242"></a><a name="%_idx_1244"></a><em>n</em>th roots as a
-fixed-point search based upon repeated average damping of <em>y</em> <img src="book-Z-G-D-17.gif" border="0">
+fixed-point search based upon repeated average damping of <em>y</em> ⟼
 <em>x</em>/<em>y</em><sup><em>n</em>-1</sup>.  Use this to implement a simple procedure for computing
 <em>n</em>th roots using <tt>fixed-point</tt>, <tt>average-damp</tt>, and the <tt>repeated</tt> procedure of exercise&nbsp;<a href="#%_thm_1.43">1.43</a>.
 Assume that any arithmetic operations you need are available as primitives.
@@ -1194,10 +1194,10 @@ messages.
 <a name="%_idx_1106"></a><a name="%_idx_1108"></a><a name="%_idx_1110"></a>radians mode and then repeatedly press the <tt>cos</tt> button until you
 obtain the fixed point.
 
-<p><a name="footnote_Temp_108" href="#call_footnote_Temp_108"><sup><small>58</small></sup></a>  <img src="book-Z-G-D-17.gif" border="0">
+<p><a name="footnote_Temp_108" href="#call_footnote_Temp_108"><sup><small>58</small></sup></a>  ⟼
 <a name="%_idx_1122"></a><a name="%_idx_1124"></a>(pronounced ``maps to'') is
 the mathematician's way of writing <tt>lambda</tt>.
-<em>y</em>  <img src="book-Z-G-D-17.gif" border="0">  <em>x</em>/<em>y</em> means <tt>(lambda(y) (/ x y))</tt>, that is, the
+<em>y</em>  ⟼  <em>x</em>/<em>y</em> means <tt>(lambda(y) (/ x y))</tt>, that is, the
 function whose value at <em>y</em> is <em>x</em>/<em>y</em>.
 
 <p><a name="footnote_Temp_114" href="#call_footnote_Temp_114"><sup><small>59</small></sup></a> Observe that this is a combination whose operator is itself
