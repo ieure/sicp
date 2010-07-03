@@ -901,7 +901,7 @@ generating terms until the answer is good enough.  (See
 exercise&nbsp;<a href="#%_thm_3.64">3.64</a>.)<p>
 
 <a name="%_idx_3950"></a><a name="%_idx_3952"></a><a name="%_idx_3954"></a><a name="%_idx_3956"></a><a name="%_idx_3958"></a><a name="%_idx_3960"></a>Another iteration that we can treat in the same way is to generate an
-approximation to <img src="book-Z-G-D-9.gif" border="0">, based upon the alternating series that we saw
+approximation to π, based upon the alternating series that we saw
 in section&nbsp;<a href="book-Z-H-12.html#%_sec_1.3.1">1.3.1</a>:<p>
 
 <p><div align=left><img src="ch3-Z-G-41.gif" border="0"></div><p><p>
@@ -927,9 +927,9 @@ of exercise&nbsp;<a href="#%_thm_3.55">3.55</a>) and scale the result by 4:
 <i>3.2837384837384844</i><br>
 <i>3.017071817071818</i><br>
 <tt>...</tt></tt><p><p>
-This gives us a stream of better and better approximations to <img src="book-Z-G-D-9.gif" border="0">,
+This gives us a stream of better and better approximations to π,
 although the approximations converge rather slowly.  Eight terms of
-the sequence bound the value of <img src="book-Z-G-D-9.gif" border="0"> between 3.284 and 3.017.<p>
+the sequence bound the value of π between 3.284 and 3.017.<p>
 
 <a name="%_idx_3964"></a>So far, our use of the stream of states approach is not much different
 from updating state variables.  But streams give us an opportunity to
@@ -957,7 +957,7 @@ the transformed sequence is given by<p>
 </tt><p><p><p>
 
 We can demonstrate Euler acceleration with our sequence of
-approximations to <img src="book-Z-G-D-9.gif" border="0">:<p>
+approximations to π:<p>
 
 <p><p><tt>(display-stream&nbsp;(euler-transform&nbsp;pi-stream))<br>
 <i>3.166666666666667</i><br>
@@ -991,7 +991,7 @@ the tableau:<p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(make-tableau&nbsp;transform&nbsp;s)))<br>
 </tt><p><p><p>
 
-We can demonstrate this kind of ``super-acceleration'' of the <img src="book-Z-G-D-9.gif" border="0">
+We can demonstrate this kind of ``super-acceleration'' of the π
 sequence:<p>
 
 <p><p><tt>(display-stream&nbsp;(accelerated-sequence&nbsp;euler-transform<br>
@@ -1006,8 +1006,8 @@ sequence:<p>
 <i>3.141592653589778</i><br>
 <tt>...</tt></tt><p><p>
 The result is impressive.  Taking eight terms of the sequence yields
-the correct value of <img src="book-Z-G-D-9.gif" border="0"> to 14 decimal places.  If we had used only
-the original <img src="book-Z-G-D-9.gif" border="0"> sequence, we would need to compute on the order of
+the correct value of π to 14 decimal places.  If we had used only
+the original π sequence, we would need to compute on the order of
 10<sup>13</sup> terms (i.e., expanding the series far enough so that the
 individual terms are less then 10<sup>-13</sup>) to get that much accuracy!
 
@@ -1050,7 +1050,7 @@ this, we could compute square roots up to a given tolerance by
 <b>Exercise 3.65.</b>&nbsp;&nbsp;<a name="%_idx_3982"></a>Use the series
 <p><div align=left><img src="ch3-Z-G-44.gif" border="0"></div><p>
 to compute three sequences of approximations to the natural logarithm of 2,
-in the same way we did above for <img src="book-Z-G-D-9.gif" border="0">.
+in the same way we did above for π.
 How rapidly do these sequences converge?
 <p>
 
@@ -1615,7 +1615,7 @@ major benefits of introducing assignment is that we can increase the
 modularity of our systems by encapsulating, or ``hiding,'' parts of
 the state of a large system within local variables.  Stream models can
 provide an equivalent modularity without the use of assignment.  As an
-<a name="%_idx_4120"></a><a name="%_idx_4122"></a>illustration, we can reimplement the Monte Carlo estimation of <img src="book-Z-G-D-9.gif" border="0">,
+<a name="%_idx_4120"></a><a name="%_idx_4122"></a>illustration, we can reimplement the Monte Carlo estimation of π,
 which we examined in section&nbsp;<a href="book-Z-H-20.html#%_sec_3.1.2">3.1.2</a>, from a
 stream-processing point of view.<p>
 
@@ -1658,9 +1658,9 @@ stream:<p>
 </tt><p><p>
 The <tt>cesaro-stream</tt> is now fed to a <tt>monte-carlo</tt> procedure,
 which produces a stream of estimates of probabilities.  The results
-are then converted into a stream of estimates of <img src="book-Z-G-D-9.gif" border="0">.  This version
+are then converted into a stream of estimates of π.  This version
 of the program doesn't need a parameter telling how many trials to
-perform.  Better estimates of <img src="book-Z-G-D-9.gif" border="0"> (from performing more experiments)
+perform.  Better estimates of π (from performing more experiments)
 are obtained by looking farther into the <tt>pi</tt> stream:<p>
 
 <p><p><tt><a name="%_idx_4132"></a>(define&nbsp;(monte-carlo&nbsp;experiment-stream&nbsp;passed&nbsp;failed)<br>
