@@ -926,12 +926,16 @@ of some basic list-manipulation operations as accumulations:
 
 </p><p><a name="%_thm_2.34" id="%_thm_2.34"></a>
 <b>Exercise 2.34.</b>  <a name="%_idx_1772" id="%_idx_1772"></a>Evaluating a polynomial in <em>x</em> at a given value of <em>x</em> can be
-formulated as an accumulation.  We evaluate the polynomial
-</p><p></p><div align="left"><img src="images/ch2-Z-G-18.gif" border="0" /></div><p>
-using a well-known algorithm called <a name="%_idx_1774" id="%_idx_1774"></a><em>Horner's rule</em>, which
-structures the computation as
-</p><p></p><div align="left"><img src="images/ch2-Z-G-19.gif" border="0" /></div><p>
-In other words, we start with <em>a</em><sub><em>n</em></sub>, multiply by <em>x</em>, add <em>a</em><sub><em>n</em>-1</sub>,
+formulated as an accumulation.  We evaluate the polynomial</p>
+
+<p><em>a<sub>n</sub>x<sup>n</sup></em> + <em>a</em><sub><em>n</em>-1</sub><em>x</em><sup><em>n</em>-1</sup> + ⋯ + <em>a</em><sub>1</sub><em>x</em> + <em>a</em><sub>0</sub></p>
+
+<p>using a well-known algorithm called <a name="%_idx_1774" id="%_idx_1774"></a><em>Horner's rule</em>, which
+structures the computation as</p>
+
+<p>(⋯ (<em>a<sub>n</sub>x</em> + <em>a</em><sub><em>n</em>-1</sub>)<em>x</em> + ⋯ + <em>a</em><sub>1</sub>) <em>x</em> + <em>a</em><sub>0</sub></p>
+
+<p>In other words, we start with <em>a</em><sub><em>n</em></sub>, multiply by <em>x</em>, add <em>a</em><sub><em>n</em>-1</sub>,
 multiply by <em>x</em>, and so on, until we reach <em>a</em><sub>0</sub>.<a name="call_footnote_Temp_186" href="#footnote_Temp_186" id="call_footnote_Temp_186"><sup><small>16</small></sup></a>
 Fill in the following template to produce a procedure that evaluates a
 polynomial using Horner's rule.
@@ -971,16 +975,55 @@ in the following definition of <tt>accumulate-n</tt>:
 </p><p><a name="%_thm_2.37" id="%_thm_2.37"></a>
 <b>Exercise 2.37.</b>  <a name="%_idx_1796" id="%_idx_1796"></a><a name="%_idx_1798" id="%_idx_1798"></a><a name="%_idx_1800" id="%_idx_1800"></a>Suppose we represent vectors <em>v</em> = (<em>v</em><sub><em>i</em></sub>) as sequences of numbers, and
 matrices <em>m</em> = (<em>m</em><sub><em>i</em><em>j</em></sub>) as sequences of vectors (the rows of the matrix).
-For example, the matrix
-</p><p></p><div align="left"><img src="images/ch2-Z-G-20.gif" border="0" /></div><p>
-is represented as the sequence <tt>((1 2 3 4) (4 5 6 6) (6 7 8 9))</tt>.
+For example, the matrix</p>
+
+<table id="ch2-Z-G-20">
+    <tr>
+        <td class="cap left top"></td>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td class="cap right top"></td>
+    </tr>
+    <tr>
+        <td class="cap left"></td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>6</td>
+        <td class="cap right"></td>
+    </tr>
+    <tr>
+        <td class="cap left bottom"></td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td class="cap right bottom"></td>
+    </tr>
+</table>
+
+<p>is represented as the sequence <tt>((1 2 3 4) (4 5 6 6) (6 7 8 9))</tt>.
 With this representation, we can use sequence operations to concisely
 express the basic matrix and vector operations.  These operations
-(which are described in any book on matrix algebra) are the following:</p><p>
+(which are described in any book on matrix algebra) are the following:</p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-21.gif" border="0" /></div><p></p><p>
+<p>
+    <code>(dot-product <em>v w</em>)      </code>returns the sum ∑<sub><em>i</em></sub> <em>v<sub>i</sub>w<sub>i</sub></em>;
+</p>
+<p>
+    <code>(matrix-*-vector <em>m v</em>)  </code>returns the vector <em>t</em>, where <em>t<sub>i</sub></em> = ∑<em><sub>j</sub> m<sub>ij</sub>v<sub>j</sub></em>;
+</p>
+<p>
+    <code>(matrix-*-vector <em>m n</em>)  </code>returns the matrix <em>p</em>, where <em>p<sub>ij</sub></em> = ∑<em><sub>k</sub> m<sub>ik</sub>n<sub>kj</sub></em>;
+</p>
 
-We can define the dot product as<a name="call_footnote_Temp_190" href="#footnote_Temp_190" id="call_footnote_Temp_190"><sup><small>17</small></sup></a>
+<p>
+    <code>(transpose <em>m</em>)          </code>returns the matrix <em>n</em>, where <em>n<sub>ij</sub></em> = <em>m<sub>ji</sub></em>.
+</p>
+
+<p>We can define the dot product as<a name="call_footnote_Temp_190" href="#footnote_Temp_190" id="call_footnote_Temp_190"><sup><small>17</small></sup></a>
 </p><p></p><p><tt><a name="%_idx_1802" id="%_idx_1802"></a>(define (dot-product v w)<br />
   (accumulate + 0 (map * v w)))<br /></tt></p><p></p><p>
 Fill in the missing expressions in the following procedures for
@@ -1036,9 +1079,44 @@ Consider
 this problem: Given a positive integer <em>n</em>, find all ordered pairs of
 distinct positive integers <em>i</em> and <em>j</em>, where 1<u>&lt;</u> <em>j</em>&lt; <em>i</em><u>&lt;</u> <em>n</em>, such
 that <em>i</em>  + <em>j</em> is prime.  For example, if <em>n</em> is 6, then the pairs are
-the following:
-</p><p></p><div align="left"><img src="images/ch2-Z-G-22.gif" border="0" /></div><p>
-A natural way to organize this computation is to generate the sequence
+the following:</p>
+
+<table id="ch2-Z-G-22">
+    <tr>
+        <td class="label"><em>i</em></td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>6</td>
+    </tr>
+
+    <tr>
+        <td class="label"><em>j</em></td>
+        <td>1</td>
+        <td>2</td>
+        <td>1</td>
+        <td>3</td>
+        <td>2</td>
+        <td>1</td>
+        <td>5</td>
+    </tr>
+
+    <tr class="sum">
+        <td class="label"><em>i</em> + <em>j</em></td>
+        <td>3</td>
+        <td>5</td>
+        <td>5</td>
+        <td>7</td>
+        <td>7</td>
+        <td>7</td>
+        <td>11</td>
+    </tr>
+</table>
+
+<p>A natural way to organize this computation is to generate the sequence
 of all ordered pairs of positive integers less than or equal to <em>n</em>,
 filter to select those pairs whose sum is prime, and
 then, for each pair (<em>i</em>, <em>j</em>) that passes through the filter, produce the triple
@@ -1130,10 +1208,24 @@ equal to a given integer <em>n</em> that sum to a given integer <em>s</em>.
 
 
 </p><p><a name="%_thm_2.42" id="%_thm_2.42"></a>
-<b>Exercise 2.42.</b>  <a name="%_fig_2.8" id="%_fig_2.8"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-23.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.8:</b>  A solution to the eight-queens puzzle.</div></caption><tr><td>
 
-</td></tr></table></div><p>
-The <a name="%_idx_1846" id="%_idx_1846"></a><a name="%_idx_1848" id="%_idx_1848"></a><a name="%_idx_1850" id="%_idx_1850"></a>“eight-queens puzzle” asks how to place eight queens on a
+<b>Exercise 2.42.</b>  <a name="%_fig_2.8" id="%_fig_2.8"></a></p><p></p><div align="left">
+
+    <table id="ch2-Z-G-23">
+        <tr><td></td><td></td><td></td><td></td><td></td><td>♕</td><td></td><td></td></tr>
+        <tr><td></td><td></td><td>♕</td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td>♕</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td>♕</td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td>♕</td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>♕</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td>♕</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td></td><td></td><td></td><td>♕</td><td></td><td></td><td></td><td></td></tr>
+        <caption align="bottom"><b>Figure 2.8:</b>  A solution to the eight-queens puzzle.</caption>
+    </table>
+</div>
+
+<p>The <a name="%_idx_1846" id="%_idx_1846"></a><a name="%_idx_1848" id="%_idx_1848"></a><a name="%_idx_1850" id="%_idx_1850"></a>“eight-queens puzzle” asks how to place eight queens on a
 chessboard so that no queen is in check from any other (i.e., no two
 queens are in the same row, column, or diagonal).  One possible
 solution is shown in figure <a href="#%_fig_2.8">2.8</a>.  One way to solve the
@@ -1529,11 +1621,15 @@ abstraction for vectors by giving a constructor <a name="%_idx_1932" id="%_idx_1
 corresponding selectors <a name="%_idx_1934" id="%_idx_1934"></a><tt>xcor-vect</tt> and <a name="%_idx_1936" id="%_idx_1936"></a><tt>ycor-vect</tt>.  In
 terms of your selectors and constructor, implement procedures <a name="%_idx_1938" id="%_idx_1938"></a><tt>add-vect</tt>, <a name="%_idx_1940" id="%_idx_1940"></a><tt>sub-vect</tt>, and <a name="%_idx_1942" id="%_idx_1942"></a><tt>scale-vect</tt> that perform
 the operations vector addition, vector subtraction, and multiplying a
-vector by a scalar:
-</p><p></p><div align="left"><img src="images/ch2-Z-G-44.gif" border="0" /></div><p>
-</p><p></p><p>
+vector by a scalar:</p>
 
-</p><p><a name="%_thm_2.47" id="%_thm_2.47"></a>
+<p class="centered">
+    (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>) + (<em>x</em><sub>2</sub>, <em>y</em><sub>2</sub>) = (<em>x</em><sub>1</sub> + <em>x</em><sub>2</sub>, <em>y</em><sub>1</sub> + <em>y</em><sub>2</sub>)<br/>
+    (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>) - (<em>x</em><sub>2</sub>, <em>y</em><sub>2</sub>) = (<em>x</em><sub>1</sub> - <em>x</em><sub>2</sub>, <em>y</em><sub>1</sub> - <em>y</em><sub>2</sub>)<br/>
+    <em>s</em> · (<em>x</em>, <em>y</em>) = (<em>sx</em>, <em>sy</em>)
+</p>
+
+<p><a name="%_thm_2.47" id="%_thm_2.47"></a>
 <b>Exercise 2.47.</b>  Here are two possible constructors for frames:
 </p><p></p><p><tt><a name="%_idx_1944" id="%_idx_1944"></a>(define (make-frame origin edge1 edge2)<br />
   (list origin edge1 edge2))<br /><br />
@@ -1832,8 +1928,11 @@ not just to lists.
 </p><p><a name="footnote_Temp_157" href="#call_footnote_Temp_157" id="footnote_Temp_157"><sup><small>9</small></sup></a> Since nested applications of <tt>car</tt> and <tt>cdr</tt>
 are cumbersome to write, Lisp dialects provide abbreviations for
 them – for instance,
-<a name="%_idx_1584" id="%_idx_1584"></a><a name="%_idx_1586" id="%_idx_1586"></a></p><p></p><div align="left"><img src="images/ch2-Z-G-14.gif" border="0" /></div><p>
-The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a name="%_idx_1588" id="%_idx_1588"></a><a name="%_idx_1590" id="%_idx_1590"></a><tt>car</tt> operation and
+<a name="%_idx_1584" id="%_idx_1584"></a><a name="%_idx_1586" id="%_idx_1586"></a></p>
+
+<p><code>(cadr ⟨arg⟩) = (car (cdr ⟨arg⟩))</p>
+
+<p>The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a name="%_idx_1588" id="%_idx_1588"></a><a name="%_idx_1590" id="%_idx_1590"></a><tt>car</tt> operation and
 each <tt>d</tt> for a <tt>cdr</tt> operation, to be applied in the same order
 in which they appear in the name.  The names <tt>car</tt> and <tt>cdr</tt>
 persist because simple combinations like <tt>cadr</tt> are

@@ -77,4 +77,70 @@ background-color: pink;
 color: gray;
 }
 
+p.centered {
+    text-align: center;
+    display: inline-block;
+    width: auto;
+}
 
+table#ch2-Z-G-22 {
+    border-spacing: 0;
+}
+
+table#ch2-Z-G-22 td {
+    text-align: center;
+    padding: .1em .4em;
+}
+
+table#ch2-Z-G-22 tr.sum td {
+    border-top: 1px solid black;
+}
+
+table#ch2-Z-G-22 td.label {
+    border-right: 1px solid black;
+}
+
+table#ch2-Z-G-23 {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+table#ch2-Z-G-23 td
+{
+    border: 1px solid black;
+    height: 32pt;
+    width: 32pt;
+    vertical-align: center;
+    text-align: center;
+    font-size: 24pt;
+}
+
+table#ch2-Z-G-23 caption {
+    text-align: left;
+}
+
+table#ch2-Z-G-20 {
+    border-spacing: 0;
+}
+
+table#ch2-Z-G-20 td {
+    padding: .1em .4em;
+}
+
+table#ch2-Z-G-20 td.cap.left {
+    border-left: 1px solid black;
+    padding: 2pt;
+}
+
+table#ch2-Z-G-20 td.cap.right {
+    border-right: 1px solid black;
+    padding: 2pt;
+}
+
+table#ch2-Z-G-20 td.cap.top {
+    border-top: 1px solid black;
+}
+
+table#ch2-Z-G-20 td.cap.bottom {
+    border-bottom: 1px solid black;
+}
