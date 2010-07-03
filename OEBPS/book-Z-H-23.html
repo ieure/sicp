@@ -177,7 +177,7 @@ must ensure that money is conserved.
 To make concurrent programs behave correctly, we may have to
 place some restrictions on concurrent execution.<p>
 
-<a name="%_fig_3.29"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-31.gif" border="0">
+<a name="%_fig_3.29"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-31.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.29:</b>&nbsp;&nbsp;Timing diagram showing how interleaving the order of events
 in two banking withdrawals can lead to an incorrect final balance.</div></caption><tr><td>
 <a name="%_idx_3602"></a>
@@ -201,7 +201,7 @@ But there should be no problem
 permitting Paul's deposit to his private account to proceed
 concurrently with Peter's withdrawal from the shared account.<p>
 
-<a name="%_fig_3.30"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-32.gif" border="0">
+<a name="%_fig_3.30"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-32.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.30:</b>&nbsp;&nbsp;Concurrent deposits and withdrawals from a joint account
 in Bank1 and a private account in Bank2.</div></caption><tr><td>
 
@@ -271,7 +271,7 @@ ordered events (<em>x</em>,<em>y</em>,<em>z</em>).  If the two processes run con
 no constraints on how their execution is interleaved, then there are
 20 different possible orderings for the events that are consistent
 with the individual orderings for the two processes:
-<p><div align=left><img src="ch3-Z-G-33.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch3-Z-G-33.gif" border="0"></div><p>
 As programmers designing this system, we would have to consider the
 effects of each of these 20 orderings and check that each behavior is
 acceptable.  Such an approach rapidly becomes unwieldy as the numbers

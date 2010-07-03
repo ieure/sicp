@@ -46,7 +46,7 @@ the variable in the first frame in the environment that contains a
 binding for that variable.  If no frame in the sequence specifies a
 binding for the variable, then the variable is said to be <a name="%_idx_3054"></a><a name="%_idx_3056"></a><em>unbound</em> in the environment.<p>
 
-<a name="%_fig_3.1"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-2.gif" border="0">
+<a name="%_fig_3.1"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-2.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.1:</b>&nbsp;&nbsp;A simple environment structure.</div></caption><tr><td>
 
 <a name="%_idx_3058"></a></td></tr></table></div><p><p>
@@ -138,7 +138,7 @@ object with the symbol <tt>square</tt>, has been added to the global
 frame.  In general, <tt>define</tt> creates definitions by adding
 bindings to frames.<p>
 
-<a name="%_fig_3.2"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-3.gif" border="0">
+<a name="%_fig_3.2"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-3.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.2:</b>&nbsp;&nbsp;Environment structure produced by
 evaluating
 <tt>(define (square x) (* x x))</tt> in the global environment.</div></caption><tr><td>
@@ -168,7 +168,7 @@ procedure object.  Within E1, we evaluate the body of the procedure,
 <tt>(* x x)</tt>.  Since the value of <tt>x</tt> in E1 is 5, the result is
 <tt>(*&nbsp;5&nbsp;5)</tt>, or&nbsp;25.
 
-<a name="%_fig_3.3"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-4.gif" border="0">
+<a name="%_fig_3.3"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-4.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.3:</b>&nbsp;&nbsp;Environment created by evaluating <tt>(square 5)</tt>
 in the global environment.</div></caption><tr><td>
 
@@ -235,7 +235,7 @@ created by evaluating the definitions of <tt>f</tt>, <tt>square</tt>, and
 consists of some code, together with a pointer to the global
 environment.<p>
 
-<a name="%_fig_3.4"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-5.gif" border="0">
+<a name="%_fig_3.4"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-5.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.4:</b>&nbsp;&nbsp;Procedure objects in the global frame.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -249,7 +249,7 @@ evaluate the body of <tt>f</tt>:<p>
 <p><p><tt>(sum-of-squares&nbsp;(+&nbsp;a&nbsp;1)&nbsp;(*&nbsp;a&nbsp;2))<br>
 </tt><p><p><p>
 
-<a name="%_fig_3.5"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-6.gif" border="0">
+<a name="%_fig_3.5"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-6.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.5:</b>&nbsp;&nbsp;Environments created by evaluating <tt>(f 5)</tt>
 using the procedures in figure&nbsp;<a href="#%_fig_3.4">3.4</a>.</div></caption><tr><td>
 
@@ -353,7 +353,7 @@ So far, this is no different from the examples we have already seen,
 except that the body of the procedure is itself a <tt>lambda</tt>
 expression.<p>
 
-<a name="%_fig_3.6"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-7.gif" border="0">
+<a name="%_fig_3.6"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-7.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.6:</b>&nbsp;&nbsp;Result of defining <tt>make-withdraw</tt>
 in the global environment.</div></caption><tr><td>
 
@@ -375,7 +375,7 @@ returned by the call to <tt>make-withdraw</tt>.  This is bound to <tt>W1</tt> in
 evaluated in the global environment.  Figure&nbsp;<a href="#%_fig_3.7">3.7</a> shows the
 resulting environment structure.<p>
 
-<a name="%_fig_3.7"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-8.gif" border="0">
+<a name="%_fig_3.7"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-8.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.7:</b>&nbsp;&nbsp;Result of evaluating <tt>(define W1 (make-withdraw 100))</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -404,7 +404,7 @@ both <tt>amount</tt> and <tt>balance</tt>.  <tt>Amount</tt> will be found in
 the first frame in the environment, while <tt>balance</tt> will be found
 by following the enclosing-environment pointer to E1.<p>
 
-<a name="%_fig_3.8"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-9.gif" border="0">
+<a name="%_fig_3.8"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-9.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.8:</b>&nbsp;&nbsp;Environments created by applying the procedure
 object <tt>W1</tt>.</div></caption><tr><td>
 
@@ -423,7 +423,7 @@ We see that E1 serves as the ``place'' that holds the local state
 variable for the procedure object <tt>W1</tt>.  Figure&nbsp;<a href="#%_fig_3.9">3.9</a>
 shows the situation after the call to <tt>W1</tt>.<p>
 
-<a name="%_fig_3.9"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-10.gif" border="0">
+<a name="%_fig_3.9"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-10.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.9:</b>&nbsp;&nbsp;Environments after the call to <tt>W1</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -444,7 +444,7 @@ variable <tt>balance</tt> stored in E1, whereas calls to <tt>W2</tt>
 reference the <tt>balance</tt> stored in E2. Thus, changes to the local
 state of one object do not affect the other object.<p>
 
-<a name="%_fig_3.10"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-11.gif" border="0">
+<a name="%_fig_3.10"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-11.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.10:</b>&nbsp;&nbsp;Using <tt>(define W2 (make-withdraw 100))</tt>
 to create a second object.</div></caption><tr><td>
 
@@ -519,7 +519,7 @@ evaluation of the expression <tt>(sqrt 2)</tt> where the internal
 procedure <tt>good-enough?</tt> has been called for the first time with
 <tt>guess</tt> equal to 1.<p>
 
-<a name="%_fig_3.11"></a><p><div align=left><table width=100%><tr><td><img src="ch3-Z-G-12.gif" border="0">
+<a name="%_fig_3.11"></a><p><div align=left><table width=100%><tr><td><img src="images/ch3-Z-G-12.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 3.11:</b>&nbsp;&nbsp;<tt>Sqrt</tt> procedure with internal definitions.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>

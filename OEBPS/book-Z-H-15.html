@@ -37,12 +37,12 @@ building block from which we can construct all sorts of data
 structures.  Figure&nbsp;<a href="#%_fig_2.3">2.3</a> shows two ways
 to use pairs to combine the numbers 1, 2, 3, and 4.<p>
 
-<a name="%_fig_2.2"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-11.gif" border="0">
+<a name="%_fig_2.2"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-11.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.2:</b>&nbsp;&nbsp;Box-and-pointer representation of <tt>(cons 1 2)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
 
-<a name="%_fig_2.3"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-12.gif" border="0">
+<a name="%_fig_2.3"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-12.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.3:</b>&nbsp;&nbsp;Two ways to combine 1, 2, 3, and 4 using pairs.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -70,7 +70,7 @@ language that illustrates closure in a vivid way.<a name="call_footnote_Temp_155
 
 <p>
 
-<a name="%_fig_2.4"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-13.gif" border="0">
+<a name="%_fig_2.4"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-13.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.4:</b>&nbsp;&nbsp;The sequence 1, 2, 3, 4 represented as a chain of pairs.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -504,7 +504,7 @@ as a list of three items, the first of which is itself a list, <tt>(1 2)</tt>.  
 printed by the interpreter.  Figure&nbsp;<a href="#%_fig_2.5">2.5</a> shows
 the representation of this structure in terms of pairs.<p>
 
-<a name="%_fig_2.5"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-15.gif" border="0">
+<a name="%_fig_2.5"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-15.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.5:</b>&nbsp;&nbsp;Structure formed by <tt>(cons (list 1 2) (list 3 4))</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -515,7 +515,7 @@ tree, and elements that are themselves sequences are subtrees.
 Figure&nbsp;<a href="#%_fig_2.6">2.6</a> shows the structure in
 figure&nbsp;<a href="#%_fig_2.5">2.5</a> viewed as a tree.<p>
 
-<a name="%_fig_2.6"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-16.gif" border="0">
+<a name="%_fig_2.6"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-16.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.6:</b>&nbsp;&nbsp;The list structure in figure&nbsp;<a href="#%_fig_2.5">2.5</a> viewed as a tree.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -875,7 +875,7 @@ element.  The output of the map is then fed to an <a name="%_idx_1736"></a><em>a
 which combines the elements using <tt>+</tt>, starting from an initial 0.
 The plan for <tt>even-fibs</tt> is analogous.<p>
 
-<a name="%_fig_2.7"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-17.gif" border="0">
+<a name="%_fig_2.7"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-17.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.7:</b>&nbsp;&nbsp;The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the
 commonality between the two programs.</div></caption><tr><td>
 
@@ -1066,10 +1066,10 @@ of some basic list-manipulation operations as accumulations:
 <p><a name="%_thm_2.34"></a>
 <b>Exercise 2.34.</b>&nbsp;&nbsp;<a name="%_idx_1772"></a>Evaluating a polynomial in <em>x</em> at a given value of <em>x</em> can be
 formulated as an accumulation.  We evaluate the polynomial
-<p><div align=left><img src="ch2-Z-G-18.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-18.gif" border="0"></div><p>
 using a well-known algorithm called <a name="%_idx_1774"></a><em>Horner's rule</em>, which
 structures the computation as
-<p><div align=left><img src="ch2-Z-G-19.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-19.gif" border="0"></div><p>
 In other words, we start with <em>a</em><sub><em>n</em></sub>, multiply by <em>x</em>, add <em>a</em><sub><em>n</em>-1</sub>,
 multiply by <em>x</em>, and so on, until we reach <em>a</em><sub>0</sub>.<a name="call_footnote_Temp_186" href="#footnote_Temp_186"><sup><small>16</small></sup></a>
 Fill in the following template to produce a procedure that evaluates a
@@ -1115,13 +1115,13 @@ in the following definition of <tt>accumulate-n</tt>:
 <b>Exercise 2.37.</b>&nbsp;&nbsp;<a name="%_idx_1796"></a><a name="%_idx_1798"></a><a name="%_idx_1800"></a>Suppose we represent vectors <em>v</em> = (<em>v</em><sub><em>i</em></sub>) as sequences of numbers, and
 matrices <em>m</em> = (<em>m</em><sub><em>i</em><em>j</em></sub>) as sequences of vectors (the rows of the matrix).
 For example, the matrix
-<p><div align=left><img src="ch2-Z-G-20.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-20.gif" border="0"></div><p>
 is represented as the sequence <tt>((1 2 3 4) (4 5 6 6) (6 7 8 9))</tt>.
 With this representation, we can use sequence operations to concisely
 express the basic matrix and vector operations.  These operations
 (which are described in any book on matrix algebra) are the following:<p>
 
-<p><div align=left><img src="ch2-Z-G-21.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-21.gif" border="0"></div><p><p>
 
 We can define the dot product as<a name="call_footnote_Temp_190" href="#footnote_Temp_190"><sup><small>17</small></sup></a>
 <p><p><tt><a name="%_idx_1802"></a>(define&nbsp;(dot-product&nbsp;v&nbsp;w)<br>
@@ -1187,7 +1187,7 @@ this problem: Given a positive integer <em>n</em>, find all ordered pairs of
 distinct positive integers <em>i</em> and <em>j</em>, where 1<u>&lt;</u> <em>j</em>&lt; <em>i</em><u>&lt;</u> <em>n</em>, such
 that <em>i</em>  + <em>j</em> is prime.  For example, if <em>n</em> is 6, then the pairs are
 the following:
-<p><div align=left><img src="ch2-Z-G-22.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-22.gif" border="0"></div><p>
 A natural way to organize this computation is to generate the sequence
 of all ordered pairs of positive integers less than or equal to <em>n</em>,
 filter to select those pairs whose sum is prime, and
@@ -1287,7 +1287,7 @@ equal to a given integer <em>n</em> that sum to a given integer <em>s</em>.
 
 
 <p><a name="%_thm_2.42"></a>
-<b>Exercise 2.42.</b>&nbsp;&nbsp;<a name="%_fig_2.8"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-23.gif" border="0">
+<b>Exercise 2.42.</b>&nbsp;&nbsp;<a name="%_fig_2.8"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-23.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.8:</b>&nbsp;&nbsp;A solution to the eight-queens puzzle.</div></caption><tr><td>
 
 </td></tr></table></div><p>
@@ -1385,9 +1385,9 @@ list structure, the operations in this language, which also
 satisfy the closure property, allow us to easily build
 arbitrarily complicated patterns.<p>
 
-<a name="%_fig_2.9"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-24.gif" border="0">
+<a name="%_fig_2.9"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-24.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-25.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-25.gif" border="0">&nbsp;</div>
 
 </td></tr><caption align=bottom><div align=left><b>Figure 2.9:</b>&nbsp;&nbsp;Designs generated with the picture language.</div></caption><tr><td>
 
@@ -1434,13 +1434,13 @@ produces a painter that draws its image upside-down, and
 <a name="%_idx_1884"></a><tt>flip-horiz</tt> produces a painter that draws the original
 painter's image left-to-right reversed.<p>
 
-<a name="%_fig_2.10"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-26.gif" border="0">
+<a name="%_fig_2.10"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-26.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-27.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-27.gif" border="0">&nbsp;</div>
 
-<div align=left><img src="ch2-Z-G-28.gif" border="0">
+<div align=left><img src="images/ch2-Z-G-28.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-29.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-29.gif" border="0">&nbsp;</div>
 
 </td></tr><caption align=bottom><div align=left><b>Figure 2.10:</b>&nbsp;&nbsp;Images produced by the <tt>wave</tt> painter, with respect
 to four different frames.  The frames, shown with dotted lines, are not
@@ -1448,13 +1448,13 @@ part of the images.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
 
-<a name="%_fig_2.11"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-30.gif" border="0">
+<a name="%_fig_2.11"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-30.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-31.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-31.gif" border="0">&nbsp;</div>
 
-<div align=left><img src="ch2-Z-G-32.gif" border="0">
+<div align=left><img src="images/ch2-Z-G-32.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-33.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-33.gif" border="0">&nbsp;</div>
 
 </td></tr><caption align=bottom><div align=left><b>Figure 2.11:</b>&nbsp;&nbsp;Images of William Barton Rogers, founder and first
 president of MIT, painted with respect to the same four frames as in
@@ -1470,9 +1470,9 @@ Figure&nbsp;<a href="#%_fig_2.12">2.12</a> shows the drawing of a painter called
 (define&nbsp;wave4&nbsp;(below&nbsp;wave2&nbsp;wave2))<br>
 </tt><p><p><p>
 
-<a name="%_fig_2.12"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-34.gif" border="0">
+<a name="%_fig_2.12"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-34.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-35.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-35.gif" border="0">&nbsp;</div>
 
 <p><p><tt>(define&nbsp;wave2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(define&nbsp;wave4<br>
 &nbsp;&nbsp;(beside&nbsp;wave&nbsp;(flip-vert&nbsp;wave)))&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(below&nbsp;wave2&nbsp;wave2))<br>
@@ -1524,9 +1524,9 @@ and &nbsp;<a href="#%_fig_2.14">2.14</a>:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(beside&nbsp;painter&nbsp;(below&nbsp;smaller&nbsp;smaller)))))<br>
 </tt><p><p><p>
 
-<a name="%_fig_2.13"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-36.gif" border="0">
+<a name="%_fig_2.13"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-36.gif" border="0">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-37.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-37.gif" border="0">&nbsp;</div>
 
 <p><p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;right-split&nbsp;<em>n</em>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;corner-split&nbsp;<em>n</em><br>
 </tt><p><p>
@@ -1550,15 +1550,15 @@ and figures&nbsp;<a href="#%_fig_2.13">2.13</a> and &nbsp;<a href="#%_fig_2.14">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(below&nbsp;bottom-right&nbsp;corner))))))<br>
 </tt><p><p><p>
 
-<a name="%_fig_2.14"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="ch2-Z-G-38.gif" border="0">
+<a name="%_fig_2.14"></a><p><div align=left><table width=100%><tr><td><div align=left><img src="images/ch2-Z-G-38.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-39.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-39.gif" border="0">&nbsp;</div>
 
 <p><p><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(right-split&nbsp;wave&nbsp;4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(right-split&nbsp;rogers&nbsp;4)<br>
 </tt><p><p>
-<p><p><div align=left><img src="ch2-Z-G-40.gif" border="0">
+<p><p><div align=left><img src="images/ch2-Z-G-40.gif" border="0">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<img src="ch2-Z-G-41.gif" border="0">&nbsp;</div>
+<img src="images/ch2-Z-G-41.gif" border="0">&nbsp;</div>
 
 <p><p><tt>&nbsp;&nbsp;&nbsp;&nbsp;(corner-split&nbsp;wave&nbsp;4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(corner-split&nbsp;rogers&nbsp;4)<br>
 </tt><p><p>
@@ -1662,7 +1662,7 @@ there is a constructor <a name="%_idx_1914"></a><tt>make-frame</tt>, which takes
 produces a frame, and three corresponding selectors <a name="%_idx_1916"></a><tt>origin-frame</tt>, <a name="%_idx_1918"></a><tt>edge1-frame</tt>, and <a name="%_idx_1920"></a><tt>edge2-frame</tt> (see
 exercise&nbsp;<a href="#%_thm_2.47">2.47</a>).<p>
 
-<a name="%_fig_2.15"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-42.gif" border="0">
+<a name="%_fig_2.15"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-42.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.15:</b>&nbsp;&nbsp;A frame is described by three vectors -- an
 origin and two edges.</div></caption><tr><td>
 
@@ -1674,7 +1674,7 @@ With each frame, we associate a <a name="%_idx_1924"></a><em>frame coordinate ma
 will be used to shift and scale images to fit the frame.  The map
 transforms the unit square into the frame by
 mapping the vector <strong><em>v</em></strong> = (<em>x</em>,<em>y</em>) to the vector sum
-<p><div align=left><img src="ch2-Z-G-43.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-43.gif" border="0"></div><p>
 For example, (0,0) is mapped to the origin of the frame, (1,1) to
 the vertex diagonally opposite the origin, and (0.5,0.5) to the
 center of the frame.  We can create a frame's coordinate map with the
@@ -1708,7 +1708,7 @@ corresponding selectors <a name="%_idx_1934"></a><tt>xcor-vect</tt> and <a name=
 terms of your selectors and constructor, implement procedures <a name="%_idx_1938"></a><tt>add-vect</tt>, <a name="%_idx_1940"></a><tt>sub-vect</tt>, and <a name="%_idx_1942"></a><tt>scale-vect</tt> that perform
 the operations vector addition, vector subtraction, and multiplying a
 vector by a scalar:
-<p><div align=left><img src="ch2-Z-G-44.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-44.gif" border="0"></div><p>
 <p><p>
 
 <p><a name="%_thm_2.47"></a>
@@ -2019,7 +2019,7 @@ not just to lists.
 <p><a name="footnote_Temp_157" href="#call_footnote_Temp_157"><sup><small>9</small></sup></a> Since nested applications of <tt>car</tt> and <tt>cdr</tt>
 are cumbersome to write, Lisp dialects provide abbreviations for
 them -- for instance,
-<a name="%_idx_1584"></a><a name="%_idx_1586"></a><p><div align=left><img src="ch2-Z-G-14.gif" border="0"></div><p>
+<a name="%_idx_1584"></a><a name="%_idx_1586"></a><p><div align=left><img src="images/ch2-Z-G-14.gif" border="0"></div><p>
 The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a name="%_idx_1588"></a><a name="%_idx_1590"></a><tt>car</tt> operation and
 each <tt>d</tt> for a <tt>cdr</tt> operation, to be applied in the same order
 in which they appear in the name.  The names <tt>car</tt> and <tt>cdr</tt>

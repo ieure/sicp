@@ -47,7 +47,7 @@ polar).  Moreover, the structure of the system is additive, so
 that one can design the individual arithmetic packages separately and
 combine them to produce a generic arithmetic system.
 
-<a name="%_fig_2.23"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-64.gif" border="0">
+<a name="%_fig_2.23"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-64.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.23:</b>&nbsp;&nbsp;Generic arithmetic system.</div></caption><tr><td>
 <a name="%_idx_2500"></a>
 </td></tr></table></div><p><p>
@@ -225,7 +225,7 @@ object is passed ``downward,'' the outer tag that is used to direct
 it to the appropriate package is stripped off (by applying <tt>contents</tt>) and the next level of tag (if any) becomes visible to be used for
 further dispatching.<p>
 
-<a name="%_fig_2.24"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-65.gif" border="0">
+<a name="%_fig_2.24"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-65.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.24:</b>&nbsp;&nbsp;Representation of 3 + 4<em>i</em> in rectangular form.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -469,7 +469,7 @@ hierarchy we have here is of a very simple kind, in which each type
 has at most one supertype and at most one subtype.  Such a structure,
 called a <em>tower</em>, is illustrated in figure&nbsp;<a href="#%_fig_2.25">2.25</a>.<p>
 
-<a name="%_fig_2.25"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-66.gif" border="0">
+<a name="%_fig_2.25"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-66.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.25:</b>&nbsp;&nbsp;A tower of types.</div></caption><tr><td>
 <a name="%_idx_2604"></a><a name="%_idx_2606"></a>
 </td></tr></table></div><p><p>
@@ -516,7 +516,7 @@ such a lowering operation.  (The trick is that we need a general way
 to distinguish those objects that can be lowered, such as 6 + 0<em>i</em>, from
 those that cannot, such as 6 + 2<em>i</em>.)<p>
 
-<a name="%_fig_2.26"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-67.gif" border="0">
+<a name="%_fig_2.26"></a><p><div align=left><table width=100%><tr><td><img src="images/ch2-Z-G-67.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.26:</b>&nbsp;&nbsp;Relations among types of geometric figures.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -677,7 +677,7 @@ function.  We can regard these as compound ``types,'' which are often
 useful for directing the processing of expressions.  For example, we
 could describe the expression<p>
 
-<p><div align=left><img src="ch2-Z-G-68.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-68.gif" border="0"></div><p>
 as a polynomial in <em>x</em> with coefficients that are trigonometric
 functions of polynomials in <em>y</em> whose coefficients are integers.<p>
 
@@ -702,9 +702,9 @@ indeterminate, or a product of a coefficient and a power of the
 indeterminate.  A coefficient is defined as an algebraic expression
 that is not dependent upon the indeterminate of the polynomial.  For
 example,
-<p><div align=left><img src="ch2-Z-G-69.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-69.gif" border="0"></div><p>
 is a simple polynomial in <em>x</em>, and
-<p><div align=left><img src="ch2-Z-G-70.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-70.gif" border="0"></div><p>
 is a polynomial in <em>x</em> whose coefficients are polynomials in <em>y</em>.<p>
 
 Already we are skirting some thorny issues.  Is the first of these
@@ -869,14 +869,14 @@ arithmetic package.  If we include a <a name="%_idx_2718"></a>coercion mechanism
 those discussed in section&nbsp;<a href="#%_sec_2.5.2">2.5.2</a>,
 then we also are automatically able to handle operations on
 polynomials of different coefficient types, such as
-<p><div align=left><img src="ch2-Z-G-71.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-71.gif" border="0"></div><p><p>
 
 Because we installed the polynomial addition and
 multiplication procedures <tt>add-poly</tt> and <tt>mul-poly</tt> in the generic
 arithmetic system as the <tt>add</tt> and <tt>mul</tt> operations
 for type <tt>polynomial</tt>, our system is also
 automatically able to handle polynomial operations such as
-<p><div align=left><img src="ch2-Z-G-72.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-72.gif" border="0"></div><p><p>
 
 The reason is that when the system tries to combine coefficients, it
 will dispatch through <tt>add</tt> and <tt>mul</tt>.  Since the coefficients
@@ -907,9 +907,9 @@ consideration is the ``density'' of the polynomials we intend to
 manipulate.  A polynomial is said to be <a name="%_idx_2726"></a><a name="%_idx_2728"></a><em>dense</em> if it has nonzero
 coefficients in terms of most orders.  If it has many zero terms it
 is said to be <a name="%_idx_2730"></a><a name="%_idx_2732"></a><em>sparse</em>.  For example,
-<p><div align=left><img src="ch2-Z-G-74.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-74.gif" border="0"></div><p>
 is a dense polynomial, whereas
-<p><div align=left><img src="ch2-Z-G-75.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-75.gif" border="0"></div><p>
 is sparse.<p>
 
 The term lists of dense polynomials are most efficiently represented
@@ -985,7 +985,7 @@ change.
 <b>Exercise 2.91.</b>&nbsp;&nbsp;<a name="%_idx_2758"></a>A univariate polynomial can be divided by another one to produce a
 polynomial quotient and a polynomial remainder.  For example,<p>
 
-<p><div align=left><img src="ch2-Z-G-76.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-76.gif" border="0"></div><p><p>
 
 Division can be performed via long division.
 That is, divide the highest-order term of the dividend by
@@ -1086,10 +1086,10 @@ in different variables.  (This is not easy!)
 functions</em>.  These are ``fractions'' whose numerator and denominator
 are polynomials, such as<p>
 
-<p><div align=left><img src="ch2-Z-G-77.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-77.gif" border="0"></div><p>
 The system should be able to add, subtract, multiply, and divide
 rational functions, and to perform such computations as
-<p><div align=left><img src="ch2-Z-G-78.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-78.gif" border="0"></div><p>
 (Here the sum has been simplified by removing common factors.
 Ordinary ``cross multiplication'' would have produced a
 fourth-degree polynomial over a fifth-degree polynomial.)<p>
@@ -1159,11 +1159,11 @@ and check your result by hand.
 <p><a name="%_thm_2.95"></a>
 <b>Exercise 2.95.</b>&nbsp;&nbsp;Define <em>P</em><sub>1</sub>, <em>P</em><sub>2</sub>, and <em>P</em><sub>3</sub> to be the polynomials<p>
 
-<p><div align=left><img src="ch2-Z-G-79.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-79.gif" border="0"></div><p><p>
 
-<p><div align=left><img src="ch2-Z-G-80.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-80.gif" border="0"></div><p><p>
 
-<p><div align=left><img src="ch2-Z-G-81.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch2-Z-G-81.gif" border="0"></div><p><p>
 
 Now define <em>Q</em><sub>1</sub> to be the product of <em>P</em><sub>1</sub> and <em>P</em><sub>2</sub> and <em>Q</em><sub>2</sub> to
 be the product of <em>P</em><sub>1</sub> and <em>P</em><sub>3</sub>, and use <tt>greatest-common-divisor</tt>
@@ -1366,7 +1366,7 @@ arithmetic system the ability to coerce a ``number'' to a polynomial
 by regarding it as a polynomial of degree zero whose coefficient is
 the number.  This is necessary if we are going to perform operations
 such as
-<p><div align=left><img src="ch2-Z-G-73.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch2-Z-G-73.gif" border="0"></div><p>
 which requires adding the coefficient <em>y</em> + 1 to the coefficient 2.
 
 <p><a name="footnote_Temp_303" href="#call_footnote_Temp_303"><sup><small>58</small></sup></a> In these polynomial examples,

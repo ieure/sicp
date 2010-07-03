@@ -65,7 +65,7 @@ practical examples in their own right.<p>
 
 
 <a name="%_idx_636"></a><a name="%_idx_638"></a>
-<a name="%_fig_1.3"></a><p><div align=left><table width=100%><tr><td><img src="ch1-Z-G-7.gif" border="0">
+<a name="%_fig_1.3"></a><p><div align=left><table width=100%><tr><td><img src="images/ch1-Z-G-7.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 1.3:</b>&nbsp;&nbsp;A linear recursive process for computing 6!.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -112,7 +112,7 @@ step to the next according to the rule<p>
 and stipulating that <em>n</em>! is the value of the product when
 the counter exceeds <em>n</em>.<p>
 
-<a name="%_fig_1.4"></a><p><div align=left><table width=100%><tr><td><img src="ch1-Z-G-10.gif" border="0">
+<a name="%_fig_1.4"></a><p><div align=left><table width=100%><tr><td><img src="images/ch1-Z-G-10.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 1.4:</b>&nbsp;&nbsp;A linear iterative process for computing 6!.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -278,7 +278,7 @@ in which each number is the sum of the preceding two:<p>
 <p>0, 1, 1, 2, 3, 5, 8, 13, 21, …</p>
 
 In general, the Fibonacci numbers can be defined by the rule
-<p><div align=left><img src="ch1-Z-G-12.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-12.gif" border="0"></div><p>
 We can immediately translate this definition into a recursive
 procedure for computing Fibonacci numbers:<p>
 
@@ -289,7 +289,7 @@ procedure for computing Fibonacci numbers:<p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(fib&nbsp;(-&nbsp;n&nbsp;2))))))<br>
 </tt><p><p><p>
 
-<a name="%_fig_1.5"></a><p><div align=left><table width=100%><tr><td><img src="ch1-Z-G-13.gif" border="0">
+<a name="%_fig_1.5"></a><p><div align=left><table width=100%><tr><td><img src="images/ch1-Z-G-13.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 1.5:</b>&nbsp;&nbsp;The tree-recursive process generated in computing <tt>(fib 5)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p><p>
@@ -313,12 +313,12 @@ of leaves in the above tree, in general) is precisely
 <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1).  To get an idea of how bad this is, one can show that the
 value of  <em>F</em><em>i</em><em>b</em>(<em>n</em>) <a name="%_idx_722"></a>grows exponentially with <em>n</em>.  More precisely
 (see exercise&nbsp;<a href="#%_thm_1.13">1.13</a>),  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest
-integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup> /√5, where<p>
+integer to <img src="images/book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup> /√5, where<p>
 
-<p><div align=left><img src="ch1-Z-G-14.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-14.gif" border="0"></div><p>
 is the <a name="%_idx_724"></a><em>golden ratio</em>, which satisfies the equation<p>
 
-<p><div align=left><img src="ch1-Z-G-15.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-15.gif" border="0"></div><p>
 
 Thus, the process uses a number of steps that grows exponentially
 with the input.  On the other hand, the space required grows only
@@ -468,7 +468,7 @@ computes <em>f</em> by means of an iterative process.
 <b>Exercise 1.12.</b>&nbsp;&nbsp;<a name="%_idx_738"></a>The following pattern of numbers is called
 <em>Pascal's triangle</em>.<p>
 
-<p><div align=left><img src="ch1-Z-G-17.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-17.gif" border="0"></div><p>
 The numbers at the edge of the triangle are all 1, and
 each number inside the triangle is the sum of the two numbers above it.<a name="call_footnote_Temp_57" href="#footnote_Temp_57"><sup><small>35</small></sup></a>
 Write a procedure that computes elements of Pascal's triangle by means
@@ -476,11 +476,11 @@ of a recursive process.
 <p><p>
 
 <p><a name="%_thm_1.13"></a>
-<b>Exercise 1.13.</b>&nbsp;&nbsp;Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>/√5,
-where <img src="book-Z-G-D-11.gif" border="0"> =  (1 + √5)/2.  Hint: Let <img src="book-Z-G-D-12.gif" border="0"> =  (1 - √5)/2.  Use
+<b>Exercise 1.13.</b>&nbsp;&nbsp;Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <img src="images/book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>/√5,
+where <img src="images/book-Z-G-D-11.gif" border="0"> =  (1 + √5)/2.  Hint: Let <img src="images/book-Z-G-D-12.gif" border="0"> =  (1 - √5)/2.  Use
 induction and the definition of the Fibonacci numbers (see
-section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>) to prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = (<img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>
- - <img src="book-Z-G-D-12.gif" border="0"><sup><em>n</em></sup>)/√5.
+section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>) to prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = (<img src="images/book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>
+ - <img src="images/book-Z-G-D-12.gif" border="0"><sup><em>n</em></sup>)/√5.
 
 <p><p>
 
@@ -527,7 +527,7 @@ steps required for this process grows as θ(<em>n</em>).  We also saw
 that the space required grows as θ(<em>n</em>).  For the <a name="%_idx_768"></a><a name="%_idx_770"></a><a name="%_idx_772"></a>iterative
 factorial, the number of steps is still θ(<em>n</em>) but the space is
 θ(1) -- that is, constant.<a name="call_footnote_Temp_59" href="#footnote_Temp_59"><sup><small>36</small></sup></a> The <a name="%_idx_774"></a><a name="%_idx_776"></a><a name="%_idx_778"></a>tree-recursive Fibonacci computation requires
-θ(<img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>) steps and space θ(<em>n</em>), where <img src="book-Z-G-D-11.gif" border="0"> is the
+θ(<img src="images/book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>) steps and space θ(<em>n</em>), where <img src="images/book-Z-G-D-11.gif" border="0"> is the
 golden ratio described in section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>.<p>
 
 
@@ -558,7 +558,7 @@ radians) can be computed by making use of the approximation
 <tt>sin</tt> <em>x</em> ≈  <em>x</em>
 if <em>x</em> is
 sufficiently small, and the trigonometric identity
-<p><div align=left><img src="ch1-Z-G-19.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-19.gif" border="0"></div><p>
 to reduce the size of the argument of <tt>sin</tt>.  (For
 purposes of this exercise an angle is considered ``sufficiently
 small'' if its magnitude is not greater than 0.1 radians.) These
@@ -634,7 +634,7 @@ This method works fine for exponents that are powers of 2.  We can
 also take advantage of successive squaring in computing exponentials
 in general if we use the rule<p>
 
-<p><div align=left><img src="ch1-Z-G-23.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-23.gif" border="0"></div><p>
 We can express this method as a procedure:<p>
 
 
@@ -781,7 +781,7 @@ the remainder when <em>a</em> is divided by <em>b</em>, then the common divisors
 to successively reduce the problem of computing a GCD to the
 problem of computing the GCD of smaller and smaller pairs of
 integers.  For example,
-<p><div align=left><img src="ch1-Z-G-25.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-25.gif" border="0"></div><p>
 reduces GCD(206,40) to GCD(2,0), which is 2.  It is
 possible to show that starting with any two positive integers and
 performing repeated reductions will always eventually produce a pair
@@ -812,9 +812,9 @@ number.<a name="call_footnote_Temp_72" href="#footnote_Temp_72"><sup><small>43</
 We can use this theorem to get an order-of-growth estimate for Euclid's
 Algorithm.  Let <em>n</em> be the smaller of the two inputs to the
 procedure.  If the process takes <em>k</em> steps, then we must have
-<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) ≈ <img src="book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/√5.  Therefore
+<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) ≈ <img src="images/book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/√5.  Therefore
 the number of steps <em>k</em> grows as the logarithm (to the base
-<img src="book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).<p>
+<img src="images/book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).<p>
 
 <p><a name="%_thm_1.20"></a>
 <b>Exercise 1.20.</b>&nbsp;&nbsp;<a name="%_idx_852"></a><a name="%_idx_854"></a>The process that a procedure generates is of course dependent on the

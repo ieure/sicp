@@ -81,7 +81,7 @@ The second computes the sum of the cubes of the integers in the given range:<p>
 </tt><p><p>
 The third computes the sum of a sequence of terms in the
 series
-<p><div align=left><img src="ch1-Z-G-26.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-26.gif" border="0"></div><p>
 which converges to π/8 (very slowly):<a name="call_footnote_Temp_90" href="#footnote_Temp_90"><sup><small>49</small></sup></a><p>
 
 <p><p><tt><a name="%_idx_978"></a>(define&nbsp;(pi-sum&nbsp;a&nbsp;b)<br>
@@ -109,7 +109,7 @@ mathematicians long ago identified the abstraction of
 <a name="%_idx_982"></a><a name="%_idx_984"></a><em>summation of a series</em> and invented ``sigma
 <a name="%_idx_986"></a><a name="%_idx_988"></a>notation,'' for example<p>
 
-<p><div align=left><img src="ch1-Z-G-27.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch1-Z-G-27.gif" border="0"></div><p><p>
 
 to express this concept.  The power of sigma notation is that it
 allows mathematicians to deal with the concept of summation
@@ -185,7 +185,7 @@ Once we have <tt>sum</tt>, we can use it as a building block in
 formulating further concepts.  For instance, the <a name="%_idx_1002"></a>definite integral of a
 function <em>f</em> between the limits <em>a</em> and <em>b</em> can be approximated
 numerically using the formula
-<p><p><div align=left><img src="ch1-Z-G-28.gif" border="0"></div><p>
+<p><p><div align=left><img src="images/ch1-Z-G-28.gif" border="0"></div><p>
 for small values of <em>d</em><em>x</em>.  We can express this directly as a
 procedure:<p>
 
@@ -204,7 +204,7 @@ procedure:<p>
 <b>Exercise 1.29.</b>&nbsp;&nbsp;<a name="%_idx_1006"></a>Simpson's Rule is a more accurate method of numerical integration than
 the method illustrated above.  Using Simpson's Rule, the integral of a
 function <em>f</em> between <em>a</em> and <em>b</em> is approximated as
-<p><div align=left><img src="ch1-Z-G-29.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch1-Z-G-29.gif" border="0"></div><p><p>
 
 where <em>h</em> = (<em>b</em> - <em>a</em>)/<em>n</em>, for some even integer <em>n</em>, and <em>y</em><sub><em>k</em></sub>  = <em>f</em>(<em>a</em> + <em>k</em><em>h</em>).
 (Increasing <em>n</em> increases the accuracy of the approximation.)  Define
@@ -239,7 +239,7 @@ function at points over a given range.
 Show how to define <a name="%_idx_1012"></a><tt>factorial</tt> in terms of
 <tt>product</tt>.  Also use <tt>product</tt> to compute approximations to
 <a name="%_idx_1014"></a>π using the formula<a name="call_footnote_Temp_96" href="#footnote_Temp_96"><sup><small>52</small></sup></a>
-<p><div align=left><img src="ch1-Z-G-30.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch1-Z-G-30.gif" border="0"></div><p><p>
 
 b.&nbsp;&nbsp;If your <tt>product</tt>
 procedure generates a recursive process, write one that generates
@@ -375,10 +375,10 @@ We often need local variables in our procedures other than those that have
 been bound as formal parameters.  For example, suppose we wish to
 compute the function<p>
 
-<p><div align=left><img src="ch1-Z-G-31.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch1-Z-G-31.gif" border="0"></div><p><p>
 
 which we could also express as
-<p><div align=left><img src="ch1-Z-G-32.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-32.gif" border="0"></div><p>
 In writing a procedure to compute <em>f</em>, we would like to include as
 local variables not only <em>x</em> and <em>y</em>  but also the names of
 intermediate quantities like <em>a</em> and <em>b</em>.  One way to
@@ -639,7 +639,7 @@ satisfies the equation <em>f</em>(<em>x</em>) = <em>x</em>.  For some functions 
 a fixed point by beginning with an initial guess and applying <em>f</em>
 repeatedly,<p>
 
-<p><div align=left><img src="ch1-Z-G-33.gif" border="0"></div><p><p>
+<p><div align=left><img src="images/ch1-Z-G-33.gif" border="0"></div><p><p>
 
 until the value does not change very much.  Using this idea, we can
 devise a procedure <tt>fixed-point</tt> that takes as inputs a function
@@ -726,9 +726,9 @@ successive approximations to a solution, a technique we that we call
 searches.<p>
 
 <p><a name="%_thm_1.35"></a>
-<b>Exercise 1.35.</b>&nbsp;&nbsp;<a name="%_idx_1130"></a><a name="%_idx_1132"></a>Show that the golden ratio <img src="book-Z-G-D-11.gif" border="0"> (section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>)
+<b>Exercise 1.35.</b>&nbsp;&nbsp;<a name="%_idx_1130"></a><a name="%_idx_1132"></a>Show that the golden ratio <img src="images/book-Z-G-D-11.gif" border="0"> (section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>)
 is a fixed point of the transformation <em>x</em>  ⟼  1  +  1/<em>x</em>, and use
-this fact to compute <img src="book-Z-G-D-11.gif" border="0"> by means of the <tt>fixed-point</tt>
+this fact to compute <img src="images/book-Z-G-D-11.gif" border="0"> by means of the <tt>fixed-point</tt>
 procedure.
 <p><p>
 
@@ -747,22 +747,22 @@ guess of 1, as this would cause division by <tt>log</tt>(1) = 0.)
 
 <p><a name="%_thm_1.37"></a>
 <b>Exercise 1.37.</b>&nbsp;&nbsp;<a name="%_idx_1138"></a>a. An infinite <em>continued fraction</em> is an expression of the form
-<p><div align=left><img src="ch1-Z-G-34.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-34.gif" border="0"></div><p>
 <a name="%_idx_1140"></a><a name="%_idx_1142"></a>As an example, one can show that the infinite continued fraction
 expansion with the <em>N</em><sub><em>i</em></sub> and the <em>D</em><sub><em>i</em></sub> all equal to 1 produces
-1/<img src="book-Z-G-D-11.gif" border="0">, where <img src="book-Z-G-D-11.gif" border="0"> is the golden ratio (described in
+1/<img src="images/book-Z-G-D-11.gif" border="0">, where <img src="images/book-Z-G-D-11.gif" border="0"> is the golden ratio (described in
 section&nbsp;<a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>).
 One way to approximate an
 infinite continued fraction is to truncate the expansion after a given
 number of terms.  Such a truncation -- a so-called <em><em>k</em>-term finite
 continued fraction</em> -- has the form
-<p><div align=left><img src="ch1-Z-G-35.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-35.gif" border="0"></div><p>
 Suppose that <tt>n</tt> and <tt>d</tt> are procedures of one argument (the
 term index <em>i</em>) that return the <em>N</em><sub><em>i</em></sub> and <em>D</em><sub><em>i</em></sub> of the terms of the
 continued fraction.  Define a procedure <tt>cont-frac</tt>
 such that evaluating <tt>(cont-frac n d k)</tt>
 computes the value of the <em>k</em>-term finite
-continued fraction.  Check your procedure by approximating 1/<img src="book-Z-G-D-11.gif" border="0"> using
+continued fraction.  Check your procedure by approximating 1/<img src="images/book-Z-G-D-11.gif" border="0"> using
 <p><p><tt>(cont-frac&nbsp;(lambda&nbsp;(i)&nbsp;1.0)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(lambda&nbsp;(i)&nbsp;1.0)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;k)<br>
@@ -792,7 +792,7 @@ Euler's expansion.
 <p><a name="%_thm_1.39"></a>
 <b>Exercise 1.39.</b>&nbsp;&nbsp;<a name="%_idx_1150"></a><a name="%_idx_1152"></a><a name="%_idx_1154"></a>A continued fraction representation of the tangent function was
 published in 1770 by the German mathematician J.H. Lambert:
-<p><div align=left><img src="ch1-Z-G-36.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-36.gif" border="0"></div><p>
 where <em>x</em> is in radians.
 Define a procedure <tt>(tan-cf x k)</tt> that computes an approximation
 to the tangent function based on Lambert's
@@ -882,7 +882,7 @@ section&nbsp;<a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>, we mentioned that
 If <em>x</em> ⟼  <em>g</em>(<em>x</em>) is a differentiable function, then a solution of
 the equation <em>g</em>(<em>x</em>) = 0 is a fixed point of the function <em>x</em> ⟼  <em>f</em>(<em>x</em>)
 where
-<p><div align=left><img src="ch1-Z-G-37.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-37.gif" border="0"></div><p>
 and
 <em>D</em><em>g</em>(<em>x</em>) is the derivative of <em>g</em> evaluated at <em>x</em>.  <a name="%_idx_1180"></a>Newton's
 method is the use of the fixed-point method we saw above to
@@ -900,7 +900,7 @@ function.  For instance, the derivative of the function <em>x</em> ⟼
 function and <em>d</em><em>x</em> is a small number, then the derivative <em>D</em><em>g</em> of <em>g</em> is
 the function whose value at any number <em>x</em> is given (in the limit of
 small <em>d</em><em>x</em>) by
-<p><div align=left><img src="ch1-Z-G-38.gif" border="0"></div><p>
+<p><div align=left><img src="images/ch1-Z-G-38.gif" border="0"></div><p>
 Thus, we can express the idea of derivative (taking <em>d</em><em>x</em> to be, say,
 0.00001) as the procedure<p>
 
