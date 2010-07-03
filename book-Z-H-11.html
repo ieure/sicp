@@ -101,9 +101,9 @@ that counts from 1 up to <em>n</em>.  We can describe the computation by
 saying that the counter and the product simultaneously change from one
 step to the next according to the rule<p>
 
-<p><p>product  <img src="book-Z-G-D-14.gif" border="0">  counter  &middot;  product <p>
+<p><p>product  ⟵  counter  &middot;  product <p>
 
-<p><p>counter  <img src="book-Z-G-D-14.gif" border="0">  counter  +  1<p>
+<p><p>counter  ⟵  counter  +  1<p>
 
 <p><p><p>
 
@@ -706,7 +706,7 @@ halving and uses a logarithmic number of steps.<a name="call_footnote_Temp_68" h
 a logarithmic number of steps.
 Recall the transformation of the state variables
 <em>a</em> and <em>b</em> in the <tt>fib-iter</tt> process of
-section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>: <em>a</em> <img src="book-Z-G-D-14.gif" border="0">  <em>a</em> + <em>b</em> and <em>b</em> <img src="book-Z-G-D-14.gif" border="0">
+section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>: <em>a</em> ⟵  <em>a</em> + <em>b</em> and <em>b</em> ⟵
 <em>a</em>.  Call this transformation <em>T</em>, and observe that applying <em>T</em> over
 and over again <em>n</em> times, starting with 1 and 0, produces the pair
  <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1) and  <em>F</em><em>i</em><em>b</em>(<em>n</em>).  In other words, the Fibonacci
@@ -714,7 +714,7 @@ numbers are produced by applying <em>T</em><sup><em>n</em></sup>, the <em>n</em>
 transformation <em>T</em>, starting with the pair (1,0).  Now consider <em>T</em>
 to be the special case of <em>p</em> = 0 and <em>q</em> = 1 in a family of
 transformations <em>T</em><sub><em>p</em><em>q</em></sub>, where <em>T</em><sub><em>p</em><em>q</em></sub> transforms the pair (<em>a</em>,<em>b</em>)
-according to <em>a</em> <img src="book-Z-G-D-14.gif" border="0">  <em>b</em><em>q</em> + <em>a</em><em>q</em> + <em>a</em><em>p</em> and <em>b</em> <img src="book-Z-G-D-14.gif" border="0">  <em>b</em><em>p</em> + <em>a</em><em>q</em>.  Show
+according to <em>a</em> ⟵  <em>b</em><em>q</em> + <em>a</em><em>q</em> + <em>a</em><em>p</em> and <em>b</em> ⟵  <em>b</em><em>p</em> + <em>a</em><em>q</em>.  Show
 that if we apply such a transformation <em>T</em><sub><em>p</em><em>q</em></sub> twice, the effect is
 the same as using a single transformation <em>T</em><sub><em>p</em>'<em>q</em>'</sub> of the same form,
 and compute <em>p</em>' and <em>q</em>' in terms of <em>p</em> and&nbsp;<em>q</em>.  This gives us an
