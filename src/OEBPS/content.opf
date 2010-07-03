@@ -244,7 +244,6 @@
         <item id="cover" href="images/cover.jpg" media-type="image/jpeg"/>
     </manifest>
     <spine toc="ncx">
-        <itemref idref="book" linear="yes"/>
         <itemref idref="book-Z-H-1" linear="yes"/>
         <itemref idref="book-Z-H-2" linear="yes"/>
         <itemref idref="book-Z-H-3" linear="yes"/>
