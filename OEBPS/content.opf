@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         unique-identifier="bookid" version="2.0">
+    <metadata>
+        <dc:title>Structure and Interpretation of Computer Programs</dc:title>
+        <dc:creator>Harold Abelson and Gerald Jay Sussman with Julie Sussman</dc:creator>
+        <dc:identifier
+            id="bookid">urn:uuid:0cc33cbd-94e2-49c1-909a-72ae16bc2658</dc:identifier>
+        <dc:language>en-US</dc:language>
+        <meta name="cover" content="cover-image" />
+    </metadata>
+    <manifest>
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+        <item id="book-Z-H-1" href="book-Z-H-1.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-2" href="book-Z-H-2.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-3" href="book-Z-H-3.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-4" href="book-Z-H-4.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-5" href="book-Z-H-5.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-6" href="book-Z-H-6.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-7" href="book-Z-H-7.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-8" href="book-Z-H-8.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-9" href="book-Z-H-9.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-10" href="book-Z-H-10.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-11" href="book-Z-H-11.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-12" href="book-Z-H-12.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-13" href="book-Z-H-13.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-14" href="book-Z-H-14.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-15" href="book-Z-H-15.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-16" href="book-Z-H-16.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-17" href="book-Z-H-17.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-18" href="book-Z-H-18.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-19" href="book-Z-H-19.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-20" href="book-Z-H-20.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-21" href="book-Z-H-21.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-22" href="book-Z-H-22.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-23" href="book-Z-H-23.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-24" href="book-Z-H-24.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-25" href="book-Z-H-25.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-26" href="book-Z-H-26.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-27" href="book-Z-H-27.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-28" href="book-Z-H-28.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-29" href="book-Z-H-29.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-30" href="book-Z-H-30.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-31" href="book-Z-H-31.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-32" href="book-Z-H-32.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-33" href="book-Z-H-33.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-34" href="book-Z-H-34.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-35" href="book-Z-H-35.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-36" href="book-Z-H-36.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-37" href="book-Z-H-37.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-38" href="book-Z-H-38.html" media-type="application/xhtml+xml"/>
+        <item id="css" href="stylesheet.css" media-type="text/css"/>
+    </manifest>
+    <spine toc="ncx">
+        <itemref idref="book" linear="no"/>
+    </spine>
+    <guide>
+        <reference href="book.html" type="cover" title="Cover"/>
+    </guide>
+</package>
