@@ -1,0 +1,22 @@
+* What is this?
+
+  This is the seminal Structure and Interpretation of Computer
+  Programs, Second Edition (SICP), converted to ePub format.
+
+  The HTML version used low-resolution GIFs to represent complex
+  layouts and non-ASCII characters. Wherever possible, I have replaced
+  these with Unicode and HTML. There are still many diagrams and
+  figures left, though. If you’d like to contribute, redrawing those
+  in SVG would be an immense help.
+
+
+* Why?
+
+  Because I wanted to read it on my iPad, and I wasn’t happy with the
+  existing digital editions.
+
+
+* How do I use it?
+
+  This is the raw source for the book. If you’d just like to read it,
+  you’ll find what you’re looking for [[you’ll%20find%20what%20you’re%20looking%20for%20][in the downloads tab]].
