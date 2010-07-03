@@ -601,10 +601,13 @@ we can compute it using three multiplications:
 
 This method works fine for exponents that are powers of 2.  We can
 also take advantage of successive squaring in computing exponentials
-in general if we use the rule<p>
+in general if we use the rule
 
-</p><p></p><div align="left"><img src="images/ch1-Z-G-23.gif" border="0" /></div><p>
-We can express this method as a procedure:</p><p>
+<p>
+    <em>b<sup>n</sup></em> = (<em>b</em><sup><em>n</em>/2</sup>)<sup>2</sup>          if <em>n</em> is even<br/>
+    <em>b<sup>n</sup></em> = <em>b</em> · <em>b</em><sup><em>n</em>-1</sup>         if <em>n</em> is odd</p>
+
+<p>We can express this method as a procedure:</p><p>
 
 
 </p><p></p><p><tt><a name="%_idx_798" id="%_idx_798"></a>(define (fast-expt b n)<br />
