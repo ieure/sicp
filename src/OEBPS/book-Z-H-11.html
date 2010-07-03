@@ -443,10 +443,18 @@ computes <em>f</em> by means of an iterative process.
 
 </p><p><a name="%_thm_1.12" id="%_thm_1.12"></a>
 <b>Exercise 1.12.</b>  <a name="%_idx_738" id="%_idx_738"></a>The following pattern of numbers is called
-<em>Pascal's triangle</em>.</p><p>
+<em>Pascal's triangle</em>.</p>
 
-</p><p></p><div align="left"><img src="images/ch1-Z-G-17.gif" border="0" /></div><p>
-The numbers at the edge of the triangle are all 1, and
+<pre>
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
+    …
+</pre>
+
+<p>The numbers at the edge of the triangle are all 1, and
 each number inside the triangle is the sum of the two numbers above it.<a name="call_footnote_Temp_57" href="#footnote_Temp_57" id="call_footnote_Temp_57"><sup><small>35</small></sup></a>
 Write a procedure that computes elements of Pascal's triangle by means
 of a recursive process.
