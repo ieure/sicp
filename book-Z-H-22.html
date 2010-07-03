@@ -484,10 +484,10 @@ queue would just be taking the <tt>cdr</tt> of the list.  However, this
 representation is inefficient, because in order to insert an item we
 must scan the list until we reach the end.  Since the only method we
 have for scanning a list is by successive <tt>cdr</tt> operations, this
-scanning requires Θ(<em>n</em>) steps for a list of <em>n</em> items.  A simple
+scanning requires θ(<em>n</em>) steps for a list of <em>n</em> items.  A simple
 modification to the list representation overcomes this disadvantage by
 allowing the queue operations to be implemented so that they require
-Θ(1) steps; that is, so that the number of steps
+θ(1) steps; that is, so that the number of steps
 needed is independent of the length of the queue.<p>
 
 The difficulty with the list representation arises from the need to
@@ -644,7 +644,7 @@ implementations of the queue operations using this representation.
 can be inserted and deleted at either the front or the rear.
 Operations on deques are the constructor <tt>make-deque</tt>, the predicate <tt>empty-deque?</tt>, selectors <tt>front-deque</tt> and <tt>rear-deque</tt>, and mutators <tt>front-insert-deque!</tt>, <tt>rear-insert-deque!</tt>, <tt>front-delete-deque!</tt>, and <tt>rear-delete-deque!</tt>.  Show how to represent deques using pairs, and
 give implementations of the operations.<a name="call_footnote_Temp_370" href="#footnote_Temp_370"><sup><small>23</small></sup></a>
-All operations should be accomplished in Θ(1) steps.
+All operations should be accomplished in θ(1) steps.
 <p>
 
 <a name="%_sec_3.3.3"></a>

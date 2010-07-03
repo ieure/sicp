@@ -507,8 +507,8 @@ computers that do only a fixed number of operations at a time, the
 time required will be proportional to the number of elementary machine
 operations performed.<p>
 
-<a name="%_idx_758"></a><a name="%_idx_760"></a>We say that <em>R</em>(<em>n</em>) has order of growth Θ(<em>f</em>(<em>n</em>)), written
-<em>R</em>(<em>n</em>) = Θ(<em>f</em>(<em>n</em>)) (pronounced ``theta of <em>f</em>(<em>n</em>)''), if there are
+<a name="%_idx_758"></a><a name="%_idx_760"></a>We say that <em>R</em>(<em>n</em>) has order of growth θ(<em>f</em>(<em>n</em>)), written
+<em>R</em>(<em>n</em>) = θ(<em>f</em>(<em>n</em>)) (pronounced ``theta of <em>f</em>(<em>n</em>)''), if there are
 positive constants <em>k</em><sub>1</sub> and <em>k</em><sub>2</sub> independent of <em>n</em> such that
 <p><div align=left><img src="ch1-Z-G-18.gif" border="0"></div><p>
 for any sufficiently large value of <em>n</em>.  (In other
@@ -518,21 +518,21 @@ and <em>k</em><sub>2</sub><em>f</em>(<em>n</em>).)<p>
 <a name="%_idx_762"></a><a name="%_idx_764"></a><a name="%_idx_766"></a>For instance, with the linear recursive process for computing
 factorial described in section&nbsp;<a href="#%_sec_1.2.1">1.2.1</a> the
 number of steps grows proportionally to the input <em>n</em>.  Thus, the
-steps required for this process grows as Θ(<em>n</em>).  We also saw
-that the space required grows as Θ(<em>n</em>).  For the <a name="%_idx_768"></a><a name="%_idx_770"></a><a name="%_idx_772"></a>iterative
-factorial, the number of steps is still Θ(<em>n</em>) but the space is
-Θ(1) -- that is, constant.<a name="call_footnote_Temp_59" href="#footnote_Temp_59"><sup><small>36</small></sup></a> The <a name="%_idx_774"></a><a name="%_idx_776"></a><a name="%_idx_778"></a>tree-recursive Fibonacci computation requires
-Θ(<img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>) steps and space Θ(<em>n</em>), where <img src="book-Z-G-D-11.gif" border="0"> is the
+steps required for this process grows as θ(<em>n</em>).  We also saw
+that the space required grows as θ(<em>n</em>).  For the <a name="%_idx_768"></a><a name="%_idx_770"></a><a name="%_idx_772"></a>iterative
+factorial, the number of steps is still θ(<em>n</em>) but the space is
+θ(1) -- that is, constant.<a name="call_footnote_Temp_59" href="#footnote_Temp_59"><sup><small>36</small></sup></a> The <a name="%_idx_774"></a><a name="%_idx_776"></a><a name="%_idx_778"></a>tree-recursive Fibonacci computation requires
+θ(<img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>) steps and space θ(<em>n</em>), where <img src="book-Z-G-D-11.gif" border="0"> is the
 golden ratio described in section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>.<p>
 
 
 Orders of growth provide only a crude description of the behavior of a
 process.  For example, a process requiring <em>n</em><sup>2</sup> steps and a process
 requiring 1000<em>n</em><sup>2</sup> steps and a process requiring 3<em>n</em><sup>2</sup> + 10<em>n</em> + 17 steps
-all have Θ(<em>n</em><sup>2</sup>) order of growth.  On the other hand, order of
+all have θ(<em>n</em><sup>2</sup>) order of growth.  On the other hand, order of
 growth provides a useful indication of how we may expect the behavior
 of the process to change as we change the size of the problem.  For a
-<a name="%_idx_780"></a>Θ(<em>n</em>) (linear) process, doubling the size will roughly double the amount
+<a name="%_idx_780"></a>θ(<em>n</em>) (linear) process, doubling the size will roughly double the amount
 of resources used.  For an <a name="%_idx_782"></a>exponential process, each increment in
 problem size will multiply the resource utilization by a constant
 factor.  In the remainder of section&nbsp;<a href="#%_sec_1.2">1.2</a>
@@ -593,8 +593,8 @@ which translates readily into the procedure <p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;b&nbsp;(expt&nbsp;b&nbsp;(-&nbsp;n&nbsp;1)))))<br>
 </tt><p><p>
-This is a linear recursive process, which requires Θ(<em>n</em>) steps
-and Θ(<em>n</em>) space.  Just as with factorial, we can readily
+This is a linear recursive process, which requires θ(<em>n</em>) steps
+and θ(<em>n</em>) space.  Just as with factorial, we can readily
 formulate an equivalent linear iteration:<p>
 
 
@@ -608,7 +608,7 @@ formulate an equivalent linear iteration:<p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(-&nbsp;counter&nbsp;1)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(*&nbsp;b&nbsp;product))))&nbsp;<br>
 </tt><p><p>
-This version requires Θ(<em>n</em>) steps and Θ(1) space.<p>
+This version requires θ(<em>n</em>) steps and θ(1) space.<p>
 
 <a name="%_idx_796"></a>We can compute exponentials in fewer steps by using successive
 squaring.  For instance, rather than computing <em>b</em><sup>8</sup> as
@@ -644,10 +644,10 @@ multiplication than computing <em>b</em><sup><em>n</em></sup>.  The size of the 
 compute therefore doubles (approximately) with every new
 multiplication we are allowed.  Thus, the number of multiplications
 required for an exponent of <em>n</em> grows about as fast as the logarithm
-of <em>n</em> to the base 2.  The process has Θ(<tt>log</tt> <em>n</em>)
+of <em>n</em> to the base 2.  The process has θ(<tt>log</tt> <em>n</em>)
 growth.<a name="call_footnote_Temp_62" href="#footnote_Temp_62"><sup><small>37</small></sup></a><p>
 
-The difference between Θ(<tt>log</tt> <em>n</em>) growth and Θ(<em>n</em>) growth
+The difference between θ(<tt>log</tt> <em>n</em>) growth and θ(<em>n</em>) growth
 becomes striking as <em>n</em> becomes large.  For example, <tt>fast-expt</tt>
 for <em>n</em> = 1000 requires only 14 multiplications.<a name="call_footnote_Temp_63" href="#footnote_Temp_63"><sup><small>38</small></sup></a> It is also possible to use the idea of
 successive squaring to devise an iterative algorithm that computes
@@ -799,7 +799,7 @@ Algorithm.  Let <em>n</em> be the smaller of the two inputs to the
 procedure.  If the process takes <em>k</em> steps, then we must have
 <em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) <img src="book-Z-G-D-20.gif" border="0"> <img src="book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/<img src="book-Z-G-D-13.gif" border="0">5.  Therefore
 the number of steps <em>k</em> grows as the logarithm (to the base
-<img src="book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is Θ(<tt>log</tt> <em>n</em>).<p>
+<img src="book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).<p>
 
 <p><a name="%_thm_1.20"></a>
 <b>Exercise 1.20.</b>&nbsp;&nbsp;<a name="%_idx_852"></a><a name="%_idx_854"></a>The process that a procedure generates is of course dependent on the
@@ -823,8 +823,8 @@ In the applicative-order evaluation?
 
 <a name="%_idx_856"></a><a name="%_idx_858"></a>
 This section describes two methods for checking the primality of an
-integer <em>n</em>, one with order of growth Θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), and a
-``probabilistic'' algorithm with order of growth Θ(<tt>log</tt> <em>n</em>).  The
+integer <em>n</em>, one with order of growth θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), and a
+``probabilistic'' algorithm with order of growth θ(<tt>log</tt> <em>n</em>).  The
 exercises at the end of this section suggest programming
 projects based on these algorithms.<p>
 
@@ -861,12 +861,12 @@ is not prime it must have a divisor less than or equal to
 <img src="book-Z-G-D-13.gif" border="0"><em>n</em>.<a name="call_footnote_Temp_75" href="#footnote_Temp_75"><sup><small>44</small></sup></a>  This
 means that the algorithm need only test divisors between 1 and
 <img src="book-Z-G-D-13.gif" border="0"><em>n</em>.  Consequently, the number of steps required to identify
-<em>n</em> as prime will have order of growth Θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>).<p>
+<em>n</em> as prime will have order of growth θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>).<p>
 
 <a name="%_sec_Temp_76"></a>
 <h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_76">The Fermat test</a></h4><p>
 
-<a name="%_idx_868"></a><a name="%_idx_870"></a>The Θ(<tt>log</tt> <em>n</em>) primality test is based on a result from number
+<a name="%_idx_868"></a><a name="%_idx_870"></a>The θ(<tt>log</tt> <em>n</em>) primality test is based on a result from number
 theory known as Fermat's Little Theorem.<a name="call_footnote_Temp_77" href="#footnote_Temp_77"><sup><small>45</small></sup></a><p>
 
 <p><p><a name="%_idx_886"></a><strong>Fermat's Little Theorem:</strong> If <em>n</em> is a prime number and
@@ -1003,7 +1003,7 @@ checks the primality of consecutive odd integers in a specified range.
 Use your procedure to find the three smallest primes larger than 1000;
 larger than 10,000; larger than 100,000; larger than 1,000,000.  Note
 the time needed to test each prime.  Since the testing algorithm has
-order of growth of Θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), you should expect that testing
+order of growth of θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), you should expect that testing
 for primes around 10,000 should take about <img src="book-Z-G-D-13.gif" border="0">10 times as long
 as testing for primes around 1000.  Do your timing data bear this out?
 How well do the data for 100,000 and 1,000,000 support the <img src="book-Z-G-D-13.gif" border="0"><em>n</em>
@@ -1036,7 +1036,7 @@ it is different from 2?
 <b>Exercise 1.24.</b>&nbsp;&nbsp;Modify the <tt>timed-prime-test</tt> procedure of
 exercise&nbsp;<a href="#%_thm_1.22">1.22</a> to use <tt>fast-prime?</tt> (the
 Fermat method), and test each of the 12 primes you found in that
-exercise.  Since the Fermat test has Θ(<tt>log</tt> <em>n</em>) growth, how
+exercise.  Since the Fermat test has θ(<tt>log</tt> <em>n</em>) growth, how
 would you expect the time to test primes near 1,000,000 to compare
 with the time needed to test primes near 1000?  Do your data bear this
 out?  Can you explain any discrepancy you find?
@@ -1076,7 +1076,7 @@ explicit multiplication, rather than calling <tt>square</tt>:<p>
 </tt><p><p>
 ``I don't see what difference that could make,'' says Louis.  ``I
 do.''  says Eva.  ``By writing the procedure like that, you have
-transformed the Θ(<tt>log</tt> <em>n</em>) process into a Θ(<em>n</em>) process.''
+transformed the θ(<tt>log</tt> <em>n</em>) process into a θ(<em>n</em>) process.''
 Explain.
 <p><p>
 
@@ -1199,7 +1199,7 @@ less than twice the log base 2 of <em>n</em>.  The arbitrary constants
 <em>k</em><sub>1</sub> and <em>k</em><sub>2</sub> in
 the definition of order notation imply that, for a logarithmic
 process, the base to which logarithms are taken does not matter, so
-all such processes are described as Θ(<tt>log</tt> <em>n</em>).
+all such processes are described as θ(<tt>log</tt> <em>n</em>).
 
 <p><a name="footnote_Temp_63" href="#call_footnote_Temp_63"><sup><small>38</small></sup></a> You may wonder
 why anyone would care about raising numbers to the 1000th power.  See
