@@ -143,9 +143,14 @@ the construction of the stream with its use.</p><p>
 
 On the surface, streams are just lists with different names for the
 procedures that manipulate them.  There is a constructor,
-<a name="%_idx_3738" id="%_idx_3738"></a><tt>cons-stream</tt>, and two selectors, <a name="%_idx_3740" id="%_idx_3740"></a><tt>stream-car</tt> and <a name="%_idx_3742" id="%_idx_3742"></a><tt>stream-cdr</tt>, which satisfy the constraints
-</p><p></p><div align="left"><img src="images/ch3-Z-G-34.gif" border="0" /></div><p>
-There is a distinguishable object, <a name="%_idx_3744" id="%_idx_3744"></a><a name="%_idx_3746" id="%_idx_3746"></a><a name="%_idx_3748" id="%_idx_3748"></a><tt>the-empty-stream</tt>, which
+<a name="%_idx_3738" id="%_idx_3738"></a><tt>cons-stream</tt>, and two selectors, <a name="%_idx_3740" id="%_idx_3740"></a><tt>stream-car</tt> and <a name="%_idx_3742" id="%_idx_3742"></a><tt>stream-cdr</tt>, which satisfy the constraints</p>
+
+<p>
+    <code>(stream-car (cons-stream x y)) = x</code><br/>
+    <code>(stream-cdr (cons-stream x y)) = y</code>
+</p>
+
+<p>There is a distinguishable object, <a name="%_idx_3744" id="%_idx_3744"></a><a name="%_idx_3746" id="%_idx_3746"></a><a name="%_idx_3748" id="%_idx_3748"></a><tt>the-empty-stream</tt>, which
 cannot be the result of any <tt>cons-stream</tt> operation, and which can
 be identified with the predicate <a name="%_idx_3750" id="%_idx_3750"></a><tt>stream-null?</tt>.<a name="call_footnote_Temp_444" href="#footnote_Temp_444" id="call_footnote_Temp_444"><sup><small>54</small></sup></a>
 Thus we can make and use streams, in just the same way as we can make
