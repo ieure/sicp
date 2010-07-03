@@ -542,11 +542,11 @@ is a member of a set, <tt>element-of-set?</tt> may have to scan the
 entire set. (In the worst case, the object turns out not to be in the
 set.)  Hence, if the set has <em>n</em> elements, <tt>element-of-set?</tt>
 might take up to <em>n</em> steps.  Thus, the number of steps
-required grows as <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>).
+required grows as Θ(<em>n</em>).
 The number of steps required by <tt>adjoin-set</tt>, which uses this operation,
-also grows as <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>).  For <tt>intersection-set</tt>, which does an <tt>element-of-set?</tt> check for each element of <tt>set1</tt>, the number of steps
+also grows as Θ(<em>n</em>).  For <tt>intersection-set</tt>, which does an <tt>element-of-set?</tt> check for each element of <tt>set1</tt>, the number of steps
 required grows as the product of the sizes of the sets involved, or
-<img src="book-Z-G-D-3.gif" border="0">(<em>n</em><sup>2</sup>) for two sets of size <em>n</em>.  The same will be true of <tt>union-set</tt>.<p>
+Θ(<em>n</em><sup>2</sup>) for two sets of size <em>n</em>.  The same will be true of <tt>union-set</tt>.<p>
 
 <p><a name="%_thm_2.59"></a>
 <b>Exercise 2.59.</b>&nbsp;&nbsp;Implement the <a name="%_idx_2122"></a><tt>union-set</tt> operation for the unordered-list
@@ -603,13 +603,13 @@ beginning of the list and that other times we will still need to
 examine most of the list.  On the average we should expect to have to
 examine about half of the items in the set.  Thus, the average
 number of steps required will be about <em>n</em>/2.
-This is still <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>) growth, but
+This is still Θ(<em>n</em>) growth, but
 it does save us, on the average, a factor of 2 in number of steps over the
 previous implementation.<p>
 
 We obtain a more impressive speedup with <tt>intersection-set</tt>.  In
 the unordered representation this operation required
-<img src="book-Z-G-D-3.gif" border="0">(<em>n</em><sup>2</sup>) steps, because we performed a complete scan of <tt>set2</tt> for
+Θ(<em>n</em><sup>2</sup>) steps, because we performed a complete scan of <tt>set2</tt> for
 each element of <tt>set1</tt>.  But with the ordered representation, we
 can use a more clever method.  Begin by comparing the initial
 elements, <tt>x1</tt> and <tt>x2</tt>, of the two sets.  If <tt>x1</tt>
@@ -638,8 +638,8 @@ To estimate the number of steps required by this process, observe that at each
 step we reduce the intersection problem to computing intersections of
 smaller sets -- removing the first element from <tt>set1</tt> or <tt>set2</tt> or both.  Thus, the number of steps required is at most the sum
 of the sizes of <tt>set1</tt> and <tt>set2</tt>, rather than the product of
-the sizes as with the unordered representation.  This is <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>) growth
-rather than <img src="book-Z-G-D-3.gif" border="0">(<em>n</em><sup>2</sup>) -- a considerable speedup, even for sets of
+the sizes as with the unordered representation.  This is Θ(<em>n</em>) growth
+rather than Θ(<em>n</em><sup>2</sup>) -- a considerable speedup, even for sets of
 moderate size.<p>
 
 <p><a name="%_thm_2.61"></a>
@@ -652,7 +652,7 @@ representation.
 <p><p>
 
 <p><a name="%_thm_2.62"></a>
-<b>Exercise 2.62.</b>&nbsp;&nbsp;Give a <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>) implementation of <a name="%_idx_2134"></a><tt>union-set</tt> for sets
+<b>Exercise 2.62.</b>&nbsp;&nbsp;Give a Θ(<em>n</em>) implementation of <a name="%_idx_2134"></a><tt>union-set</tt> for sets
 represented as ordered lists.
 <p>
 <p>
@@ -688,7 +688,7 @@ greater, we need only search the right subtree.  Now, if the tree is
 the original.  Thus, in one step we have reduced the problem of
 searching a tree of size <em>n</em> to searching a tree of size <em>n</em>/2.  Since
 the size of the tree is halved at each step, we should expect that the
-number of steps needed to search a tree of size <em>n</em> grows as <img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt>
+number of steps needed to search a tree of size <em>n</em> grows as Θ(<tt>log</tt>
 <em>n</em>).<a name="call_footnote_Temp_248" href="#footnote_Temp_248"><sup><small>38</small></sup></a> For large sets, this will
 be a significant speedup over the previous representations.<p>
 
@@ -718,7 +718,7 @@ described above:<p>
 </tt><p><p><p>
 
 Adjoining an item to a set is implemented similarly and also requires
-<img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt> <em>n</em>) steps.  To adjoin an item <tt>x</tt>, we compare <tt>x</tt> with
+Θ(<tt>log</tt> <em>n</em>) steps.  To adjoin an item <tt>x</tt>, we compare <tt>x</tt> with
 the node entry to determine whether <tt>x</tt> should be added to the
 right or to the left branch, and having adjoined <tt>x</tt> to the
 appropriate branch we piece this newly constructed branch together
@@ -762,7 +762,7 @@ can perform this transformation after every few <tt>adjoin-set</tt>
 operations to keep our set in balance.  There are also other ways to
 solve this problem, most of which involve designing new data
 structures for which searching and insertion both can be done in
-<img src="book-Z-G-D-3.gif" border="0">(<tt>log</tt> <em>n</em>) steps.<a name="call_footnote_Temp_250" href="#footnote_Temp_250"><sup><small>40</small></sup></a><p>
+Θ(<tt>log</tt> <em>n</em>) steps.<a name="call_footnote_Temp_250" href="#footnote_Temp_250"><sup><small>40</small></sup></a><p>
 
 <a name="%_fig_2.17"></a><p><div align=left><table width=100%><tr><td><img src="ch2-Z-G-52.gif" border="0">
 </td></tr><caption align=bottom><div align=left><b>Figure 2.17:</b>&nbsp;&nbsp;Unbalanced tree produced by adjoining 1 through 7 in sequence.</div></caption><tr><td>
@@ -835,7 +835,7 @@ the list <tt>(1 3 5 7 9 11)</tt>.
 
 <p><a name="%_thm_2.65"></a>
 <b>Exercise 2.65.</b>&nbsp;&nbsp;<a name="%_idx_2194"></a><a name="%_idx_2196"></a>Use the results of exercises&nbsp;<a href="#%_thm_2.63">2.63</a> and
-&nbsp;<a href="#%_thm_2.64">2.64</a> to give <img src="book-Z-G-D-3.gif" border="0">(<em>n</em>) implementations of <tt>union-set</tt> and <tt>intersection-set</tt> for sets implemented as
+&nbsp;<a href="#%_thm_2.64">2.64</a> to give Θ(<em>n</em>) implementations of <tt>union-set</tt> and <tt>intersection-set</tt> for sets implemented as
 (balanced) binary trees.<a name="call_footnote_Temp_254" href="#footnote_Temp_254"><sup><small>41</small></sup></a>
 
 <p>
