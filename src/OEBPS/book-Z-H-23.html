@@ -262,9 +262,17 @@ processes, one with three ordered events (<em>a</em>,<em>b</em>,<em>c</em>) and 
 ordered events (<em>x</em>,<em>y</em>,<em>z</em>).  If the two processes run concurrently, with
 no constraints on how their execution is interleaved, then there are
 20 different possible orderings for the events that are consistent
-with the individual orderings for the two processes:
-</p><p></p><div align="left"><img src="images/ch3-Z-G-33.gif" border="0" /></div><p>
-As programmers designing this system, we would have to consider the
+with the individual orderings for the two processes:</p>
+
+<p>
+    (<em>a</em>, <em>b</em>, <em>c</em>, <em>x</em>, <em>y</em>, <em>z</em>) (<em>a</em>, <em>x</em>, <em>b</em>, <em>y</em>, <em>c</em>, <em>z</em>) (<em>x</em>, <em>a</em>, <em>b</em>, <em>c</em>, <em>y</em>, <em>z</em>) (<em>x</em>, <em>a</em>, <em>y</em>, <em>z</em>, <em>b</em>, <em>c</em>)<br/>
+    (<em>a</em>, <em>b</em>, <em>x</em>, <em>c</em>, <em>y</em>, <em>z</em>) (<em>a</em>, <em>x</em>, <em>b</em>, <em>y</em>, <em>z</em>, <em>c</em>) (<em>x</em>, <em>a</em>, <em>b</em>, <em>y</em>, <em>c</em>, <em>z</em>) (<em>x</em>, <em>y</em>, <em>a</em>, <em>b</em>, <em>c</em>, <em>z</em>)<br/>
+    (<em>a</em>, <em>b</em>, <em>x</em>, <em>y</em>, <em>c</em>, <em>z</em>) (<em>a</em>, <em>x</em>, <em>y</em>, <em>b</em>, <em>c</em>, <em>z</em>) (<em>x</em>, <em>a</em>, <em>b</em>, <em>y</em>, <em>z</em>, <em>c</em>) (<em>x</em>, <em>y</em>, <em>a</em>, <em>b</em>, <em>z</em>, <em>c</em>)<br/>
+    (<em>a</em>, <em>b</em>, <em>x</em>, <em>y</em>, <em>z</em>, <em>c</em>) (<em>a</em>, <em>x</em>, <em>y</em>, <em>b</em>, <em>c</em>, <em>z</em>) (<em>x</em>, <em>a</em>, <em>y</em>, <em>b</em>, <em>c</em>, <em>z</em>) (<em>x</em>, <em>y</em>, <em>a</em>, <em>z</em>, <em>b</em>, <em>c</em>)<br/>
+    (<em>a</em>, <em>x</em>, <em>b</em>, <em>c</em>, <em>y</em>, <em>z</em>) (<em>a</em>, <em>x</em>, <em>y</em>, <em>z</em>, <em>b</em>, <em>c</em>) (<em>x</em>, <em>a</em>, <em>y</em>, <em>b</em>, <em>z</em>, <em>c</em>) (<em>x</em>, <em>y</em>, <em>z</em>, <em>a</em>, <em>b</em>, <em>c</em>)
+</p>
+
+<p>As programmers designing this system, we would have to consider the
 effects of each of these 20 orderings and check that each behavior is
 acceptable.  Such an approach rapidly becomes unwieldy as the numbers
 of processes and events increase.</p><p>

@@ -1369,9 +1369,11 @@ model systems in terms of relations among quantities.  For example, a
 mathematical model of a mechanical structure might include the
 information that the deflection <em>d</em> of a metal rod is related to the
 force <em>F</em> on the rod, the length <em>L</em> of the rod, the cross-sectional
-area <em>A</em>, and the elastic modulus <em>E</em> via the equation
-</p><p></p><div align="left"><img src="images/ch3-Z-G-28.gif" border="0" /></div><p>
-Such an equation is not one-directional.  Given any four of the
+area <em>A</em>, and the elastic modulus <em>E</em> via the equation</p>
+
+<p><em>dAE</em> = <em>FL</em></p>
+
+<p>Such an equation is not one-directional.  Given any four of the
 quantities, we can use it to compute the fifth.  Yet translating the
 equation into a traditional computer language would force us to choose
 one of the quantities to be computed in terms of the other four.
@@ -1395,11 +1397,11 @@ constructing <a name="%_idx_3514" id="%_idx_3514"></a><em>constraint networks</e
 joined by <a name="%_idx_3516" id="%_idx_3516"></a><em>connectors</em>.  A connector is an object that “holds” a
 value that may participate in one or more constraints.  For example,
 we know that the relationship between Fahrenheit and Celsius
-temperatures is</p><p>
+temperatures is</p>
 
-</p><p></p><div align="left"><img src="images/ch3-Z-G-29.gif" border="0" /></div><p></p><p>
+<p>9<em>C</em> = 5(<em>F</em> - 32)</p>
 
-Such a constraint can be thought of as a network consisting of
+<p>Such a constraint can be thought of as a network consisting of
 primitive adder, multiplier, and constant constraints
 (figure <a href="#%_fig_3.28">3.28</a>).  In the figure, we see on the left a
 multiplier box with three terminals, labeled <em>m</em>1, <em>m</em>2, and <em>p</em>.
