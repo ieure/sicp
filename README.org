@@ -20,3 +20,35 @@
 
   This is the raw source for the book. If you’d just like to read it,
   you’ll find what you’re looking for [[you’ll%20find%20what%20you’re%20looking%20for%20][in the downloads tab]].
+
+* What’s left to do?
+
+** TODO Fix TOC
+
+   iBooks doesn’t let you jump to an anchor within a page from the
+   table of contents, so the chapters need to be broken down into
+   smaller files to make this work.
+
+** TODO Repleace remaining GIF figures with markup or SVG
+
+   Many of the figures are trivial and can be replicated with plain
+   markup and Unicode. Others are more complex and will require
+   redrawing, preferably in SVG.
+
+** TODO Use =<code>= instead of =<tt>=
+
+   Many places where there are inline mentions of function and
+   variable names, these are wrapped in =<tt>= for display
+   purposes. The correct semantic element is =<code>=.
+
+** TODO Fix source listings
+
+   All the source is formatted with =<tt>= and non-breaking spaces. A
+   =<pre>= would be much nicer.
+
+** TODO Better footnotes
+
+   The footnotes are all at the end of each chapter. It might be nice
+   to move them all to the end of the book, one per page, so they’re
+   not in the way when you finish a chapter.
+
