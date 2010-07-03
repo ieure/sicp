@@ -744,13 +744,24 @@ factors, but there is a famous algorithm that is much more efficient.</p><p>
 the remainder when <em>a</em> is divided by <em>b</em>, then the common divisors of
 <em>a</em> and <em>b</em> are precisely the same as the common divisors of <em>b</em> and
 <em>r</em>.  Thus, we can use the equation
-</p><p>GCD(<em>a</em>, <em>b</em>) = GCD(<em>b</em>, <em>r</em>)</p>
+</p>
+<p><code>GCD(<em>a</em>, <em>b</em>) = GCD(<em>b</em>, <em>r</em>)</code></p>
 
 to successively reduce the problem of computing a GCD to the
 problem of computing the GCD of smaller and smaller pairs of
 integers.  For example,
-<p></p><div align="left"><img src="images/ch1-Z-G-25.gif" border="0" /></div><p>
-reduces GCD(206,40) to GCD(2,0), which is 2.  It is
+
+<pre>
+GCD(206, 40) = GCD(40, 6)
+             = GCD(6, 4)
+             = GCD(4, 2)
+             = GCD(2, 0)
+             = 2
+</pre>
+
+<div align="left"><img src="images/ch1-Z-G-25.gif" border="0" /></div>
+
+<p>reduces GCD(206,40) to GCD(2,0), which is 2.  It is
 possible to show that starting with any two positive integers and
 performing repeated reductions will always eventually produce a pair
 where the second number is 0.  Then the GCD is the other
