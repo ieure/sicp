@@ -312,7 +312,7 @@ of leaves in the above tree, in general) is precisely
 <em>F</em><em>i</em><em>b</em>(<em>n</em> + 1).  To get an idea of how bad this is, one can show that the
 value of  <em>F</em><em>i</em><em>b</em>(<em>n</em>) <a name="%_idx_722"></a>grows exponentially with <em>n</em>.  More precisely
 (see exercise&nbsp;<a href="#%_thm_1.13">1.13</a>),  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest
-integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup> /<img src="book-Z-G-D-13.gif" border="0">5, where<p>
+integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup> /√5, where<p>
 
 <p><div align=left><img src="ch1-Z-G-14.gif" border="0"></div><p>
 is the <a name="%_idx_724"></a><em>golden ratio</em>, which satisfies the equation<p>
@@ -471,11 +471,11 @@ of a recursive process.
 <p><p>
 
 <p><a name="%_thm_1.13"></a>
-<b>Exercise 1.13.</b>&nbsp;&nbsp;Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>/<img src="book-Z-G-D-13.gif" border="0">5,
-where <img src="book-Z-G-D-11.gif" border="0"> =  (1 + <img src="book-Z-G-D-13.gif" border="0">5)/2.  Hint: Let <img src="book-Z-G-D-12.gif" border="0"> =  (1 - <img src="book-Z-G-D-13.gif" border="0">5)/2.  Use
+<b>Exercise 1.13.</b>&nbsp;&nbsp;Prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) is the closest integer to <img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>/√5,
+where <img src="book-Z-G-D-11.gif" border="0"> =  (1 + √5)/2.  Hint: Let <img src="book-Z-G-D-12.gif" border="0"> =  (1 - √5)/2.  Use
 induction and the definition of the Fibonacci numbers (see
 section&nbsp;<a href="#%_sec_1.2.2">1.2.2</a>) to prove that  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = (<img src="book-Z-G-D-11.gif" border="0"><sup><em>n</em></sup>
- - <img src="book-Z-G-D-12.gif" border="0"><sup><em>n</em></sup>)/<img src="book-Z-G-D-13.gif" border="0">5.
+ - <img src="book-Z-G-D-12.gif" border="0"><sup><em>n</em></sup>)/√5.
 
 <p><p>
 
@@ -797,7 +797,7 @@ number.<a name="call_footnote_Temp_72" href="#footnote_Temp_72"><sup><small>43</
 We can use this theorem to get an order-of-growth estimate for Euclid's
 Algorithm.  Let <em>n</em> be the smaller of the two inputs to the
 procedure.  If the process takes <em>k</em> steps, then we must have
-<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) <img src="book-Z-G-D-20.gif" border="0"> <img src="book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/<img src="book-Z-G-D-13.gif" border="0">5.  Therefore
+<em>n</em><u>&gt;</u>  <em>F</em><em>i</em><em>b</em> (<em>k</em>) <img src="book-Z-G-D-20.gif" border="0"> <img src="book-Z-G-D-11.gif" border="0"><sup><em>k</em></sup>/√5.  Therefore
 the number of steps <em>k</em> grows as the logarithm (to the base
 <img src="book-Z-G-D-11.gif" border="0">) of <em>n</em>.  Hence, the order of growth is θ(<tt>log</tt> <em>n</em>).<p>
 
@@ -823,7 +823,7 @@ In the applicative-order evaluation?
 
 <a name="%_idx_856"></a><a name="%_idx_858"></a>
 This section describes two methods for checking the primality of an
-integer <em>n</em>, one with order of growth θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), and a
+integer <em>n</em>, one with order of growth θ(√<em>n</em>), and a
 ``probabilistic'' algorithm with order of growth θ(<tt>log</tt> <em>n</em>).  The
 exercises at the end of this section suggest programming
 projects based on these algorithms.<p>
@@ -858,10 +858,10 @@ and only if <em>n</em> is its own smallest divisor.<p>
 
 The end test for <tt>find-divisor</tt> is based on the fact that if <em>n</em>
 is not prime it must have a divisor less than or equal to
-<img src="book-Z-G-D-13.gif" border="0"><em>n</em>.<a name="call_footnote_Temp_75" href="#footnote_Temp_75"><sup><small>44</small></sup></a>  This
+√<em>n</em>.<a name="call_footnote_Temp_75" href="#footnote_Temp_75"><sup><small>44</small></sup></a>  This
 means that the algorithm need only test divisors between 1 and
-<img src="book-Z-G-D-13.gif" border="0"><em>n</em>.  Consequently, the number of steps required to identify
-<em>n</em> as prime will have order of growth θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>).<p>
+√<em>n</em>.  Consequently, the number of steps required to identify
+<em>n</em> as prime will have order of growth θ(√<em>n</em>).<p>
 
 <a name="%_sec_Temp_76"></a>
 <h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_76">The Fermat test</a></h4><p>
@@ -1003,10 +1003,10 @@ checks the primality of consecutive odd integers in a specified range.
 Use your procedure to find the three smallest primes larger than 1000;
 larger than 10,000; larger than 100,000; larger than 1,000,000.  Note
 the time needed to test each prime.  Since the testing algorithm has
-order of growth of θ(<img src="book-Z-G-D-13.gif" border="0"><em>n</em>), you should expect that testing
-for primes around 10,000 should take about <img src="book-Z-G-D-13.gif" border="0">10 times as long
+order of growth of θ(√<em>n</em>), you should expect that testing
+for primes around 10,000 should take about √10 times as long
 as testing for primes around 1000.  Do your timing data bear this out?
-How well do the data for 100,000 and 1,000,000 support the <img src="book-Z-G-D-13.gif" border="0"><em>n</em>
+How well do the data for 100,000 and 1,000,000 support the √<em>n</em>
 prediction?  Is your result compatible with the notion that programs
 on your machine run in time proportional to the number of steps
 required for the computation?
@@ -1260,7 +1260,7 @@ proved together with the definition of the Fibonacci numbers gives
 completes the proof of Lam&eacute;'s Theorem.
 
 <p><a name="footnote_Temp_75" href="#call_footnote_Temp_75"><sup><small>44</small></sup></a> If <em>d</em> is a divisor of <em>n</em>, then so is <em>n</em>/<em>d</em>.
-But <em>d</em> and <em>n</em>/<em>d</em> cannot both be greater than <img src="book-Z-G-D-13.gif" border="0"><em>n</em>.
+But <em>d</em> and <em>n</em>/<em>d</em> cannot both be greater than √<em>n</em>.
 
 <p><a name="footnote_Temp_77" href="#call_footnote_Temp_77"><sup><small>45</small></sup></a> Pierre de Fermat (1601-1665) is considered to be the founder of
 <a name="%_idx_872"></a><a name="%_idx_874"></a>modern number theory.  He obtained many important number-theoretic

@@ -635,7 +635,7 @@ primality.  We will need the first prime, 2, to get started:<p>
 This definition is not so straightforward as it appears, because we
 will test whether a number <em>n</em> is prime by checking whether <em>n</em> is
 divisible by a prime (not by just any integer) less than or equal to
-<img src="book-Z-G-D-13.gif" border="0"><em>n</em>:<p>
+√<em>n</em>:<p>
 
 <p><p><tt><a name="%_idx_3874"></a>(define&nbsp;(prime?&nbsp;n)<br>
 &nbsp;&nbsp;(define&nbsp;(iter&nbsp;ps)<br>
@@ -652,7 +652,7 @@ the numbers we need to check next.  That is, for every <em>n</em> we test for
 primality, either <em>n</em> is not prime (in which case there is a prime
 already generated that divides it) or <em>n</em> is prime (in which case
 there is a prime already generated -- i.e., a prime less than
-<em>n</em> -- that is greater than <img src="book-Z-G-D-13.gif" border="0"><em>n</em>).<a name="call_footnote_Temp_459" href="#footnote_Temp_459"><sup><small>63</small></sup></a>
+<em>n</em> -- that is greater than √<em>n</em>).<a name="call_footnote_Temp_459" href="#footnote_Temp_459"><sup><small>63</small></sup></a>
 
 <p><a name="%_thm_3.53"></a>
 <b>Exercise 3.53.</b>&nbsp;&nbsp;Without running the program, describe the elements of the
