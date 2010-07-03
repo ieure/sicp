@@ -32,36 +32,36 @@
             </navPoint>
             <navPoint id="navPoint-4" playOrder="4">
                 <navLabel>
-                    <text>1.1The Elements of Programming</text>
+                    <text>1.1 The Elements of Programming</text>
                 </navLabel>
                 <content src="Text/book-Z-H-10.html"/>
                 <navPoint id="navPoint-5" playOrder="5">
                     <navLabel>
-                        <text>1.1.1Expressions</text>
+                        <text>1.1.1 Expressions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-6" playOrder="6">
                     <navLabel>
-                        <text>1.1.2Naming and the Environment</text>
+                        <text>1.1.2 Naming and the Environment</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_4"/>
                 </navPoint>
                 <navPoint id="navPoint-7" playOrder="7">
                     <navLabel>
-                        <text>1.1.3Evaluating Combinations</text>
+                        <text>1.1.3 Evaluating Combinations</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_5"/>
                 </navPoint>
                 <navPoint id="navPoint-8" playOrder="8">
                     <navLabel>
-                        <text>1.1.4Compound Procedures</text>
+                        <text>1.1.4 Compound Procedures</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_6"/>
                 </navPoint>
                 <navPoint id="navPoint-9" playOrder="9">
                     <navLabel>
-                        <text>1.1.5The Substitution Model for Procedure Application</text>
+                        <text>1.1.5 The Substitution Model for Procedure Application</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_7"/>
                     <navPoint id="navPoint-10" playOrder="10">
@@ -73,19 +73,19 @@
                 </navPoint>
                 <navPoint id="navPoint-11" playOrder="11">
                     <navLabel>
-                        <text>1.1.6Conditional Expressions and Predicates</text>
+                        <text>1.1.6 Conditional Expressions and Predicates</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_9"/>
                 </navPoint>
                 <navPoint id="navPoint-12" playOrder="12">
                     <navLabel>
-                        <text>1.1.7Example: Square Roots by Newton's Method</text>
+                        <text>1.1.7 Example: Square Roots by Newton's Method</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_10"/>
                 </navPoint>
                 <navPoint id="navPoint-13" playOrder="13">
                     <navLabel>
-                        <text>1.1.8Procedures as Black-Box Abstractions</text>
+                        <text>1.1.8 Procedures as Black-Box Abstractions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-10.html#heading_id_11"/>
                     <navPoint id="navPoint-14" playOrder="14">
@@ -104,18 +104,18 @@
             </navPoint>
             <navPoint id="navPoint-16" playOrder="16">
                 <navLabel>
-                    <text>1.2Procedures and the Processes They Generate</text>
+                    <text>1.2 Procedures and the Processes They Generate</text>
                 </navLabel>
                 <content src="Text/book-Z-H-11.html"/>
                 <navPoint id="navPoint-17" playOrder="17">
                     <navLabel>
-                        <text>1.2.1Linear Recursion and Iteration</text>
+                        <text>1.2.1 Linear Recursion and Iteration</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-18" playOrder="18">
                     <navLabel>
-                        <text>1.2.2Tree Recursion</text>
+                        <text>1.2.2 Tree Recursion</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_4"/>
                     <navPoint id="navPoint-19" playOrder="19">
@@ -127,25 +127,25 @@
                 </navPoint>
                 <navPoint id="navPoint-20" playOrder="20">
                     <navLabel>
-                        <text>1.2.3Orders of Growth</text>
+                        <text>1.2.3 Orders of Growth</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_6"/>
                 </navPoint>
                 <navPoint id="navPoint-21" playOrder="21">
                     <navLabel>
-                        <text>1.2.4Exponentiation</text>
+                        <text>1.2.4 Exponentiation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_7"/>
                 </navPoint>
                 <navPoint id="navPoint-22" playOrder="22">
                     <navLabel>
-                        <text>1.2.5Greatest Common Divisors</text>
+                        <text>1.2.5 Greatest Common Divisors</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_8"/>
                 </navPoint>
                 <navPoint id="navPoint-23" playOrder="23">
                     <navLabel>
-                        <text>1.2.6Example: Testing for Primality</text>
+                        <text>1.2.6 Example: Testing for Primality</text>
                     </navLabel>
                     <content src="Text/book-Z-H-11.html#heading_id_9"/>
                     <navPoint id="navPoint-24" playOrder="24">
@@ -170,18 +170,18 @@
             </navPoint>
             <navPoint id="navPoint-27" playOrder="27">
                 <navLabel>
-                    <text>1.3Formulating Abstractions with Higher-Order Procedures</text>
+                    <text>1.3 Formulating Abstractions with Higher-Order Procedures</text>
                 </navLabel>
                 <content src="Text/book-Z-H-12.html"/>
                 <navPoint id="navPoint-28" playOrder="28">
                     <navLabel>
-                        <text>1.3.1Procedures as Arguments</text>
+                        <text>1.3.1 Procedures as Arguments</text>
                     </navLabel>
                     <content src="Text/book-Z-H-12.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-29" playOrder="29">
                     <navLabel>
-                        <text>1.3.2Constructing Procedures Using Lambda</text>
+                        <text>1.3.2 Constructing Procedures Using Lambda</text>
                     </navLabel>
                     <content src="Text/book-Z-H-12.html#heading_id_4"/>
                     <navPoint id="navPoint-30" playOrder="30">
@@ -193,7 +193,7 @@
                 </navPoint>
                 <navPoint id="navPoint-31" playOrder="31">
                     <navLabel>
-                        <text>1.3.3Procedures as General Methods</text>
+                        <text>1.3.3 Procedures as General Methods</text>
                     </navLabel>
                     <content src="Text/book-Z-H-12.html#heading_id_6"/>
                     <navPoint id="navPoint-32" playOrder="32">
@@ -211,7 +211,7 @@
                 </navPoint>
                 <navPoint id="navPoint-34" playOrder="34">
                     <navLabel>
-                        <text>1.3.4Procedures as Returned Values</text>
+                        <text>1.3.4 Procedures as Returned Values</text>
                     </navLabel>
                     <content src="Text/book-Z-H-12.html#heading_id_9"/>
                     <navPoint id="navPoint-35" playOrder="35">
@@ -236,12 +236,12 @@
             <content src="Text/book-Z-H-13.html"/>
             <navPoint id="navPoint-38" playOrder="38">
                 <navLabel>
-                    <text>2.1Introduction to Data Abstraction</text>
+                    <text>2.1 Introduction to Data Abstraction</text>
                 </navLabel>
                 <content src="Text/book-Z-H-14.html"/>
                 <navPoint id="navPoint-39" playOrder="39">
                     <navLabel>
-                        <text>2.1.1Example: Arithmetic Operations for Rational Numbers</text>
+                        <text>2.1.1 Example: Arithmetic Operations for Rational Numbers</text>
                     </navLabel>
                     <content src="Text/book-Z-H-14.html#heading_id_3"/>
                     <navPoint id="navPoint-40" playOrder="40">
@@ -259,31 +259,31 @@
                 </navPoint>
                 <navPoint id="navPoint-42" playOrder="42">
                     <navLabel>
-                        <text>2.1.2Abstraction Barriers</text>
+                        <text>2.1.2 Abstraction Barriers</text>
                     </navLabel>
                     <content src="Text/book-Z-H-14.html#heading_id_6"/>
                 </navPoint>
                 <navPoint id="navPoint-43" playOrder="43">
                     <navLabel>
-                        <text>2.1.3What Is Meant by Data?</text>
+                        <text>2.1.3 What Is Meant by Data?</text>
                     </navLabel>
                     <content src="Text/book-Z-H-14.html#heading_id_7"/>
                 </navPoint>
                 <navPoint id="navPoint-44" playOrder="44">
                     <navLabel>
-                        <text>2.1.4Extended Exercise: Interval Arithmetic</text>
+                        <text>2.1.4 Extended Exercise: Interval Arithmetic</text>
                     </navLabel>
                     <content src="Text/book-Z-H-14.html#heading_id_8"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-45" playOrder="45">
                 <navLabel>
-                    <text>2.2Hierarchical Data and the Closure Property</text>
+                    <text>2.2 Hierarchical Data and the Closure Property</text>
                 </navLabel>
                 <content src="Text/book-Z-H-15.html"/>
                 <navPoint id="navPoint-46" playOrder="46">
                     <navLabel>
-                        <text>2.2.1Representing Sequences</text>
+                        <text>2.2.1 Representing Sequences</text>
                     </navLabel>
                     <content src="Text/book-Z-H-15.html#heading_id_3"/>
                     <navPoint id="navPoint-47" playOrder="47">
@@ -301,7 +301,7 @@
                 </navPoint>
                 <navPoint id="navPoint-49" playOrder="49">
                     <navLabel>
-                        <text>2.2.2Hierarchical Structures</text>
+                        <text>2.2.2 Hierarchical Structures</text>
                     </navLabel>
                     <content src="Text/book-Z-H-15.html#heading_id_6"/>
                     <navPoint id="navPoint-50" playOrder="50">
@@ -313,7 +313,7 @@
                 </navPoint>
                 <navPoint id="navPoint-51" playOrder="51">
                     <navLabel>
-                        <text>2.2.3Sequences as Conventional Interfaces</text>
+                        <text>2.2.3 Sequences as Conventional Interfaces</text>
                     </navLabel>
                     <content src="Text/book-Z-H-15.html#heading_id_8"/>
                     <navPoint id="navPoint-52" playOrder="52">
@@ -331,7 +331,7 @@
                 </navPoint>
                 <navPoint id="navPoint-54" playOrder="54">
                     <navLabel>
-                        <text>2.2.4Example: A Picture Language</text>
+                        <text>2.2.4 Example: A Picture Language</text>
                     </navLabel>
                     <content src="Text/book-Z-H-15.html#heading_id_11"/>
                     <navPoint id="navPoint-55" playOrder="55">
@@ -374,18 +374,18 @@
             </navPoint>
             <navPoint id="navPoint-61" playOrder="61">
                 <navLabel>
-                    <text>2.3Symbolic Data</text>
+                    <text>2.3 Symbolic Data</text>
                 </navLabel>
                 <content src="Text/book-Z-H-16.html"/>
                 <navPoint id="navPoint-62" playOrder="62">
                     <navLabel>
-                        <text>2.3.1Quotation</text>
+                        <text>2.3.1 Quotation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-16.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-63" playOrder="63">
                     <navLabel>
-                        <text>2.3.2Example: Symbolic Differentiation</text>
+                        <text>2.3.2 Example: Symbolic Differentiation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-16.html#heading_id_4"/>
                     <navPoint id="navPoint-64" playOrder="64">
@@ -403,7 +403,7 @@
                 </navPoint>
                 <navPoint id="navPoint-66" playOrder="66">
                     <navLabel>
-                        <text>2.3.3Example: Representing Sets</text>
+                        <text>2.3.3 Example: Representing Sets</text>
                     </navLabel>
                     <content src="Text/book-Z-H-16.html#heading_id_7"/>
                     <navPoint id="navPoint-67" playOrder="67">
@@ -433,7 +433,7 @@
                 </navPoint>
                 <navPoint id="navPoint-71" playOrder="71">
                     <navLabel>
-                        <text>2.3.4Example: Huffman Encoding Trees</text>
+                        <text>2.3.4 Example: Huffman Encoding Trees</text>
                     </navLabel>
                     <content src="Text/book-Z-H-16.html#heading_id_12"/>
                     <navPoint id="navPoint-72" playOrder="72">
@@ -464,24 +464,24 @@
             </navPoint>
             <navPoint id="navPoint-76" playOrder="76">
                 <navLabel>
-                    <text>2.4Multiple Representations for Abstract Data</text>
+                    <text>2.4 Multiple Representations for Abstract Data</text>
                 </navLabel>
                 <content src="Text/book-Z-H-17.html"/>
                 <navPoint id="navPoint-77" playOrder="77">
                     <navLabel>
-                        <text>2.4.1Representations for Complex Numbers</text>
+                        <text>2.4.1 Representations for Complex Numbers</text>
                     </navLabel>
                     <content src="Text/book-Z-H-17.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-78" playOrder="78">
                     <navLabel>
-                        <text>2.4.2Tagged data</text>
+                        <text>2.4.2 Tagged data</text>
                     </navLabel>
                     <content src="Text/book-Z-H-17.html#heading_id_4"/>
                 </navPoint>
                 <navPoint id="navPoint-79" playOrder="79">
                     <navLabel>
-                        <text>2.4.3Data-Directed Programming and Additivity</text>
+                        <text>2.4.3 Data-Directed Programming and Additivity</text>
                     </navLabel>
                     <content src="Text/book-Z-H-17.html#heading_id_5"/>
                     <navPoint id="navPoint-80" playOrder="80">
@@ -494,18 +494,18 @@
             </navPoint>
             <navPoint id="navPoint-81" playOrder="81">
                 <navLabel>
-                    <text>2.5Systems with Generic Operations</text>
+                    <text>2.5 Systems with Generic Operations</text>
                 </navLabel>
                 <content src="Text/book-Z-H-18.html"/>
                 <navPoint id="navPoint-82" playOrder="82">
                     <navLabel>
-                        <text>2.5.1Generic Arithmetic Operations</text>
+                        <text>2.5.1 Generic Arithmetic Operations</text>
                     </navLabel>
                     <content src="Text/book-Z-H-18.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-83" playOrder="83">
                     <navLabel>
-                        <text>2.5.2Combining Data of Different Types</text>
+                        <text>2.5.2 Combining Data of Different Types</text>
                     </navLabel>
                     <content src="Text/book-Z-H-18.html#heading_id_4"/>
                     <navPoint id="navPoint-84" playOrder="84">
@@ -529,7 +529,7 @@
                 </navPoint>
                 <navPoint id="navPoint-87" playOrder="87">
                     <navLabel>
-                        <text>2.5.3Example: Symbolic Algebra</text>
+                        <text>2.5.3 Example: Symbolic Algebra</text>
                     </navLabel>
                     <content src="Text/book-Z-H-18.html#heading_id_8"/>
                     <navPoint id="navPoint-88" playOrder="88">
@@ -566,24 +566,24 @@
             <content src="Text/book-Z-H-19.html"/>
             <navPoint id="navPoint-93" playOrder="93">
                 <navLabel>
-                    <text>3.1Assignment and Local State</text>
+                    <text>3.1 Assignment and Local State</text>
                 </navLabel>
                 <content src="Text/book-Z-H-20.html"/>
                 <navPoint id="navPoint-94" playOrder="94">
                     <navLabel>
-                        <text>3.1.1Local State Variables</text>
+                        <text>3.1.1 Local State Variables</text>
                     </navLabel>
                     <content src="Text/book-Z-H-20.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-95" playOrder="95">
                     <navLabel>
-                        <text>3.1.2The Benefits of Introducing Assignment</text>
+                        <text>3.1.2 The Benefits of Introducing Assignment</text>
                     </navLabel>
                     <content src="Text/book-Z-H-20.html#heading_id_4"/>
                 </navPoint>
                 <navPoint id="navPoint-96" playOrder="96">
                     <navLabel>
-                        <text>3.1.3The Costs of Introducing Assignment</text>
+                        <text>3.1.3 The Costs of Introducing Assignment</text>
                     </navLabel>
                     <content src="Text/book-Z-H-20.html#heading_id_5"/>
                     <navPoint id="navPoint-97" playOrder="97">
@@ -602,42 +602,42 @@
             </navPoint>
             <navPoint id="navPoint-99" playOrder="99">
                 <navLabel>
-                    <text>3.2The Environment Model of Evaluation</text>
+                    <text>3.2 The Environment Model of Evaluation</text>
                 </navLabel>
                 <content src="Text/book-Z-H-21.html"/>
                 <navPoint id="navPoint-100" playOrder="100">
                     <navLabel>
-                        <text>3.2.1The Rules for Evaluation</text>
+                        <text>3.2.1 The Rules for Evaluation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-21.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-101" playOrder="101">
                     <navLabel>
-                        <text>3.2.2Applying Simple Procedures</text>
+                        <text>3.2.2 Applying Simple Procedures</text>
                     </navLabel>
                     <content src="Text/book-Z-H-21.html#heading_id_4"/>
                 </navPoint>
                 <navPoint id="navPoint-102" playOrder="102">
                     <navLabel>
-                        <text>3.2.3Frames as the Repository of Local State</text>
+                        <text>3.2.3 Frames as the Repository of Local State</text>
                     </navLabel>
                     <content src="Text/book-Z-H-21.html#heading_id_5"/>
                 </navPoint>
                 <navPoint id="navPoint-103" playOrder="103">
                     <navLabel>
-                        <text>3.2.4Internal Definitions</text>
+                        <text>3.2.4 Internal Definitions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-21.html#heading_id_6"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-104" playOrder="104">
                 <navLabel>
-                    <text>3.3Modeling with Mutable Data</text>
+                    <text>3.3 Modeling with Mutable Data</text>
                 </navLabel>
                 <content src="Text/book-Z-H-22.html"/>
                 <navPoint id="navPoint-105" playOrder="105">
                     <navLabel>
-                        <text>3.3.1Mutable List Structure</text>
+                        <text>3.3.1 Mutable List Structure</text>
                     </navLabel>
                     <content src="Text/book-Z-H-22.html#heading_id_3"/>
                     <navPoint id="navPoint-106" playOrder="106">
@@ -655,13 +655,13 @@
                 </navPoint>
                 <navPoint id="navPoint-108" playOrder="108">
                     <navLabel>
-                        <text>3.3.2Representing Queues</text>
+                        <text>3.3.2 Representing Queues</text>
                     </navLabel>
                     <content src="Text/book-Z-H-22.html#heading_id_6"/>
                 </navPoint>
                 <navPoint id="navPoint-109" playOrder="109">
                     <navLabel>
-                        <text>3.3.3Representing Tables</text>
+                        <text>3.3.3 Representing Tables</text>
                     </navLabel>
                     <content src="Text/book-Z-H-22.html#heading_id_7"/>
                     <navPoint id="navPoint-110" playOrder="110">
@@ -679,7 +679,7 @@
                 </navPoint>
                 <navPoint id="navPoint-112" playOrder="112">
                     <navLabel>
-                        <text>3.3.4A Simulator for Digital Circuits</text>
+                        <text>3.3.4 A Simulator for Digital Circuits</text>
                     </navLabel>
                     <content src="Text/book-Z-H-22.html#heading_id_10"/>
                     <navPoint id="navPoint-113" playOrder="113">
@@ -715,7 +715,7 @@
                 </navPoint>
                 <navPoint id="navPoint-118" playOrder="118">
                     <navLabel>
-                        <text>3.3.5Propagation of Constraints</text>
+                        <text>3.3.5 Propagation of Constraints</text>
                     </navLabel>
                     <content src="Text/book-Z-H-22.html#heading_id_16"/>
                     <navPoint id="navPoint-119" playOrder="119">
@@ -740,12 +740,12 @@
             </navPoint>
             <navPoint id="navPoint-122" playOrder="122">
                 <navLabel>
-                    <text>3.4Concurrency: Time Is of the Essence</text>
+                    <text>3.4 Concurrency: Time Is of the Essence</text>
                 </navLabel>
                 <content src="Text/book-Z-H-23.html"/>
                 <navPoint id="navPoint-123" playOrder="123">
                     <navLabel>
-                        <text>3.4.1The Nature of Time in Concurrent Systems</text>
+                        <text>3.4.1 The Nature of Time in Concurrent Systems</text>
                     </navLabel>
                     <content src="Text/book-Z-H-23.html#heading_id_3"/>
                     <navPoint id="navPoint-124" playOrder="124">
@@ -757,7 +757,7 @@
                 </navPoint>
                 <navPoint id="navPoint-125" playOrder="125">
                     <navLabel>
-                        <text>3.4.2Mechanisms for Controlling Concurrency</text>
+                        <text>3.4.2 Mechanisms for Controlling Concurrency</text>
                     </navLabel>
                     <content src="Text/book-Z-H-23.html#heading_id_5"/>
                     <navPoint id="navPoint-126" playOrder="126">
@@ -800,12 +800,12 @@
             </navPoint>
             <navPoint id="navPoint-132" playOrder="132">
                 <navLabel>
-                    <text>3.5Streams</text>
+                    <text>3.5 Streams</text>
                 </navLabel>
                 <content src="Text/book-Z-H-24.html"/>
                 <navPoint id="navPoint-133" playOrder="133">
                     <navLabel>
-                        <text>3.5.1Streams Are Delayed Lists</text>
+                        <text>3.5.1 Streams Are Delayed Lists</text>
                     </navLabel>
                     <content src="Text/book-Z-H-24.html#heading_id_3"/>
                     <navPoint id="navPoint-134" playOrder="134">
@@ -823,7 +823,7 @@
                 </navPoint>
                 <navPoint id="navPoint-136" playOrder="136">
                     <navLabel>
-                        <text>3.5.2Infinite Streams</text>
+                        <text>3.5.2 Infinite Streams</text>
                     </navLabel>
                     <content src="Text/book-Z-H-24.html#heading_id_6"/>
                     <navPoint id="navPoint-137" playOrder="137">
@@ -835,7 +835,7 @@
                 </navPoint>
                 <navPoint id="navPoint-138" playOrder="138">
                     <navLabel>
-                        <text>3.5.3Exploiting the Stream Paradigm</text>
+                        <text>3.5.3 Exploiting the Stream Paradigm</text>
                     </navLabel>
                     <content src="Text/book-Z-H-24.html#heading_id_8"/>
                     <navPoint id="navPoint-139" playOrder="139">
@@ -859,7 +859,7 @@
                 </navPoint>
                 <navPoint id="navPoint-142" playOrder="142">
                     <navLabel>
-                        <text>3.5.4Streams and Delayed Evaluation</text>
+                        <text>3.5.4 Streams and Delayed Evaluation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-24.html#heading_id_12"/>
                     <navPoint id="navPoint-143" playOrder="143">
@@ -871,7 +871,7 @@
                 </navPoint>
                 <navPoint id="navPoint-144" playOrder="144">
                     <navLabel>
-                        <text>3.5.5Modularity of Functional Programs and Modularity of Objects</text>
+                        <text>3.5.5 Modularity of Functional Programs and Modularity of Objects</text>
                     </navLabel>
                     <content src="Text/book-Z-H-24.html#heading_id_14"/>
                     <navPoint id="navPoint-145" playOrder="145">
@@ -890,12 +890,12 @@
             <content src="Text/book-Z-H-25.html"/>
             <navPoint id="navPoint-147" playOrder="147">
                 <navLabel>
-                    <text>4.1The Metacircular Evaluator</text>
+                    <text>4.1 The Metacircular Evaluator</text>
                 </navLabel>
                 <content src="Text/book-Z-H-26.html"/>
                 <navPoint id="navPoint-148" playOrder="148">
                     <navLabel>
-                        <text>4.1.1The Core of the Evaluator</text>
+                        <text>4.1.1 The Core of the Evaluator</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_3"/>
                     <navPoint id="navPoint-149" playOrder="149">
@@ -955,7 +955,7 @@
                 </navPoint>
                 <navPoint id="navPoint-158" playOrder="158">
                     <navLabel>
-                        <text>4.1.2Representing Expressions</text>
+                        <text>4.1.2 Representing Expressions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_13"/>
                     <navPoint id="navPoint-159" playOrder="159">
@@ -967,7 +967,7 @@
                 </navPoint>
                 <navPoint id="navPoint-160" playOrder="160">
                     <navLabel>
-                        <text>4.1.3Evaluator Data Structures</text>
+                        <text>4.1.3 Evaluator Data Structures</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_15"/>
                     <navPoint id="navPoint-161" playOrder="161">
@@ -991,43 +991,43 @@
                 </navPoint>
                 <navPoint id="navPoint-164" playOrder="164">
                     <navLabel>
-                        <text>4.1.4Running the Evaluator as a Program</text>
+                        <text>4.1.4 Running the Evaluator as a Program</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_19"/>
                 </navPoint>
                 <navPoint id="navPoint-165" playOrder="165">
                     <navLabel>
-                        <text>4.1.5Data as Programs</text>
+                        <text>4.1.5 Data as Programs</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_20"/>
                 </navPoint>
                 <navPoint id="navPoint-166" playOrder="166">
                     <navLabel>
-                        <text>4.1.6Internal Definitions</text>
+                        <text>4.1.6 Internal Definitions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_21"/>
                 </navPoint>
                 <navPoint id="navPoint-167" playOrder="167">
                     <navLabel>
-                        <text>4.1.7Separating Syntactic Analysis from Execution</text>
+                        <text>4.1.7 Separating Syntactic Analysis from Execution</text>
                     </navLabel>
                     <content src="Text/book-Z-H-26.html#heading_id_22"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-168" playOrder="168">
                 <navLabel>
-                    <text>4.2Variations on a Scheme – Lazy Evaluation</text>
+                    <text>4.2 Variations on a Scheme – Lazy Evaluation</text>
                 </navLabel>
                 <content src="Text/book-Z-H-27.html"/>
                 <navPoint id="navPoint-169" playOrder="169">
                     <navLabel>
-                        <text>4.2.1Normal Order and Applicative Order</text>
+                        <text>4.2.1 Normal Order and Applicative Order</text>
                     </navLabel>
                     <content src="Text/book-Z-H-27.html#heading_id_3"/>
                 </navPoint>
                 <navPoint id="navPoint-170" playOrder="170">
                     <navLabel>
-                        <text>4.2.2An Interpreter with Lazy Evaluation</text>
+                        <text>4.2.2 An Interpreter with Lazy Evaluation</text>
                     </navLabel>
                     <content src="Text/book-Z-H-27.html#heading_id_4"/>
                     <navPoint id="navPoint-171" playOrder="171">
@@ -1045,19 +1045,19 @@
                 </navPoint>
                 <navPoint id="navPoint-173" playOrder="173">
                     <navLabel>
-                        <text>4.2.3Streams as Lazy Lists</text>
+                        <text>4.2.3 Streams as Lazy Lists</text>
                     </navLabel>
                     <content src="Text/book-Z-H-27.html#heading_id_7"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-174" playOrder="174">
                 <navLabel>
-                    <text>4.3Variations on a Scheme – Nondeterministic Computing</text>
+                    <text>4.3 Variations on a Scheme – Nondeterministic Computing</text>
                 </navLabel>
                 <content src="Text/book-Z-H-28.html"/>
                 <navPoint id="navPoint-175" playOrder="175">
                     <navLabel>
-                        <text>4.3.1Amb and Search</text>
+                        <text>4.3.1 Amb and Search</text>
                     </navLabel>
                     <content src="Text/book-Z-H-28.html#heading_id_3"/>
                     <navPoint id="navPoint-176" playOrder="176">
@@ -1069,7 +1069,7 @@
                 </navPoint>
                 <navPoint id="navPoint-177" playOrder="177">
                     <navLabel>
-                        <text>4.3.2Examples of Nondeterministic Programs</text>
+                        <text>4.3.2 Examples of Nondeterministic Programs</text>
                     </navLabel>
                     <content src="Text/book-Z-H-28.html#heading_id_5"/>
                     <navPoint id="navPoint-178" playOrder="178">
@@ -1087,7 +1087,7 @@
                 </navPoint>
                 <navPoint id="navPoint-180" playOrder="180">
                     <navLabel>
-                        <text>4.3.3Implementing the Amb Evaluator</text>
+                        <text>4.3.3 Implementing the Amb Evaluator</text>
                     </navLabel>
                     <content src="Text/book-Z-H-28.html#heading_id_8"/>
                     <navPoint id="navPoint-181" playOrder="181">
@@ -1142,12 +1142,12 @@
             </navPoint>
             <navPoint id="navPoint-189" playOrder="189">
                 <navLabel>
-                    <text>4.4Logic Programming</text>
+                    <text>4.4 Logic Programming</text>
                 </navLabel>
                 <content src="Text/book-Z-H-29.html"/>
                 <navPoint id="navPoint-190" playOrder="190">
                     <navLabel>
-                        <text>4.4.1Deductive Information Retrieval</text>
+                        <text>4.4.1 Deductive Information Retrieval</text>
                     </navLabel>
                     <content src="Text/book-Z-H-29.html#heading_id_3"/>
                     <navPoint id="navPoint-191" playOrder="191">
@@ -1183,7 +1183,7 @@
                 </navPoint>
                 <navPoint id="navPoint-196" playOrder="196">
                     <navLabel>
-                        <text>4.4.2How the Query System Works</text>
+                        <text>4.4.2 How the Query System Works</text>
                     </navLabel>
                     <content src="Text/book-Z-H-29.html#heading_id_9"/>
                     <navPoint id="navPoint-197" playOrder="197">
@@ -1231,7 +1231,7 @@
                 </navPoint>
                 <navPoint id="navPoint-204" playOrder="204">
                     <navLabel>
-                        <text>4.4.3Is Logic Programming Mathematical Logic?</text>
+                        <text>4.4.3 Is Logic Programming Mathematical Logic?</text>
                     </navLabel>
                     <content src="Text/book-Z-H-29.html#heading_id_17"/>
                     <navPoint id="navPoint-205" playOrder="205">
@@ -1249,18 +1249,18 @@
                 </navPoint>
                 <navPoint id="navPoint-207" playOrder="207">
                     <navLabel>
-                        <text>4.4.4Implementing the Query System</text>
+                        <text>4.4.4 Implementing the Query System</text>
                     </navLabel>
                     <content src="Text/book-Z-H-29.html#heading_id_20"/>
                     <navPoint id="navPoint-208" playOrder="208">
                         <navLabel>
-                            <text>4.4.4.1The Driver Loop and Instantiation</text>
+                            <text>4.4.4.1 The Driver Loop and Instantiation</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_21"/>
                     </navPoint>
                     <navPoint id="navPoint-209" playOrder="209">
                         <navLabel>
-                            <text>4.4.4.2The Evaluator</text>
+                            <text>4.4.4.2 The Evaluator</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_22"/>
                     </navPoint>
@@ -1284,7 +1284,7 @@
                     </navPoint>
                     <navPoint id="navPoint-213" playOrder="213">
                         <navLabel>
-                            <text>4.4.4.3Finding Assertions by Pattern Matching</text>
+                            <text>4.4.4.3 Finding Assertions by Pattern Matching</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_26"/>
                     </navPoint>
@@ -1296,31 +1296,31 @@
                     </navPoint>
                     <navPoint id="navPoint-215" playOrder="215">
                         <navLabel>
-                            <text>4.4.4.4Rules and Unification</text>
+                            <text>4.4.4.4 Rules and Unification</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_28"/>
                     </navPoint>
                     <navPoint id="navPoint-216" playOrder="216">
                         <navLabel>
-                            <text>4.4.4.5Maintaining the Data Base</text>
+                            <text>4.4.4.5 Maintaining the Data Base</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_29"/>
                     </navPoint>
                     <navPoint id="navPoint-217" playOrder="217">
                         <navLabel>
-                            <text>4.4.4.6Stream Operations</text>
+                            <text>4.4.4.6 Stream Operations</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_30"/>
                     </navPoint>
                     <navPoint id="navPoint-218" playOrder="218">
                         <navLabel>
-                            <text>4.4.4.7Query Syntax Procedures</text>
+                            <text>4.4.4.7 Query Syntax Procedures</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_31"/>
                     </navPoint>
                     <navPoint id="navPoint-219" playOrder="219">
                         <navLabel>
-                            <text>4.4.4.8Frames and Bindings</text>
+                            <text>4.4.4.8 Frames and Bindings</text>
                         </navLabel>
                         <content src="Text/book-Z-H-29.html#heading_id_32"/>
                     </navPoint>
@@ -1334,12 +1334,12 @@
             <content src="Text/book-Z-H-30.html"/>
             <navPoint id="navPoint-221" playOrder="221">
                 <navLabel>
-                    <text>5.1Designing Register Machines</text>
+                    <text>5.1 Designing Register Machines</text>
                 </navLabel>
                 <content src="Text/book-Z-H-31.html"/>
                 <navPoint id="navPoint-222" playOrder="222">
                     <navLabel>
-                        <text>5.1.1A Language for Describing Register Machines</text>
+                        <text>5.1.1 A Language for Describing Register Machines</text>
                     </navLabel>
                     <content src="Text/book-Z-H-31.html#heading_id_3"/>
                     <navPoint id="navPoint-223" playOrder="223">
@@ -1351,19 +1351,19 @@
                 </navPoint>
                 <navPoint id="navPoint-224" playOrder="224">
                     <navLabel>
-                        <text>5.1.2Abstraction in Machine Design</text>
+                        <text>5.1.2 Abstraction in Machine Design</text>
                     </navLabel>
                     <content src="Text/book-Z-H-31.html#heading_id_5"/>
                 </navPoint>
                 <navPoint id="navPoint-225" playOrder="225">
                     <navLabel>
-                        <text>5.1.3Subroutines</text>
+                        <text>5.1.3 Subroutines</text>
                     </navLabel>
                     <content src="Text/book-Z-H-31.html#heading_id_6"/>
                 </navPoint>
                 <navPoint id="navPoint-226" playOrder="226">
                     <navLabel>
-                        <text>5.1.4Using a Stack to Implement Recursion</text>
+                        <text>5.1.4 Using a Stack to Implement Recursion</text>
                     </navLabel>
                     <content src="Text/book-Z-H-31.html#heading_id_7"/>
                     <navPoint id="navPoint-227" playOrder="227">
@@ -1375,19 +1375,19 @@
                 </navPoint>
                 <navPoint id="navPoint-228" playOrder="228">
                     <navLabel>
-                        <text>5.1.5Instruction Summary</text>
+                        <text>5.1.5 Instruction Summary</text>
                     </navLabel>
                     <content src="Text/book-Z-H-31.html#heading_id_9"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-229" playOrder="229">
                 <navLabel>
-                    <text>5.2A Register-Machine Simulator</text>
+                    <text>5.2 A Register-Machine Simulator</text>
                 </navLabel>
                 <content src="Text/book-Z-H-32.html"/>
                 <navPoint id="navPoint-230" playOrder="230">
                     <navLabel>
-                        <text>5.2.1The Machine Model</text>
+                        <text>5.2.1 The Machine Model</text>
                     </navLabel>
                     <content src="Text/book-Z-H-32.html#heading_id_3"/>
                     <navPoint id="navPoint-231" playOrder="231">
@@ -1411,13 +1411,13 @@
                 </navPoint>
                 <navPoint id="navPoint-234" playOrder="234">
                     <navLabel>
-                        <text>5.2.2The Assembler</text>
+                        <text>5.2.2 The Assembler</text>
                     </navLabel>
                     <content src="Text/book-Z-H-32.html#heading_id_7"/>
                 </navPoint>
                 <navPoint id="navPoint-235" playOrder="235">
                     <navLabel>
-                        <text>5.2.3Generating Execution Procedures for Instructions</text>
+                        <text>5.2.3 Generating Execution Procedures for Instructions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-32.html#heading_id_8"/>
                     <navPoint id="navPoint-236" playOrder="236">
@@ -1447,19 +1447,19 @@
                 </navPoint>
                 <navPoint id="navPoint-240" playOrder="240">
                     <navLabel>
-                        <text>5.2.4Monitoring Machine Performance</text>
+                        <text>5.2.4 Monitoring Machine Performance</text>
                     </navLabel>
                     <content src="Text/book-Z-H-32.html#heading_id_13"/>
                 </navPoint>
             </navPoint>
             <navPoint id="navPoint-241" playOrder="241">
                 <navLabel>
-                    <text>5.3Storage Allocation and Garbage Collection</text>
+                    <text>5.3 Storage Allocation and Garbage Collection</text>
                 </navLabel>
                 <content src="Text/book-Z-H-33.html"/>
                 <navPoint id="navPoint-242" playOrder="242">
                     <navLabel>
-                        <text>5.3.1Memory as Vectors</text>
+                        <text>5.3.1 Memory as Vectors</text>
                     </navLabel>
                     <content src="Text/book-Z-H-33.html#heading_id_3"/>
                     <navPoint id="navPoint-243" playOrder="243">
@@ -1483,7 +1483,7 @@
                 </navPoint>
                 <navPoint id="navPoint-246" playOrder="246">
                     <navLabel>
-                        <text>5.3.2Maintaining the Illusion of Infinite Memory</text>
+                        <text>5.3.2 Maintaining the Illusion of Infinite Memory</text>
                     </navLabel>
                     <content src="Text/book-Z-H-33.html#heading_id_7"/>
                     <navPoint id="navPoint-247" playOrder="247">
@@ -1496,7 +1496,7 @@
             </navPoint>
             <navPoint id="navPoint-248" playOrder="248">
                 <navLabel>
-                    <text>5.4The Explicit-Control Evaluator</text>
+                    <text>5.4 The Explicit-Control Evaluator</text>
                 </navLabel>
                 <content src="Text/book-Z-H-34.html"/>
                 <navPoint id="navPoint-249" playOrder="249">
@@ -1507,7 +1507,7 @@
                 </navPoint>
                 <navPoint id="navPoint-250" playOrder="250">
                     <navLabel>
-                        <text>5.4.1The Core of the Explicit-Control Evaluator</text>
+                        <text>5.4.1 The Core of the Explicit-Control Evaluator</text>
                     </navLabel>
                     <content src="Text/book-Z-H-34.html#heading_id_4"/>
                     <navPoint id="navPoint-251" playOrder="251">
@@ -1531,7 +1531,7 @@
                 </navPoint>
                 <navPoint id="navPoint-254" playOrder="254">
                     <navLabel>
-                        <text>5.4.2Sequence Evaluation and Tail Recursion</text>
+                        <text>5.4.2 Sequence Evaluation and Tail Recursion</text>
                     </navLabel>
                     <content src="Text/book-Z-H-34.html#heading_id_8"/>
                     <navPoint id="navPoint-255" playOrder="255">
@@ -1543,7 +1543,7 @@
                 </navPoint>
                 <navPoint id="navPoint-256" playOrder="256">
                     <navLabel>
-                        <text>5.4.3Conditionals, Assignments, and Definitions</text>
+                        <text>5.4.3 Conditionals, Assignments, and Definitions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-34.html#heading_id_10"/>
                     <navPoint id="navPoint-257" playOrder="257">
@@ -1555,7 +1555,7 @@
                 </navPoint>
                 <navPoint id="navPoint-258" playOrder="258">
                     <navLabel>
-                        <text>5.4.4Running the Evaluator</text>
+                        <text>5.4.4 Running the Evaluator</text>
                     </navLabel>
                     <content src="Text/book-Z-H-34.html#heading_id_12"/>
                     <navPoint id="navPoint-259" playOrder="259">
@@ -1568,7 +1568,7 @@
             </navPoint>
             <navPoint id="navPoint-260" playOrder="260">
                 <navLabel>
-                    <text>5.5Compilation</text>
+                    <text>5.5 Compilation</text>
                 </navLabel>
                 <content src="Text/book-Z-H-35.html"/>
                 <navPoint id="navPoint-261" playOrder="261">
@@ -1579,7 +1579,7 @@
                 </navPoint>
                 <navPoint id="navPoint-262" playOrder="262">
                     <navLabel>
-                        <text>5.5.1Structure of the Compiler</text>
+                        <text>5.5.1 Structure of the Compiler</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_4"/>
                     <navPoint id="navPoint-263" playOrder="263">
@@ -1597,7 +1597,7 @@
                 </navPoint>
                 <navPoint id="navPoint-265" playOrder="265">
                     <navLabel>
-                        <text>5.5.2Compiling Expressions</text>
+                        <text>5.5.2 Compiling Expressions</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_7"/>
                     <navPoint id="navPoint-266" playOrder="266">
@@ -1633,7 +1633,7 @@
                 </navPoint>
                 <navPoint id="navPoint-271" playOrder="271">
                     <navLabel>
-                        <text>5.5.3Compiling Combinations</text>
+                        <text>5.5.3 Compiling Combinations</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_13"/>
                     <navPoint id="navPoint-272" playOrder="272">
@@ -1651,25 +1651,25 @@
                 </navPoint>
                 <navPoint id="navPoint-274" playOrder="274">
                     <navLabel>
-                        <text>5.5.4Combining Instruction Sequences</text>
+                        <text>5.5.4 Combining Instruction Sequences</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_16"/>
                 </navPoint>
                 <navPoint id="navPoint-275" playOrder="275">
                     <navLabel>
-                        <text>5.5.5An Example of Compiled Code</text>
+                        <text>5.5.5 An Example of Compiled Code</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_17"/>
                 </navPoint>
                 <navPoint id="navPoint-276" playOrder="276">
                     <navLabel>
-                        <text>5.5.6Lexical Addressing</text>
+                        <text>5.5.6 Lexical Addressing</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_18"/>
                 </navPoint>
                 <navPoint id="navPoint-277" playOrder="277">
                     <navLabel>
-                        <text>5.5.7Interfacing Compiled Code to the Evaluator</text>
+                        <text>5.5.7 Interfacing Compiled Code to the Evaluator</text>
                     </navLabel>
                     <content src="Text/book-Z-H-35.html#heading_id_19"/>
                     <navPoint id="navPoint-278" playOrder="278">
