@@ -19,7 +19,7 @@
 * How do I use it?
 
   This is the raw source for the book. If you’d just like to read it,
-  you’ll find what you’re looking for [[you’ll%20find%20what%20you’re%20looking%20for%20][in the downloads tab]].
+  you’ll find what you’re looking for [[http://github.com/ieure/sicp/downloads][in the downloads tab]].
 
 * What’s left to do?
 
