@@ -1,4 +1,3 @@
-
 LATEX_DIR := src/latex
 IMAGES_DIR := src/OEBPS/images
 BUILD_DIR := $(LATEX_DIR)/build
@@ -11,19 +10,6 @@ TEX_FILES := $(wildcard $(LATEX_DIR)/*.tex)
 SVG_FILES := $(patsubst %.tex,%.svg,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
 CONTENT := $(shell find src -type f -not -name .DS_Store)
 XML     := $(shell find src -type f -name \*html)
-LATEX_DIR := src/latex
-IMAGES_DIR := src/OEBPS/images
-BUILD_DIR := $(LATEX_DIR)/build
-#
-# TEX_FILES becomes a list of *.tex files that are in LATEX_DIR
-# SVG_FILES becomes the list of what would be the equivalent *.svg
-# file names in IMAGES_DIR (even if they don't exist yet)
-#
-TEX_FILES := $(wildcard $(LATEX_DIR)/*.tex)
-SVG_FILES := $(patsubst %.tex,%.svg,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
-
-
-.PHONY : clean tex tex_setup
 
 .PHONY : clean tex tex_setup
 
@@ -46,4 +32,4 @@ tex_setup:
 tex: tex_setup $(SVG_FILES)
 
 clean:
-	rm -rf sicp.epub $(SVG_FILES) $(BUILD_DIR)
+	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES)
