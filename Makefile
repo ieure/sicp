@@ -9,14 +9,18 @@ BUILD_DIR := $(LATEX_DIR)/build
 #
 TEX_FILES := $(wildcard $(LATEX_DIR)/*.tex)
 SVG_FILES := $(patsubst %.tex,%.svg,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
-
+CONTENT := $(shell find src -type f -not -name .DS_Store)
+XML     := $(shell find src -type f -name \*html)
 
 .PHONY : clean tex tex_setup
 
 all: sicp.epub
 
-sicp.epub:
-	cd src && zip -r ../$@ *
+sicp.epub: $(CONTENT)
+	cd src && zip -r ../$@ $(^:src/%=%)
+
+check:
+	xmllint --noout $(XML)
 
 $(IMAGES_DIR)/%.svg: tex_setup $(LATEX_DIR)/%.tex
 	pdflatex -output-dir $(BUILD_DIR)/ $(LATEX_DIR)/$*.tex
@@ -29,6 +33,4 @@ tex_setup:
 tex: $(SVG_FILES)
 
 clean:
-	rm -f sicp.epub
-	-rm -rf $(BUILD_DIR)
-	-rm -f $(SVG_FILES)
+	rm -rf sicp.epub $(SVG_FILES) $(BUILD_DIR)
