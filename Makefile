@@ -18,7 +18,7 @@ all: sicp.epub
 sicp.epub:
 	cd src && zip -r ../$@ *
 
-$(IMAGES_DIR)/%.svg: $(LATEX_DIR)/%.tex
+$(IMAGES_DIR)/%.svg: tex_setup $(LATEX_DIR)/%.tex
 	pdflatex -output-dir $(BUILD_DIR)/ $(LATEX_DIR)/$*.tex
 	pdfcrop --clip $(BUILD_DIR)/$*.pdf $(BUILD_DIR)/$*_cropped.pdf
 	pdf2svg $(BUILD_DIR)/$*_cropped.pdf $@
@@ -26,7 +26,7 @@ $(IMAGES_DIR)/%.svg: $(LATEX_DIR)/%.tex
 tex_setup:
 	mkdir -p $(BUILD_DIR)
 
-tex: tex_setup $(SVG_FILES)
+tex: $(SVG_FILES)
 
 clean:
 	rm -f sicp.epub
