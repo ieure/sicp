@@ -1,6 +1,12 @@
+# TODO: Add potrace for gif -> svg conversion; convert still gives
+#       rasterized images
+
 LATEX_DIR := src/latex
 IMAGES_DIR := src/OEBPS/images
 BUILD_DIR := $(LATEX_DIR)/build
+HUGE_MARK := $(BUILD_DIR)/huge.mark
+NORMAL_MARK := $(BUILD_DIR)/normal.mark
+
 
 #
 # TEX_FILES becomes a list of *.tex files that are in LATEX_DIR
@@ -24,18 +30,40 @@ sicp.epub: $(CONTENT)
 check:
 	xmllint --noout $(XML)
 
-$(BUILD_DIR)/%_cropped.pdf: $(BUILD_DIR) $(LATEX_DIR)/%.tex
-	cd $(LATEX_DIR); pdflatex -output-dir ./build ./$*.tex
-	pdfcrop --clip $(BUILD_DIR)/$*.pdf $(BUILD_DIR)/$*_cropped.pdf
+$(HUGE_MARK): $(BUILD_DIR) $(LATEX_DIR)/sicpstyle-huge.sty
+	cp $(LATEX_DIR)/sicpstyle-huge.sty $(LATEX_DIR)/sicpstyle.sty
+	touch $(HUGE_MARK)
 
-$(IMAGES_DIR)/%.svg: $(BUILD_DIR)/%_cropped.pdf
-	convert $(BUILD_DIR)/$*_cropped.pdf $@
+$(BUILD_DIR)/huge/%_cropped.pdf: $(HUGE_MARK) $(BUILD_DIR)/huge/ $(LATEX_DIR)/%.tex
+	cd $(LATEX_DIR) && pdflatex -output-dir ./build/huge/ ./$*.tex
+	pdfcrop --clip $(BUILD_DIR)/huge/$*.pdf $(BUILD_DIR)/huge/$*_cropped.pdf
+	rm -f $(HUGE_MARK)
+
+$(BUILD_DIR)/huge/%.pbm: $(BUILD_DIR)/huge/%_cropped.pdf
+	convert $(BUILD_DIR)/huge/$*_cropped.pdf $@
+
+$(IMAGES_DIR)/%.svg: $(BUILD_DIR)/huge/%.pbm
+	potrace -s -o $@ $(BUILD_DIR)/huge/$*.pbm 
+
+
+$(NORMAL_MARK): $(BUILD_DIR) $(LATEX_DIR)/sicpstyle-normal.sty
+	cp $(LATEX_DIR)/sicpstyle-normal.sty $(LATEX_DIR)/sicpstyle.sty
+	touch $(NORMAL_MARK)
+
+$(BUILD_DIR)/%_cropped.pdf: $(NORMAL_MARK) $(BUILD_DIR) $(LATEX_DIR)/%.tex
+	cd $(LATEX_DIR) && pdflatex -output-dir ./build ./$*.tex
+	pdfcrop --clip $(BUILD_DIR)/$*.pdf $(BUILD_DIR)/$*_cropped.pdf
+	rm -f $(NORMAL_MARK)
 
 $(IMAGES_DIR)/%.gif: $(BUILD_DIR)/%_cropped.pdf
 	convert $(BUILD_DIR)/$*_cropped.pdf $@
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+
+$(BUILD_DIR)/huge/:
+	mkdir -p $(BUILD_DIR)/huge/
+
 
 tex: $(SVG_FILES) $(GIF_FILES)
 
