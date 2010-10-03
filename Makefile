@@ -30,11 +30,10 @@ sicp.epub: $(CONTENT)
 check:
 	xmllint --noout $(XML)
 
-$(HUGE_MARK): $(BUILD_DIR) $(LATEX_DIR)/sicpstyle-huge.sty
-	cp $(LATEX_DIR)/sicpstyle-huge.sty $(LATEX_DIR)/sicpstyle.sty
-	touch $(HUGE_MARK)
 
-$(BUILD_DIR)/huge/%_cropped.pdf: $(HUGE_MARK) $(BUILD_DIR)/huge/ $(LATEX_DIR)/%.tex
+$(BUILD_DIR)/huge/%_cropped.pdf: $(BUILD_DIR)/huge/ $(LATEX_DIR)/%.tex
+	sed 's/\\sicpsize}{\\fontsize{16}{18}/\\sicpsize}{\\fontsize{200}{220}/' < $(LATEX_DIR)/sicpstyle.sty > $(LATEX_DIR)/sicpstyle2.sty
+	mv $(LATEX_DIR)/sicpstyle2.sty $(LATEX_DIR)/sicpstyle.sty
 	cd $(LATEX_DIR) && pdflatex -output-dir ./build/huge/ ./$*.tex
 	pdfcrop --clip $(BUILD_DIR)/huge/$*.pdf $(BUILD_DIR)/huge/$*_cropped.pdf
 	rm -f $(HUGE_MARK)
@@ -46,11 +45,9 @@ $(IMAGES_DIR)/%.svg: $(BUILD_DIR)/huge/%.pbm
 	potrace -s -o $@ $(BUILD_DIR)/huge/$*.pbm 
 
 
-$(NORMAL_MARK): $(BUILD_DIR) $(LATEX_DIR)/sicpstyle-normal.sty
-	cp $(LATEX_DIR)/sicpstyle-normal.sty $(LATEX_DIR)/sicpstyle.sty
-	touch $(NORMAL_MARK)
-
-$(BUILD_DIR)/%_cropped.pdf: $(NORMAL_MARK) $(BUILD_DIR) $(LATEX_DIR)/%.tex
+$(BUILD_DIR)/%_cropped.pdf: $(BUILD_DIR) $(LATEX_DIR)/%.tex
+	sed 's/\\sicpsize}{\\fontsize{200}{220}/\\sicpsize}{\\fontsize{16}{18}/' < $(LATEX_DIR)/sicpstyle.sty > $(LATEX_DIR)/sicpstyle2.sty
+	mv $(LATEX_DIR)/sicpstyle2.sty $(LATEX_DIR)/sicpstyle.sty
 	cd $(LATEX_DIR) && pdflatex -output-dir ./build ./$*.tex
 	pdfcrop --clip $(BUILD_DIR)/$*.pdf $(BUILD_DIR)/$*_cropped.pdf
 	rm -f $(NORMAL_MARK)
@@ -65,7 +62,9 @@ $(BUILD_DIR)/huge/:
 	mkdir -p $(BUILD_DIR)/huge/
 
 
-tex: $(SVG_FILES) $(GIF_FILES)
+svg: $(SVG_FILES)
+
+gif: $(GIF_FILES)
 
 clean:
 	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES) $(GIF_FILES)
