@@ -42,7 +42,7 @@ $(BUILD_DIR)/huge/%.pbm: $(BUILD_DIR)/huge/%_cropped.pdf
 	convert $(BUILD_DIR)/huge/$*_cropped.pdf $@
 
 $(IMAGES_DIR)/%.svg: $(BUILD_DIR)/huge/%.pbm
-	potrace -s -o $@ $(BUILD_DIR)/huge/$*.pbm 
+	potrace -s -o $@ $(BUILD_DIR)/huge/$*.pbm
 
 
 $(BUILD_DIR)/%_cropped.pdf: $(BUILD_DIR) $(LATEX_DIR)/%.tex
