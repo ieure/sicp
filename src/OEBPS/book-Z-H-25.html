@@ -1,44 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
+<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
 <!-- Generated from TeX source by tex2page, v 4o,
-     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-    <title>Structure and Interpretation of Computer Programs</title>
-    <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
-  </head>
-  <body>
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type: text/html; charset=utf-8">
+<title>Structure and Interpretation of Computer Programs</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default">
+</head>
+<body>
 
 
 
 <a name="%_chap_4" id="%_chap_4"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_4">Chapter 4</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_4">Metalinguistic Abstraction</a></p><p>
+<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_4">Chapter 4</a></div>
+</h1>
+<p>
+<a href="book-Z-H-4.html#%_toc_%_chap_4">Metalinguistic Abstraction</a></p>
+<p>
 
-</p><p>
-</p><div align="right">
+</p>
+<p>
+</p>
+<div align="right">
 <table width="60%"><tr><td>
 <span class="epigraph">
 <p>
 
-<tt>...</tt> It's in words that the magic
+<code>...</code> It's in words that the magic
 is – Abracadabra, Open Sesame, and the rest – but the magic words in
 one story aren't magical in the next.  The real magic is to understand
 which words work, and when, and for what; the trick is to learn the
-trick.<br /><tt>...</tt> And those words are made from the letters of our
+trick.<br><code>...</code> And those words are made from the letters of our
 alphabet: a couple-dozen squiggles we can draw with the pen.  This is
 the key!  And the treasure, too, if we can only get our hands on it!
-It's as if – as if the key to the treasure <em>is</em> the treasure!</p><p>
+It's as if – as if the key to the treasure <em>is</em> the treasure!</p>
+<p>
 
-<a name="%_idx_4188" id="%_idx_4188"></a>John Barth, <em>Chimera</em></p><p>
+<a name="%_idx_4188" id="%_idx_4188"></a>John Barth, <em>Chimera</em></p>
+<p>
 
 </p></span>
-</td></tr></table></div>
+</td></tr></table>
+</div>
 
-<p></p><p>
+<p></p>
+<p>
 
 In our study of program design, we have seen that expert programmers
 control the complexity of their designs with the same general
@@ -58,7 +65,8 @@ engineering design; we can often enhance our ability to deal with a
 complex problem by adopting a new language that enables us to describe
 (and hence to think about) the problem in a different way, using
 primitives, means of combination, and means of abstraction that are
-particularly well suited to the problem at hand.<a name="call_footnote_Temp_508" href="#footnote_Temp_508" id="call_footnote_Temp_508"><sup><small>1</small></sup></a></p><p>
+particularly well suited to the problem at hand.<a name="call_footnote_Temp_508" href="#footnote_Temp_508" id="call_footnote_Temp_508"><sup><small>1</small></sup></a></p>
+<p>
 
 <a name="%_idx_4190" id="%_idx_4190"></a><a name="%_idx_4192" id="%_idx_4192"></a>Programming is endowed with a multitude of languages.  There are
 physical languages, such as the machine languages for particular
@@ -72,7 +80,8 @@ about the representation of data as collections of bits and the
 representation of programs as sequences of primitive instructions.
 These languages have means of combination and abstraction, such as
 procedure definition, that are appropriate to the larger-scale
-organization of systems.</p><p>
+organization of systems.</p>
+<p>
 
 <a name="%_idx_4194" id="%_idx_4194"></a><a name="%_idx_4196" id="%_idx_4196"></a><em>Metalinguistic abstraction</em> – establishing new
 languages – plays an important role in all branches of engineering
@@ -80,11 +89,13 @@ design.  It is particularly important to computer programming, because
 in programming not only can we formulate new languages but we can also
 implement these languages by constructing evaluators.  An <a name="%_idx_4198" id="%_idx_4198"></a><em>evaluator</em> (or <em>interpreter</em>) for a programming language is a procedure
 that, when applied to an expression of the language, performs the
-actions required to evaluate that expression.</p><p>
+actions required to evaluate that expression.</p>
+<p>
 
 It is no exaggeration to regard this as the most fundamental idea in
 programming:
-</p><blockquote>
+</p>
+<blockquote>
 The evaluator, which determines the meaning of expressions in a
 programming language, is just another program.
 </blockquote>
@@ -108,7 +119,8 @@ of abstraction.  Seen from this perspective, the technology for coping
 with large-scale computer systems merges with the technology for
 building new computer languages, and <a name="%_idx_4200" id="%_idx_4200"></a>computer science itself becomes
 no more (and no less) than the discipline of constructing appropriate
-descriptive languages.</p><p>
+descriptive languages.</p>
+<p>
 
 We now embark on a tour of the technology by which languages are
 established in terms of other languages.  In this chapter we shall use
@@ -127,7 +139,8 @@ evaluator has been simplified for the purposes of illustration and
 discussion, and some features have been left out that would be
 important to include in a production-quality Lisp system.
 Nevertheless, this simple evaluator is adequate to execute most of the
-programs in this book.<a name="call_footnote_Temp_509" href="#footnote_Temp_509" id="call_footnote_Temp_509"><sup><small>2</small></sup></a></p><p>
+programs in this book.<a name="call_footnote_Temp_509" href="#footnote_Temp_509" id="call_footnote_Temp_509"><sup><small>2</small></sup></a></p>
+<p>
 
 
 An important advantage of making the evaluator accessible as a Lisp
@@ -143,7 +156,8 @@ sometimes cumbersome, because they were constrained by
 the applicative-order evaluation of Scheme.
 In section <a href="book-Z-H-27.html#%_sec_4.2">4.2</a>, we'll change
 the underlying language to provide for a more elegant approach, by modifying
-the evaluator to provide for <em>normal-order evaluation</em>.</p><p>
+the evaluator to provide for <em>normal-order evaluation</em>.</p>
+<p>
 
 Section <a href="book-Z-H-28.html#%_sec_4.3">4.3</a> implements a more
 ambitious linguistic change, whereby expressions have many values,
@@ -154,17 +168,24 @@ computation and time, this is like having time branch into a set of
 “possible futures” and then searching for appropriate time lines.
 With our nondeterministic evaluator, keeping track of multiple values
 and performing searches are handled automatically by the underlying
-mechanism of the language.</p><p>
+mechanism of the language.</p>
+<p>
 
 In section <a href="book-Z-H-29.html#%_sec_4.4">4.4</a> we implement a <em>logic-programming</em> language in which knowledge is expressed in terms
 of relations, rather than in terms of computations with inputs and
 outputs.  Even though this makes the language drastically different
 from Lisp, or indeed from any conventional language, we will see that
 the logic-programming evaluator shares the essential structure of the
-Lisp evaluator.</p><p>
+Lisp evaluator.</p>
+<p>
 
-</p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_508" href="#call_footnote_Temp_508" id="footnote_Temp_508"><sup><small>1</small></sup></a> The same idea
+</p>
+<p></p>
+<div class="smallprint"><hr></div>
+<p>
+</p>
+<div class="footnote">
+<p><a name="footnote_Temp_508" href="#call_footnote_Temp_508" id="footnote_Temp_508"><sup><small>1</small></sup></a> The same idea
 is pervasive throughout all of engineering.  For example, electrical
 engineers use many different languages for describing circuits.  Two
 of these are the language of electrical <em>networks</em> and the
@@ -188,16 +209,17 @@ assumed.  This layered collection of languages is another example of
 the stratified design technique illustrated by the picture
 language of section <a href="book-Z-H-15.html#%_sec_2.2.4">2.2.4</a>.
 
-</p><p><a name="footnote_Temp_509" href="#call_footnote_Temp_509" id="footnote_Temp_509"><sup><small>2</small></sup></a> The most important features that our evaluator leaves out
+</p>
+<p><a name="footnote_Temp_509" href="#call_footnote_Temp_509" id="footnote_Temp_509"><sup><small>2</small></sup></a> The most important features that our evaluator leaves out
 are mechanisms for handling errors and supporting debugging.  For a
 more extensive discussion of evaluators, see <a name="%_idx_4204" id="%_idx_4204"></a><a name="%_idx_4206" id="%_idx_4206"></a><a name="%_idx_4208" id="%_idx_4208"></a>Friedman, Wand, and Haynes
 1992, which gives an exposition of programming languages that proceeds
 via a sequence of evaluators written in Scheme.
 
-</p></div>
+</p>
+</div>
 
 
 
 </body>
 </html>
-

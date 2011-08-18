@@ -1,1315 +1,909 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
+<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
 <!-- Generated from TeX source by tex2page, v 4o,
-     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-    <title>Structure and Interpretation of Computer Programs</title>
-    <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
-  </head>
-  <body>
-
-
-
-<a name="%_sec_2.3" id="%_sec_2.3"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_2.3">2.3  Symbolic Data</a></h2><p>
-
-
-<a name="%_idx_1984" id="%_idx_1984"></a>
-<a name="%_idx_1986" id="%_idx_1986"></a>All the compound data objects we have used so far were constructed
-ultimately from numbers.  In this section we extend the representational
-capability of our language by introducing the ability to work with
-arbitrary symbols as data.</p><p>
-
-<a name="%_sec_2.3.1" id="%_sec_2.3.1"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.1">2.3.1  Quotation</a></h3><p>
-
-
-<a name="%_idx_1988" id="%_idx_1988"></a>
-If we can form compound data using symbols, we can have lists such as</p><p>
-
-</p><p></p><p><tt><a name="%_idx_1990" id="%_idx_1990"></a>(a b c d)<br />
-(23 45 17)<br />
-((Norah 12) (Molly 9) (Anna 7) (Lauren 6) (Charlotte 4))<br /></tt></p><p></p><p>
-Lists containing symbols can look just like the expressions of our
-language:</p><p>
-
-</p><p></p><p><tt>(* (+ 23 45) (+ x 9))<br /><br />
-(define (fact n) (if (= n 1) 1 (* n (fact (- n 1)))))<br /></tt></p><p></p><p></p><p>
-
-In order to manipulate symbols we need a new element in our language:
-the ability to <em>quote</em> a data object.  Suppose we want to
-construct the list <tt>(a b)</tt>.  We can't accomplish this with <tt>(list a b)</tt>, because this expression constructs
-a list of the <em>values</em> of <tt>a</tt> and <tt>b</tt> rather than
-the symbols themselves.  This issue is well known in the context of
-<a name="%_idx_1992" id="%_idx_1992"></a><a name="%_idx_1994" id="%_idx_1994"></a>natural languages, where words and sentences may be regarded either as
-semantic entities or as character strings (syntactic entities).  The
-common practice in natural languages is to use quotation marks to
-indicate that a word or a sentence is to be treated literally as a
-string of characters.  For instance, the first letter of “John” is
-clearly “J.”  If we tell somebody “say your name aloud,” we expect
-to hear that person's name.  However, if we tell somebody “say `your
-name' aloud,” we expect to hear the words “your name.”  Note that
-we are forced to nest quotation marks to describe what somebody else
-might say.<a name="call_footnote_Temp_227" href="#footnote_Temp_227" id="call_footnote_Temp_227"><sup><small>32</small></sup></a></p><p>
-
-<a name="%_idx_1998" id="%_idx_1998"></a>We can follow this same practice to identify lists and symbols that are
-to be treated as data objects rather than as expressions to be
-evaluated.  However, our format for quoting differs from that of
-natural languages in that we place a quotation mark (traditionally,
-the single <a name="%_idx_2000" id="%_idx_2000"></a>quote symbol <tt>'</tt>) only at the beginning of the object
-to be quoted.  We can get away with this in Scheme syntax because we
-rely on blanks and parentheses to delimit objects.  Thus, the meaning
-of the single quote character is to quote the next object.<a name="call_footnote_Temp_228" href="#footnote_Temp_228" id="call_footnote_Temp_228"><sup><small>33</small></sup></a></p><p>
-
-<a name="%_idx_2010" id="%_idx_2010"></a>Now we can distinguish between symbols and their values:</p><p>
-
-</p><p></p><p><tt>(define a 1)<br /><br />
-(define b 2)<br /><br />
-(list a b)<br /><i>(1 2)</i><br /><br />
-(list 'a 'b)<br /><i>(a b)</i><br /><br />
-(list 'a b)<br /><i>(a 2)</i><br /></tt></p><p></p><p></p><p>
-
-<a name="%_idx_2012" id="%_idx_2012"></a>Quotation also allows us to type in compound objects, using the
-conventional printed representation for lists:<a name="call_footnote_Temp_229" href="#footnote_Temp_229" id="call_footnote_Temp_229"><sup><small>34</small></sup></a></p><p>
-
-</p><p></p><p><tt>(car '(a b c))<br /><i>a</i><br /><br />
-(cdr '(a b c))<br /><i>(b c)</i><br /></tt></p><p></p><p>
-<a name="%_idx_2018" id="%_idx_2018"></a><a name="%_idx_2020" id="%_idx_2020"></a>In keeping with this, we can obtain the empty list by evaluating <tt>'()</tt>, and thus dispense with the variable <tt>nil</tt>.</p><p>
-
-One additional primitive used in manipulating symbols is <a name="%_idx_2022" id="%_idx_2022"></a><a name="%_idx_2024" id="%_idx_2024"></a><a name="%_idx_2026" id="%_idx_2026"></a><a name="%_idx_2028" id="%_idx_2028"></a><tt>eq?</tt>,
-which takes two symbols as arguments and tests whether they are the
-same.<a name="call_footnote_Temp_230" href="#footnote_Temp_230" id="call_footnote_Temp_230"><sup><small>35</small></sup></a> Using <tt>eq?</tt>,
-we can implement a useful procedure called <tt>memq</tt>.  This takes two
-arguments, a symbol and a list.  If the symbol is not contained in the
-list (i.e., is not <tt>eq?</tt> to any item in the list), then <tt>memq</tt> returns false.  Otherwise, it returns the sublist of
-the list beginning with the first occurrence of the symbol:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2030" id="%_idx_2030"></a>(define (memq item x)<br />
-  (cond ((null? x) false)<br />
-        ((eq? item (car x)) x)<br />
-        (else (memq item (cdr x)))))<br /></tt></p><p></p><p>
-For example, the value of</p><p>
-
-</p><p></p><p><tt>(memq 'apple '(pear banana prune))<br /></tt></p><p></p><p>
-is false, whereas the value of</p><p>
-
-</p><p></p><p><tt>(memq 'apple '(x (apple sauce) y apple pear))<br /></tt></p><p></p><p>
-is <tt>(apple pear)</tt>.</p><p>
-
-</p><p><a name="%_thm_2.53" id="%_thm_2.53"></a>
-<b>Exercise 2.53.</b>  What would the interpreter print in response to evaluating each of the
-following expressions?</p><p>
-
-</p><p></p><p><tt>(list 'a 'b 'c)<br /><br />
-(list (list 'george))<br />
-(cdr '((x1 x2) (y1 y2)))<br /><br />
-(cadr '((x1 x2) (y1 y2)))<br />
-(pair? (car '(a short list)))<br />
-(memq 'red '((red shoes) (blue socks)))<br /><br />
-(memq 'red '(red shoes blue socks))<br /></tt></p><p></p><p>
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.54" id="%_thm_2.54"></a>
-<b>Exercise 2.54.</b>  Two lists are said to be <a name="%_idx_2032" id="%_idx_2032"></a><a name="%_idx_2034" id="%_idx_2034"></a><a name="%_idx_2036" id="%_idx_2036"></a><tt>equal?</tt> if they contain equal elements
-arranged in the same order.  For example,</p><p>
-
-</p><p></p><p><tt>(equal? '(this is a list) '(this is a list))<br /></tt></p><p></p><p>
-is true, but</p><p>
-
-</p><p></p><p><tt>(equal? '(this is a list) '(this (is a) list))<br /></tt></p><p></p><p>
-is false.  To be more precise, we can define <tt>equal?</tt>
-recursively in terms of the basic <tt>eq?</tt> equality of symbols by
-saying that <tt>a</tt> and <tt>b</tt> are <tt>equal?</tt> if they are both
-symbols and the symbols are <tt>eq?</tt>, or if they are both lists such
-that <tt>(car a)</tt> is <tt>equal?</tt> to <tt>(car b)</tt> and <tt>(cdr
-a)</tt> is <tt>equal?</tt> to <tt>(cdr b)</tt>.  Using this idea, implement
-<tt>equal?</tt> as a procedure.<a name="call_footnote_Temp_233" href="#footnote_Temp_233" id="call_footnote_Temp_233"><sup><small>36</small></sup></a>
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.55" id="%_thm_2.55"></a>
-<b>Exercise 2.55.</b>  Eva Lu Ator types to the interpreter the expression
-</p><p></p><p><tt>(car ''abracadabra)<br /></tt></p><p></p><p>
-To her surprise, the interpreter prints back <tt>quote</tt>.  Explain.
-
-</p><p>
-
-<a name="%_sec_2.3.2" id="%_sec_2.3.2"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.2">2.3.2  Example: Symbolic Differentiation</a></h3><p>
-
-
-<a name="%_idx_2042" id="%_idx_2042"></a><a name="%_idx_2044" id="%_idx_2044"></a><a name="%_idx_2046" id="%_idx_2046"></a>
-As an illustration of symbol manipulation and a further illustration
-of data abstraction, consider the design of a procedure that performs
-symbolic differentiation of algebraic expressions.  We would like the
-procedure to take as arguments an algebraic expression and a variable
-and to return the derivative of the expression with respect to the
-variable.  For example, if the arguments to the procedure are <em>a</em><em>x</em><sup>2</sup>
- + <em>b</em><em>x</em>  + <em>c</em> and <em>x</em>, the procedure should return 2<em>a</em><em>x</em> + <em>b</em>.  Symbolic
-differentiation is of special historical significance in Lisp.  It was
-one of the motivating examples behind the development of a computer
-language for symbol manipulation.  Furthermore, it marked the
-beginning of the line of research that led to the development of
-powerful systems for symbolic mathematical work, which are currently
-being used by a growing number of applied mathematicians and
-physicists.</p><p>
-
-In developing the symbolic-differentiation program, we will follow the
-same strategy of data abstraction that we followed in developing the
-rational-number system of section <a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.  That is, we will first
-define a differentiation algorithm that operates on abstract
-objects such as “sums,” “products,” and “variables” without
-worrying about how these are to be represented.  Only afterward will
-we address the representation problem.</p><p>
-
-<a name="%_sec_Temp_235" id="%_sec_Temp_235"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_235">The differentiation program with abstract data</a></h4><p>
-
-<a name="%_idx_2048" id="%_idx_2048"></a>
-In order to keep things simple, we will consider a very simple
-symbolic-differentiation program that handles expressions that are
-built up using only the operations of addition and multiplication with
-two arguments.  Differentiation of any such expression can be carried
-out by applying the following reduction rules:</p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-45.gif" border="0" /></div><p></p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-46.gif" border="0" /></div><p></p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-47.gif" border="0" /></div><p></p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-48.gif" border="0" /></div><p></p><p>
-
-Observe that the latter two rules are recursive in nature.  That is,
-to obtain the derivative of a sum we first find the derivatives of the
-terms and add them.  Each of the terms may in turn be an
-expression that needs to be decomposed.  Decomposing into smaller and
-smaller pieces will eventually produce pieces that are either
-constants or variables, whose derivatives will be either 0 or 1.</p><p>
-
-To embody these rules in a procedure we indulge in a little <a name="%_idx_2050" id="%_idx_2050"></a>wishful
-thinking, as we did in designing the rational-number implementation.
-If we had a means for representing algebraic expressions, we should be
-able to tell whether an expression is a sum, a product, a constant, or
-a variable.  We should be able to extract the parts of an expression.
-For a sum, for example we want to be able to extract the addend
-(first term) and the augend (second term).  We should also be able to
-construct expressions from parts.  Let us assume that we already have
-procedures to implement the following selectors, constructors, and
-predicates:</p><p>
-
-</p><table border="0"><tr><td valign="top"><tt>(variable? e)</tt> </td><td valign="top">Is <tt>e</tt> a variable?</td></tr><tr><td valign="top"><tt>(same-variable? v1 v2)</tt> </td><td valign="top">Are <tt>v1</tt> and <tt>v2</tt> the same variable?</td></tr><tr><td valign="top"><p>
-
-<tt>(sum? e)</tt> </p></td><td valign="top">Is <tt>e</tt> a sum?</td></tr><tr><td valign="top"><tt>(addend e)</tt> </td><td valign="top">Addend of the sum <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(augend e)</tt> </td><td valign="top">Augend of the sum <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(make-sum a1 a2)</tt> </td><td valign="top">Construct the sum of <tt>a1</tt> and <tt>a2</tt>.</td></tr><tr><td valign="top"><p>
-
-<tt>(product? e)</tt> </p></td><td valign="top">Is <tt>e</tt> a product?</td></tr><tr><td valign="top"><tt>(multiplier e)</tt> </td><td valign="top">Multiplier of the product <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(multiplicand e)</tt> </td><td valign="top">Multiplicand of the product <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(make-product m1 m2)</tt> </td><td valign="top">Construct the product of <tt>m1</tt> and <tt>m2</tt>.
-</td></tr></table>
-Using these, and the primitive predicate <tt>number?</tt>,
-<a name="%_idx_2052" id="%_idx_2052"></a><a name="%_idx_2054" id="%_idx_2054"></a>which identifies numbers, we can express the differentiation rules as the
-following procedure:<p>
-
-</p><p></p><p><tt><a name="%_idx_2056" id="%_idx_2056"></a>(define (deriv exp var)<br />
-  (cond ((number? exp) 0)<br />
-        ((variable? exp)<br />
-         (if (same-variable? exp var) 1 0))<br />
-        ((sum? exp)<br />
-         (make-sum (deriv (addend exp) var)<br />
-                   (deriv (augend exp) var)))<br />
-        ((product? exp)<br />
-         (make-sum<br />
-           (make-product (multiplier exp)<br />
-                         (deriv (multiplicand exp) var))<br />
-           (make-product (deriv (multiplier exp) var)<br />
-                         (multiplicand exp))))<br />
-        (else<br />
-         (error "unknown expression type -- DERIV" exp))))<br /></tt></p><p></p><p>
-This <tt>deriv</tt> procedure incorporates the complete differentiation algorithm.
-Since it is expressed in terms of abstract data, it will work no
-matter how we choose to represent algebraic expressions, as long as we
-design a proper set of selectors and constructors.  This is the issue
-we must address next.</p><p>
-
-<a name="%_sec_Temp_236" id="%_sec_Temp_236"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_236">Representing algebraic expressions</a></h4><p>
-
-<a name="%_idx_2058" id="%_idx_2058"></a>
-We can imagine many ways to use list structure to represent algebraic
-expressions.  For example, we could use lists of symbols that mirror
-the usual algebraic notation, representing <em>a</em><em>x</em> + <em>b</em> as the list <tt>(a
-* x + b)</tt>.  However, one especially straightforward choice is to use
-the same parenthesized prefix notation that Lisp uses for
-combinations; that is, to represent <em>a</em><em>x</em> + <em>b</em> as <tt>(+ (* a x) b)</tt>.
-Then our data representation for the differentiation problem is as
-follows:</p><p>
-
-</p><p></p><ul><li>The variables are symbols.  They are identified by the primitive predicate
-<a name="%_idx_2060" id="%_idx_2060"></a><a name="%_idx_2062" id="%_idx_2062"></a><tt>symbol?</tt>:<p>
-
-</p><p></p><p><tt><a name="%_idx_2064" id="%_idx_2064"></a>(define (variable? x) (symbol? x))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>Two variables are the same if the symbols representing them are
-<tt>eq?</tt>:<p>
-
-</p><p></p><p><tt><a name="%_idx_2066" id="%_idx_2066"></a>(define (same-variable? v1 v2)<br />
-  (and (variable? v1) (variable? v2) (eq? v1 v2)))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>Sums and products are constructed as lists:<p>
-
-</p><p></p><p><tt><a name="%_idx_2068" id="%_idx_2068"></a>(define (make-sum a1 a2) (list '+ a1 a2))<br /><br /><a name="%_idx_2070" id="%_idx_2070"></a>(define (make-product m1 m2) (list '* m1 m2))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>A sum is a list whose first element is the symbol <tt>+</tt>:<p>
-
-</p><p></p><p><tt><a name="%_idx_2072" id="%_idx_2072"></a>(define (sum? x)<br />
-  (and (pair? x) (eq? (car x) '+)))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>The addend is the second item of the sum list:<p>
-
-</p><p></p><p><tt><a name="%_idx_2074" id="%_idx_2074"></a>(define (addend s) (cadr s))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>The augend is the third item of the sum list:<p>
-
-</p><p></p><p><tt><a name="%_idx_2076" id="%_idx_2076"></a>(define (augend s) (caddr s))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>A product is a list whose first element is the symbol <tt>*</tt>:<p>
-
-</p><p></p><p><tt><a name="%_idx_2078" id="%_idx_2078"></a>(define (product? x)<br />
-  (and (pair? x) (eq? (car x) '*)))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>The multiplier is the second item of the product list:<p>
-
-</p><p></p><p><tt><a name="%_idx_2080" id="%_idx_2080"></a>(define (multiplier p) (cadr p))<br /></tt></p><p></p><p>
-</p><p>
-
-</p></li><li>The multiplicand is the third item of the product list:<p>
-
-</p><p></p><p><tt><a name="%_idx_2082" id="%_idx_2082"></a>(define (multiplicand p) (caddr p))<br /></tt></p><p></p><p>
-</p></li></ul><p></p><p>
-
-Thus, we need only combine these with the algorithm as embodied by
-<tt>deriv</tt> in order to have a working symbolic-differentiation
-program.  Let us look at some examples of its behavior:</p><p>
-
-</p><p></p><p><tt>(deriv '(+ x 3) 'x)<br /><i>(+ 1 0)</i><br />
-(deriv '(* x y) 'x)<br /><i>(+ (* x 0) (* 1 y))</i><br />
-(deriv '(* (* x y) (+ x 3)) 'x)<br /><i>(+ (* (* x y) (+ 1 0))<br />
-   (* (+ (* x 0) (* 1 y))<br />
-      (+  x 3)))</i><br /></tt></p><p></p><p>
-The program produces answers that are correct; however, they are
-unsimplified.  It is true that</p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-49.gif" border="0" /></div><p></p><p>
-
-but we would like the program to know that <em>x</em> ·  0  =  0, 1 ·  <em>y</em>  =
-<em>y</em>, and 0 + <em>y</em> = <em>y</em>.  The answer for the second example should have been
-simply <tt>y</tt>.  As the third example shows, this becomes a serious
-issue when the expressions are complex.</p><p>
-
-<a name="%_idx_2084" id="%_idx_2084"></a><a name="%_idx_2086" id="%_idx_2086"></a>Our difficulty is much like the one we encountered with the
-rational-number implementation: we haven't reduced answers to simplest
-form.  To accomplish the rational-number reduction, we needed to
-change only the constructors and the selectors of the implementation.
-We can adopt a similar strategy here.  We won't change <tt>deriv</tt> at
-all.  Instead, we will change <tt>make-sum</tt> so that if both summands
-are numbers, <tt>make-sum</tt> will add them and return their sum.  Also,
-if one of the summands is 0, then <tt>make-sum</tt> will return the other
-summand.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2088" id="%_idx_2088"></a>(define (make-sum a1 a2)<br />
-  (cond ((=number? a1 0) a2)<br />
-        ((=number? a2 0) a1)<br />
-        ((and (number? a1) (number? a2)) (+ a1 a2))<br />
-        (else (list '+ a1 a2))))<br /></tt></p><p></p><p>
-This uses the procedure <tt>=number?</tt>, which checks whether an
-expression is equal to a given number:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2090" id="%_idx_2090"></a>(define (=number? exp num)<br />
-  (and (number? exp) (= exp num)))<br /></tt></p><p></p><p>
-Similarly, we will change <tt>make-product</tt> to build in the rules that 0
-times anything is 0 and 1 times anything is the thing itself:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2092" id="%_idx_2092"></a>(define (make-product m1 m2)<br />
-  (cond ((or (=number? m1 0) (=number? m2 0)) 0)<br />
-        ((=number? m1 1) m2)<br />
-        ((=number? m2 1) m1)<br />
-        ((and (number? m1) (number? m2)) (* m1 m2))<br />
-        (else (list '* m1 m2))))<br /></tt></p><p></p><p>
-Here is how this version works on our three examples:</p><p>
-
-</p><p></p><p><tt>(deriv '(+ x 3) 'x)<br /><i>1</i><br />
-(deriv '(* x y) 'x)<br /><i>y</i><br />
-(deriv '(* (* x y) (+ x 3)) 'x)<br /><i>(+ (* x y) (* y (+ x 3)))</i><br /></tt></p><p></p><p>
-Although this is quite an improvement, the third example shows that
-there is still a long way to go before we get a program that puts
-expressions into a form that we might agree is “simplest.”  The
-problem of algebraic simplification is complex because, among other
-reasons, a form that may be simplest for one purpose may not be for
-another.
-
-</p><p><a name="%_thm_2.56" id="%_thm_2.56"></a>
-<b>Exercise 2.56.</b>  <a name="%_idx_2094" id="%_idx_2094"></a>Show how to extend the basic differentiator to handle more kinds of
-expressions.  For instance, implement the differentiation rule</p><p>
-
-</p><p></p><div align="left"><img src="images/ch2-Z-G-50.gif" border="0" /></div><p></p><p>
-
-by adding a new clause to the <tt>deriv</tt> program
-and defining
-appropriate procedures <tt>exponentiation?</tt>, <tt>base</tt>, <tt>exponent</tt>,
-and <tt>make-exponentiation</tt>.  (You may use the symbol <tt>**</tt> to denote
-exponentiation.)
-Build in the rules that anything raised to the power 0 is 1 and
-anything raised to the power 1 is the thing itself.
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.57" id="%_thm_2.57"></a>
-<b>Exercise 2.57.</b>  Extend the differentiation program to handle sums and products of
-arbitrary numbers of (two or more) terms.
-Then the last example above could be expressed as
-</p><p></p><p><tt>(deriv '(* x y (+ x 3)) 'x)<br /></tt></p><p></p><p>
-Try to do this by changing only the
-representation for sums and products, without changing the <tt>deriv</tt> procedure at all.  For example, the <tt>addend</tt> of a sum would
-be the first term, and the <tt>augend</tt> would be the sum of the rest
-of the terms.
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.58" id="%_thm_2.58"></a>
-<b>Exercise 2.58.</b>  <a name="%_idx_2096" id="%_idx_2096"></a><a name="%_idx_2098" id="%_idx_2098"></a>Suppose we want to modify the differentiation program so that it works
-with ordinary mathematical notation, in which <tt>+</tt> and <tt>*</tt> are
-infix rather than prefix operators.  Since the differentiation program
-is defined in terms of abstract data, we can modify it to work with
-different representations of expressions solely by changing the
-predicates, selectors, and constructors that define the representation
-of the algebraic expressions on which the differentiator is to
-operate.</p><p>
-
-</p><p></p><p>a. Show how to do this in order to differentiate algebraic
-expressions presented in infix form, such as <tt>(x + (3 * (x + (y + 2))))</tt>.
-To simplify the task, assume that <tt>+</tt> and <tt>*</tt> always
-take two arguments and that expressions are fully parenthesized.</p><p>
-
-</p><p></p><p>b. The problem becomes substantially harder if we allow standard
-algebraic notation, such as <tt>(x + 3 * (x + y + 2))</tt>, which drops
-unnecessary parentheses and assumes that multiplication is done before
-addition.  Can you design appropriate predicates, selectors, and
-constructors for this notation such that our derivative program still
-works?
-</p><p>
-
-<a name="%_sec_2.3.3" id="%_sec_2.3.3"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.3">2.3.3  Example: Representing Sets</a></h3><p>
-
-
-<a name="%_idx_2100" id="%_idx_2100"></a>
-In the previous examples we built representations for two kinds of
-compound data objects: rational numbers and algebraic expressions.  In
-one of these examples we had the choice of simplifying (reducing) the
-expressions at either construction time or selection time, but other
-than that the choice of a representation for these structures in terms
-of lists was straightforward. When we turn to the representation of
-sets, the choice of a representation is not so obvious.  Indeed, there
-are a number of possible representations, and they differ
-significantly from one another in several ways.</p><p>
-
-
-<a name="%_idx_2102" id="%_idx_2102"></a>Informally, a set is simply a collection of distinct objects.  To give
-a more precise definition we can employ the method of data
-abstraction.  That is, we define “set” by specifying the operations
-that are to be used on sets.  These are <tt>union-set</tt>,
-<tt>intersection-set</tt>, <tt>element-of-set?</tt>, and <tt>adjoin-set</tt>.
-<a name="%_idx_2104" id="%_idx_2104"></a><tt>Element-of-set?</tt> is a predicate that determines whether a given
-element is a member of a set.  <a name="%_idx_2106" id="%_idx_2106"></a><tt>Adjoin-set</tt> takes an object and a
-set as arguments and returns a set that contains the elements of the
-original set and also the adjoined element.  <a name="%_idx_2108" id="%_idx_2108"></a><tt>Union-set</tt> computes
-the union of two sets, which is the set containing each element that
-appears in either argument.  <a name="%_idx_2110" id="%_idx_2110"></a><tt>Intersection-set</tt> computes the
-intersection of two sets, which is the set containing only elements
-that appear in both arguments.  From the viewpoint of data abstraction, we
-are free to design any representation that implements these operations
-in a way consistent with the interpretations given above.<a name="call_footnote_Temp_240" href="#footnote_Temp_240" id="call_footnote_Temp_240"><sup><small>37</small></sup></a>
-</p><p>
-
-
-<a name="%_sec_Temp_241" id="%_sec_Temp_241"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_241">Sets as unordered lists</a></h4><p>
-
-<a name="%_idx_2112" id="%_idx_2112"></a><a name="%_idx_2114" id="%_idx_2114"></a>
-One way to represent a set is as a list of its elements in which no
-element appears more than once.  The empty set is represented by the
-empty list.  In this representation, <tt>element-of-set?</tt> is similar
-to the procedure <tt>memq</tt> of section <a href="#%_sec_2.3.1">2.3.1</a>.  It uses <tt>equal?</tt>
-instead of <tt>eq?</tt> so that the set elements need not be symbols:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2116" id="%_idx_2116"></a>(define (element-of-set? x set)<br />
-  (cond ((null? set) false)<br />
-        ((equal? x (car set)) true)<br />
-        (else (element-of-set? x (cdr set)))))<br /></tt></p><p></p><p>
-Using this, we can write <tt>adjoin-set</tt>.  If the object to be adjoined
-is already in the set, we just return the set.  Otherwise, we use
-<tt>cons</tt> to add the object to the list that represents the set:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2118" id="%_idx_2118"></a>(define (adjoin-set x set)<br />
-  (if (element-of-set? x set)<br />
-      set<br />
-      (cons x set)))<br /></tt></p><p></p><p>
-For <tt>intersection-set</tt> we can use a recursive strategy.  If we
-know how to form the intersection of <tt>set2</tt> and the <tt>cdr</tt>
-of <tt>set1</tt>, we only need to decide whether to include
-the <tt>car</tt> of <tt>set1</tt> in this.  But this depends on whether <tt>(car
-set1)</tt> is also in <tt>set2</tt>.  Here is the resulting procedure:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2120" id="%_idx_2120"></a>(define (intersection-set set1 set2)<br />
-  (cond ((or (null? set1) (null? set2)) '())<br />
-        ((element-of-set? (car set1) set2)        <br />
-         (cons (car set1)<br />
-               (intersection-set (cdr set1) set2)))<br />
-        (else (intersection-set (cdr set1) set2))))<br /></tt></p><p></p><p></p><p>
-
-In designing a representation, one of the issues we should be
-concerned with is efficiency.  Consider the number of steps required by our set
-operations.  Since they all use <tt>element-of-set?</tt>, the speed
-of this operation has a major impact on the efficiency of the set
-implementation as a whole.  Now, in order to check whether an object
-is a member of a set, <tt>element-of-set?</tt> may have to scan the
-entire set. (In the worst case, the object turns out not to be in the
-set.)  Hence, if the set has <em>n</em> elements, <tt>element-of-set?</tt>
-might take up to <em>n</em> steps.  Thus, the number of steps
-required grows as θ(<em>n</em>).
-The number of steps required by <tt>adjoin-set</tt>, which uses this operation,
-also grows as θ(<em>n</em>).  For <tt>intersection-set</tt>, which does an <tt>element-of-set?</tt> check for each element of <tt>set1</tt>, the number of steps
-required grows as the product of the sizes of the sets involved, or
-θ(<em>n</em><sup>2</sup>) for two sets of size <em>n</em>.  The same will be true of <tt>union-set</tt>.</p><p>
-
-</p><p><a name="%_thm_2.59" id="%_thm_2.59"></a>
-<b>Exercise 2.59.</b>  Implement the <a name="%_idx_2122" id="%_idx_2122"></a><tt>union-set</tt> operation for the unordered-list
-representation of sets.
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.60" id="%_thm_2.60"></a>
-<b>Exercise 2.60.</b>  We specified that a set would be represented as a list with no
-duplicates.  Now suppose we allow duplicates.  For instance,
-the set {1,2,3} could be represented as the list <tt>(2 3 2 1 3 2
-2)</tt>.  Design procedures <tt>element-of-set?</tt>, <tt>adjoin-set</tt>, <tt>union-set</tt>, and <tt>intersection-set</tt> that operate on this
-representation.  How does the efficiency of each compare with the
-corresponding procedure for the non-duplicate representation?  Are
-there applications for which you would use this representation in
-preference to the non-duplicate one?
-</p><p>
-
-
-<a name="%_sec_Temp_244" id="%_sec_Temp_244"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_244">Sets as ordered lists</a></h4><p>
-
-<a name="%_idx_2124" id="%_idx_2124"></a><a name="%_idx_2126" id="%_idx_2126"></a>
-One way to speed up our set operations is to change the representation
-so that the set elements are listed in increasing order.  To do this,
-we need some way to compare two objects so that we can say which is
-bigger.  For example, we could compare symbols lexicographically, or
-we could agree on some method for assigning a unique number to an
-object and then compare the elements by comparing the corresponding
-numbers.  To keep our discussion simple, we will consider only the
-case where the set elements are numbers, so that we can compare
-elements using <tt>&gt;</tt> and <tt>&lt;</tt>.  We will represent a set of
-numbers by listing its elements in increasing order.  Whereas our
-first representation above allowed us to represent the set
-{1,3,6,10} by listing the elements in any order, our new
-representation allows only the list <tt>(1 3 6 10)</tt>.</p><p>
-
-One advantage of ordering shows up in <tt>element-of-set?</tt>: In
-checking for the presence of an item, we no longer have to scan the
-entire set.  If we reach a set element that is larger than the item we
-are looking for, then we know that the item is not in the set:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2128" id="%_idx_2128"></a>(define (element-of-set? x set)<br />
-  (cond ((null? set) false)<br />
-        ((= x (car set)) true)<br />
-        ((&lt; x (car set)) false)<br />
-        (else (element-of-set? x (cdr set)))))<br /></tt></p><p></p><p>
-How many steps does this save?  In the worst case, the item we are
-looking for may be the largest one in the set, so the number of steps
-is the same as for the unordered representation.  On the other hand,
-if we search for items of many different sizes we can expect that
-sometimes we will be able to stop searching at a point near the
-beginning of the list and that other times we will still need to
-examine most of the list.  On the average we should expect to have to
-examine about half of the items in the set.  Thus, the average
-number of steps required will be about <em>n</em>/2.
-This is still θ(<em>n</em>) growth, but
-it does save us, on the average, a factor of 2 in number of steps over the
-previous implementation.</p><p>
-
-We obtain a more impressive speedup with <tt>intersection-set</tt>.  In
-the unordered representation this operation required
-θ(<em>n</em><sup>2</sup>) steps, because we performed a complete scan of <tt>set2</tt> for
-each element of <tt>set1</tt>.  But with the ordered representation, we
-can use a more clever method.  Begin by comparing the initial
-elements, <tt>x1</tt> and <tt>x2</tt>, of the two sets.  If <tt>x1</tt>
-equals <tt>x2</tt>, then that gives an element of the intersection, and
-the rest of the intersection is the intersection of the <tt>cdr</tt>s of
-the two sets.  Suppose, however, that <tt>x1</tt> is less than <tt>x2</tt>.
-Since <tt>x2</tt> is the smallest element in <tt>set2</tt>, we can
-immediately conclude that <tt>x1</tt> cannot appear anywhere in <tt>set2</tt> and hence is not in the intersection.  Hence, the intersection
-is equal to the intersection of <tt>set2</tt> with the <tt>cdr</tt> of <tt>set1</tt>.  Similarly, if <tt>x2</tt> is less than <tt>x1</tt>, then the
-intersection is given by the intersection of <tt>set1</tt> with the <tt>cdr</tt> of <tt>set2</tt>.  Here is the procedure:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2130" id="%_idx_2130"></a>(define (intersection-set set1 set2)<br />
-  (if (or (null? set1) (null? set2))<br />
-      '()    <br />
-      (let ((x1 (car set1)) (x2 (car set2)))<br />
-        (cond ((= x1 x2)<br />
-               (cons x1<br />
-                     (intersection-set (cdr set1)<br />
-                                       (cdr set2))))<br />
-              ((&lt; x1 x2)<br />
-               (intersection-set (cdr set1) set2))<br />
-              ((&lt; x2 x1)<br />
-               (intersection-set set1 (cdr set2)))))))<br /></tt></p><p></p><p>
-To estimate the number of steps required by this process, observe that at each
-step we reduce the intersection problem to computing intersections of
-smaller sets – removing the first element from <tt>set1</tt> or <tt>set2</tt> or both.  Thus, the number of steps required is at most the sum
-of the sizes of <tt>set1</tt> and <tt>set2</tt>, rather than the product of
-the sizes as with the unordered representation.  This is θ(<em>n</em>) growth
-rather than θ(<em>n</em><sup>2</sup>) – a considerable speedup, even for sets of
-moderate size.</p><p>
-
-</p><p><a name="%_thm_2.61" id="%_thm_2.61"></a>
-<b>Exercise 2.61.</b>  Give an implementation of <a name="%_idx_2132" id="%_idx_2132"></a><tt>adjoin-set</tt> using the ordered
-representation.  By analogy with <tt>element-of-set?</tt> show how to
-take advantage of the ordering to produce a procedure that requires on
-the average about half as many steps as with the unordered
-representation.
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.62" id="%_thm_2.62"></a>
-<b>Exercise 2.62.</b>  Give a θ(<em>n</em>) implementation of <a name="%_idx_2134" id="%_idx_2134"></a><tt>union-set</tt> for sets
-represented as ordered lists.
-</p><p>
-</p><p>
-
-<a name="%_sec_Temp_247" id="%_sec_Temp_247"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_247">Sets as binary trees</a></h4><p>
-
-<a name="%_idx_2136" id="%_idx_2136"></a><a name="%_idx_2138" id="%_idx_2138"></a><a name="%_idx_2140" id="%_idx_2140"></a><a name="%_idx_2142" id="%_idx_2142"></a><a name="%_idx_2144" id="%_idx_2144"></a><a name="%_idx_2146" id="%_idx_2146"></a>
-We can do better than the ordered-list representation by arranging the
-set elements in the form of a tree.  Each node of the tree holds one
-element of the set, called the “entry” at that node, and a link to
-each of two other (possibly empty) nodes.  The “left” link points to
-elements smaller than the one at the node, and the “right” link to
-elements greater than the one at the node.
-Figure <a href="#%_fig_2.16">2.16</a> shows some trees that represent the set
-{1,3,5,7,9,11}.  The same set may be represented by a tree in a
-number of different ways.  The only thing we require for a valid
-representation is that all elements in the left subtree be smaller
-than the node entry and that all elements in the right subtree be
-larger.</p><p>
-
-<a name="%_fig_2.16" id="%_fig_2.16"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-51.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.16:</b>  Various binary trees that represent the set { 1,3,5,7,9,11 }.</div></caption><tr><td>
-
-</td></tr></table></div><p></p><p>
-
-The advantage of the tree representation is this: Suppose we want to
-check whether a number <em>x</em> is contained in a set.  We begin by
-comparing <em>x</em> with the entry in the top node.  If <em>x</em> is less than
-this, we know that we need only search the left subtree; if <em>x</em> is
-greater, we need only search the right subtree.  Now, if the tree is
-“balanced,” each of these subtrees will be about half the size of
-the original.  Thus, in one step we have reduced the problem of
-searching a tree of size <em>n</em> to searching a tree of size <em>n</em>/2.  Since
-the size of the tree is halved at each step, we should expect that the
-number of steps needed to search a tree of size <em>n</em> grows as θ(<tt>log</tt>
-<em>n</em>).<a name="call_footnote_Temp_248" href="#footnote_Temp_248" id="call_footnote_Temp_248"><sup><small>38</small></sup></a> For large sets, this will
-be a significant speedup over the previous representations.</p><p>
-
-<a name="%_idx_2150" id="%_idx_2150"></a>We can represent trees by using lists.  Each node will be a list of
-three items: the entry at the node, the left subtree, and the right
-subtree.  A left or a right subtree of the empty list will indicate
-that there is no subtree connected there.  We can describe this
-representation by the following procedures:<a name="call_footnote_Temp_249" href="#footnote_Temp_249" id="call_footnote_Temp_249"><sup><small>39</small></sup></a></p><p>
-
-</p><p></p><p><tt><a name="%_idx_2152" id="%_idx_2152"></a>(define (entry tree) (car tree))<br /><a name="%_idx_2154" id="%_idx_2154"></a>(define (left-branch tree) (cadr tree))<br /><a name="%_idx_2156" id="%_idx_2156"></a>(define (right-branch tree) (caddr tree))<br /><a name="%_idx_2158" id="%_idx_2158"></a>(define (make-tree entry left right)<br />
-  (list entry left right))<br /></tt></p><p></p><p></p><p>
-
-Now we can write the <tt>element-of-set?</tt> procedure using the strategy
-described above:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2160" id="%_idx_2160"></a>(define (element-of-set? x set)<br />
-  (cond ((null? set) false)<br />
-        ((= x (entry set)) true)<br />
-        ((&lt; x (entry set))<br />
-         (element-of-set? x (left-branch set)))<br />
-        ((&gt; x (entry set))<br />
-         (element-of-set? x (right-branch set)))))<br /></tt></p><p></p><p></p><p>
-
-Adjoining an item to a set is implemented similarly and also requires
-θ(<tt>log</tt> <em>n</em>) steps.  To adjoin an item <tt>x</tt>, we compare <tt>x</tt> with
-the node entry to determine whether <tt>x</tt> should be added to the
-right or to the left branch, and having adjoined <tt>x</tt> to the
-appropriate branch we piece this newly constructed branch together
-with the original entry and the other branch.  If <tt>x</tt> is equal to
-the entry, we just return the node.  If we are asked to adjoin
-<tt>x</tt> to an empty tree, we generate a tree that has <tt>x</tt> as the
-entry and empty right and left branches.  Here is the procedure:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2162" id="%_idx_2162"></a>(define (adjoin-set x set)<br />
-  (cond ((null? set) (make-tree x '() '()))<br />
-        ((= x (entry set)) set)<br />
-        ((&lt; x (entry set))<br />
-         (make-tree (entry set) <br />
-                    (adjoin-set x (left-branch set))<br />
-                    (right-branch set)))<br />
-        ((&gt; x (entry set))<br />
-         (make-tree (entry set)<br />
-                    (left-branch set)<br />
-                    (adjoin-set x (right-branch set))))))<br /></tt></p><p></p><p></p><p>
-
-The above claim that searching the tree can be performed in a logarithmic
-number of steps
-rests on the assumption that the tree is <a name="%_idx_2164" id="%_idx_2164"></a><a name="%_idx_2166" id="%_idx_2166"></a>“balanced,” i.e., that the
-left and the right subtree of every tree have approximately the same
-number of elements, so that each subtree contains about half the
-elements of its parent.  But how can we be certain that the trees we
-construct will be balanced?  Even if we start with a balanced tree,
-adding elements with <tt>adjoin-set</tt> may produce an unbalanced
-result.  Since the position of a newly adjoined element depends on how
-the element compares with the items already in the set, we can expect
-that if we add elements “randomly” the tree will tend to be balanced
-on the average.  But this is not a guarantee.  For example, if we
-start with an empty set and adjoin the numbers 1 through 7 in sequence
-we end up with the highly unbalanced tree shown in
-figure <a href="#%_fig_2.17">2.17</a>.  In this tree all the left subtrees
-are empty, so it has no advantage over a simple ordered list.  One
-way to solve this problem is to define an operation that transforms an
-arbitrary tree into a balanced tree with the same elements.  Then we
-can perform this transformation after every few <tt>adjoin-set</tt>
-operations to keep our set in balance.  There are also other ways to
-solve this problem, most of which involve designing new data
-structures for which searching and insertion both can be done in
-θ(<tt>log</tt> <em>n</em>) steps.<a name="call_footnote_Temp_250" href="#footnote_Temp_250" id="call_footnote_Temp_250"><sup><small>40</small></sup></a></p><p>
-
-<a name="%_fig_2.17" id="%_fig_2.17"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-52.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.17:</b>  Unbalanced tree produced by adjoining 1 through 7 in sequence.</div></caption><tr><td>
-
-</td></tr></table></div><p></p><p>
-
-</p><p><a name="%_thm_2.63" id="%_thm_2.63"></a>
-<b>Exercise 2.63.</b>  Each of the following two procedures converts a <a name="%_idx_2182" id="%_idx_2182"></a><a name="%_idx_2184" id="%_idx_2184"></a>binary tree to a list.
-<a name="%_idx_2186" id="%_idx_2186"></a></p><p></p><p><tt>(define (tree-&gt;list-1 tree)<br />
-  (if (null? tree)<br />
-      '()<br />
-      (append (tree-&gt;list-1 (left-branch tree))<br />
-              (cons (entry tree)<br />
-                    (tree-&gt;list-1 (right-branch tree))))))<br />
-(define (tree-&gt;list-2 tree)<br />
-  (define (copy-to-list tree result-list)<br />
-    (if (null? tree)<br />
-        result-list<br />
-        (copy-to-list (left-branch tree)<br />
-                      (cons (entry tree)<br />
-                            (copy-to-list (right-branch tree)<br />
-                                          result-list)))))<br />
-  (copy-to-list tree '()))<br /></tt></p><p></p><p>
-</p><p></p><p>a. Do the two procedures produce the same result for every tree?  If
-not, how do the results differ?  What lists do the two procedures
-produce for the trees in figure <a href="#%_fig_2.16">2.16</a>?
-
-</p><p></p><p>b. Do the two procedures have the same order of growth in the number
-of steps required to convert a balanced tree with <em>n</em> elements to a list?
-If not, which one grows more slowly?
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.64" id="%_thm_2.64"></a>
-<b>Exercise 2.64.</b>  <a name="%_idx_2188" id="%_idx_2188"></a><a name="%_idx_2190" id="%_idx_2190"></a>The following procedure <tt>list-&gt;tree</tt> converts an ordered list to a
-balanced binary tree.  The helper procedure <tt>partial-tree</tt> takes
-as arguments an integer <em>n</em> and list of at least <em>n</em> elements and
-constructs a balanced tree containing the first <em>n</em> elements of the
-list.  The result returned by <tt>partial-tree</tt> is a pair (formed
-with <tt>cons</tt>) whose <tt>car</tt> is the constructed tree and whose
-<tt>cdr</tt> is the list of elements not included in the tree.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2192" id="%_idx_2192"></a>(define (list-&gt;tree elements)<br />
-  (car (partial-tree elements (length elements))))<br /><br />
-(define (partial-tree elts n)<br />
-  (if (= n 0)<br />
-      (cons '() elts)<br />
-      (let ((left-size (quotient (- n 1) 2)))<br />
-        (let ((left-result (partial-tree elts left-size)))<br />
-          (let ((left-tree (car left-result))<br />
-                (non-left-elts (cdr left-result))<br />
-                (right-size (- n (+ left-size 1))))<br />
-            (let ((this-entry (car non-left-elts))<br />
-                  (right-result (partial-tree (cdr non-left-elts)<br />
-                                              right-size)))<br />
-              (let ((right-tree (car right-result))<br />
-                    (remaining-elts (cdr right-result)))<br />
-                (cons (make-tree this-entry left-tree right-tree)<br />
-                      remaining-elts))))))))<br /></tt></p><p></p><p></p><p>
-
-</p><p></p><p>a. Write a short paragraph explaining as clearly as you can how <tt>partial-tree</tt> works.  Draw the tree produced by <tt>list-&gt;tree</tt> for
-the list <tt>(1 3 5 7 9 11)</tt>.
-
-</p><p></p><p>b. What is the order of growth in the number of steps required by <tt>list-&gt;tree</tt> to convert a list of <em>n</em> elements?
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.65" id="%_thm_2.65"></a>
-<b>Exercise 2.65.</b>  <a name="%_idx_2194" id="%_idx_2194"></a><a name="%_idx_2196" id="%_idx_2196"></a>Use the results of exercises <a href="#%_thm_2.63">2.63</a> and
- <a href="#%_thm_2.64">2.64</a> to give θ(<em>n</em>) implementations of <tt>union-set</tt> and <tt>intersection-set</tt> for sets implemented as
-(balanced) binary trees.<a name="call_footnote_Temp_254" href="#footnote_Temp_254" id="call_footnote_Temp_254"><sup><small>41</small></sup></a>
-
-</p><p>
-
-<a name="%_sec_Temp_255" id="%_sec_Temp_255"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_255">Sets and information retrieval</a></h4><p>
-
-<a name="%_idx_2200" id="%_idx_2200"></a>
-We have examined options for using lists to represent sets and have
-seen how the choice of representation for a data object can have a
-large impact on the performance of the programs that use the data.
-Another reason for concentrating on sets is that the techniques
-discussed here appear again and again in applications involving
-information retrieval.</p><p>
-
-<a name="%_idx_2202" id="%_idx_2202"></a>Consider a data base containing a large number of individual records,
-<a name="%_idx_2204" id="%_idx_2204"></a>such as the personnel files for a company or the transactions in an
-accounting system.  A typical data-management system spends a large
-amount of time accessing or modifying the data in the records and
-therefore requires an efficient method for accessing records.  This is
-done by identifying a part of each record to serve as an identifying
-<a name="%_idx_2206" id="%_idx_2206"></a><em>key</em>.  A key can be anything that uniquely identifies the
-record.  For a personnel file, it might be an employee's ID number.
-For an accounting system, it might be a transaction number.  Whatever
-the key is, when we define the record as a data structure we should
-include a <a name="%_idx_2208" id="%_idx_2208"></a><tt>key</tt> selector procedure that retrieves the key
-associated with a given record.</p><p>
-
-Now we represent the data base as a set of records. To locate the
-record with a given key we use a procedure <tt>lookup</tt>, which takes
-as arguments a key and a data base and which returns the record that
-has that key, or false if there is no such record.  <tt>Lookup</tt>
-is implemented in almost the same way as <tt>element-of-set?</tt>.  For
-example, if the set of records is implemented as an unordered list, we
-could use</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2210" id="%_idx_2210"></a>(define (lookup given-key set-of-records)<br />
-  (cond ((null? set-of-records) false)<br />
-        ((equal? given-key (key (car set-of-records)))<br />
-         (car set-of-records))<br />
-        (else (lookup given-key (cdr set-of-records)))))<br /></tt></p><p></p><p></p><p>
-
-Of course, there are better ways to represent large sets than as
-unordered lists.  Information-retrieval systems in which records have
-to be “randomly accessed” are typically implemented by a tree-based
-method, such as the binary-tree representation discussed previously.
-In designing such a system the methodology of data abstraction
-can be a great help.  The designer can create an initial
-implementation using a simple, straightforward representation such as
-unordered lists.  This will be unsuitable for the eventual system, but
-it can be useful in providing a “quick and dirty” data base with
-which to test the rest of the system.  Later on, the data
-representation can be modified to be more sophisticated.  If the data
-base is accessed in terms of abstract selectors and constructors, this
-change in representation will not require any changes to the rest of
-the system.</p><p>
-
-</p><p><a name="%_thm_2.66" id="%_thm_2.66"></a>
-<b>Exercise 2.66.</b>  Implement the <tt>lookup</tt> procedure for the case
-where the set of records is structured as a binary tree, ordered by
-the numerical values of the keys.
-
-</p><p></p><p>
-
-<a name="%_sec_2.3.4" id="%_sec_2.3.4"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.4">2.3.4  Example: Huffman Encoding Trees</a></h3><p>
-
-<a name="%_idx_2212" id="%_idx_2212"></a>
-This section provides practice in the use of list structure and data
-abstraction to manipulate sets and trees.  The application is to
-methods for representing data as sequences of ones and zeros (bits).
-For example, the <a name="%_idx_2214" id="%_idx_2214"></a><a name="%_idx_2216" id="%_idx_2216"></a>ASCII standard code used to represent text in
-computers encodes each <a name="%_idx_2218" id="%_idx_2218"></a>character as a sequence of seven bits.  Using
-seven bits allows us to distinguish 2<sup>7</sup>, or 128, possible different
-characters.  In general, if we want to distinguish <em>n</em> different
-symbols, we will need to use <tt>log</tt><sub>2</sub><em>n</em> bits per symbol.  If all our
-messages are made up of the eight symbols A, B, C, D, E, F, G, and H,
-we can choose a code with three bits per character, for example
-</p><table border="0"><tr><td valign="top">A 000 </td><td valign="top">C 010 </td><td valign="top">E 100 </td><td valign="top">G 110</td></tr><tr><td valign="top">B 001 </td><td valign="top">D 011 </td><td valign="top">F 101 </td><td valign="top">H 111
-</td></tr></table>
-With this code, the message<p>
-
-</p><p></p><p>BACADAEAFABBAAAGAH</p><p>
-
-</p><p></p><p>is encoded as the string of 54 bits</p><p>
-
-</p><p></p><p>001000010000011000100000101000001001000000000110000111</p><p>
-
-</p><p></p><p>Codes such as ASCII and the A-through-H code above are known as <a name="%_idx_2220" id="%_idx_2220"></a><a name="%_idx_2222" id="%_idx_2222"></a><em>fixed-length</em> codes, because they represent each symbol in the message
-with the same number of bits.  It is sometimes advantageous to use
-<a name="%_idx_2224" id="%_idx_2224"></a><a name="%_idx_2226" id="%_idx_2226"></a><em>variable-length</em> codes, in which different symbols may be
-represented by different numbers of bits.  For example, <a name="%_idx_2228" id="%_idx_2228"></a><a name="%_idx_2230" id="%_idx_2230"></a>Morse code
-does not use the same number of dots and dashes for each letter of the
-alphabet.  In particular, E, the most frequent letter, is represented
-by a single dot.  In general, if our messages are such that some
-symbols appear very frequently and some very rarely, we can encode
-data more efficiently (i.e., using fewer bits per message) if we
-assign shorter codes to the frequent symbols.  Consider the following
-alternative code for the letters A through H:
-</p><table border="0"><tr><td valign="top">A 0 </td><td valign="top">C 1010 </td><td valign="top">E 1100 </td><td valign="top">G 1110</td></tr><tr><td valign="top">B 100 </td><td valign="top">D 1011 </td><td valign="top">F 1101 </td><td valign="top">H 1111
-</td></tr></table>
-With this code, the same message as above is encoded as the string<p>
-
-</p><p></p><p>100010100101101100011010100100000111001111</p><p>
-
-</p><p></p><p>This string contains 42 bits, so it saves more than 20% in space in
-comparison with the fixed-length code shown above.</p><p>
-
-One of the difficulties of using a variable-length code is knowing
-when you have reached the end of a symbol in reading a sequence of
-zeros and ones.  Morse code solves this problem by using a special
-<a name="%_idx_2232" id="%_idx_2232"></a><em>separator code</em> (in this case, a pause) after the sequence of
-dots and dashes for each letter.  Another solution is to design the
-code in such a way that no complete code for any symbol is the
-beginning (or <em>prefix</em>) of the code for another symbol.  Such a
-code is called a <a name="%_idx_2234" id="%_idx_2234"></a><a name="%_idx_2236" id="%_idx_2236"></a><em>prefix code</em>.  In the example above, A is
-encoded by 0 and B is encoded by 100, so no other symbol can have a
-code that begins with 0 or with 100.</p><p>
-
-In general, we can attain significant savings if we use
-variable-length prefix codes that take advantage of the relative
-frequencies of the symbols in the messages to be encoded.  One
-particular scheme for doing this is called the Huffman encoding
-method, after its discoverer, <a name="%_idx_2238" id="%_idx_2238"></a>David Huffman.  A Huffman code can be
-represented as a <a name="%_idx_2240" id="%_idx_2240"></a><a name="%_idx_2242" id="%_idx_2242"></a>binary tree whose leaves are the symbols that are
-encoded.  At each non-leaf node of the tree there is a set containing
-all the symbols in the leaves that lie below the node.  In addition,
-each symbol at a leaf is assigned a weight (which is its
-relative frequency), and each non-leaf
-node contains a weight that is the sum of all the weights of the
-leaves lying below it.  The weights are not used in the encoding or
-the decoding process.  We will see below how they are used to help
-construct the tree.</p><p>
-
-<a name="%_fig_2.18" id="%_fig_2.18"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-53.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.18:</b>  A Huffman encoding tree.</div></caption><tr><td>
-
-</td></tr></table></div><p></p><p>
-
-Figure <a href="#%_fig_2.18">2.18</a> shows the Huffman tree for the A-through-H
-code given above.  The weights at the leaves
-indicate that the tree was designed for messages in which A appears
-with relative frequency 8, B with relative frequency 3, and the
-other letters each with relative frequency 1.</p><p>
-
-Given a Huffman tree, we can find the encoding of any symbol by
-starting at the root and moving down until we reach the leaf that
-holds the symbol.  Each time we move down a left branch we add a 0 to
-the code, and each time we move down a right branch we add a 1.  (We
-decide which branch to follow by testing to see which branch either is
-the leaf node for the symbol or contains the symbol in its set.)  For
-example, starting from the root of the tree in
-figure <a href="#%_fig_2.18">2.18</a>, we arrive at the leaf for D by following a
-right branch, then a left branch, then a right branch, then a right
-branch; hence, the code for D is 1011.</p><p>
-
-To decode a bit sequence using a Huffman tree, we begin at the root
-and use the successive zeros and ones of the bit sequence to determine
-whether to move down the left or the right branch.  Each time we come
-to a leaf, we have generated a new symbol in the message, at which
-point we start over from the root of the tree to find the next symbol.
-For example, suppose we are given the tree above and the sequence
-10001010.  Starting at the root, we move down the right branch, (since
-the first bit of the string is 1), then down the left branch (since
-the second bit is 0), then down the left branch (since the third bit
-is also 0).  This brings us to the leaf for B, so the first symbol of
-the decoded message is B.  Now we start again at the root, and we make
-a left move because the next bit in the string is 0.  This brings us
-to the leaf for A.  Then we start again at the root with the rest of
-the string 1010, so we move right, left, right, left and reach C.
-Thus, the entire message is BAC.</p><p>
-
-<a name="%_sec_Temp_257" id="%_sec_Temp_257"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_257">Generating Huffman trees</a></h4><p>
-
-Given an “alphabet” of symbols and their relative frequencies, how
-do we construct the “best” code?  (In other words, which tree will
-encode messages with the fewest bits?)  Huffman gave an algorithm for
-doing this and showed that the resulting code is indeed the best
-variable-length code for messages where the relative frequency of the
-symbols matches the frequencies with which the code was constructed.
-<a name="%_idx_2244" id="%_idx_2244"></a><a name="%_idx_2246" id="%_idx_2246"></a>We will not prove this optimality of Huffman codes here, but we will
-show how Huffman trees are constructed.<a name="call_footnote_Temp_258" href="#footnote_Temp_258" id="call_footnote_Temp_258"><sup><small>42</small></sup></a></p><p>
-
-The algorithm for generating a Huffman tree is very simple. The idea
-is to arrange the tree so that the symbols with the lowest frequency
-appear farthest away from the root. Begin with the set of leaf nodes,
-containing symbols and their frequencies, as determined by the initial data
-from which the code is to be constructed. Now find two leaves with
-the lowest weights and merge them to produce a node that has these
-two nodes as its left and right branches. The weight of the new node
-is the sum of the two weights. Remove the two leaves from the
-original set and replace them by this new node. Now continue this
-process. At each step, merge two nodes with the smallest weights,
-removing them from the set and replacing them with a node that has
-these two as its left and right branches. The process stops when
-there is only one node left, which is the root of the entire tree.
-Here is how the Huffman tree of figure <a href="#%_fig_2.18">2.18</a> was generated:</p><p>
-
-</p><table border="0"><tr><td valign="top">Initial leaves </td><td valign="top">{(A 8)  (B 3)  (C 1)
- (D 1)  (E 1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)  (E
-1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)
-({E F} 2)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)
-({E F} 2)   ({G H} 2)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)   (B 3)  ({C D} 2)  ({E F G H} 4)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)  ({B C D} 5)  ({E F G H} 4)}</td></tr><tr><td valign="top"><p>
-
-Merge </p></td><td valign="top">{(A 8)  ({B C D E F G H} 9)}</td></tr><tr><td valign="top"><p>
-
-Final merge </p></td><td valign="top">{({A B C D E F G H} 17)}</td></tr><tr><td valign="top"></td></tr></table>
-The algorithm does not always specify a unique tree, because there may
-not be unique smallest-weight nodes at each step.  Also, the choice of
-the order in which the two nodes are merged (i.e., which will be the
-right branch and which will be the left branch) is arbitrary.<p>
-
-<a name="%_sec_Temp_259" id="%_sec_Temp_259"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_259">Representing Huffman trees</a></h4><p>
-
-In the exercises below we will work with a system that uses
-Huffman trees to encode and decode messages and generates Huffman
-trees according to the algorithm outlined above.  We will begin by
-discussing how trees are represented.</p><p>
-
-Leaves of the tree are represented by a list consisting of the
-symbol <tt>leaf</tt>, the symbol at the leaf, and the weight:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2250" id="%_idx_2250"></a>(define (make-leaf symbol weight)<br />
-  (list 'leaf symbol weight))<br /><a name="%_idx_2252" id="%_idx_2252"></a>(define (leaf? object)<br />
-  (eq? (car object) 'leaf))<br /><a name="%_idx_2254" id="%_idx_2254"></a>(define (symbol-leaf x) (cadr x))<br /><a name="%_idx_2256" id="%_idx_2256"></a>(define (weight-leaf x) (caddr x))<br /></tt></p><p></p><p>
-A general tree will be a list of a left branch, a right branch, a set
-of symbols, and a weight.  The set of symbols will be simply a list of
-the symbols, rather than some more sophisticated set representation.
-When we make a tree by merging two nodes, we obtain the weight of the
-tree as the sum of the weights of the nodes, and the set of symbols as
-the union of the sets of symbols for the nodes.  Since our symbol sets are
-represented as lists, we can form the union by using the <tt>append</tt>
-procedure we defined in section <a href="book-Z-H-15.html#%_sec_2.2.1">2.2.1</a>:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2258" id="%_idx_2258"></a>(define (make-code-tree left right)<br />
-  (list left<br />
-        right<br />
-        (append (symbols left) (symbols right))<br />
-        (+ (weight left) (weight right))))<br /></tt></p><p></p><p>
-If we make a tree in this way, we have the following selectors:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2260" id="%_idx_2260"></a>(define (left-branch tree) (car tree))<br /><br /><a name="%_idx_2262" id="%_idx_2262"></a>(define (right-branch tree) (cadr tree))<br /><a name="%_idx_2264" id="%_idx_2264"></a>(define (symbols tree)<br />
-  (if (leaf? tree)<br />
-      (list (symbol-leaf tree))<br />
-      (caddr tree)))<br /><a name="%_idx_2266" id="%_idx_2266"></a>(define (weight tree)<br />
-  (if (leaf? tree)<br />
-      (weight-leaf tree)<br />
-      (cadddr tree)))<br /></tt></p><p></p><p>
-The procedures <tt>symbols</tt> and <tt>weight</tt> must do something
-slightly different depending on whether they are called with a leaf or
-a general tree.  These are simple examples of <a name="%_idx_2268" id="%_idx_2268"></a><a name="%_idx_2270" id="%_idx_2270"></a><em>generic
-procedures</em> (procedures that can handle more than one kind of data),
-which we will have much more to say about in
-sections <a href="book-Z-H-17.html#%_sec_2.4">2.4</a> and <a href="book-Z-H-18.html#%_sec_2.5">2.5</a>.</p><p>
-
-<a name="%_sec_Temp_260" id="%_sec_Temp_260"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_260">The decoding procedure</a></h4><p>
-
-The following procedure implements the decoding algorithm.
-It takes as arguments a list of zeros and ones, together with
-a Huffman tree.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2272" id="%_idx_2272"></a>(define (decode bits tree)<br />
-  (define (decode-1 bits current-branch)<br />
-    (if (null? bits)<br />
-        '()<br />
-        (let ((next-branch<br />
-               (choose-branch (car bits) current-branch)))<br />
-          (if (leaf? next-branch)<br />
-              (cons (symbol-leaf next-branch)<br />
-                    (decode-1 (cdr bits) tree))<br />
-              (decode-1 (cdr bits) next-branch)))))<br />
-  (decode-1 bits tree))<br />
-(define (choose-branch bit branch)<br />
-  (cond ((= bit 0) (left-branch branch))<br />
-        ((= bit 1) (right-branch branch))<br />
-        (else (error "bad bit -- CHOOSE-BRANCH" bit))))<br /></tt></p><p></p><p>
-The procedure <tt>decode-1</tt> takes two arguments: the list of remaining bits
-and the current position in the tree.  It keeps moving
-“down” the tree, choosing a left or a right branch according to
-whether the next bit in the list is a zero or a one.  (This is done
-with the procedure <tt>choose-branch</tt>.)  When it reaches a leaf, it
-returns the symbol at that leaf as the next symbol in the message by
-<tt>cons</tt>ing it onto the result of decoding
-the rest of the message, starting at the root of the tree.
-Note the error check in the final clause of <tt>choose-branch</tt>, which
-complains if the procedure finds something other than a zero or a one in the
-input data.</p><p>
-
-<a name="%_sec_Temp_261" id="%_sec_Temp_261"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_261">Sets of weighted elements</a></h4><p>
-
-In our representation of trees, each non-leaf node contains a set of
-symbols, which we have represented as a simple list.  However, the
-tree-generating algorithm discussed above requires that we also work
-with sets of leaves and trees, successively merging the two smallest
-items.  Since we will be required to repeatedly find the smallest item
-in a set, it is convenient to use an ordered representation for this
-kind of set.</p><p>
-
-We will represent a set of leaves and trees as a list of elements,
-arranged in increasing order of weight.  The following <tt>adjoin-set</tt> procedure for constructing sets is similar to the one
-described in exercise <a href="#%_thm_2.61">2.61</a>; however, items are compared
-by their weights, and the element being added to the set is
-never already in it.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2274" id="%_idx_2274"></a>(define (adjoin-set x set)<br />
-  (cond ((null? set) (list x))<br />
-        ((&lt; (weight x) (weight (car set))) (cons x set))<br />
-        (else (cons (car set)<br />
-                    (adjoin-set x (cdr set))))))<br /></tt></p><p></p><p></p><p>
-
-The following procedure takes a list of
-symbol-frequency pairs such as <tt>((A 4) (B 2) (C 1) (D 1))</tt> and
-constructs an initial ordered set of leaves, ready to be merged
-according to the Huffman algorithm:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2276" id="%_idx_2276"></a>(define (make-leaf-set pairs)<br />
-  (if (null? pairs)<br />
-      '()<br />
-      (let ((pair (car pairs)))<br />
-        (adjoin-set (make-leaf (car pair)    <em>; symbol</em><br />
-                               (cadr pair))  <em>; frequency</em><br />
-                    (make-leaf-set (cdr pairs))))))<br /></tt></p><p></p><p></p><p>
-
-</p><p><a name="%_thm_2.67" id="%_thm_2.67"></a>
-<b>Exercise 2.67.</b>  Define an encoding tree and a sample message:</p><p>
-
-
-</p><p></p><p><tt>(define sample-tree<br />
-  (make-code-tree (make-leaf 'A 4)<br />
-                  (make-code-tree<br />
-                   (make-leaf 'B 2)<br />
-                   (make-code-tree (make-leaf 'D 1)<br />
-                                   (make-leaf 'C 1)))))<br /><br />
-(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))<br /></tt></p><p></p><p>
-Use the <tt>decode</tt> procedure to decode the
-message, and give the result.
-
-</p><p></p><p>
-
-
-</p><p><a name="%_thm_2.68" id="%_thm_2.68"></a>
-<b>Exercise 2.68.</b>  The <tt>encode</tt> procedure takes as arguments a message and a tree and
-produces the list of bits that gives the encoded message.</p><p>
-
-
-</p><p></p><p><tt><a name="%_idx_2278" id="%_idx_2278"></a>(define (encode message tree)<br />
-  (if (null? message)<br />
-      '()<br />
-      (append (encode-symbol (car message) tree)<br />
-              (encode (cdr message) tree))))<br /></tt></p><p></p><p>
-<tt>Encode-symbol</tt> is a procedure, which you must write, that returns
-the list of bits that encodes a given symbol according to a given
-tree.  You should design <tt>encode-symbol</tt> so that it signals an
-error if the symbol is not in the tree at all.  Test your procedure by
-encoding the result you obtained in exercise <a href="#%_thm_2.67">2.67</a> with
-the sample tree and seeing whether it is the same as the original
-sample message.
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.69" id="%_thm_2.69"></a>
-<b>Exercise 2.69.</b>  The following procedure takes as its argument a list of
-symbol-frequency pairs (where no symbol appears in more than one pair)
-and generates a Huffman encoding tree according to the Huffman
-algorithm.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2280" id="%_idx_2280"></a>(define (generate-huffman-tree pairs)<br />
-  (successive-merge (make-leaf-set pairs)))<br /></tt></p><p></p><p>
-<tt>Make-leaf-set</tt> is the procedure given above that transforms the
-list of pairs into an ordered set of leaves.  <tt>Successive-merge</tt>
-is the procedure you must write, using <tt>make-code-tree</tt> to
-successively merge the smallest-weight elements of the set until there
-is only one element left, which is the desired Huffman tree.  (This
-procedure is slightly tricky, but not really complicated.  If you find
-yourself designing a complex procedure, then you are almost certainly
-doing something wrong.  You can take significant advantage of the fact
-that we are using an ordered set representation.)
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.70" id="%_thm_2.70"></a>
-<b>Exercise 2.70.</b>  <a name="%_idx_2282" id="%_idx_2282"></a>The following eight-symbol alphabet with associated relative
-frequencies was designed to efficiently encode the lyrics of 1950s
-rock songs.  (Note that the “symbols” of an “alphabet” need not be
-individual letters.)</p><p>
-
-</p><table border="0"><tr><td valign="top">A    </td><td valign="top">2 </td><td valign="top">NA  </td><td valign="top">16</td></tr><tr><td valign="top">BOOM </td><td valign="top">1 </td><td valign="top">SHA </td><td valign="top">3</td></tr><tr><td valign="top">GET  </td><td valign="top">2 </td><td valign="top">YIP </td><td valign="top">9</td></tr><tr><td valign="top">JOB  </td><td valign="top">2 </td><td valign="top">WAH </td><td valign="top">1
-</td></tr></table>
-Use <tt>generate-huffman-tree</tt> (exercise <a href="#%_thm_2.69">2.69</a>)
-to generate a corresponding Huffman tree, and use
-<tt>encode</tt> (exercise <a href="#%_thm_2.68">2.68</a>)
-to encode the following message:<p>
-
-</p><p></p><p>Get a job</p><p>
-
-Sha na na na na na na na na</p><p>
-
-Get a job</p><p>
-
-Sha na na na na na na na na</p><p>
-
-Wah yip yip yip yip yip yip yip yip yip</p><p>
-
-Sha boom</p><p>
-
-</p><p></p><p>How many bits are required for the encoding?  What is the smallest
-number of bits that would be needed to encode this song if we
-used a fixed-length code for the eight-symbol alphabet?
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.71" id="%_thm_2.71"></a>
-<b>Exercise 2.71.</b>  Suppose we have a Huffman tree for an alphabet of <em>n</em> symbols, and
-that the relative frequencies of the symbols are 1, 2, 4, <tt>...</tt>,
-2<sup><em>n</em>-1</sup>.  Sketch the tree for <em>n</em>=5; for <em>n</em>=10.  In such a tree
-(for general <em>n</em>) how may bits are required to encode the most
-frequent symbol?  the least frequent symbol?
-
-</p><p></p><p>
-
-</p><p><a name="%_thm_2.72" id="%_thm_2.72"></a>
-<b>Exercise 2.72.</b>  <a name="%_idx_2284" id="%_idx_2284"></a>Consider the encoding procedure that you designed in
-exercise <a href="#%_thm_2.68">2.68</a>.  What is the order of growth in the
-number of steps needed to encode a symbol?  Be sure to include the
-number of steps needed to search the symbol list at each node
-encountered.  To answer this question in general is difficult.
-Consider the special case where the relative frequencies of the <em>n</em>
-symbols are as described in exercise <a href="#%_thm_2.71">2.71</a>, and give
-the order of growth (as a function of <em>n</em>) of the number of steps
-needed to encode the most frequent and least frequent symbols in the
-alphabet.
-</p><p>
-
-</p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_227" href="#call_footnote_Temp_227" id="footnote_Temp_227"><sup><small>32</small></sup></a> Allowing quotation in a language wreaks havoc
-with the ability to reason about the language in simple terms, because
-it destroys the notion that equals can be substituted for equals.  For
-example, three is one plus two, but the word “three” is not the
-phrase “one plus two.”  Quotation is powerful because it gives us a way
-to build expressions that manipulate other expressions (as we will see
-when we write an interpreter in chapter 4). But allowing statements in
-a language that talk about other statements in that language makes it
-very difficult to maintain any coherent principle of what “equals can
-be substituted for equals” should mean.  For example, if we know that
-<a name="%_idx_1996" id="%_idx_1996"></a>the evening star is the morning star, then from the statement “the
-evening star is Venus” we can deduce “the morning star is Venus.”
-However, given that “John knows that the evening star is Venus” we
-cannot infer that “John knows that the morning star is Venus.”
-
-</p><p><a name="footnote_Temp_228" href="#call_footnote_Temp_228" id="footnote_Temp_228"><sup><small>33</small></sup></a> The single quote is different <a name="%_idx_2002" id="%_idx_2002"></a><a name="%_idx_2004" id="%_idx_2004"></a><a name="%_idx_2006" id="%_idx_2006"></a><a name="%_idx_2008" id="%_idx_2008"></a>from the double quote we have
-been using to enclose character strings to be printed.  Whereas the
-single quote can be used to denote lists or symbols, the double quote
-is used only with character strings.  In this book, the only use for
-character strings is as items to be printed.
-
-</p><p><a name="footnote_Temp_229" href="#call_footnote_Temp_229" id="footnote_Temp_229"><sup><small>34</small></sup></a> Strictly, our
-use of the quotation mark violates the general rule that all compound
-expressions in our language should be delimited by parentheses
-and look like lists.  We
-<a name="%_idx_2014" id="%_idx_2014"></a><a name="%_idx_2016" id="%_idx_2016"></a>can recover this consistency by introducing a special form <tt>quote</tt>, which serves the same purpose as the quotation mark.  Thus, we
-would type <tt>(quote a)</tt> instead of <tt>'a</tt>, and we would type <tt>(quote (a b c))</tt> instead of <tt>'(a b c)</tt>.  This is precisely how the
-interpreter works.  The quotation mark is just a single-character
-abbreviation for wrapping the next complete expression with <tt>quote</tt> to form <tt>(quote &lt;<em>expression</em>&gt;)</tt>.  This is important
-because it maintains the principle that any expression seen by the
-interpreter can be manipulated as a data object.  For instance, we
-could construct the expression
-<tt>(car '(a b c))</tt>, which is the same as <tt>(car (quote (a b c)))</tt>,
-by evaluating <tt>(list 'car (list 'quote '(a b c)))</tt>.
-
-</p><p><a name="footnote_Temp_230" href="#call_footnote_Temp_230" id="footnote_Temp_230"><sup><small>35</small></sup></a> We can consider two symbols to be “the same” if they
-consist of the same characters in the same order.  Such a definition
-skirts a deep issue that we are not yet ready to address: the meaning
-of “sameness” in a programming language.  We will return to this in
-chapter 3 (section <a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>).
-
-</p><p><a name="footnote_Temp_233" href="#call_footnote_Temp_233" id="footnote_Temp_233"><sup><small>36</small></sup></a> In practice, programmers
-use <tt>equal?</tt> to compare lists that contain numbers as well as
-symbols.  Numbers are not considered to be symbols.  The question
-<a name="%_idx_2038" id="%_idx_2038"></a><a name="%_idx_2040" id="%_idx_2040"></a>of whether two numerically equal numbers (as tested by <tt>=</tt>) are also
-<tt>eq?</tt> is highly implementation-dependent.  A better definition
-of <tt>equal?</tt> (such as the one that comes as a primitive in Scheme)
-would also stipulate that if <tt>a</tt> and <tt>b</tt> are
-both numbers, then <tt>a</tt> and <tt>b</tt> are <tt>equal?</tt> if they are
-numerically equal.
-
-</p><p><a name="footnote_Temp_240" href="#call_footnote_Temp_240" id="footnote_Temp_240"><sup><small>37</small></sup></a> If
-we want to be more formal, we can specify “consistent with the
-interpretations given above” to mean that the operations satisfy a
-collection of rules such as these:</p><p>
-
-</p><p></p><ul><li>For any set <tt>S</tt> and any object <tt>x</tt>,
-<tt>(element-of-set? x (adjoin-set x S))</tt>
-is true (informally: “Adjoining an object to a
-set produces a set that contains the object”).<p>
-
-</p></li><li>For any sets <tt>S</tt> and <tt>T</tt> and any object <tt>x</tt>,
-<tt>(element-of-set? x (union-set S T))</tt>
-is equal to
-<tt>(or (element-of-set? x S) (element-of-set? x T))</tt>
-(informally: “The elements of <tt>(union S T)</tt> are the elements that
-are in <tt>S</tt> or in <tt>T</tt>”).<p>
-
-</p></li><li>For any object <tt>x</tt>,
-<tt>(element-of-set? x '())</tt>
-is false (informally: “No object is an element of the empty set”).
-</li></ul><p>
-
-
-</p><p><a name="footnote_Temp_248" href="#call_footnote_Temp_248" id="footnote_Temp_248"><sup><small>38</small></sup></a> Halving the size of the problem at each step is the
-distinguishing characteristic of <a name="%_idx_2148" id="%_idx_2148"></a>logarithmic growth, as we saw with
-the fast-exponentiation algorithm of section <a href="book-Z-H-11.html#%_sec_1.2.4">1.2.4</a>
-and the half-interval search method of
-section <a href="book-Z-H-12.html#%_sec_1.3.3">1.3.3</a>.
-
-</p><p><a name="footnote_Temp_249" href="#call_footnote_Temp_249" id="footnote_Temp_249"><sup><small>39</small></sup></a> We are
-representing sets in terms of trees, and trees in terms of lists – in
-effect, a data abstraction built upon a data abstraction.  We can
-regard the procedures <tt>entry</tt>, <tt>left-branch</tt>, <tt>right-branch</tt>, and <tt>make-tree</tt> as a way of isolating the
-abstraction of a “binary tree” from the particular way we might wish
-to represent such a tree in terms of list structure.
-
-</p><p><a name="footnote_Temp_250" href="#call_footnote_Temp_250" id="footnote_Temp_250"><sup><small>40</small></sup></a> Examples of such structures include
-<a name="%_idx_2168" id="%_idx_2168"></a><a name="%_idx_2170" id="%_idx_2170"></a><a name="%_idx_2172" id="%_idx_2172"></a><a name="%_idx_2174" id="%_idx_2174"></a><em>B-trees</em> and <em>red-black trees</em>.  There is a large literature on
-data structures devoted to this problem.  See Cormen,
-<a name="%_idx_2176" id="%_idx_2176"></a><a name="%_idx_2178" id="%_idx_2178"></a><a name="%_idx_2180" id="%_idx_2180"></a>Leiserson, and Rivest 1990.
-
-</p><p><a name="footnote_Temp_254" href="#call_footnote_Temp_254" id="footnote_Temp_254"><sup><small>41</small></sup></a> Exercises <a href="#%_thm_2.63">2.63</a>-<a href="#%_thm_2.65">2.65</a>
-<a name="%_idx_2198" id="%_idx_2198"></a>are due to Paul Hilfinger.
-
-</p><p><a name="footnote_Temp_258" href="#call_footnote_Temp_258" id="footnote_Temp_258"><sup><small>42</small></sup></a> See Hamming 1980
-<a name="%_idx_2248" id="%_idx_2248"></a>for a discussion of the mathematical properties of Huffman codes.
-
-</p></div>
-
-
-
-</body>
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type: text/html; charset=utf-8">
+<title>Structure and Interpretation of Computer Programs</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default">
+</head>
+<body><a name="%_sec_2.3" id="%_sec_2.3"></a><h2><a href="book-Z-H-4.html#%_toc_%_sec_2.3">2.3  Symbolic Data</a></h2>
+<p><a name="%_idx_1984" id="%_idx_1984"></a><a name="%_idx_1986" id="%_idx_1986"></a>All the compound data objects we have used so far were constructedultimately from numbers.  In this section we extend the representationalcapability of our language by introducing the ability to work witharbitrary symbols as data.</p>
+<p><a name="%_sec_2.3.1" id="%_sec_2.3.1"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.1">2.3.1  Quotation</a></h3>
+<p><a name="%_idx_1988" id="%_idx_1988"></a>If we can form compound data using symbols, we can have lists such as</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_1990" id="%_idx_1990"></a>(a b c d)
+(23 45 17)
+((Norah 12) (Molly 9) (Anna 7) (Lauren 6) (Charlotte 4))
+</pre></p>
+<p></p>
+<p>Lists containing symbols can look just like the expressions of ourlanguage:</p>
+<p></p>
+<p></p>
+<p><pre>(* (+ 23 45) (+ x 9))
+
+(define (fact n) (if (= n 1) 1 (* n (fact (- n 1)))))
+</pre></p>
+<p></p>
+<p></p>
+<p>In order to manipulate symbols we need a new element in our language:the ability to <em>quote</em> a data object.  Suppose we want toconstruct the list <code>(a b)</code>.  We can't accomplish this with <code>(list a b)</code>, because this expression constructsa list of the <em>values</em> of <code>a</code> and <code>b</code> rather thanthe symbols themselves.  This issue is well known in the context of<a name="%_idx_1992" id="%_idx_1992"></a><a name="%_idx_1994" id="%_idx_1994"></a>natural languages, where words and sentences may be regarded either assemantic entities or as character strings (syntactic entities).  Thecommon practice in natural languages is to use quotation marks toindicate that a word or a sentence is to be treated literally as astring of characters.  For instance, the first letter of “John” isclearly “J.”  If we tell somebody “say your name aloud,” we expectto hear that person's name.  However, if we tell somebody “say `yourname' aloud,” we expect to hear the words “your name.”  Note thatwe are forced to nest quotation marks to describe what somebody elsemight say.<a name="call_footnote_Temp_227" href="#footnote_Temp_227" id="call_footnote_Temp_227"><sup><small>32</small></sup></a></p>
+<p><a name="%_idx_1998" id="%_idx_1998"></a>We can follow this same practice to identify lists and symbols that areto be treated as data objects rather than as expressions to beevaluated.  However, our format for quoting differs from that ofnatural languages in that we place a quotation mark (traditionally,the single <a name="%_idx_2000" id="%_idx_2000"></a>quote symbol <code>'</code>) only at the beginning of the objectto be quoted.  We can get away with this in Scheme syntax because werely on blanks and parentheses to delimit objects.  Thus, the meaningof the single quote character is to quote the next object.<a name="call_footnote_Temp_228" href="#footnote_Temp_228" id="call_footnote_Temp_228"><sup><small>33</small></sup></a></p>
+<p><a name="%_idx_2010" id="%_idx_2010"></a>Now we can distinguish between symbols and their values:</p>
+<p></p>
+<p></p>
+<p><pre>(define a 1)
+
+(define b 2)
+
+(list a b)
+<i>(1 2)</i>
+
+(list 'a 'b)
+<i>(a b)</i>
+
+(list 'a b)
+<i>(a 2)</i>
+</pre></p>
+<p></p>
+<p></p>
+<p><a name="%_idx_2012" id="%_idx_2012"></a>Quotation also allows us to type in compound objects, using theconventional printed representation for lists:<a name="call_footnote_Temp_229" href="#footnote_Temp_229" id="call_footnote_Temp_229"><sup><small>34</small></sup></a></p>
+<p></p>
+<p></p>
+<p><pre>(car '(a b c))
+<i>a</i>
+
+(cdr '(a b c))
+<i>(b c)</i>
+</pre></p>
+<p></p>
+<p><a name="%_idx_2018" id="%_idx_2018"></a><a name="%_idx_2020" id="%_idx_2020"></a>In keeping with this, we can obtain the empty list by evaluating <code>'()</code>, and thus dispense with the variable <code>nil</code>.</p>
+<p>One additional primitive used in manipulating symbols is <a name="%_idx_2022" id="%_idx_2022"></a><a name="%_idx_2024" id="%_idx_2024"></a><a name="%_idx_2026" id="%_idx_2026"></a><a name="%_idx_2028" id="%_idx_2028"></a><code>eq?</code>,which takes two symbols as arguments and tests whether they are thesame.<a name="call_footnote_Temp_230" href="#footnote_Temp_230" id="call_footnote_Temp_230"><sup><small>35</small></sup></a> Using <code>eq?</code>,we can implement a useful procedure called <code>memq</code>.  This takes twoarguments, a symbol and a list.  If the symbol is not contained in thelist (i.e., is not <code>eq?</code> to any item in the list), then <code>memq</code> returns false.  Otherwise, it returns the sublist ofthe list beginning with the first occurrence of the symbol:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2030" id="%_idx_2030"></a>(define (memq item x)
+  (cond ((null? x) false)
+        ((eq? item (car x)) x)
+        (else (memq item (cdr x)))))
+</pre></p>
+<p></p>
+<p>For example, the value of</p>
+<p></p>
+<p></p>
+<p><pre>(memq 'apple '(pear banana prune))
+</pre></p>
+<p></p>
+<p>is false, whereas the value of</p>
+<p></p>
+<p></p>
+<p><pre>(memq 'apple '(x (apple sauce) y apple pear))
+</pre></p>
+<p></p>
+<p>is <code>(apple pear)</code>.</p>
+<p></p>
+<p><a name="%_thm_2.53" id="%_thm_2.53"></a><b>Exercise 2.53.</b>  What would the interpreter print in response to evaluating each of thefollowing expressions?</p>
+<p></p>
+<p></p>
+<p><pre>(list 'a 'b 'c)
+
+(list (list 'george))
+(cdr '((x1 x2) (y1 y2)))
+
+(cadr '((x1 x2) (y1 y2)))
+(pair? (car '(a short list)))
+(memq 'red '((red shoes) (blue socks)))
+
+(memq 'red '(red shoes blue socks))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.54" id="%_thm_2.54"></a><b>Exercise 2.54.</b>  Two lists are said to be <a name="%_idx_2032" id="%_idx_2032"></a><a name="%_idx_2034" id="%_idx_2034"></a><a name="%_idx_2036" id="%_idx_2036"></a><code>equal?</code> if they contain equal elementsarranged in the same order.  For example,</p>
+<p></p>
+<p></p>
+<p><pre>(equal? '(this is a list) '(this is a list))
+</pre></p>
+<p></p>
+<p>is true, but</p>
+<p></p>
+<p></p>
+<p><pre>(equal? '(this is a list) '(this (is a) list))
+</pre></p>
+<p></p>
+<p>is false.  To be more precise, we can define <code>equal?</code>recursively in terms of the basic <code>eq?</code> equality of symbols bysaying that <code>a</code> and <code>b</code> are <code>equal?</code> if they are bothsymbols and the symbols are <code>eq?</code>, or if they are both lists suchthat <code>(car a)</code> is <code>equal?</code> to <code>(car b)</code> and <code>(cdra)</code> is <code>equal?</code> to <code>(cdr b)</code>.  Using this idea, implement<code>equal?</code> as a procedure.<a name="call_footnote_Temp_233" href="#footnote_Temp_233" id="call_footnote_Temp_233"><sup><small>36</small></sup></a></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.55" id="%_thm_2.55"></a><b>Exercise 2.55.</b>  Eva Lu Ator types to the interpreter the expression</p>
+<p></p>
+<p><pre>(car ''abracadabra)
+</pre></p>
+<p></p>
+<p>To her surprise, the interpreter prints back <code>quote</code>.  Explain.</p>
+<p><a name="%_sec_2.3.2" id="%_sec_2.3.2"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.2">2.3.2  Example: Symbolic Differentiation</a></h3>
+<p><a name="%_idx_2042" id="%_idx_2042"></a><a name="%_idx_2044" id="%_idx_2044"></a><a name="%_idx_2046" id="%_idx_2046"></a>As an illustration of symbol manipulation and a further illustrationof data abstraction, consider the design of a procedure that performssymbolic differentiation of algebraic expressions.  We would like theprocedure to take as arguments an algebraic expression and a variableand to return the derivative of the expression with respect to thevariable.  For example, if the arguments to the procedure are <em>a</em><em>x</em><sup>2</sup> + <em>b</em><em>x</em>  + <em>c</em> and <em>x</em>, the procedure should return 2<em>a</em><em>x</em> + <em>b</em>.  Symbolicdifferentiation is of special historical significance in Lisp.  It wasone of the motivating examples behind the development of a computerlanguage for symbol manipulation.  Furthermore, it marked thebeginning of the line of research that led to the development ofpowerful systems for symbolic mathematical work, which are currentlybeing used by a growing number of applied mathematicians andphysicists.</p>
+<p>In developing the symbolic-differentiation program, we will follow thesame strategy of data abstraction that we followed in developing therational-number system of section <a href="book-Z-H-14.html#%_sec_2.1.1">2.1.1</a>.  That is, we will firstdefine a differentiation algorithm that operates on abstractobjects such as “sums,” “products,” and “variables” withoutworrying about how these are to be represented.  Only afterward willwe address the representation problem.</p>
+<p><a name="%_sec_Temp_235" id="%_sec_Temp_235"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_235">The differentiation program with abstract data</a></h4>
+<p><a name="%_idx_2048" id="%_idx_2048"></a>In order to keep things simple, we will consider a very simplesymbolic-differentiation program that handles expressions that arebuilt up using only the operations of addition and multiplication withtwo arguments.  Differentiation of any such expression can be carriedout by applying the following reduction rules:</p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-45.gif" border="0"></div>
+<p></p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-46.gif" border="0"></div>
+<p></p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-47.gif" border="0"></div>
+<p></p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-48.gif" border="0"></div>
+<p></p>
+<p>Observe that the latter two rules are recursive in nature.  That is,to obtain the derivative of a sum we first find the derivatives of theterms and add them.  Each of the terms may in turn be anexpression that needs to be decomposed.  Decomposing into smaller andsmaller pieces will eventually produce pieces that are eitherconstants or variables, whose derivatives will be either 0 or 1.</p>
+<p>To embody these rules in a procedure we indulge in a little <a name="%_idx_2050" id="%_idx_2050"></a>wishfulthinking, as we did in designing the rational-number implementation.If we had a means for representing algebraic expressions, we should beable to tell whether an expression is a sum, a product, a constant, ora variable.  We should be able to extract the parts of an expression.For a sum, for example we want to be able to extract the addend(first term) and the augend (second term).  We should also be able toconstruct expressions from parts.  Let us assume that we already haveprocedures to implement the following selectors, constructors, andpredicates:</p>
+<p></p>
+<table border="0">
+<tr>
+<td valign="top">
+<code>(variable? e)</code> </td>
+<td valign="top">Is <code>e</code> a variable?</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(same-variable? v1 v2)</code> </td>
+<td valign="top">Are <code>v1</code> and <code>v2</code> the same variable?</td>
+</tr>
+<tr>
+<td valign="top"><p><code>(sum? e)</code> </p></td>
+<td valign="top">Is <code>e</code> a sum?</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(addend e)</code> </td>
+<td valign="top">Addend of the sum <code>e</code>.</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(augend e)</code> </td>
+<td valign="top">Augend of the sum <code>e</code>.</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(make-sum a1 a2)</code> </td>
+<td valign="top">Construct the sum of <code>a1</code> and <code>a2</code>.</td>
+</tr>
+<tr>
+<td valign="top"><p><code>(product? e)</code> </p></td>
+<td valign="top">Is <code>e</code> a product?</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(multiplier e)</code> </td>
+<td valign="top">Multiplier of the product <code>e</code>.</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(multiplicand e)</code> </td>
+<td valign="top">Multiplicand of the product <code>e</code>.</td>
+</tr>
+<tr>
+<td valign="top">
+<code>(make-product m1 m2)</code> </td>
+<td valign="top">Construct the product of <code>m1</code> and <code>m2</code>.</td>
+</tr>
+</table>Using these, and the primitive predicate <code>number?</code>,<a name="%_idx_2052" id="%_idx_2052"></a><a name="%_idx_2054" id="%_idx_2054"></a>which identifies numbers, we can express the differentiation rules as thefollowing procedure:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2056" id="%_idx_2056"></a>(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+           (make-product (multiplier exp)
+                         (deriv (multiplicand exp) var))
+           (make-product (deriv (multiplier exp) var)
+                         (multiplicand exp))))
+        (else
+         (error "unknown expression type -- DERIV" exp))))
+</pre></p>
+<p></p>
+<p>This <code>deriv</code> procedure incorporates the complete differentiation algorithm.Since it is expressed in terms of abstract data, it will work nomatter how we choose to represent algebraic expressions, as long as wedesign a proper set of selectors and constructors.  This is the issuewe must address next.</p>
+<p><a name="%_sec_Temp_236" id="%_sec_Temp_236"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_236">Representing algebraic expressions</a></h4>
+<p><a name="%_idx_2058" id="%_idx_2058"></a>We can imagine many ways to use list structure to represent algebraicexpressions.  For example, we could use lists of symbols that mirrorthe usual algebraic notation, representing <em>a</em><em>x</em> + <em>b</em> as the list <code>(a* x + b)</code>.  However, one especially straightforward choice is to usethe same parenthesized prefix notation that Lisp uses forcombinations; that is, to represent <em>a</em><em>x</em> + <em>b</em> as <code>(+ (* a x) b)</code>.Then our data representation for the differentiation problem is asfollows:</p>
+<p></p>
+<p></p>
+<ul>
+<li>The variables are symbols.  They are identified by the primitive predicate<a name="%_idx_2060" id="%_idx_2060"></a><a name="%_idx_2062" id="%_idx_2062"></a><code>symbol?</code>:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2064" id="%_idx_2064"></a>(define (variable? x) (symbol? x))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>Two variables are the same if the symbols representing them are<code>eq?</code>:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2066" id="%_idx_2066"></a>(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>Sums and products are constructed as lists:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2068" id="%_idx_2068"></a>(define (make-sum a1 a2) (list '+ a1 a2))
+
+<a name="%_idx_2070" id="%_idx_2070"></a>(define (make-product m1 m2) (list '* m1 m2))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>A sum is a list whose first element is the symbol <code>+</code>:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2072" id="%_idx_2072"></a>(define (sum? x)
+  (and (pair? x) (eq? (car x) '+)))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>The addend is the second item of the sum list:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2074" id="%_idx_2074"></a>(define (addend s) (cadr s))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>The augend is the third item of the sum list:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2076" id="%_idx_2076"></a>(define (augend s) (caddr s))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>A product is a list whose first element is the symbol <code>*</code>:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2078" id="%_idx_2078"></a>(define (product? x)
+  (and (pair? x) (eq? (car x) '*)))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>The multiplier is the second item of the product list:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2080" id="%_idx_2080"></a>(define (multiplier p) (cadr p))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+</li>
+<li>The multiplicand is the third item of the product list:<p></p>
+<p></p>
+<p><pre><a name="%_idx_2082" id="%_idx_2082"></a>(define (multiplicand p) (caddr p))
+</pre></p>
+<p></p>
+<p></p>
+</li>
+</ul>
+<p></p>
+<p>Thus, we need only combine these with the algorithm as embodied by<code>deriv</code> in order to have a working symbolic-differentiationprogram.  Let us look at some examples of its behavior:</p>
+<p></p>
+<p></p>
+<p><pre>(deriv '(+ x 3) 'x)
+<i>(+ 1 0)</i>
+(deriv '(* x y) 'x)
+<i>(+ (* x 0) (* 1 y))</i>
+(deriv '(* (* x y) (+ x 3)) 'x)
+<i>(+ (* (* x y) (+ 1 0))
+   (* (+ (* x 0) (* 1 y))
+      (+  x 3)))</i>
+</pre></p>
+<p></p>
+<p>The program produces answers that are correct; however, they areunsimplified.  It is true that</p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-49.gif" border="0"></div>
+<p></p>
+<p>but we would like the program to know that <em>x</em> ·  0  =  0, 1 ·  <em>y</em>  =<em>y</em>, and 0 + <em>y</em> = <em>y</em>.  The answer for the second example should have beensimply <code>y</code>.  As the third example shows, this becomes a seriousissue when the expressions are complex.</p>
+<p><a name="%_idx_2084" id="%_idx_2084"></a><a name="%_idx_2086" id="%_idx_2086"></a>Our difficulty is much like the one we encountered with therational-number implementation: we haven't reduced answers to simplestform.  To accomplish the rational-number reduction, we needed tochange only the constructors and the selectors of the implementation.We can adopt a similar strategy here.  We won't change <code>deriv</code> atall.  Instead, we will change <code>make-sum</code> so that if both summandsare numbers, <code>make-sum</code> will add them and return their sum.  Also,if one of the summands is 0, then <code>make-sum</code> will return the othersummand.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2088" id="%_idx_2088"></a>(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2)) (+ a1 a2))
+        (else (list '+ a1 a2))))
+</pre></p>
+<p></p>
+<p>This uses the procedure <code>=number?</code>, which checks whether anexpression is equal to a given number:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2090" id="%_idx_2090"></a>(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+</pre></p>
+<p></p>
+<p>Similarly, we will change <code>make-product</code> to build in the rules that 0times anything is 0 and 1 times anything is the thing itself:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2092" id="%_idx_2092"></a>(define (make-product m1 m2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((and (number? m1) (number? m2)) (* m1 m2))
+        (else (list '* m1 m2))))
+</pre></p>
+<p></p>
+<p>Here is how this version works on our three examples:</p>
+<p></p>
+<p></p>
+<p><pre>(deriv '(+ x 3) 'x)
+<i>1</i>
+(deriv '(* x y) 'x)
+<i>y</i>
+(deriv '(* (* x y) (+ x 3)) 'x)
+<i>(+ (* x y) (* y (+ x 3)))</i>
+</pre></p>
+<p></p>
+<p>Although this is quite an improvement, the third example shows thatthere is still a long way to go before we get a program that putsexpressions into a form that we might agree is “simplest.”  Theproblem of algebraic simplification is complex because, among otherreasons, a form that may be simplest for one purpose may not be foranother.</p>
+<p><a name="%_thm_2.56" id="%_thm_2.56"></a><b>Exercise 2.56.</b>  <a name="%_idx_2094" id="%_idx_2094"></a>Show how to extend the basic differentiator to handle more kinds ofexpressions.  For instance, implement the differentiation rule</p>
+<p></p>
+<p></p>
+<div align="left"><img src="images/ch2-Z-G-50.gif" border="0"></div>
+<p></p>
+<p>by adding a new clause to the <code>deriv</code> programand definingappropriate procedures <code>exponentiation?</code>, <code>base</code>, <code>exponent</code>,and <code>make-exponentiation</code>.  (You may use the symbol <code>**</code> to denoteexponentiation.)Build in the rules that anything raised to the power 0 is 1 andanything raised to the power 1 is the thing itself.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.57" id="%_thm_2.57"></a><b>Exercise 2.57.</b>  Extend the differentiation program to handle sums and products ofarbitrary numbers of (two or more) terms.Then the last example above could be expressed as</p>
+<p></p>
+<p><pre>(deriv '(* x y (+ x 3)) 'x)
+</pre></p>
+<p></p>
+<p>Try to do this by changing only therepresentation for sums and products, without changing the <code>deriv</code> procedure at all.  For example, the <code>addend</code> of a sum wouldbe the first term, and the <code>augend</code> would be the sum of the restof the terms.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.58" id="%_thm_2.58"></a><b>Exercise 2.58.</b>  <a name="%_idx_2096" id="%_idx_2096"></a><a name="%_idx_2098" id="%_idx_2098"></a>Suppose we want to modify the differentiation program so that it workswith ordinary mathematical notation, in which <code>+</code> and <code>*</code> areinfix rather than prefix operators.  Since the differentiation programis defined in terms of abstract data, we can modify it to work withdifferent representations of expressions solely by changing thepredicates, selectors, and constructors that define the representationof the algebraic expressions on which the differentiator is tooperate.</p>
+<p></p>
+<p></p>
+<p>a. Show how to do this in order to differentiate algebraicexpressions presented in infix form, such as <code>(x + (3 * (x + (y + 2))))</code>.To simplify the task, assume that <code>+</code> and <code>*</code> alwaystake two arguments and that expressions are fully parenthesized.</p>
+<p></p>
+<p></p>
+<p>b. The problem becomes substantially harder if we allow standardalgebraic notation, such as <code>(x + 3 * (x + y + 2))</code>, which dropsunnecessary parentheses and assumes that multiplication is done beforeaddition.  Can you design appropriate predicates, selectors, andconstructors for this notation such that our derivative program stillworks?</p>
+<p><a name="%_sec_2.3.3" id="%_sec_2.3.3"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.3">2.3.3  Example: Representing Sets</a></h3>
+<p><a name="%_idx_2100" id="%_idx_2100"></a>In the previous examples we built representations for two kinds ofcompound data objects: rational numbers and algebraic expressions.  Inone of these examples we had the choice of simplifying (reducing) theexpressions at either construction time or selection time, but otherthan that the choice of a representation for these structures in termsof lists was straightforward. When we turn to the representation ofsets, the choice of a representation is not so obvious.  Indeed, thereare a number of possible representations, and they differsignificantly from one another in several ways.</p>
+<p><a name="%_idx_2102" id="%_idx_2102"></a>Informally, a set is simply a collection of distinct objects.  To givea more precise definition we can employ the method of dataabstraction.  That is, we define “set” by specifying the operationsthat are to be used on sets.  These are <code>union-set</code>,<code>intersection-set</code>, <code>element-of-set?</code>, and <code>adjoin-set</code>.<a name="%_idx_2104" id="%_idx_2104"></a><code>Element-of-set?</code> is a predicate that determines whether a givenelement is a member of a set.  <a name="%_idx_2106" id="%_idx_2106"></a><code>Adjoin-set</code> takes an object and aset as arguments and returns a set that contains the elements of theoriginal set and also the adjoined element.  <a name="%_idx_2108" id="%_idx_2108"></a><code>Union-set</code> computesthe union of two sets, which is the set containing each element thatappears in either argument.  <a name="%_idx_2110" id="%_idx_2110"></a><code>Intersection-set</code> computes theintersection of two sets, which is the set containing only elementsthat appear in both arguments.  From the viewpoint of data abstraction, weare free to design any representation that implements these operationsin a way consistent with the interpretations given above.<a name="call_footnote_Temp_240" href="#footnote_Temp_240" id="call_footnote_Temp_240"><sup><small>37</small></sup></a></p>
+<p><a name="%_sec_Temp_241" id="%_sec_Temp_241"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_241">Sets as unordered lists</a></h4>
+<p><a name="%_idx_2112" id="%_idx_2112"></a><a name="%_idx_2114" id="%_idx_2114"></a>One way to represent a set is as a list of its elements in which noelement appears more than once.  The empty set is represented by theempty list.  In this representation, <code>element-of-set?</code> is similarto the procedure <code>memq</code> of section <a href="#%_sec_2.3.1">2.3.1</a>.  It uses <code>equal?</code>instead of <code>eq?</code> so that the set elements need not be symbols:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2116" id="%_idx_2116"></a>(define (element-of-set? x set)
+  (cond ((null? set) false)
+        ((equal? x (car set)) true)
+        (else (element-of-set? x (cdr set)))))
+</pre></p>
+<p></p>
+<p>Using this, we can write <code>adjoin-set</code>.  If the object to be adjoinedis already in the set, we just return the set.  Otherwise, we use<code>cons</code> to add the object to the list that represents the set:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2118" id="%_idx_2118"></a>(define (adjoin-set x set)
+  (if (element-of-set? x set)
+      set
+      (cons x set)))
+</pre></p>
+<p></p>
+<p>For <code>intersection-set</code> we can use a recursive strategy.  If weknow how to form the intersection of <code>set2</code> and the <code>cdr</code>of <code>set1</code>, we only need to decide whether to includethe <code>car</code> of <code>set1</code> in this.  But this depends on whether <code>(carset1)</code> is also in <code>set2</code>.  Here is the resulting procedure:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2120" id="%_idx_2120"></a>(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) '())
+        ((element-of-set? (car set1) set2)        
+         (cons (car set1)
+               (intersection-set (cdr set1) set2)))
+        (else (intersection-set (cdr set1) set2))))
+</pre></p>
+<p></p>
+<p></p>
+<p>In designing a representation, one of the issues we should beconcerned with is efficiency.  Consider the number of steps required by our setoperations.  Since they all use <code>element-of-set?</code>, the speedof this operation has a major impact on the efficiency of the setimplementation as a whole.  Now, in order to check whether an objectis a member of a set, <code>element-of-set?</code> may have to scan theentire set. (In the worst case, the object turns out not to be in theset.)  Hence, if the set has <em>n</em> elements, <code>element-of-set?</code>might take up to <em>n</em> steps.  Thus, the number of stepsrequired grows as θ(<em>n</em>).The number of steps required by <code>adjoin-set</code>, which uses this operation,also grows as θ(<em>n</em>).  For <code>intersection-set</code>, which does an <code>element-of-set?</code> check for each element of <code>set1</code>, the number of stepsrequired grows as the product of the sizes of the sets involved, orθ(<em>n</em><sup>2</sup>) for two sets of size <em>n</em>.  The same will be true of <code>union-set</code>.</p>
+<p></p>
+<p><a name="%_thm_2.59" id="%_thm_2.59"></a><b>Exercise 2.59.</b>  Implement the <a name="%_idx_2122" id="%_idx_2122"></a><code>union-set</code> operation for the unordered-listrepresentation of sets.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.60" id="%_thm_2.60"></a><b>Exercise 2.60.</b>  We specified that a set would be represented as a list with noduplicates.  Now suppose we allow duplicates.  For instance,the set {1,2,3} could be represented as the list <code>(2 3 2 1 3 22)</code>.  Design procedures <code>element-of-set?</code>, <code>adjoin-set</code>, <code>union-set</code>, and <code>intersection-set</code> that operate on thisrepresentation.  How does the efficiency of each compare with thecorresponding procedure for the non-duplicate representation?  Arethere applications for which you would use this representation inpreference to the non-duplicate one?</p>
+<p><a name="%_sec_Temp_244" id="%_sec_Temp_244"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_244">Sets as ordered lists</a></h4>
+<p><a name="%_idx_2124" id="%_idx_2124"></a><a name="%_idx_2126" id="%_idx_2126"></a>One way to speed up our set operations is to change the representationso that the set elements are listed in increasing order.  To do this,we need some way to compare two objects so that we can say which isbigger.  For example, we could compare symbols lexicographically, orwe could agree on some method for assigning a unique number to anobject and then compare the elements by comparing the correspondingnumbers.  To keep our discussion simple, we will consider only thecase where the set elements are numbers, so that we can compareelements using <code>&gt;</code> and <code>&lt;</code>.  We will represent a set ofnumbers by listing its elements in increasing order.  Whereas ourfirst representation above allowed us to represent the set{1,3,6,10} by listing the elements in any order, our newrepresentation allows only the list <code>(1 3 6 10)</code>.</p>
+<p>One advantage of ordering shows up in <code>element-of-set?</code>: Inchecking for the presence of an item, we no longer have to scan theentire set.  If we reach a set element that is larger than the item weare looking for, then we know that the item is not in the set:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2128" id="%_idx_2128"></a>(define (element-of-set? x set)
+  (cond ((null? set) false)
+        ((= x (car set)) true)
+        ((&lt; x (car set)) false)
+        (else (element-of-set? x (cdr set)))))
+</pre></p>
+<p></p>
+<p>How many steps does this save?  In the worst case, the item we arelooking for may be the largest one in the set, so the number of stepsis the same as for the unordered representation.  On the other hand,if we search for items of many different sizes we can expect thatsometimes we will be able to stop searching at a point near thebeginning of the list and that other times we will still need toexamine most of the list.  On the average we should expect to have toexamine about half of the items in the set.  Thus, the averagenumber of steps required will be about <em>n</em>/2.This is still θ(<em>n</em>) growth, butit does save us, on the average, a factor of 2 in number of steps over theprevious implementation.</p>
+<p>We obtain a more impressive speedup with <code>intersection-set</code>.  Inthe unordered representation this operation requiredθ(<em>n</em><sup>2</sup>) steps, because we performed a complete scan of <code>set2</code> foreach element of <code>set1</code>.  But with the ordered representation, wecan use a more clever method.  Begin by comparing the initialelements, <code>x1</code> and <code>x2</code>, of the two sets.  If <code>x1</code>equals <code>x2</code>, then that gives an element of the intersection, andthe rest of the intersection is the intersection of the <code>cdr</code>s ofthe two sets.  Suppose, however, that <code>x1</code> is less than <code>x2</code>.Since <code>x2</code> is the smallest element in <code>set2</code>, we canimmediately conclude that <code>x1</code> cannot appear anywhere in <code>set2</code> and hence is not in the intersection.  Hence, the intersectionis equal to the intersection of <code>set2</code> with the <code>cdr</code> of <code>set1</code>.  Similarly, if <code>x2</code> is less than <code>x1</code>, then theintersection is given by the intersection of <code>set1</code> with the <code>cdr</code> of <code>set2</code>.  Here is the procedure:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2130" id="%_idx_2130"></a>(define (intersection-set set1 set2)
+  (if (or (null? set1) (null? set2))
+      '()    
+      (let ((x1 (car set1)) (x2 (car set2)))
+        (cond ((= x1 x2)
+               (cons x1
+                     (intersection-set (cdr set1)
+                                       (cdr set2))))
+              ((&lt; x1 x2)
+               (intersection-set (cdr set1) set2))
+              ((&lt; x2 x1)
+               (intersection-set set1 (cdr set2)))))))
+</pre></p>
+<p></p>
+<p>To estimate the number of steps required by this process, observe that at eachstep we reduce the intersection problem to computing intersections ofsmaller sets – removing the first element from <code>set1</code> or <code>set2</code> or both.  Thus, the number of steps required is at most the sumof the sizes of <code>set1</code> and <code>set2</code>, rather than the product ofthe sizes as with the unordered representation.  This is θ(<em>n</em>) growthrather than θ(<em>n</em><sup>2</sup>) – a considerable speedup, even for sets ofmoderate size.</p>
+<p></p>
+<p><a name="%_thm_2.61" id="%_thm_2.61"></a><b>Exercise 2.61.</b>  Give an implementation of <a name="%_idx_2132" id="%_idx_2132"></a><code>adjoin-set</code> using the orderedrepresentation.  By analogy with <code>element-of-set?</code> show how totake advantage of the ordering to produce a procedure that requires onthe average about half as many steps as with the unorderedrepresentation.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.62" id="%_thm_2.62"></a><b>Exercise 2.62.</b>  Give a θ(<em>n</em>) implementation of <a name="%_idx_2134" id="%_idx_2134"></a><code>union-set</code> for setsrepresented as ordered lists.</p>
+<p></p>
+<p><a name="%_sec_Temp_247" id="%_sec_Temp_247"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_247">Sets as binary trees</a></h4>
+<p><a name="%_idx_2136" id="%_idx_2136"></a><a name="%_idx_2138" id="%_idx_2138"></a><a name="%_idx_2140" id="%_idx_2140"></a><a name="%_idx_2142" id="%_idx_2142"></a><a name="%_idx_2144" id="%_idx_2144"></a><a name="%_idx_2146" id="%_idx_2146"></a>We can do better than the ordered-list representation by arranging theset elements in the form of a tree.  Each node of the tree holds oneelement of the set, called the “entry” at that node, and a link toeach of two other (possibly empty) nodes.  The “left” link points toelements smaller than the one at the node, and the “right” link toelements greater than the one at the node.Figure <a href="#%_fig_2.16">2.16</a> shows some trees that represent the set{1,3,5,7,9,11}.  The same set may be represented by a tree in anumber of different ways.  The only thing we require for a validrepresentation is that all elements in the left subtree be smallerthan the node entry and that all elements in the right subtree belarger.</p>
+<p><a name="%_fig_2.16" id="%_fig_2.16"></a></p>
+<p></p>
+<div align="left"><table width="100%">
+<tr><td><img src="images/ch2-Z-G-51.gif" border="0"></td></tr>
+<caption align="bottom"><div align="left">
+<b>Figure 2.16:</b>  Various binary trees that represent the set { 1,3,5,7,9,11 }.</div></caption>
+<tr><td></td></tr>
+</table></div>
+<p></p>
+<p>The advantage of the tree representation is this: Suppose we want tocheck whether a number <em>x</em> is contained in a set.  We begin bycomparing <em>x</em> with the entry in the top node.  If <em>x</em> is less thanthis, we know that we need only search the left subtree; if <em>x</em> isgreater, we need only search the right subtree.  Now, if the tree is“balanced,” each of these subtrees will be about half the size ofthe original.  Thus, in one step we have reduced the problem ofsearching a tree of size <em>n</em> to searching a tree of size <em>n</em>/2.  Sincethe size of the tree is halved at each step, we should expect that thenumber of steps needed to search a tree of size <em>n</em> grows as θ(<code>log</code><em>n</em>).<a name="call_footnote_Temp_248" href="#footnote_Temp_248" id="call_footnote_Temp_248"><sup><small>38</small></sup></a> For large sets, this willbe a significant speedup over the previous representations.</p>
+<p><a name="%_idx_2150" id="%_idx_2150"></a>We can represent trees by using lists.  Each node will be a list ofthree items: the entry at the node, the left subtree, and the rightsubtree.  A left or a right subtree of the empty list will indicatethat there is no subtree connected there.  We can describe thisrepresentation by the following procedures:<a name="call_footnote_Temp_249" href="#footnote_Temp_249" id="call_footnote_Temp_249"><sup><small>39</small></sup></a></p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2152" id="%_idx_2152"></a>(define (entry tree) (car tree))
+<a name="%_idx_2154" id="%_idx_2154"></a>(define (left-branch tree) (cadr tree))
+<a name="%_idx_2156" id="%_idx_2156"></a>(define (right-branch tree) (caddr tree))
+<a name="%_idx_2158" id="%_idx_2158"></a>(define (make-tree entry left right)
+  (list entry left right))
+</pre></p>
+<p></p>
+<p></p>
+<p>Now we can write the <code>element-of-set?</code> procedure using the strategydescribed above:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2160" id="%_idx_2160"></a>(define (element-of-set? x set)
+  (cond ((null? set) false)
+        ((= x (entry set)) true)
+        ((&lt; x (entry set))
+         (element-of-set? x (left-branch set)))
+        ((&gt; x (entry set))
+         (element-of-set? x (right-branch set)))))
+</pre></p>
+<p></p>
+<p></p>
+<p>Adjoining an item to a set is implemented similarly and also requiresθ(<code>log</code> <em>n</em>) steps.  To adjoin an item <code>x</code>, we compare <code>x</code> withthe node entry to determine whether <code>x</code> should be added to theright or to the left branch, and having adjoined <code>x</code> to theappropriate branch we piece this newly constructed branch togetherwith the original entry and the other branch.  If <code>x</code> is equal tothe entry, we just return the node.  If we are asked to adjoin<code>x</code> to an empty tree, we generate a tree that has <code>x</code> as theentry and empty right and left branches.  Here is the procedure:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2162" id="%_idx_2162"></a>(define (adjoin-set x set)
+  (cond ((null? set) (make-tree x '() '()))
+        ((= x (entry set)) set)
+        ((&lt; x (entry set))
+         (make-tree (entry set) 
+                    (adjoin-set x (left-branch set))
+                    (right-branch set)))
+        ((&gt; x (entry set))
+         (make-tree (entry set)
+                    (left-branch set)
+                    (adjoin-set x (right-branch set))))))
+</pre></p>
+<p></p>
+<p></p>
+<p>The above claim that searching the tree can be performed in a logarithmicnumber of stepsrests on the assumption that the tree is <a name="%_idx_2164" id="%_idx_2164"></a><a name="%_idx_2166" id="%_idx_2166"></a>“balanced,” i.e., that theleft and the right subtree of every tree have approximately the samenumber of elements, so that each subtree contains about half theelements of its parent.  But how can we be certain that the trees weconstruct will be balanced?  Even if we start with a balanced tree,adding elements with <code>adjoin-set</code> may produce an unbalancedresult.  Since the position of a newly adjoined element depends on howthe element compares with the items already in the set, we can expectthat if we add elements “randomly” the tree will tend to be balancedon the average.  But this is not a guarantee.  For example, if westart with an empty set and adjoin the numbers 1 through 7 in sequencewe end up with the highly unbalanced tree shown infigure <a href="#%_fig_2.17">2.17</a>.  In this tree all the left subtreesare empty, so it has no advantage over a simple ordered list.  Oneway to solve this problem is to define an operation that transforms anarbitrary tree into a balanced tree with the same elements.  Then wecan perform this transformation after every few <code>adjoin-set</code>operations to keep our set in balance.  There are also other ways tosolve this problem, most of which involve designing new datastructures for which searching and insertion both can be done inθ(<code>log</code> <em>n</em>) steps.<a name="call_footnote_Temp_250" href="#footnote_Temp_250" id="call_footnote_Temp_250"><sup><small>40</small></sup></a></p>
+<p><a name="%_fig_2.17" id="%_fig_2.17"></a></p>
+<p></p>
+<div align="left"><table width="100%">
+<tr><td><img src="images/ch2-Z-G-52.gif" border="0"></td></tr>
+<caption align="bottom"><div align="left">
+<b>Figure 2.17:</b>  Unbalanced tree produced by adjoining 1 through 7 in sequence.</div></caption>
+<tr><td></td></tr>
+</table></div>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.63" id="%_thm_2.63"></a><b>Exercise 2.63.</b>  Each of the following two procedures converts a <a name="%_idx_2182" id="%_idx_2182"></a><a name="%_idx_2184" id="%_idx_2184"></a>binary tree to a list.<a name="%_idx_2186" id="%_idx_2186"></a></p>
+<p></p>
+<p><pre>(define (tree-&gt;list-1 tree)
+  (if (null? tree)
+      '()
+      (append (tree-&gt;list-1 (left-branch tree))
+              (cons (entry tree)
+                    (tree-&gt;list-1 (right-branch tree))))))
+(define (tree-&gt;list-2 tree)
+  (define (copy-to-list tree result-list)
+    (if (null? tree)
+        result-list
+        (copy-to-list (left-branch tree)
+                      (cons (entry tree)
+                            (copy-to-list (right-branch tree)
+                                          result-list)))))
+  (copy-to-list tree '()))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p>a. Do the two procedures produce the same result for every tree?  Ifnot, how do the results differ?  What lists do the two proceduresproduce for the trees in figure <a href="#%_fig_2.16">2.16</a>?</p>
+<p></p>
+<p>b. Do the two procedures have the same order of growth in the numberof steps required to convert a balanced tree with <em>n</em> elements to a list?If not, which one grows more slowly?</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.64" id="%_thm_2.64"></a><b>Exercise 2.64.</b>  <a name="%_idx_2188" id="%_idx_2188"></a><a name="%_idx_2190" id="%_idx_2190"></a>The following procedure <code>list-&gt;tree</code> converts an ordered list to abalanced binary tree.  The helper procedure <code>partial-tree</code> takesas arguments an integer <em>n</em> and list of at least <em>n</em> elements andconstructs a balanced tree containing the first <em>n</em> elements of thelist.  The result returned by <code>partial-tree</code> is a pair (formedwith <code>cons</code>) whose <code>car</code> is the constructed tree and whose<code>cdr</code> is the list of elements not included in the tree.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2192" id="%_idx_2192"></a>(define (list-&gt;tree elements)
+  (car (partial-tree elements (length elements))))
+
+(define (partial-tree elts n)
+  (if (= n 0)
+      (cons '() elts)
+      (let ((left-size (quotient (- n 1) 2)))
+        (let ((left-result (partial-tree elts left-size)))
+          (let ((left-tree (car left-result))
+                (non-left-elts (cdr left-result))
+                (right-size (- n (+ left-size 1))))
+            (let ((this-entry (car non-left-elts))
+                  (right-result (partial-tree (cdr non-left-elts)
+                                              right-size)))
+              (let ((right-tree (car right-result))
+                    (remaining-elts (cdr right-result)))
+                (cons (make-tree this-entry left-tree right-tree)
+                      remaining-elts))))))))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p>a. Write a short paragraph explaining as clearly as you can how <code>partial-tree</code> works.  Draw the tree produced by <code>list-&gt;tree</code> forthe list <code>(1 3 5 7 9 11)</code>.</p>
+<p></p>
+<p>b. What is the order of growth in the number of steps required by <code>list-&gt;tree</code> to convert a list of <em>n</em> elements?</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.65" id="%_thm_2.65"></a><b>Exercise 2.65.</b>  <a name="%_idx_2194" id="%_idx_2194"></a><a name="%_idx_2196" id="%_idx_2196"></a>Use the results of exercises <a href="#%_thm_2.63">2.63</a> and <a href="#%_thm_2.64">2.64</a> to give θ(<em>n</em>) implementations of <code>union-set</code> and <code>intersection-set</code> for sets implemented as(balanced) binary trees.<a name="call_footnote_Temp_254" href="#footnote_Temp_254" id="call_footnote_Temp_254"><sup><small>41</small></sup></a></p>
+<p><a name="%_sec_Temp_255" id="%_sec_Temp_255"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_255">Sets and information retrieval</a></h4>
+<p><a name="%_idx_2200" id="%_idx_2200"></a>We have examined options for using lists to represent sets and haveseen how the choice of representation for a data object can have alarge impact on the performance of the programs that use the data.Another reason for concentrating on sets is that the techniquesdiscussed here appear again and again in applications involvinginformation retrieval.</p>
+<p><a name="%_idx_2202" id="%_idx_2202"></a>Consider a data base containing a large number of individual records,<a name="%_idx_2204" id="%_idx_2204"></a>such as the personnel files for a company or the transactions in anaccounting system.  A typical data-management system spends a largeamount of time accessing or modifying the data in the records andtherefore requires an efficient method for accessing records.  This isdone by identifying a part of each record to serve as an identifying<a name="%_idx_2206" id="%_idx_2206"></a><em>key</em>.  A key can be anything that uniquely identifies therecord.  For a personnel file, it might be an employee's ID number.For an accounting system, it might be a transaction number.  Whateverthe key is, when we define the record as a data structure we shouldinclude a <a name="%_idx_2208" id="%_idx_2208"></a><code>key</code> selector procedure that retrieves the keyassociated with a given record.</p>
+<p>Now we represent the data base as a set of records. To locate therecord with a given key we use a procedure <code>lookup</code>, which takesas arguments a key and a data base and which returns the record thathas that key, or false if there is no such record.  <code>Lookup</code>is implemented in almost the same way as <code>element-of-set?</code>.  Forexample, if the set of records is implemented as an unordered list, wecould use</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2210" id="%_idx_2210"></a>(define (lookup given-key set-of-records)
+  (cond ((null? set-of-records) false)
+        ((equal? given-key (key (car set-of-records)))
+         (car set-of-records))
+        (else (lookup given-key (cdr set-of-records)))))
+</pre></p>
+<p></p>
+<p></p>
+<p>Of course, there are better ways to represent large sets than asunordered lists.  Information-retrieval systems in which records haveto be “randomly accessed” are typically implemented by a tree-basedmethod, such as the binary-tree representation discussed previously.In designing such a system the methodology of data abstractioncan be a great help.  The designer can create an initialimplementation using a simple, straightforward representation such asunordered lists.  This will be unsuitable for the eventual system, butit can be useful in providing a “quick and dirty” data base withwhich to test the rest of the system.  Later on, the datarepresentation can be modified to be more sophisticated.  If the database is accessed in terms of abstract selectors and constructors, thischange in representation will not require any changes to the rest ofthe system.</p>
+<p></p>
+<p><a name="%_thm_2.66" id="%_thm_2.66"></a><b>Exercise 2.66.</b>  Implement the <code>lookup</code> procedure for the casewhere the set of records is structured as a binary tree, ordered bythe numerical values of the keys.</p>
+<p></p>
+<p><a name="%_sec_2.3.4" id="%_sec_2.3.4"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_2.3.4">2.3.4  Example: Huffman Encoding Trees</a></h3>
+<p><a name="%_idx_2212" id="%_idx_2212"></a>This section provides practice in the use of list structure and dataabstraction to manipulate sets and trees.  The application is tomethods for representing data as sequences of ones and zeros (bits).For example, the <a name="%_idx_2214" id="%_idx_2214"></a><a name="%_idx_2216" id="%_idx_2216"></a>ASCII standard code used to represent text incomputers encodes each <a name="%_idx_2218" id="%_idx_2218"></a>character as a sequence of seven bits.  Usingseven bits allows us to distinguish 2<sup>7</sup>, or 128, possible differentcharacters.  In general, if we want to distinguish <em>n</em> differentsymbols, we will need to use <code>log</code><sub>2</sub><em>n</em> bits per symbol.  If all ourmessages are made up of the eight symbols A, B, C, D, E, F, G, and H,we can choose a code with three bits per character, for example</p>
+<table border="0">
+<tr>
+<td valign="top">A 000 </td>
+<td valign="top">C 010 </td>
+<td valign="top">E 100 </td>
+<td valign="top">G 110</td>
+</tr>
+<tr>
+<td valign="top">B 001 </td>
+<td valign="top">D 011 </td>
+<td valign="top">F 101 </td>
+<td valign="top">H 111</td>
+</tr>
+</table>With this code, the message<p></p>
+<p></p>
+<p>BACADAEAFABBAAAGAH</p>
+<p></p>
+<p></p>
+<p>is encoded as the string of 54 bits</p>
+<p></p>
+<p></p>
+<p>001000010000011000100000101000001001000000000110000111</p>
+<p></p>
+<p></p>
+<p>Codes such as ASCII and the A-through-H code above are known as <a name="%_idx_2220" id="%_idx_2220"></a><a name="%_idx_2222" id="%_idx_2222"></a><em>fixed-length</em> codes, because they represent each symbol in the messagewith the same number of bits.  It is sometimes advantageous to use<a name="%_idx_2224" id="%_idx_2224"></a><a name="%_idx_2226" id="%_idx_2226"></a><em>variable-length</em> codes, in which different symbols may berepresented by different numbers of bits.  For example, <a name="%_idx_2228" id="%_idx_2228"></a><a name="%_idx_2230" id="%_idx_2230"></a>Morse codedoes not use the same number of dots and dashes for each letter of thealphabet.  In particular, E, the most frequent letter, is representedby a single dot.  In general, if our messages are such that somesymbols appear very frequently and some very rarely, we can encodedata more efficiently (i.e., using fewer bits per message) if weassign shorter codes to the frequent symbols.  Consider the followingalternative code for the letters A through H:</p>
+<table border="0">
+<tr>
+<td valign="top">A 0 </td>
+<td valign="top">C 1010 </td>
+<td valign="top">E 1100 </td>
+<td valign="top">G 1110</td>
+</tr>
+<tr>
+<td valign="top">B 100 </td>
+<td valign="top">D 1011 </td>
+<td valign="top">F 1101 </td>
+<td valign="top">H 1111</td>
+</tr>
+</table>With this code, the same message as above is encoded as the string<p></p>
+<p></p>
+<p>100010100101101100011010100100000111001111</p>
+<p></p>
+<p></p>
+<p>This string contains 42 bits, so it saves more than 20% in space incomparison with the fixed-length code shown above.</p>
+<p>One of the difficulties of using a variable-length code is knowingwhen you have reached the end of a symbol in reading a sequence ofzeros and ones.  Morse code solves this problem by using a special<a name="%_idx_2232" id="%_idx_2232"></a><em>separator code</em> (in this case, a pause) after the sequence ofdots and dashes for each letter.  Another solution is to design thecode in such a way that no complete code for any symbol is thebeginning (or <em>prefix</em>) of the code for another symbol.  Such acode is called a <a name="%_idx_2234" id="%_idx_2234"></a><a name="%_idx_2236" id="%_idx_2236"></a><em>prefix code</em>.  In the example above, A isencoded by 0 and B is encoded by 100, so no other symbol can have acode that begins with 0 or with 100.</p>
+<p>In general, we can attain significant savings if we usevariable-length prefix codes that take advantage of the relativefrequencies of the symbols in the messages to be encoded.  Oneparticular scheme for doing this is called the Huffman encodingmethod, after its discoverer, <a name="%_idx_2238" id="%_idx_2238"></a>David Huffman.  A Huffman code can berepresented as a <a name="%_idx_2240" id="%_idx_2240"></a><a name="%_idx_2242" id="%_idx_2242"></a>binary tree whose leaves are the symbols that areencoded.  At each non-leaf node of the tree there is a set containingall the symbols in the leaves that lie below the node.  In addition,each symbol at a leaf is assigned a weight (which is itsrelative frequency), and each non-leafnode contains a weight that is the sum of all the weights of theleaves lying below it.  The weights are not used in the encoding orthe decoding process.  We will see below how they are used to helpconstruct the tree.</p>
+<p><a name="%_fig_2.18" id="%_fig_2.18"></a></p>
+<p></p>
+<div align="left"><table width="100%">
+<tr><td><img src="images/ch2-Z-G-53.gif" border="0"></td></tr>
+<caption align="bottom"><div align="left">
+<b>Figure 2.18:</b>  A Huffman encoding tree.</div></caption>
+<tr><td></td></tr>
+</table></div>
+<p></p>
+<p>Figure <a href="#%_fig_2.18">2.18</a> shows the Huffman tree for the A-through-Hcode given above.  The weights at the leavesindicate that the tree was designed for messages in which A appearswith relative frequency 8, B with relative frequency 3, and theother letters each with relative frequency 1.</p>
+<p>Given a Huffman tree, we can find the encoding of any symbol bystarting at the root and moving down until we reach the leaf thatholds the symbol.  Each time we move down a left branch we add a 0 tothe code, and each time we move down a right branch we add a 1.  (Wedecide which branch to follow by testing to see which branch either isthe leaf node for the symbol or contains the symbol in its set.)  Forexample, starting from the root of the tree infigure <a href="#%_fig_2.18">2.18</a>, we arrive at the leaf for D by following aright branch, then a left branch, then a right branch, then a rightbranch; hence, the code for D is 1011.</p>
+<p>To decode a bit sequence using a Huffman tree, we begin at the rootand use the successive zeros and ones of the bit sequence to determinewhether to move down the left or the right branch.  Each time we cometo a leaf, we have generated a new symbol in the message, at whichpoint we start over from the root of the tree to find the next symbol.For example, suppose we are given the tree above and the sequence10001010.  Starting at the root, we move down the right branch, (sincethe first bit of the string is 1), then down the left branch (sincethe second bit is 0), then down the left branch (since the third bitis also 0).  This brings us to the leaf for B, so the first symbol ofthe decoded message is B.  Now we start again at the root, and we makea left move because the next bit in the string is 0.  This brings usto the leaf for A.  Then we start again at the root with the rest ofthe string 1010, so we move right, left, right, left and reach C.Thus, the entire message is BAC.</p>
+<p><a name="%_sec_Temp_257" id="%_sec_Temp_257"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_257">Generating Huffman trees</a></h4>
+<p>Given an “alphabet” of symbols and their relative frequencies, howdo we construct the “best” code?  (In other words, which tree willencode messages with the fewest bits?)  Huffman gave an algorithm fordoing this and showed that the resulting code is indeed the bestvariable-length code for messages where the relative frequency of thesymbols matches the frequencies with which the code was constructed.<a name="%_idx_2244" id="%_idx_2244"></a><a name="%_idx_2246" id="%_idx_2246"></a>We will not prove this optimality of Huffman codes here, but we willshow how Huffman trees are constructed.<a name="call_footnote_Temp_258" href="#footnote_Temp_258" id="call_footnote_Temp_258"><sup><small>42</small></sup></a></p>
+<p>The algorithm for generating a Huffman tree is very simple. The ideais to arrange the tree so that the symbols with the lowest frequencyappear farthest away from the root. Begin with the set of leaf nodes,containing symbols and their frequencies, as determined by the initial datafrom which the code is to be constructed. Now find two leaves withthe lowest weights and merge them to produce a node that has thesetwo nodes as its left and right branches. The weight of the new nodeis the sum of the two weights. Remove the two leaves from theoriginal set and replace them by this new node. Now continue thisprocess. At each step, merge two nodes with the smallest weights,removing them from the set and replacing them with a node that hasthese two as its left and right branches. The process stops whenthere is only one node left, which is the root of the entire tree.Here is how the Huffman tree of figure <a href="#%_fig_2.18">2.18</a> was generated:</p>
+<p></p>
+<table border="0">
+<tr>
+<td valign="top">Initial leaves </td>
+<td valign="top">{(A 8)  (B 3)  (C 1) (D 1)  (E 1)  (F 1)  (G 1)  (H 1)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)  (B 3)  ({C D} 2)  (E1)  (F 1)  (G 1)  (H 1)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)  (B 3)  ({C D} 2)({E F} 2)  (G 1)  (H 1)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)  (B 3)  ({C D} 2)({E F} 2)   ({G H} 2)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)   (B 3)  ({C D} 2)  ({E F G H} 4)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)  ({B C D} 5)  ({E F G H} 4)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Merge </p></td>
+<td valign="top">{(A 8)  ({B C D E F G H} 9)}</td>
+</tr>
+<tr>
+<td valign="top"><p>Final merge </p></td>
+<td valign="top">{({A B C D E F G H} 17)}</td>
+</tr>
+<tr><td valign="top"></td></tr>
+</table>The algorithm does not always specify a unique tree, because there maynot be unique smallest-weight nodes at each step.  Also, the choice ofthe order in which the two nodes are merged (i.e., which will be theright branch and which will be the left branch) is arbitrary.<p><a name="%_sec_Temp_259" id="%_sec_Temp_259"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_259">Representing Huffman trees</a></h4>
+<p>In the exercises below we will work with a system that usesHuffman trees to encode and decode messages and generates Huffmantrees according to the algorithm outlined above.  We will begin bydiscussing how trees are represented.</p>
+<p>Leaves of the tree are represented by a list consisting of thesymbol <code>leaf</code>, the symbol at the leaf, and the weight:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2250" id="%_idx_2250"></a>(define (make-leaf symbol weight)
+  (list 'leaf symbol weight))
+<a name="%_idx_2252" id="%_idx_2252"></a>(define (leaf? object)
+  (eq? (car object) 'leaf))
+<a name="%_idx_2254" id="%_idx_2254"></a>(define (symbol-leaf x) (cadr x))
+<a name="%_idx_2256" id="%_idx_2256"></a>(define (weight-leaf x) (caddr x))
+</pre></p>
+<p></p>
+<p>A general tree will be a list of a left branch, a right branch, a setof symbols, and a weight.  The set of symbols will be simply a list ofthe symbols, rather than some more sophisticated set representation.When we make a tree by merging two nodes, we obtain the weight of thetree as the sum of the weights of the nodes, and the set of symbols asthe union of the sets of symbols for the nodes.  Since our symbol sets arerepresented as lists, we can form the union by using the <code>append</code>procedure we defined in section <a href="book-Z-H-15.html#%_sec_2.2.1">2.2.1</a>:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2258" id="%_idx_2258"></a>(define (make-code-tree left right)
+  (list left
+        right
+        (append (symbols left) (symbols right))
+        (+ (weight left) (weight right))))
+</pre></p>
+<p></p>
+<p>If we make a tree in this way, we have the following selectors:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2260" id="%_idx_2260"></a>(define (left-branch tree) (car tree))
+
+<a name="%_idx_2262" id="%_idx_2262"></a>(define (right-branch tree) (cadr tree))
+<a name="%_idx_2264" id="%_idx_2264"></a>(define (symbols tree)
+  (if (leaf? tree)
+      (list (symbol-leaf tree))
+      (caddr tree)))
+<a name="%_idx_2266" id="%_idx_2266"></a>(define (weight tree)
+  (if (leaf? tree)
+      (weight-leaf tree)
+      (cadddr tree)))
+</pre></p>
+<p></p>
+<p>The procedures <code>symbols</code> and <code>weight</code> must do somethingslightly different depending on whether they are called with a leaf ora general tree.  These are simple examples of <a name="%_idx_2268" id="%_idx_2268"></a><a name="%_idx_2270" id="%_idx_2270"></a><em>genericprocedures</em> (procedures that can handle more than one kind of data),which we will have much more to say about insections <a href="book-Z-H-17.html#%_sec_2.4">2.4</a> and <a href="book-Z-H-18.html#%_sec_2.5">2.5</a>.</p>
+<p><a name="%_sec_Temp_260" id="%_sec_Temp_260"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_260">The decoding procedure</a></h4>
+<p>The following procedure implements the decoding algorithm.It takes as arguments a list of zeros and ones, together witha Huffman tree.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2272" id="%_idx_2272"></a>(define (decode bits tree)
+  (define (decode-1 bits current-branch)
+    (if (null? bits)
+        '()
+        (let ((next-branch
+               (choose-branch (car bits) current-branch)))
+          (if (leaf? next-branch)
+              (cons (symbol-leaf next-branch)
+                    (decode-1 (cdr bits) tree))
+              (decode-1 (cdr bits) next-branch)))))
+  (decode-1 bits tree))
+(define (choose-branch bit branch)
+  (cond ((= bit 0) (left-branch branch))
+        ((= bit 1) (right-branch branch))
+        (else (error "bad bit -- CHOOSE-BRANCH" bit))))
+</pre></p>
+<p></p>
+<p>The procedure <code>decode-1</code> takes two arguments: the list of remaining bitsand the current position in the tree.  It keeps moving“down” the tree, choosing a left or a right branch according towhether the next bit in the list is a zero or a one.  (This is donewith the procedure <code>choose-branch</code>.)  When it reaches a leaf, itreturns the symbol at that leaf as the next symbol in the message by<code>cons</code>ing it onto the result of decodingthe rest of the message, starting at the root of the tree.Note the error check in the final clause of <code>choose-branch</code>, whichcomplains if the procedure finds something other than a zero or a one in theinput data.</p>
+<p><a name="%_sec_Temp_261" id="%_sec_Temp_261"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_261">Sets of weighted elements</a></h4>
+<p>In our representation of trees, each non-leaf node contains a set ofsymbols, which we have represented as a simple list.  However, thetree-generating algorithm discussed above requires that we also workwith sets of leaves and trees, successively merging the two smallestitems.  Since we will be required to repeatedly find the smallest itemin a set, it is convenient to use an ordered representation for thiskind of set.</p>
+<p>We will represent a set of leaves and trees as a list of elements,arranged in increasing order of weight.  The following <code>adjoin-set</code> procedure for constructing sets is similar to the onedescribed in exercise <a href="#%_thm_2.61">2.61</a>; however, items are comparedby their weights, and the element being added to the set isnever already in it.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2274" id="%_idx_2274"></a>(define (adjoin-set x set)
+  (cond ((null? set) (list x))
+        ((&lt; (weight x) (weight (car set))) (cons x set))
+        (else (cons (car set)
+                    (adjoin-set x (cdr set))))))
+</pre></p>
+<p></p>
+<p></p>
+<p>The following procedure takes a list ofsymbol-frequency pairs such as <code>((A 4) (B 2) (C 1) (D 1))</code> andconstructs an initial ordered set of leaves, ready to be mergedaccording to the Huffman algorithm:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2276" id="%_idx_2276"></a>(define (make-leaf-set pairs)
+  (if (null? pairs)
+      '()
+      (let ((pair (car pairs)))
+        (adjoin-set (make-leaf (car pair)    <em>; symbol</em>
+                               (cadr pair))  <em>; frequency</em>
+                    (make-leaf-set (cdr pairs))))))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.67" id="%_thm_2.67"></a><b>Exercise 2.67.</b>  Define an encoding tree and a sample message:</p>
+<p></p>
+<p></p>
+<p><pre>(define sample-tree
+  (make-code-tree (make-leaf 'A 4)
+                  (make-code-tree
+                   (make-leaf 'B 2)
+                   (make-code-tree (make-leaf 'D 1)
+                                   (make-leaf 'C 1)))))
+
+(define sample-message '(0 1 1 0 0 1 0 1 0 1 1 1 0))
+</pre></p>
+<p></p>
+<p>Use the <code>decode</code> procedure to decode themessage, and give the result.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.68" id="%_thm_2.68"></a><b>Exercise 2.68.</b>  The <code>encode</code> procedure takes as arguments a message and a tree andproduces the list of bits that gives the encoded message.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2278" id="%_idx_2278"></a>(define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+              (encode (cdr message) tree))))
+</pre></p>
+<p></p>
+<p><code>Encode-symbol</code> is a procedure, which you must write, that returnsthe list of bits that encodes a given symbol according to a giventree.  You should design <code>encode-symbol</code> so that it signals anerror if the symbol is not in the tree at all.  Test your procedure byencoding the result you obtained in exercise <a href="#%_thm_2.67">2.67</a> withthe sample tree and seeing whether it is the same as the originalsample message.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.69" id="%_thm_2.69"></a><b>Exercise 2.69.</b>  The following procedure takes as its argument a list ofsymbol-frequency pairs (where no symbol appears in more than one pair)and generates a Huffman encoding tree according to the Huffmanalgorithm.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2280" id="%_idx_2280"></a>(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+</pre></p>
+<p></p>
+<p><code>Make-leaf-set</code> is the procedure given above that transforms thelist of pairs into an ordered set of leaves.  <code>Successive-merge</code>is the procedure you must write, using <code>make-code-tree</code> tosuccessively merge the smallest-weight elements of the set until thereis only one element left, which is the desired Huffman tree.  (Thisprocedure is slightly tricky, but not really complicated.  If you findyourself designing a complex procedure, then you are almost certainlydoing something wrong.  You can take significant advantage of the factthat we are using an ordered set representation.)</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.70" id="%_thm_2.70"></a><b>Exercise 2.70.</b>  <a name="%_idx_2282" id="%_idx_2282"></a>The following eight-symbol alphabet with associated relativefrequencies was designed to efficiently encode the lyrics of 1950srock songs.  (Note that the “symbols” of an “alphabet” need not beindividual letters.)</p>
+<p></p>
+<table border="0">
+<tr>
+<td valign="top">A    </td>
+<td valign="top">2 </td>
+<td valign="top">NA  </td>
+<td valign="top">16</td>
+</tr>
+<tr>
+<td valign="top">BOOM </td>
+<td valign="top">1 </td>
+<td valign="top">SHA </td>
+<td valign="top">3</td>
+</tr>
+<tr>
+<td valign="top">GET  </td>
+<td valign="top">2 </td>
+<td valign="top">YIP </td>
+<td valign="top">9</td>
+</tr>
+<tr>
+<td valign="top">JOB  </td>
+<td valign="top">2 </td>
+<td valign="top">WAH </td>
+<td valign="top">1</td>
+</tr>
+</table>Use <code>generate-huffman-tree</code> (exercise <a href="#%_thm_2.69">2.69</a>)to generate a corresponding Huffman tree, and use<code>encode</code> (exercise <a href="#%_thm_2.68">2.68</a>)to encode the following message:<p></p>
+<p></p>
+<p>Get a job</p>
+<p>Sha na na na na na na na na</p>
+<p>Get a job</p>
+<p>Sha na na na na na na na na</p>
+<p>Wah yip yip yip yip yip yip yip yip yip</p>
+<p>Sha boom</p>
+<p></p>
+<p></p>
+<p>How many bits are required for the encoding?  What is the smallestnumber of bits that would be needed to encode this song if weused a fixed-length code for the eight-symbol alphabet?</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.71" id="%_thm_2.71"></a><b>Exercise 2.71.</b>  Suppose we have a Huffman tree for an alphabet of <em>n</em> symbols, andthat the relative frequencies of the symbols are 1, 2, 4, <code>...</code>,2<sup><em>n</em>-1</sup>.  Sketch the tree for <em>n</em>=5; for <em>n</em>=10.  In such a tree(for general <em>n</em>) how may bits are required to encode the mostfrequent symbol?  the least frequent symbol?</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_2.72" id="%_thm_2.72"></a><b>Exercise 2.72.</b>  <a name="%_idx_2284" id="%_idx_2284"></a>Consider the encoding procedure that you designed inexercise <a href="#%_thm_2.68">2.68</a>.  What is the order of growth in thenumber of steps needed to encode a symbol?  Be sure to include thenumber of steps needed to search the symbol list at each nodeencountered.  To answer this question in general is difficult.Consider the special case where the relative frequencies of the <em>n</em>symbols are as described in exercise <a href="#%_thm_2.71">2.71</a>, and givethe order of growth (as a function of <em>n</em>) of the number of stepsneeded to encode the most frequent and least frequent symbols in thealphabet.</p>
+<p></p>
+<p></p>
+<div class="smallprint"><hr></div>
+<p></p>
+<div class="footnote">
+<p><a name="footnote_Temp_227" href="#call_footnote_Temp_227" id="footnote_Temp_227"><sup><small>32</small></sup></a> Allowing quotation in a language wreaks havocwith the ability to reason about the language in simple terms, becauseit destroys the notion that equals can be substituted for equals.  Forexample, three is one plus two, but the word “three” is not thephrase “one plus two.”  Quotation is powerful because it gives us a wayto build expressions that manipulate other expressions (as we will seewhen we write an interpreter in chapter 4). But allowing statements ina language that talk about other statements in that language makes itvery difficult to maintain any coherent principle of what “equals canbe substituted for equals” should mean.  For example, if we know that<a name="%_idx_1996" id="%_idx_1996"></a>the evening star is the morning star, then from the statement “theevening star is Venus” we can deduce “the morning star is Venus.”However, given that “John knows that the evening star is Venus” wecannot infer that “John knows that the morning star is Venus.”</p>
+<p><a name="footnote_Temp_228" href="#call_footnote_Temp_228" id="footnote_Temp_228"><sup><small>33</small></sup></a> The single quote is different <a name="%_idx_2002" id="%_idx_2002"></a><a name="%_idx_2004" id="%_idx_2004"></a><a name="%_idx_2006" id="%_idx_2006"></a><a name="%_idx_2008" id="%_idx_2008"></a>from the double quote we havebeen using to enclose character strings to be printed.  Whereas thesingle quote can be used to denote lists or symbols, the double quoteis used only with character strings.  In this book, the only use forcharacter strings is as items to be printed.</p>
+<p><a name="footnote_Temp_229" href="#call_footnote_Temp_229" id="footnote_Temp_229"><sup><small>34</small></sup></a> Strictly, ouruse of the quotation mark violates the general rule that all compoundexpressions in our language should be delimited by parenthesesand look like lists.  We<a name="%_idx_2014" id="%_idx_2014"></a><a name="%_idx_2016" id="%_idx_2016"></a>can recover this consistency by introducing a special form <code>quote</code>, which serves the same purpose as the quotation mark.  Thus, wewould type <code>(quote a)</code> instead of <code>'a</code>, and we would type <code>(quote (a b c))</code> instead of <code>'(a b c)</code>.  This is precisely how theinterpreter works.  The quotation mark is just a single-characterabbreviation for wrapping the next complete expression with <code>quote</code> to form <code>(quote &lt;<em>expression</em>&gt;)</code>.  This is importantbecause it maintains the principle that any expression seen by theinterpreter can be manipulated as a data object.  For instance, wecould construct the expression<code>(car '(a b c))</code>, which is the same as <code>(car (quote (a b c)))</code>,by evaluating <code>(list 'car (list 'quote '(a b c)))</code>.</p>
+<p><a name="footnote_Temp_230" href="#call_footnote_Temp_230" id="footnote_Temp_230"><sup><small>35</small></sup></a> We can consider two symbols to be “the same” if theyconsist of the same characters in the same order.  Such a definitionskirts a deep issue that we are not yet ready to address: the meaningof “sameness” in a programming language.  We will return to this inchapter 3 (section <a href="book-Z-H-20.html#%_sec_3.1.3">3.1.3</a>).</p>
+<p><a name="footnote_Temp_233" href="#call_footnote_Temp_233" id="footnote_Temp_233"><sup><small>36</small></sup></a> In practice, programmersuse <code>equal?</code> to compare lists that contain numbers as well assymbols.  Numbers are not considered to be symbols.  The question<a name="%_idx_2038" id="%_idx_2038"></a><a name="%_idx_2040" id="%_idx_2040"></a>of whether two numerically equal numbers (as tested by <code>=</code>) are also<code>eq?</code> is highly implementation-dependent.  A better definitionof <code>equal?</code> (such as the one that comes as a primitive in Scheme)would also stipulate that if <code>a</code> and <code>b</code> areboth numbers, then <code>a</code> and <code>b</code> are <code>equal?</code> if they arenumerically equal.</p>
+<p><a name="footnote_Temp_240" href="#call_footnote_Temp_240" id="footnote_Temp_240"><sup><small>37</small></sup></a> Ifwe want to be more formal, we can specify “consistent with theinterpretations given above” to mean that the operations satisfy acollection of rules such as these:</p>
+<p></p>
+<p></p>
+<ul>
+<li>For any set <code>S</code> and any object <code>x</code>,<code>(element-of-set? x (adjoin-set x S))</code>is true (informally: “Adjoining an object to aset produces a set that contains the object”).<p></p>
+</li>
+<li>For any sets <code>S</code> and <code>T</code> and any object <code>x</code>,<code>(element-of-set? x (union-set S T))</code>is equal to<code>(or (element-of-set? x S) (element-of-set? x T))</code>(informally: “The elements of <code>(union S T)</code> are the elements thatare in <code>S</code> or in <code>T</code>”).<p></p>
+</li>
+<li>For any object <code>x</code>,<code>(element-of-set? x '())</code>is false (informally: “No object is an element of the empty set”).</li>
+</ul>
+<p></p>
+<p><a name="footnote_Temp_248" href="#call_footnote_Temp_248" id="footnote_Temp_248"><sup><small>38</small></sup></a> Halving the size of the problem at each step is thedistinguishing characteristic of <a name="%_idx_2148" id="%_idx_2148"></a>logarithmic growth, as we saw withthe fast-exponentiation algorithm of section <a href="book-Z-H-11.html#%_sec_1.2.4">1.2.4</a>and the half-interval search method ofsection <a href="book-Z-H-12.html#%_sec_1.3.3">1.3.3</a>.</p>
+<p><a name="footnote_Temp_249" href="#call_footnote_Temp_249" id="footnote_Temp_249"><sup><small>39</small></sup></a> We arerepresenting sets in terms of trees, and trees in terms of lists – ineffect, a data abstraction built upon a data abstraction.  We canregard the procedures <code>entry</code>, <code>left-branch</code>, <code>right-branch</code>, and <code>make-tree</code> as a way of isolating theabstraction of a “binary tree” from the particular way we might wishto represent such a tree in terms of list structure.</p>
+<p><a name="footnote_Temp_250" href="#call_footnote_Temp_250" id="footnote_Temp_250"><sup><small>40</small></sup></a> Examples of such structures include<a name="%_idx_2168" id="%_idx_2168"></a><a name="%_idx_2170" id="%_idx_2170"></a><a name="%_idx_2172" id="%_idx_2172"></a><a name="%_idx_2174" id="%_idx_2174"></a><em>B-trees</em> and <em>red-black trees</em>.  There is a large literature ondata structures devoted to this problem.  See Cormen,<a name="%_idx_2176" id="%_idx_2176"></a><a name="%_idx_2178" id="%_idx_2178"></a><a name="%_idx_2180" id="%_idx_2180"></a>Leiserson, and Rivest 1990.</p>
+<p><a name="footnote_Temp_254" href="#call_footnote_Temp_254" id="footnote_Temp_254"><sup><small>41</small></sup></a> Exercises <a href="#%_thm_2.63">2.63</a>-<a href="#%_thm_2.65">2.65</a><a name="%_idx_2198" id="%_idx_2198"></a>are due to Paul Hilfinger.</p>
+<p><a name="footnote_Temp_258" href="#call_footnote_Temp_258" id="footnote_Temp_258"><sup><small>42</small></sup></a> See Hamming 1980<a name="%_idx_2248" id="%_idx_2248"></a>for a discussion of the mathematical properties of Huffman codes.</p>
+</div></body>
 </html>
-
