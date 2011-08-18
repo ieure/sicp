@@ -1,47 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
+<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
 <!-- Generated from TeX source by tex2page, v 4o,
-     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-    <title>Structure and Interpretation of Computer Programs</title>
-    <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
-  </head>
-  <body>
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type: text/html; charset=utf-8">
+<title>Structure and Interpretation of Computer Programs</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default">
+</head>
+<body>
 
 
 
 <a name="%_chap_3" id="%_chap_3"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_3">Chapter 3</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_3">Modularity, Objects, and State</a></p><p>
+<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_3">Chapter 3</a></div>
+</h1>
+<p>
+<a href="book-Z-H-4.html#%_toc_%_chap_3">Modularity, Objects, and State</a></p>
+<p>
 
-</p><p>
+</p>
+<p>
 
-</p><p>
-</p><div align="right">
+</p>
+<p>
+</p>
+<div align="right">
 <table width="60%"><tr><td>
 <span class="epigraph">
 <p>
 
-M<img src="images/ch3-Z-G-1.gif" border="0" /></p><p>
+M<img src="images/ch3-Z-G-1.gif" border="0"></p>
+<p>
 
-</p><p></p><p></p><p>
+</p>
+<p></p>
+<p></p>
+<p>
 
-(Even while it changes, it stands still.)</p><p>
+(Even while it changes, it stands still.)</p>
+<p>
 
-<a name="%_idx_2820" id="%_idx_2820"></a>Heraclitus</p><p>
+<a name="%_idx_2820" id="%_idx_2820"></a>Heraclitus</p>
+<p>
 
-Plus ça change, plus c'est la même chose.</p><p>
+Plus ça change, plus c'est la même chose.</p>
+<p>
 
-<a name="%_idx_2822" id="%_idx_2822"></a>Alphonse Karr</p><p>
+<a name="%_idx_2822" id="%_idx_2822"></a>Alphonse Karr</p>
+<p>
 
 </p></span>
-</td></tr></table></div>
+</td></tr></table>
+</div>
 
-<p></p><p>
+<p></p>
+<p>
 
 The preceding chapters introduced the basic elements from which
 programs are made.  We saw how primitive procedures and primitive data
@@ -53,7 +67,8 @@ principles that can guide us in formulating the overall design of a
 program.  In particular, we need strategies to help us structure large
 systems so that they will be <em>modular</em>, that is, so that they can
 be divided “naturally” into coherent parts that can be separately
-developed and maintained.</p><p>
+developed and maintained.</p>
+<p>
 
 <a name="%_idx_2824" id="%_idx_2824"></a><a name="%_idx_2826" id="%_idx_2826"></a>One powerful design strategy, which is particularly appropriate to the
 construction of programs for modeling physical systems, is to base the
@@ -66,7 +81,8 @@ will require no strategic changes to the program, only the addition of
 the new symbolic analogs of those objects or actions.  If we have been
 successful in our system organization, then to add a new feature or
 debug an old one we will have to work on only a localized part of the
-system.</p><p>
+system.</p>
+<p>
 
 
 To a large extent, then, the way we organize a large program is
@@ -77,7 +93,8 @@ systems.  The first organizational strategy concentrates on <a name="%_idx_2828"
 whose behaviors may change over time.  An alternative organizational
 strategy concentrates on the <a name="%_idx_2830" id="%_idx_2830"></a><em>streams</em> of information that flow in
 the system, much as an electrical engineer views a signal-processing
-system.</p><p>
+system.</p>
+<p>
 
 Both the object-based approach and the stream-processing approach
 raise significant linguistic issues in programming.
@@ -93,11 +110,12 @@ greater when we allow the possibility of concurrent execution of
 programs.  The stream approach can be most fully exploited when we
 decouple simulated time in our model from the order of the events that
 take place in the computer during evaluation.  We will accomplish this
-using a technique known as <a name="%_idx_2834" id="%_idx_2834"></a><em>delayed evaluation</em>.</p><p>
+using a technique known as <a name="%_idx_2834" id="%_idx_2834"></a><em>delayed evaluation</em>.</p>
+<p>
 
 
 
 
-</p></body>
+</p>
+</body>
 </html>
-

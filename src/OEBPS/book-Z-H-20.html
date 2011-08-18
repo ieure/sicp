@@ -1,865 +1,468 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
+<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
 <!-- Generated from TeX source by tex2page, v 4o,
-     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-    <title>Structure and Interpretation of Computer Programs</title>
-    <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
-  </head>
-  <body>
-
-
-
-<a name="%_sec_3.1" id="%_sec_3.1"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_3.1">3.1  Assignment and Local State</a></h2><p>
-
-<a name="%_idx_2836" id="%_idx_2836"></a><a name="%_idx_2838" id="%_idx_2838"></a>
-We ordinarily view the world as populated by independent objects, each
-of which has a state that changes over time.  An object is said to
-“have state” if its behavior is influenced by its history.  A bank
-account, for example, has state in that the answer to the question
-“Can I withdraw $100?”  depends upon the history of deposit and
-withdrawal transactions.  We can characterize an object's state by one
-or more <a name="%_idx_2840" id="%_idx_2840"></a><em>state variables</em>, which among them maintain enough
-information about history to determine the object's current behavior.
-In a simple banking system, we could characterize the state of an
-account by a current balance rather than by remembering the entire
-history of account transactions.</p><p>
-
-In a system composed of many objects, the objects are rarely
-completely independent.  Each may influence the states of others
-through interactions, which serve to couple the state variables of one
-object to those of other objects.  Indeed, the view that a system is
-composed of separate objects is most useful when the state variables
-of the system can be grouped into closely coupled subsystems that are
-only loosely coupled to other subsystems.</p><p>
-
-
-This view of a system can be a powerful framework for organizing
-computational models of the system.  For such a model to be modular,
-it should be decomposed into computational objects that model the
-actual objects in the system.  Each computational object must have its
-own <em>local state variables</em> describing the actual object's state.
-Since the states of objects in the system being modeled change over
-time, the state variables of the corresponding computational objects
-must also change.  If we choose to model the flow of time in the
-system by the elapsed time in the computer, then we must have a way to
-construct computational objects whose behaviors change as our programs
-run.  In particular, if we wish to model state variables by ordinary
-symbolic names in the programming language, then the language must
-provide an <a name="%_idx_2842" id="%_idx_2842"></a><em>assignment operator</em> to enable us to change the value
-associated with a name.</p><p>
-
-<a name="%_sec_3.1.1" id="%_sec_3.1.1"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.1">3.1.1  Local State Variables</a></h3><p>
-
-
-<a name="%_idx_2844" id="%_idx_2844"></a><a name="%_idx_2846" id="%_idx_2846"></a>
-<a name="%_idx_2848" id="%_idx_2848"></a><a name="%_idx_2850" id="%_idx_2850"></a>To illustrate what we mean by having a computational object with
-time-varying state, let us model the situation of withdrawing money
-from a bank account.  We will do this using a procedure <tt>withdraw</tt>, which takes as argument an <tt>amount</tt> to be withdrawn.
-If there is enough money in the account to accommodate the withdrawal,
-then <tt>withdraw</tt> should return the balance remaining after the
-withdrawal.  Otherwise, <tt>withdraw</tt> should return the message <em>Insufficient funds.</em> For example, if we begin with $100 in the
-account, we should obtain the following sequence of responses using
-<tt>withdraw</tt>:</p><p>
-
-</p><p></p><p><tt>(withdraw 25)<br /><i>75</i><br />
-(withdraw 25)<br /><i>50</i><br />
-(withdraw 60)<br /><i>"Insufficient funds"</i><br />
-(withdraw 15)<br /><i>35</i><br /></tt></p><p></p><p>
-Observe that the expression <tt>(withdraw 25)</tt>, evaluated twice,
-yields different values.  This is a new kind of behavior for a
-procedure.  Until now, all our procedures could be viewed as
-specifications for computing mathematical functions.  A call to a
-procedure computed the value of the function applied to the given
-arguments, and two calls to the same procedure with the
-same arguments always produced the same result.<a name="call_footnote_Temp_321" href="#footnote_Temp_321" id="call_footnote_Temp_321"><sup><small>1</small></sup></a></p><p>
-
-To implement <tt>withdraw</tt>, we can use a variable <tt>balance</tt> to
-indicate the balance of money in the account and define <tt>withdraw</tt>
-as a procedure that accesses <tt>balance</tt>.  The <tt>withdraw</tt>
-procedure checks to see if <tt>balance</tt> is at least as large as the
-requested <tt>amount</tt>.  If so, <tt>withdraw</tt> decrements <tt>balance</tt> by <tt>amount</tt> and returns the new value of <tt>balance</tt>.
-Otherwise, <tt>withdraw</tt> returns the <em>Insufficient funds</em>
-message.  Here are the definitions of <tt>balance</tt> and <tt>withdraw</tt>:</p><p>
-
-</p><p></p><p><tt>(define balance 100)<br /><br /><a name="%_idx_2858" id="%_idx_2858"></a>(define (withdraw amount)<br />
-  (if (&gt;= balance amount)<br />
-      (begin (set! balance (- balance amount))<br />
-             balance)<br />
-      "Insufficient funds"))<br /></tt></p><p></p><p>
-Decrementing <tt>balance</tt> is accomplished by the expression</p><p>
-
-</p><p></p><p><tt>(set! balance (- balance amount))<br /></tt></p><p></p><p>
-<a name="%_idx_2860" id="%_idx_2860"></a><a name="%_idx_2862" id="%_idx_2862"></a>This uses the <tt>set!</tt> special form, whose syntax is</p><p>
-
-</p><p></p><p><tt>(set! &lt;<em>name</em>&gt; &lt;<em>new-value</em>&gt;)<br /></tt></p><p></p><p>
-Here &lt;<em>name</em>&gt; is a symbol and &lt;<em>new-value</em>&gt; is any expression.  <tt>Set!</tt> changes &lt;<em>name</em>&gt; so that its value is the result obtained by
-evaluating &lt;<em>new-value</em>&gt;.  In the case at hand, we are changing <tt>balance</tt> so that its new value will be the result of subtracting <tt>amount</tt> from the previous value of <tt>balance</tt>.<a name="call_footnote_Temp_322" href="#footnote_Temp_322" id="call_footnote_Temp_322"><sup><small>2</small></sup></a></p><p>
-
-<a name="%_idx_2874" id="%_idx_2874"></a><a name="%_idx_2876" id="%_idx_2876"></a><tt>Withdraw</tt> also uses the <tt>begin</tt> special form to cause
-two expressions to be evaluated
-in the case where the <tt>if</tt> test is true: first decrementing <tt>balance</tt> and then returning the value of <tt>balance</tt>.  In general,
-evaluating the expression</p><p>
-
-</p><p></p><p><tt>(begin &lt;<em>exp<sub>1</sub></em>&gt; &lt;<em>exp<sub>2</sub></em>&gt; <tt>...</tt> &lt;<em>exp<sub><em>k</em></sub></em>&gt;)<br /></tt></p><p></p><p>
-causes the expressions &lt;<em>exp<sub>1</sub></em>&gt; through &lt;<em>exp<sub><em>k</em></sub></em>&gt; to be
-evaluated in sequence and the value of the final expression
-&lt;<em>exp<sub><em>k</em></sub></em>&gt; to be returned as the value of the entire <tt>begin</tt>
-form.<a name="call_footnote_Temp_323" href="#footnote_Temp_323" id="call_footnote_Temp_323"><sup><small>3</small></sup></a></p><p>
-
-Although <tt>withdraw</tt> works as desired, the variable
-<tt>balance</tt> presents a problem.  As specified above, <tt>balance</tt>
-is a name defined in the global environment and is freely accessible
-to be examined or modified by any procedure.  It would be much better
-if we could somehow make <tt>balance</tt> internal to <tt>withdraw</tt>, so
-that <tt>withdraw</tt> would be the only procedure that could access <tt>balance</tt> directly and any other procedure could access <tt>balance</tt>
-only indirectly (through calls to <tt>withdraw</tt>).  This would more
-accurately model the notion that <tt>balance</tt> is a local state
-variable used by <tt>withdraw</tt> to keep track of the state of the
-account.</p><p>
-
-We can make <tt>balance</tt> internal to <tt>withdraw</tt> by rewriting the
-definition as follows:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2884" id="%_idx_2884"></a>(define new-withdraw<br />
-  (let ((balance 100))<br />
-    (lambda (amount)<br />
-      (if (&gt;= balance amount)<br />
-          (begin (set! balance (- balance amount))<br />
-                 balance)<br />
-          "Insufficient funds"))))<br /></tt></p><p></p><p>
-What we have done here is use <tt>let</tt> to establish an environment
-with a local variable <tt>balance</tt>, bound to the initial value 100.
-Within this local environment, we use <tt>lambda</tt> to create a
-procedure that takes <tt>amount</tt> as an argument and behaves like our
-previous <tt>withdraw</tt> procedure.  This procedure – returned as the
-result of evaluating the <tt>let</tt> expression – is <tt>new-withdraw</tt>,
-which behaves in precisely the same way as <tt>withdraw</tt> but whose
-variable <tt>balance</tt> is not accessible by any other
-procedure.<a name="call_footnote_Temp_324" href="#footnote_Temp_324" id="call_footnote_Temp_324"><sup><small>4</small></sup></a></p><p>
-
-Combining <tt>set!</tt> with local variables is the general programming
-technique we will use for constructing computational objects with
-local state.  Unfortunately, using this technique raises a serious
-problem: When we first introduced procedures, we also introduced the
-substitution model of evaluation
-(section <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>) to provide an interpretation of
-what procedure application means.  We said that applying a procedure
-should be interpreted as evaluating the body of the procedure with the
-formal parameters replaced by their values.  The trouble is that, as
-soon as we introduce assignment into our language, substitution is no
-longer an adequate model of procedure application.  (We will see why
-this is so in section <a href="#%_sec_3.1.3">3.1.3</a>.)  As a
-consequence, we technically have at this point no way to understand
-why the <tt>new-withdraw</tt> procedure behaves as claimed above.  In
-order to really understand a procedure such as <tt>new-withdraw</tt>, we
-will need to develop a new model of procedure application.  In
-section <a href="book-Z-H-21.html#%_sec_3.2">3.2</a> we will introduce such a model,
-together with an explanation of <tt>set!</tt> and local variables.
-First, however, we examine some variations on the theme established by
-<tt>new-withdraw</tt>.</p><p>
-
-The following procedure, <tt>make-withdraw</tt>, creates “withdrawal
-processors.”  The formal parameter <tt>balance</tt> in <tt>make-withdraw</tt> specifies the initial amount of money in the
-account.<a name="call_footnote_Temp_325" href="#footnote_Temp_325" id="call_footnote_Temp_325"><sup><small>5</small></sup></a></p><p>
-
-</p><p></p><p><tt><a name="%_idx_2894" id="%_idx_2894"></a>(define (make-withdraw balance)<br />
-  (lambda (amount)<br />
-    (if (&gt;= balance amount)<br />
-        (begin (set! balance (- balance amount))<br />
-               balance)<br />
-        "Insufficient funds")))<br /></tt></p><p></p><p>
-<tt>Make-withdraw</tt> can be used as follows to create two objects
-<tt>W1</tt> and <tt>W2</tt>:</p><p>
-
-</p><p></p><p><tt>(define W1 (make-withdraw 100))<br />
-(define W2 (make-withdraw 100))<br />
-(W1 50)<br /><i>50</i><br />
-(W2 70)<br /><i>30</i><br />
-(W2 40)<br /><i>"Insufficient funds"</i><br />
-(W1 40)<br /><i>10</i><br /></tt></p><p></p><p>
-Observe that <tt>W1</tt> and <tt>W2</tt> are completely independent objects,
-each with its own local state variable <tt>balance</tt>.  Withdrawals
-from one do not affect the other.</p><p>
-
-We can also create objects that handle deposits as well as
-withdrawals, and thus we can represent simple bank accounts.  Here is
-a procedure that returns a “bank-account object” with
-a specified initial balance:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2896" id="%_idx_2896"></a><a name="%_idx_2898" id="%_idx_2898"></a>(define (make-account balance)<br />
-  (define (withdraw amount)<br />
-    (if (&gt;= balance amount)<br />
-        (begin (set! balance (- balance amount))<br />
-               balance)<br />
-        "Insufficient funds"))<br />
-  (define (deposit amount)<br />
-    (set! balance (+ balance amount))<br />
-    balance)<br />
-  (define (dispatch m)<br />
-    (cond ((eq? m 'withdraw) withdraw)<br />
-          ((eq? m 'deposit) deposit)<br />
-          (else (error "Unknown request -- MAKE-ACCOUNT"<br />
-                       m))))<br />
-  dispatch)<br /></tt></p><p></p><p>
-Each call to <tt>make-account</tt> sets up an environment with a local
-state variable <tt>balance</tt>.  Within this environment, <tt>make-account</tt> defines procedures <tt>deposit</tt> and <tt>withdraw</tt>
-that access <tt>balance</tt> and an additional procedure <tt>dispatch</tt>
-that takes a “message” as input and returns one of the two local
-procedures.  The <tt>dispatch</tt> procedure itself is returned as the
-value that represents the bank-account object.
-This is precisely the <a name="%_idx_2900" id="%_idx_2900"></a><em>message-passing</em>
-style of programming that we saw in section <a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a>, although
-here we are using it in conjunction with the ability to modify local
-variables.</p><p>
-
-<tt>Make-account</tt> can be used as follows:</p><p>
-
-</p><p></p><p><tt>(define acc (make-account 100))<br />
-((acc 'withdraw) 50)<br /><i>50</i><br />
-((acc 'withdraw) 60)<br /><i>"Insufficient funds"</i><br />
-((acc 'deposit) 40)<br /><i>90</i><br />
-((acc 'withdraw) 60)<br /><i>30</i><br /></tt></p><p></p><p>
-Each call to <tt>acc</tt> returns the locally defined <tt>deposit</tt> or
-<tt>withdraw</tt> procedure, which is then applied to the specified <tt>amount</tt>.  As was the case with <tt>make-withdraw</tt>, another call to <tt>make-account</tt></p><p>
-
-</p><p></p><p><tt>(define acc2 (make-account 100))<br /></tt></p><p></p><p>
-will produce a completely separate account object, which maintains its
-own local <tt>balance</tt>.</p><p>
-
-</p><p><a name="%_thm_3.1" id="%_thm_3.1"></a>
-<b>Exercise 3.1.</b>  An <a name="%_idx_2902" id="%_idx_2902"></a><em>accumulator</em> is a procedure that is called repeatedly with a
-single numeric argument and accumulates its arguments into a sum.
-Each time it is called, it returns the currently accumulated sum.
-Write a procedure <a name="%_idx_2904" id="%_idx_2904"></a><tt>make-accumulator</tt> that generates accumulators,
-each maintaining an independent sum.  The input to <tt>make-accumulator</tt> should specify the initial value of the sum; for
-example</p><p>
-
-</p><p></p><p><tt>(define A (make-accumulator 5))<br />
-(A 10)<br /><i>15</i><br />
-(A 10)<br /><i>25</i><br /></tt></p><p></p><p>
-</p><p></p><p>
-
-</p><p><a name="%_thm_3.2" id="%_thm_3.2"></a>
-<b>Exercise 3.2.</b>  In software-testing applications, it is useful to be able to count the
-number of times a given procedure is called during the course of a
-computation.  Write a procedure <a name="%_idx_2906" id="%_idx_2906"></a><a name="%_idx_2908" id="%_idx_2908"></a><a name="%_idx_2910" id="%_idx_2910"></a><tt>make-monitored</tt> that takes as
-input a procedure, <tt>f</tt>, that itself takes one input.  The result
-returned by <tt>make-monitored</tt> is a third procedure, say <tt>mf</tt>,
-that keeps track of the number of times it has been called by
-maintaining an internal counter.  If the input to <tt>mf</tt> is the
-special symbol <tt>how-many-calls?</tt>, then <tt>mf</tt> returns the
-value of the counter.  If the input is the special symbol <tt>reset-count</tt>, then <tt>mf</tt> resets the counter to zero.  For any other
-input, <tt>mf</tt> returns the result of calling <tt>f</tt> on that input
-and increments the counter.  For instance, we could make a monitored
-version of the <tt>sqrt</tt> procedure:</p><p>
-
-</p><p></p><p><tt>(define s (make-monitored sqrt))<br /><br />
-(s 100)<br /><i>10</i><br /><br />
-(s 'how-many-calls?)<br /><i>1</i><br /></tt></p><p></p><p>
-</p><p></p><p>
-
-</p><p><a name="%_thm_3.3" id="%_thm_3.3"></a>
-<b>Exercise 3.3.</b>  <a name="%_idx_2912" id="%_idx_2912"></a><a name="%_idx_2914" id="%_idx_2914"></a>Modify the <tt>make-account</tt> procedure so that it creates
-password-protected accounts.  That is, <tt>make-account</tt> should take
-a symbol as an additional argument, as in</p><p>
-
-</p><p></p><p><tt>(define acc (make-account 100 'secret-password))<br /></tt></p><p></p><p>
-The resulting account object should process a request only if it is
-accompanied by the password with which the account was created, and
-should otherwise return a complaint:</p><p>
-
-</p><p></p><p><tt>((acc 'secret-password 'withdraw) 40)<br /><i>60</i><br /><br />
-((acc 'some-other-password 'deposit) 50)<br /><i>"Incorrect password"</i><br /></tt></p><p></p><p>
-</p><p></p><p>
-
-</p><p><a name="%_thm_3.4" id="%_thm_3.4"></a>
-<b>Exercise 3.4.</b>  Modify the <tt>make-account</tt> procedure of
-exercise <a href="#%_thm_3.3">3.3</a> by adding another local state
-variable so that, if an account is accessed more than seven
-consecutive times with an incorrect password, it invokes the procedure
-<tt>call-the-cops</tt>.
-</p><p>
-</p><p>
-
-<a name="%_sec_3.1.2" id="%_sec_3.1.2"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.2">3.1.2  The Benefits of Introducing Assignment</a></h3><p>
-
-
-<a name="%_idx_2916" id="%_idx_2916"></a>
-<a name="%_idx_2918" id="%_idx_2918"></a><a name="%_idx_2920" id="%_idx_2920"></a>As we shall see, introducing assignment into our programming language
-leads us into a thicket of difficult conceptual issues.  Nevertheless,
-viewing systems as collections of objects with local state is a
-powerful technique for maintaining a modular design.  As a simple
-example, consider the design of a procedure <tt>rand</tt> that, whenever
-it is called, returns an integer chosen at random.</p><p>
-
-<a name="%_idx_2922" id="%_idx_2922"></a>It is not at all clear what is meant by “chosen at random.”  What we
-presumably want is for successive calls to <tt>rand</tt> to produce a
-sequence of numbers that has statistical properties of uniform
-distribution.  We will not discuss methods for generating suitable
-sequences here.  Rather, let us assume that we have a procedure <tt>rand-update</tt> that has the property that if we start with a given
-number <em>x</em><sub>1</sub> and form</p><p>
-
-</p><p></p><p><tt><em>x</em><sub>2</sub> = (rand-update <em>x</em><sub>1</sub>)<br /><em>x</em><sub>3</sub> = (rand-update <em>x</em><sub>2</sub>)<br /></tt></p><p></p><p>
-then the sequence of values <em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, <tt>...</tt>, will have the
-desired statistical properties.<a name="call_footnote_Temp_330" href="#footnote_Temp_330" id="call_footnote_Temp_330"><sup><small>6</small></sup></a></p><p>
-
-We can implement <tt>rand</tt> as a procedure with a local state variable
-<tt>x</tt> that is initialized to some fixed value <tt>random-init</tt>.
-Each call to <tt>rand</tt> computes <tt>rand-update</tt> of the current
-value of <tt>x</tt>, returns this as the random number, and also stores
-this as the new value of <tt>x</tt>.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2934" id="%_idx_2934"></a>(define rand<br />
-  (let ((x random-init))<br />
-    (lambda ()<br />
-      (set! x (rand-update x))<br />
-      x)))<br /></tt></p><p></p><p></p><p>
-
-Of course, we could generate the same sequence of random numbers
-without using assignment by simply calling <tt>rand-update</tt> directly.
-However, this would mean that any part of our program that used random
-numbers would have to explicitly remember the current value of <tt>x</tt>
-to be passed as an argument to <tt>rand-update</tt>.  To realize what an
-annoyance this would be, consider using random numbers to implement a
-technique called <a name="%_idx_2936" id="%_idx_2936"></a><a name="%_idx_2938" id="%_idx_2938"></a><em>Monte Carlo simulation</em>.</p><p>
-
-The Monte Carlo method consists of choosing sample experiments at
-random from a large set and then making deductions on the basis of the
-probabilities estimated from tabulating the results of those
-experiments.  For example, we can approximate <a name="%_idx_2940" id="%_idx_2940"></a>π using the fact
-that 6/π<sup>2</sup> is the probability that two integers chosen at random
-will have no factors in common; that is, that their greatest common
-divisor will be 1.<a name="call_footnote_Temp_331" href="#footnote_Temp_331" id="call_footnote_Temp_331"><sup><small>7</small></sup></a> To obtain
-the approximation to π, we perform a large number of experiments.
-In each experiment we choose two integers at random and perform a test
-<a name="%_idx_2946" id="%_idx_2946"></a>to see if their GCD is 1.  The fraction of times that the test is
-passed gives us our estimate of 6/π<sup>2</sup>, and from this we obtain our
-approximation to π.</p><p>
-
-The heart of our program is a procedure <tt>monte-carlo</tt>, which takes
-as arguments the number of times to try an experiment, together with
-the experiment, represented as a no-argument procedure that will
-return either true or false each time it is run.  <tt>Monte-carlo</tt>
-runs the experiment for the designated number of trials and returns a
-number telling the fraction of the trials in which the experiment was
-found to be true.</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2948" id="%_idx_2948"></a>(define (estimate-pi trials)<br />
-  (sqrt (/ 6 (monte-carlo trials cesaro-test))))<br /><a name="%_idx_2950" id="%_idx_2950"></a>(define (cesaro-test)<br />
-   (= (gcd (rand) (rand)) 1))<br /><a name="%_idx_2952" id="%_idx_2952"></a>(define (monte-carlo trials experiment)<br />
-  (define (iter trials-remaining trials-passed)<br />
-    (cond ((= trials-remaining 0)<br />
-           (/ trials-passed trials))<br />
-          ((experiment)<br />
-           (iter (- trials-remaining 1) (+ trials-passed 1)))<br />
-          (else<br />
-           (iter (- trials-remaining 1) trials-passed))))<br />
-  (iter trials 0))<br /></tt></p><p></p><p></p><p>
-
-Now let us try the same computation using <tt>rand-update</tt> directly
-rather than <tt>rand</tt>, the way we would be forced to proceed if we
-did not use assignment to model local state:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2954" id="%_idx_2954"></a>(define (estimate-pi trials)<br />
-  (sqrt (/ 6 (random-gcd-test trials random-init))))<br />
-(define (random-gcd-test trials initial-x)<br />
-  (define (iter trials-remaining trials-passed x)<br />
-    (let ((x1 (rand-update x)))<br />
-      (let ((x2 (rand-update x1)))<br />
-        (cond ((= trials-remaining 0)   <br />
-               (/ trials-passed trials))<br />
-              ((= (gcd x1 x2) 1)<br />
-               (iter (- trials-remaining 1)<br />
-                     (+ trials-passed 1)<br />
-                     x2))<br />
-              (else<br />
-               (iter (- trials-remaining 1)<br />
-                     trials-passed<br />
-                     x2))))))<br />
-  (iter trials 0 initial-x))<br /></tt></p><p></p><p></p><p>
-
-While the program is still simple, it betrays some painful
-breaches of modularity.  In our first version of the program, using
-<tt>rand</tt>, we can express the Monte Carlo method directly as
-a general <tt>monte-carlo</tt> procedure that takes as an argument an
-arbitrary <tt>experiment</tt> procedure.  In our second version of the
-program, with no local state for the random-number generator, <tt>random-gcd-test</tt> must explicitly manipulate the random numbers <tt>x1</tt> and <tt>x2</tt> and recycle <tt>x2</tt> through the iterative loop as
-the new input to <tt>rand-update</tt>.  This explicit handling of the
-random numbers intertwines the structure of accumulating test results
-with the fact that our particular experiment uses two random numbers,
-whereas other Monte Carlo experiments might use one random number or
-three.  Even the top-level procedure <tt>estimate-pi</tt> has to be
-concerned with supplying an initial random number.  The fact that the
-random-number generator's insides are leaking out into other parts of
-the program makes it difficult for us to isolate the Monte Carlo idea
-so that it can be applied to other tasks.  In the first version of the
-program, assignment encapsulates the state of the random-number
-generator within the <tt>rand</tt> procedure, so that the details of
-random-number generation remain independent of the rest of the
-program.</p><p>
-
-The general phenomenon illustrated by the Monte Carlo example is this:
-From the point of view of one part of a complex process, the other
-parts appear to change with time.  They have hidden time-varying local
-state.  If we wish to write computer programs whose structure reflects
-this decomposition, we make
-computational objects (such as bank accounts and random-number
-generators) whose behavior changes with time.  We model state with
-local state variables, and we model the changes of state with
-assignments to those variables.</p><p>
-
-It is tempting to conclude this discussion by saying that, by
-introducing assignment and the technique of hiding state in local
-variables, we are able to structure systems in a more modular fashion
-than if all state had to be manipulated explicitly, by passing
-additional parameters.  Unfortunately, as we shall see, the story is
-not so simple.</p><p>
-
-</p><p><a name="%_thm_3.5" id="%_thm_3.5"></a>
-<b>Exercise 3.5.</b>  <a name="%_idx_2956" id="%_idx_2956"></a><a name="%_idx_2958" id="%_idx_2958"></a><a name="%_idx_2960" id="%_idx_2960"></a><em>Monte Carlo integration</em> is a method of estimating definite
-integrals by means of Monte Carlo simulation.  Consider computing the
-area of a region of space described by a predicate <em>P</em>(<em>x</em>, <em>y</em>) that is
-true for points (<em>x</em>, <em>y</em>) in the region and false for points not in the
-region.  For example, the region contained within a circle of radius
-3 centered at (5, 7) is described by the predicate that tests
-whether (<em>x</em> - 5)<sup>2</sup>  +  (<em>y</em> - 7)<sup>2</sup><u>&lt;</u> 3<sup>2</sup>.  To estimate the area of the
-region described by such a predicate, begin by choosing a rectangle
-that contains the region.  For example, a rectangle with diagonally
-opposite corners at (2, 4) and (8, 10) contains the circle above.
-The desired integral is the area of that portion of the rectangle that
-lies in the region.  We can estimate the integral by picking, at
-random, points (<em>x</em>,<em>y</em>) that lie in the rectangle, and testing <em>P</em>(<em>x</em>,
-<em>y</em>) for each point to determine whether the point lies in the region.
-If we try this with many points, then the fraction of points that fall
-in the region should give an estimate of the proportion of the
-rectangle that lies in the region.  Hence, multiplying this fraction
-by the area of the entire rectangle should produce an estimate of the
-integral.</p><p>
-
-Implement Monte Carlo integration as a procedure <a name="%_idx_2962" id="%_idx_2962"></a><tt>estimate-integral</tt> that takes as arguments a predicate <tt>P</tt>, upper
-and lower bounds <tt>x1</tt>, <tt>x2</tt>, <tt>y1</tt>, and <tt>y2</tt> for the
-rectangle, and the number of trials to perform in order to produce the
-estimate.  Your procedure should use the same <tt>monte-carlo</tt> procedure that was used above to estimate π.  Use
-your <tt>estimate-integral</tt> to produce an estimate of π by
-measuring the area of a unit circle.</p><p>
-
-You will find it useful to have a procedure that returns a number
-chosen at random from a given range.  The following <tt>random-in-range</tt>
-procedure implements this in terms of the <tt>random</tt>
-procedure used in section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>, which returns a nonnegative
-number less than its input.<a name="call_footnote_Temp_333" href="#footnote_Temp_333" id="call_footnote_Temp_333"><sup><small>8</small></sup></a></p><p>
-
-</p><p></p><p><tt><a name="%_idx_2970" id="%_idx_2970"></a>(define (random-in-range low high)<br />
-  (let ((range (- high low)))<br />
-    (+ low (random range))))<br /></tt></p><p></p><p>
-</p><p></p><p>
-
-</p><p><a name="%_thm_3.6" id="%_thm_3.6"></a>
-<b>Exercise 3.6.</b>  <a name="%_idx_2972" id="%_idx_2972"></a><a name="%_idx_2974" id="%_idx_2974"></a>It is useful to be able to reset a random-number generator to produce
-a sequence starting from a given value.  Design a new <tt>rand</tt>
-procedure that is called with an argument that is either the symbol
-<tt>generate</tt> or the symbol <tt>reset</tt> and behaves as follows: <tt>(rand
-'generate)</tt> produces a new random number; <tt>((rand 'reset)
-&lt;<em>new-value</em>&gt;)</tt> resets the internal state variable to the designated
-&lt;<em>new-value</em>&gt;.  Thus, by resetting the state, one can generate
-repeatable sequences.  These are very handy to have when testing and
-debugging programs that use random numbers.
-
-</p><p>
-</p><p>
-
-<a name="%_sec_3.1.3" id="%_sec_3.1.3"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.3">3.1.3  The Costs of Introducing Assignment</a></h3><p>
-
-
-<a name="%_idx_2976" id="%_idx_2976"></a>
-As we have seen, the <tt>set!</tt> operation enables us to model objects
-that have local state.  However, this advantage comes at a price.  Our
-programming language can no longer be interpreted in terms of the
-substitution model of procedure application that we introduced in
-section <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>.  Moreover, no simple model with
-“nice” mathematical properties can be an adequate framework for
-dealing with objects and assignment in programming languages.</p><p>
-
-So long as we do not use assignments, two evaluations of the same
-procedure with the same arguments will produce the same result, so
-that procedures can be viewed as computing mathematical functions.
-Programming without any use of assignments, as we did throughout the
-first two chapters of this book, is accordingly known as <a name="%_idx_2978" id="%_idx_2978"></a><em>functional programming</em>.</p><p>
-
-<a name="%_idx_2980" id="%_idx_2980"></a>To understand how assignment complicates matters, consider a
-simplified version of the <tt>make-withdraw</tt> procedure of
-section <a href="#%_sec_3.1.1">3.1.1</a> that does not bother to check
-for an insufficient amount:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2982" id="%_idx_2982"></a>(define (make-simplified-withdraw balance)<br />
-  (lambda (amount)<br />
-    (set! balance (- balance amount))<br />
-    balance))<br />
-(define W (make-simplified-withdraw 25))<br />
-(W 20)<br /><i>5</i><br />
-(W 10)<br /><i> - 5</i><br /></tt></p><p></p><p>
-Compare this procedure with the following <tt>make-decrementer</tt>
-procedure, which does not use <tt>set!</tt>:</p><p>
-
-</p><p></p><p><tt><a name="%_idx_2984" id="%_idx_2984"></a>(define (make-decrementer balance)<br />
-  (lambda (amount)<br />
-    (- balance amount)))<br /></tt></p><p></p><p>
-<tt>Make-decrementer</tt> returns a procedure that subtracts its input
-from a designated amount <tt>balance</tt>, but there is no accumulated effect
-over successive calls, as with <tt>make-simplified-withdraw</tt>:</p><p>
-
-</p><p></p><p><tt>(define D (make-decrementer 25))<br />
-(D 20)<br /><i>5</i><br />
-(D 10)<br /><i>15</i><br /></tt></p><p></p><p>
-We can use the substitution model to explain how <tt>make-decrementer</tt> works.  For instance, let us analyze the evaluation
-of the expression</p><p>
-
-</p><p></p><p><tt>((make-decrementer 25) 20)<br /></tt></p><p></p><p>
-We first simplify the operator of the combination by substituting 25
-for <tt>balance</tt> in the body of <tt>make-decrementer</tt>.  This reduces
-the expression to</p><p>
-
-
-</p><p></p><p><tt>((lambda (amount) (- 25 amount)) 20)<br /></tt></p><p></p><p>
-Now we apply the operator by substituting 20 for <tt>amount</tt> in the
-body of the <tt>lambda</tt> expression:</p><p>
-
-
-</p><p></p><p><tt>(- 25 20)<br /></tt></p><p></p><p>
-The final answer is 5.</p><p>
-
-Observe, however, what happens if we attempt a similar substitution
-analysis with <tt>make-simplified-withdraw</tt>:</p><p>
-
-
-</p><p></p><p><tt>((make-simplified-withdraw 25) 20)<br /></tt></p><p></p><p>
-We first simplify the operator by substituting 25 for <tt>balance</tt> in
-the body of <tt>make-simplified-withdraw</tt>.
-This reduces the expression to<a name="call_footnote_Temp_335" href="#footnote_Temp_335" id="call_footnote_Temp_335"><sup><small>9</small></sup></a></p><p>
-
-
-</p><p></p><p><tt>((lambda (amount) (set! balance (- 25 amount)) 25) 20)<br /></tt></p><p></p><p>
-Now we apply the operator by substituting 20 for <tt>amount</tt> in the
-body of the <tt>lambda</tt> expression:</p><p>
-
-
-</p><p></p><p><tt>(set! balance (- 25 20)) 25<br /></tt></p><p></p><p>
-If we adhered to the substitution model, we would have to say that the
-meaning of the procedure application is to first set <tt>balance</tt> to
-5 and then return 25 as the value of the expression.  This gets the
-wrong answer.  In order to get the correct answer, we would have to
-somehow distinguish the first occurrence of <tt>balance</tt> (before the
-effect of the <tt>set!</tt>)  from the second occurrence of <tt>balance</tt>
-(after the effect of the <tt>set!</tt>), and the substitution model
-cannot do this.</p><p>
-
-
-The trouble here is that substitution is based ultimately on the
-notion that the symbols in our language are essentially names for
-values.  But as soon as we introduce <tt>set!</tt> and the idea that the
-value of a variable can change, a variable can no longer be simply a
-name.  Now a variable somehow refers to a place where a value can be
-stored, and the value stored at this place can change.  In
-section <a href="book-Z-H-21.html#%_sec_3.2">3.2</a>
-we will see how environments play this role of “place” in our
-computational model.
-</p><p>
-
-<a name="%_sec_Temp_336" id="%_sec_Temp_336"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_336">Sameness and change</a></h4><p>
-
-<a name="%_idx_2986" id="%_idx_2986"></a><a name="%_idx_2988" id="%_idx_2988"></a>
-The issue surfacing here is more profound than the mere breakdown of a
-particular model of computation.  As soon as we introduce change into
-our computational models, many notions that were previously
-straightforward become problematical.  Consider the concept of two
-things being “the same.”</p><p>
-
-Suppose we call <tt>make-decrementer</tt> twice with the same argument to
-create two procedures:</p><p>
-
-</p><p></p><p><tt>(define D1 (make-decrementer 25))<br />
-(define D2 (make-decrementer 25))<br /></tt></p><p></p><p>
-Are <tt>D1</tt> and <tt>D2</tt> the same?  An acceptable answer is yes,
-because <tt>D1</tt> and <tt>D2</tt> have the same computational
-behavior – each is a procedure that subtracts its input from 25.  In
-fact, <tt>D1</tt> could be substituted for <tt>D2</tt> in any computation
-without changing the result.</p><p>
-
-Contrast this with making two calls to <tt>make-simplified-withdraw</tt>:</p><p>
-
-</p><p></p><p><tt>(define W1 (make-simplified-withdraw 25))<br />
-(define W2 (make-simplified-withdraw 25))<br /></tt></p><p></p><p>
-Are <tt>W1</tt> and <tt>W2</tt> the same?  Surely not, because calls to <tt>W1</tt> and <tt>W2</tt> have distinct effects, as shown by the following
-sequence of interactions:</p><p>
-
-</p><p></p><p><tt>(W1 20)<br /><i>5</i><br />
-(W1 20)<br /><i> - 15</i><br />
-(W2 20)<br /><i>5</i><br /></tt></p><p></p><p>
-Even though <tt>W1</tt> and <tt>W2</tt> are “equal” in the sense that they
-are both created by evaluating the same expression, <tt>(make-simplified-withdraw 25)</tt>, it is not true that <tt>W1</tt> could be
-substituted for <tt>W2</tt> in any expression without changing the result
-of evaluating the expression.</p><p>
-
-A language that supports the concept that “equals can be substituted
-for equals” in an expresssion
-without changing the value of the expression is said to be
-<a name="%_idx_2990" id="%_idx_2990"></a><a name="%_idx_2992" id="%_idx_2992"></a><a name="%_idx_2994" id="%_idx_2994"></a><em>referentially transparent</em>.  Referential transparency is violated
-when we include <tt>set!</tt> in our computer language.  This makes it
-tricky to determine when we can simplify expressions by substituting
-equivalent expressions.  Consequently, reasoning about programs that
-use assignment becomes drastically more difficult.</p><p>
-
-Once we forgo referential transparency, the notion of what it means
-for computational objects to be “the same” becomes difficult to
-capture in a formal way.  Indeed, the meaning of “same” in the real
-world that our programs model is hardly clear in itself.  In general,
-we can determine that two apparently identical objects are indeed
-“the same one” only by modifying one object and then observing
-whether the other object has changed in the same way.  But how can we
-tell if an object has “changed” other than by observing the “same”
-object twice and seeing whether some property of the object differs
-from one observation to the next?  Thus, we cannot determine
-“change” without some <em>a priori</em> notion of “sameness,” and we
-cannot determine sameness without observing the effects of change.</p><p>
-
-<a name="%_idx_2996" id="%_idx_2996"></a>As an example of how this issue arises in programming, consider the
-situation where Peter and Paul have a bank account with $100 in
-it.  There is a substantial difference between modeling this as</p><p>
-
-</p><p></p><p><tt>(define peter-acc (make-account 100))<br />
-(define paul-acc (make-account 100))<br /></tt></p><p></p><p>
-and modeling it as</p><p>
-
-</p><p></p><p><tt>(define peter-acc (make-account 100))<br />
-(define paul-acc peter-acc)<br /></tt></p><p></p><p>
-In the first situation, the two bank accounts are distinct.
-Transactions made by Peter will not affect Paul's account, and vice
-versa.  In the second situation, however, we have defined <tt>paul-acc</tt> to be <em>the same thing</em> as <tt>peter-acc</tt>.  In effect,
-Peter and Paul now have a joint bank account, and if Peter makes a
-withdrawal from <tt>peter-acc</tt> Paul will observe less money in <tt>paul-acc</tt>.  These two similar but distinct situations can cause
-confusion in building computational models.  With the shared account,
-in particular, it can be especially confusing that there is one object
-(the bank account) that has two different names (<tt>peter-acc</tt> and
-<tt>paul-acc</tt>); if we are searching for all the places in our program
-where <tt>paul-acc</tt> can be changed, we must remember to look also at
-things that change <tt>peter-acc</tt>.<a name="call_footnote_Temp_337" href="#footnote_Temp_337" id="call_footnote_Temp_337"><sup><small>10</small></sup></a></p><p>
-
-
-With reference to the above remarks on “sameness” and “change,”
-observe that if Peter and Paul could only examine their bank balances,
-and could not perform operations that changed the balance, then the
-issue of whether the two accounts are distinct would be moot.  In
-general, so long as we never modify data objects, we can regard a
-compound data object to be precisely the totality of its pieces.  For
-example, a rational number is determined by giving its numerator and
-its denominator.  But this view is no longer valid in the presence of
-change, where a compound data object has an “identity” that is
-something different from the pieces of which it is composed.  A bank
-account is still “the same” bank account even if we change the
-balance by making a withdrawal; conversely, we could have two
-different bank accounts with the same state information.  This
-complication is a consequence, not of our programming language, but of
-our perception of a bank account as an object.  We do not, for
-example, ordinarily regard a rational number as a changeable object
-with identity, such that we could change the numerator and still have
-“the same” rational number.
-
-<a name="%_sec_Temp_338" id="%_sec_Temp_338"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_338">Pitfalls of imperative programming</a></h4><p>
-
-In contrast to functional programming, programming that makes
-extensive use of assignment is known as <a name="%_idx_3014" id="%_idx_3014"></a><a name="%_idx_3016" id="%_idx_3016"></a><em>imperative
-programming</em>.  In addition to raising complications about
-computational models, programs written in imperative style are
-susceptible to bugs that cannot occur in functional programs.  For
-example, recall the iterative factorial program from
-section <a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>:
-
-</p><p></p><p><tt>(define (factorial n)<br />
-  (define (iter product counter)<br />
-    (if (&gt; counter n)<br />
-        product<br />
-        (iter (* counter product)<br />
-              (+ counter 1))))<br />
-  (iter 1 1))<br /></tt></p><p></p><p>
-Instead of passing arguments in the internal iterative loop, we could
-adopt a more imperative style by using explicit assignment
-to update the values of the variables <tt>product</tt> and <tt>counter</tt>:
-</p><p></p><p><tt><a name="%_idx_3018" id="%_idx_3018"></a>(define (factorial n)<br />
-  (let ((product 1)<br />
-        (counter 1))<br />
-    (define (iter)<br />
-      (if (&gt; counter n)<br />
-          product<br />
-          (begin (set! product (* counter product))<br />
-                 (set! counter (+ counter 1))<br />
-                 (iter))))<br />
-    (iter)))<br /></tt></p><p></p><p>
-<a name="%_idx_3020" id="%_idx_3020"></a><a name="%_idx_3022" id="%_idx_3022"></a>This does not change the results produced by the program, but it does
-introduce a subtle trap.  How do we decide the order of the assignments?
-As it happens, the program is correct as written.  But
-writing the assignments in the opposite order
-</p><p></p><p><tt>(set! counter (+ counter 1))<br />
-(set! product (* counter product))<br /></tt></p><p></p><p>
-would have produced a different, incorrect result.
-In general, programming with assignment forces us to
-carefully consider the relative orders of the assignments to make sure
-that each statement is using the correct version of the variables that
-have been changed.  This issue simply does not arise in functional
-programs.<a name="call_footnote_Temp_339" href="#footnote_Temp_339" id="call_footnote_Temp_339"><sup><small>11</small></sup></a>
-
-The complexity of imperative programs becomes even worse if we
-consider applications in which several processes execute concurrently.  We
-will return to this in section <a href="book-Z-H-23.html#%_sec_3.4">3.4</a>.
-First, however, we will address the issue of providing a computational
-model for expressions that involve assignment, and explore the uses of
-objects with local state in designing simulations.</p><p>
-
-</p><p><a name="%_thm_3.7" id="%_thm_3.7"></a>
-<b>Exercise 3.7.</b>  <a name="%_idx_3026" id="%_idx_3026"></a>Consider the bank account objects created by <tt>make-account</tt>, with
-the password modification described in
-exercise <a href="#%_thm_3.3">3.3</a>.  Suppose that our banking
-system requires the ability to make joint accounts.  Define a
-procedure <a name="%_idx_3028" id="%_idx_3028"></a><tt>make-joint</tt> that accomplishes this.  <tt>Make-joint</tt>
-should take three arguments.  The first is a password-protected
-account.  The second argument must match the password with which the
-account was defined in order for the <tt>make-joint</tt> operation to
-proceed.  The third argument is a new password.  <tt>Make-joint</tt> is
-to create an additional access to the original account using the new
-password.  For example, if <tt>peter-acc</tt> is a bank account with
-password <tt>open-sesame</tt>, then</p><p>
-
-</p><p></p><p><tt>(define paul-acc<br />
-  (make-joint peter-acc 'open-sesame 'rosebud))<br /></tt></p><p></p><p>
-will allow one to make transactions on <tt>peter-acc</tt> using the name
-<tt>paul-acc</tt> and the password <tt>rosebud</tt>.  You may wish to modify
-your solution to exercise <a href="#%_thm_3.3">3.3</a> to accommodate
-this new feature.
-</p><p></p><p>
-
-</p><p><a name="%_thm_3.8" id="%_thm_3.8"></a>
-<b>Exercise 3.8.</b>  <a name="%_idx_3030" id="%_idx_3030"></a><a name="%_idx_3032" id="%_idx_3032"></a>When we defined the evaluation model in
-section <a href="book-Z-H-10.html#%_sec_1.1.3">1.1.3</a>, we said that the first step
-in evaluating an expression is to evaluate its subexpressions.  But we
-never specified the order in which the subexpressions should be
-evaluated (e.g., left to right or right to left).  When we introduce
-assignment, the order in which the arguments to a procedure are
-evaluated can make a difference to the result.  Define a simple
-procedure <tt>f</tt> such that evaluating <tt>(+ (f 0) (f 1))</tt> will
-return 0 if the arguments to <tt>+</tt> are evaluated from left to right
-but will return 1 if the arguments are evaluated from right to left.
-
-</p><p>
-</p><p>
-
-</p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_321" href="#call_footnote_Temp_321" id="footnote_Temp_321"><sup><small>1</small></sup></a> Actually,
-this is not quite true.  One exception was the <a name="%_idx_2852" id="%_idx_2852"></a><a name="%_idx_2854" id="%_idx_2854"></a>random-number generator
-in section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>.  Another exception involved the
-<a name="%_idx_2856" id="%_idx_2856"></a>operation/type tables we introduced in section <a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a>,
-where the values of two calls to <tt>get</tt> with the same arguments
-depended on intervening calls to <tt>put</tt>.
-On the other hand, until we introduce
-assignment, we have no way to create such procedures ourselves.
-
-</p><p><a name="footnote_Temp_322" href="#call_footnote_Temp_322" id="footnote_Temp_322"><sup><small>2</small></sup></a> <a name="%_idx_2864" id="%_idx_2864"></a><a name="%_idx_2866" id="%_idx_2866"></a>The value of a <tt>set!</tt> expression is implementation-dependent.
-<tt>Set!</tt> should be used only for its effect, not for its value.</p><p>
-
-<a name="%_idx_2868" id="%_idx_2868"></a><a name="%_idx_2870" id="%_idx_2870"></a><a name="%_idx_2872" id="%_idx_2872"></a>The name
-<tt>set!</tt> reflects a naming convention used in Scheme: Operations
-that change the values of variables (or that change data structures,
-as we will see in section <a href="book-Z-H-22.html#%_sec_3.3">3.3</a>) are given names that
-end with an exclamation point.  This is similar to the convention of
-designating predicates by names that end with a question mark.
-
-</p><p><a name="footnote_Temp_323" href="#call_footnote_Temp_323" id="footnote_Temp_323"><sup><small>3</small></sup></a> We have already used <a name="%_idx_2878" id="%_idx_2878"></a><tt>begin</tt> implicitly in our
-programs, because in Scheme the body of a procedure can be a sequence
-of expressions.  Also, the &lt;<em>consequent</em>&gt; part of each clause in a
-<a name="%_idx_2880" id="%_idx_2880"></a><a name="%_idx_2882" id="%_idx_2882"></a><tt>cond</tt> expression can be a sequence of expressions rather than a
-single expression.
-
-</p><p><a name="footnote_Temp_324" href="#call_footnote_Temp_324" id="footnote_Temp_324"><sup><small>4</small></sup></a> In programming-language jargon, the variable <tt>balance</tt> is said to be <a name="%_idx_2886" id="%_idx_2886"></a><a name="%_idx_2888" id="%_idx_2888"></a><em>encapsulated</em> within the <tt>new-withdraw</tt> procedure.  Encapsulation reflects the general
-system-design principle known as the <a name="%_idx_2890" id="%_idx_2890"></a><a name="%_idx_2892" id="%_idx_2892"></a><em>hiding principle</em>: One can
-make a system more modular and robust by protecting parts of the
-system from each other; that is, by providing information access only
-to those parts of the system that have a “need to know.”
-
-</p><p><a name="footnote_Temp_325" href="#call_footnote_Temp_325" id="footnote_Temp_325"><sup><small>5</small></sup></a> In contrast with <tt>new-withdraw</tt> above, we do not
-have to use <tt>let</tt> to make <tt>balance</tt> a local variable, since
-formal parameters are already local.  This will be clearer after the
-discussion of the environment model of evaluation in section <a href="book-Z-H-21.html#%_sec_3.2">3.2</a>.
-(See also exercise <a href="book-Z-H-21.html#%_thm_3.10">3.10</a>.)
-
-</p><p><a name="footnote_Temp_330" href="#call_footnote_Temp_330" id="footnote_Temp_330"><sup><small>6</small></sup></a> One common way to implement
-<tt>rand-update</tt> is to use the rule that <em>x</em> is updated to <em>a</em><em>x</em> + <em>b</em>
-modulo <em>m</em>, where <em>a</em>, <em>b</em>, and <em>m</em> are appropriately chosen integers.
-Chapter 3 of <a name="%_idx_2924" id="%_idx_2924"></a>Knuth 1981 includes an extensive discussion of techniques
-for generating sequences of random numbers and establishing their
-statistical properties.  Notice that the <tt>rand-update</tt> procedure
-computes a mathematical function: Given the same input twice, it
-produces the same output.  Therefore, the number sequence produced by
-<tt>rand-update</tt> certainly is not “random,” if by “random” we
-insist that each number in the sequence is unrelated to the preceding
-number.  The relation between “real randomness” and so-called <a name="%_idx_2926" id="%_idx_2926"></a><em>pseudo-random</em> sequences, which are produced by well-determined
-computations and yet have suitable statistical properties, is a
-complex question involving difficult issues in mathematics and
-philosophy.  <a name="%_idx_2928" id="%_idx_2928"></a><a name="%_idx_2930" id="%_idx_2930"></a><a name="%_idx_2932" id="%_idx_2932"></a>Kolmogorov, Solomonoff, and Chaitin have made great
-progress in clarifying these issues; a discussion can be found in
-Chaitin 1975.
-
-</p><p><a name="footnote_Temp_331" href="#call_footnote_Temp_331" id="footnote_Temp_331"><sup><small>7</small></sup></a> This theorem is due to E. <a name="%_idx_2942" id="%_idx_2942"></a>Cesàro.  See
-section 4.5.2 of <a name="%_idx_2944" id="%_idx_2944"></a>Knuth 1981 for a discussion and a proof.
-
-</p><p><a name="footnote_Temp_333" href="#call_footnote_Temp_333" id="footnote_Temp_333"><sup><small>8</small></sup></a> <a name="%_idx_2964" id="%_idx_2964"></a>MIT Scheme provides such a procedure.  If <a name="%_idx_2966" id="%_idx_2966"></a><a name="%_idx_2968" id="%_idx_2968"></a><tt>random</tt>
-is given an exact
-integer (as in section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>) it returns an exact integer,
-but if it is given a decimal value (as in this exercise) it returns
-a decimal value.
-
-</p><p><a name="footnote_Temp_335" href="#call_footnote_Temp_335" id="footnote_Temp_335"><sup><small>9</small></sup></a> We don't substitute for
-the occurrence of <tt>balance</tt> in the <tt>set!</tt> expression because
-the &lt;<em>name</em>&gt; in a <tt>set!</tt> is not evaluated.
-If we did substitute for it, we would get
-<tt>(set! 25 (- 25 amount))</tt>, which makes no sense.
-
-</p><p><a name="footnote_Temp_337" href="#call_footnote_Temp_337" id="footnote_Temp_337"><sup><small>10</small></sup></a> The phenomenon of a
-single computational object being accessed by more than one name is
-known as <a name="%_idx_2998" id="%_idx_2998"></a><em>aliasing</em>.  The joint bank account situation illustrates
-a very simple example of an alias.  In section <a href="book-Z-H-22.html#%_sec_3.3">3.3</a>
-we will see much more complex examples, such as “distinct” compound
-data structures that share parts.  Bugs can occur in our programs if
-<a name="%_idx_3000" id="%_idx_3000"></a><a name="%_idx_3002" id="%_idx_3002"></a><a name="%_idx_3004" id="%_idx_3004"></a>we forget that a change to an object may also, as a “side effect,”
-change a “different” object because the two “different” objects
-are actually a single object appearing under different aliases.  These
-so-called <em>side-effect bugs</em> are so difficult to locate and to
-analyze that some people have proposed that programming languages be
-designed in such a way as to not allow side effects or aliasing
-<a name="%_idx_3006" id="%_idx_3006"></a><a name="%_idx_3008" id="%_idx_3008"></a><a name="%_idx_3010" id="%_idx_3010"></a><a name="%_idx_3012" id="%_idx_3012"></a>(Lampson et al. 1981; Morris, Schmidt, and Wadler 1980).
-
-</p><p><a name="footnote_Temp_339" href="#call_footnote_Temp_339" id="footnote_Temp_339"><sup><small>11</small></sup></a> In view of this, it is ironic that introductory programming
-is most often taught in a highly imperative style.  This may be a
-vestige of a belief, common throughout the 1960s and 1970s, that
-programs that call procedures must inherently be less efficient than
-programs that perform assignments.  (Steele (1977) <a name="%_idx_3024" id="%_idx_3024"></a>debunks this
-argument.)  Alternatively it may reflect a view that step-by-step
-assignment is easier for beginners to visualize than procedure call.
-Whatever the reason, it often saddles beginning programmers with
-“should I set this variable before or after that one” concerns that can
-complicate programming and obscure the important ideas.
-
-</p></div>
-
-
-
-</body>
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type: text/html; charset=utf-8">
+<title>Structure and Interpretation of Computer Programs</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default">
+</head>
+<body><a name="%_sec_3.1" id="%_sec_3.1"></a><h2><a href="book-Z-H-4.html#%_toc_%_sec_3.1">3.1  Assignment and Local State</a></h2>
+<p><a name="%_idx_2836" id="%_idx_2836"></a><a name="%_idx_2838" id="%_idx_2838"></a>We ordinarily view the world as populated by independent objects, eachof which has a state that changes over time.  An object is said to“have state” if its behavior is influenced by its history.  A bankaccount, for example, has state in that the answer to the question“Can I withdraw $100?”  depends upon the history of deposit andwithdrawal transactions.  We can characterize an object's state by oneor more <a name="%_idx_2840" id="%_idx_2840"></a><em>state variables</em>, which among them maintain enoughinformation about history to determine the object's current behavior.In a simple banking system, we could characterize the state of anaccount by a current balance rather than by remembering the entirehistory of account transactions.</p>
+<p>In a system composed of many objects, the objects are rarelycompletely independent.  Each may influence the states of othersthrough interactions, which serve to couple the state variables of oneobject to those of other objects.  Indeed, the view that a system iscomposed of separate objects is most useful when the state variablesof the system can be grouped into closely coupled subsystems that areonly loosely coupled to other subsystems.</p>
+<p>This view of a system can be a powerful framework for organizingcomputational models of the system.  For such a model to be modular,it should be decomposed into computational objects that model theactual objects in the system.  Each computational object must have itsown <em>local state variables</em> describing the actual object's state.Since the states of objects in the system being modeled change overtime, the state variables of the corresponding computational objectsmust also change.  If we choose to model the flow of time in thesystem by the elapsed time in the computer, then we must have a way toconstruct computational objects whose behaviors change as our programsrun.  In particular, if we wish to model state variables by ordinarysymbolic names in the programming language, then the language mustprovide an <a name="%_idx_2842" id="%_idx_2842"></a><em>assignment operator</em> to enable us to change the valueassociated with a name.</p>
+<p><a name="%_sec_3.1.1" id="%_sec_3.1.1"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.1">3.1.1  Local State Variables</a></h3>
+<p><a name="%_idx_2844" id="%_idx_2844"></a><a name="%_idx_2846" id="%_idx_2846"></a><a name="%_idx_2848" id="%_idx_2848"></a><a name="%_idx_2850" id="%_idx_2850"></a>To illustrate what we mean by having a computational object withtime-varying state, let us model the situation of withdrawing moneyfrom a bank account.  We will do this using a procedure <code>withdraw</code>, which takes as argument an <code>amount</code> to be withdrawn.If there is enough money in the account to accommodate the withdrawal,then <code>withdraw</code> should return the balance remaining after thewithdrawal.  Otherwise, <code>withdraw</code> should return the message <em>Insufficient funds.</em> For example, if we begin with $100 in theaccount, we should obtain the following sequence of responses using<code>withdraw</code>:</p>
+<p></p>
+<p></p>
+<p><pre>(withdraw 25)
+<i>75</i>
+(withdraw 25)
+<i>50</i>
+(withdraw 60)
+<i>"Insufficient funds"</i>
+(withdraw 15)
+<i>35</i>
+</pre></p>
+<p></p>
+<p>Observe that the expression <code>(withdraw 25)</code>, evaluated twice,yields different values.  This is a new kind of behavior for aprocedure.  Until now, all our procedures could be viewed asspecifications for computing mathematical functions.  A call to aprocedure computed the value of the function applied to the givenarguments, and two calls to the same procedure with thesame arguments always produced the same result.<a name="call_footnote_Temp_321" href="#footnote_Temp_321" id="call_footnote_Temp_321"><sup><small>1</small></sup></a></p>
+<p>To implement <code>withdraw</code>, we can use a variable <code>balance</code> toindicate the balance of money in the account and define <code>withdraw</code>as a procedure that accesses <code>balance</code>.  The <code>withdraw</code>procedure checks to see if <code>balance</code> is at least as large as therequested <code>amount</code>.  If so, <code>withdraw</code> decrements <code>balance</code> by <code>amount</code> and returns the new value of <code>balance</code>.Otherwise, <code>withdraw</code> returns the <em>Insufficient funds</em>message.  Here are the definitions of <code>balance</code> and <code>withdraw</code>:</p>
+<p></p>
+<p></p>
+<p><pre>(define balance 100)
+
+<a name="%_idx_2858" id="%_idx_2858"></a>(define (withdraw amount)
+  (if (&gt;= balance amount)
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
+</pre></p>
+<p></p>
+<p>Decrementing <code>balance</code> is accomplished by the expression</p>
+<p></p>
+<p></p>
+<p><pre>(set! balance (- balance amount))
+</pre></p>
+<p></p>
+<p><a name="%_idx_2860" id="%_idx_2860"></a><a name="%_idx_2862" id="%_idx_2862"></a>This uses the <code>set!</code> special form, whose syntax is</p>
+<p></p>
+<p></p>
+<p><pre>(set! &lt;<em>name</em>&gt; &lt;<em>new-value</em>&gt;)
+</pre></p>
+<p></p>
+<p>Here &lt;<em>name</em>&gt; is a symbol and &lt;<em>new-value</em>&gt; is any expression.  <code>Set!</code> changes &lt;<em>name</em>&gt; so that its value is the result obtained byevaluating &lt;<em>new-value</em>&gt;.  In the case at hand, we are changing <code>balance</code> so that its new value will be the result of subtracting <code>amount</code> from the previous value of <code>balance</code>.<a name="call_footnote_Temp_322" href="#footnote_Temp_322" id="call_footnote_Temp_322"><sup><small>2</small></sup></a></p>
+<p><a name="%_idx_2874" id="%_idx_2874"></a><a name="%_idx_2876" id="%_idx_2876"></a><code>Withdraw</code> also uses the <code>begin</code> special form to causetwo expressions to be evaluatedin the case where the <code>if</code> test is true: first decrementing <code>balance</code> and then returning the value of <code>balance</code>.  In general,evaluating the expression</p>
+<p></p>
+<p></p>
+<p><pre>(begin &lt;<em>exp<sub>1</sub></em>&gt; &lt;<em>exp<sub>2</sub></em>&gt; <code>...</code> &lt;<em>exp<sub><em>k</em></sub></em>&gt;)
+</pre></p>
+<p></p>
+<p>causes the expressions &lt;<em>exp<sub>1</sub></em>&gt; through &lt;<em>exp<sub><em>k</em></sub></em>&gt; to beevaluated in sequence and the value of the final expression&lt;<em>exp<sub><em>k</em></sub></em>&gt; to be returned as the value of the entire <code>begin</code>form.<a name="call_footnote_Temp_323" href="#footnote_Temp_323" id="call_footnote_Temp_323"><sup><small>3</small></sup></a></p>
+<p>Although <code>withdraw</code> works as desired, the variable<code>balance</code> presents a problem.  As specified above, <code>balance</code>is a name defined in the global environment and is freely accessibleto be examined or modified by any procedure.  It would be much betterif we could somehow make <code>balance</code> internal to <code>withdraw</code>, sothat <code>withdraw</code> would be the only procedure that could access <code>balance</code> directly and any other procedure could access <code>balance</code>only indirectly (through calls to <code>withdraw</code>).  This would moreaccurately model the notion that <code>balance</code> is a local statevariable used by <code>withdraw</code> to keep track of the state of theaccount.</p>
+<p>We can make <code>balance</code> internal to <code>withdraw</code> by rewriting thedefinition as follows:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2884" id="%_idx_2884"></a>(define new-withdraw
+  (let ((balance 100))
+    (lambda (amount)
+      (if (&gt;= balance amount)
+          (begin (set! balance (- balance amount))
+                 balance)
+          "Insufficient funds"))))
+</pre></p>
+<p></p>
+<p>What we have done here is use <code>let</code> to establish an environmentwith a local variable <code>balance</code>, bound to the initial value 100.Within this local environment, we use <code>lambda</code> to create aprocedure that takes <code>amount</code> as an argument and behaves like ourprevious <code>withdraw</code> procedure.  This procedure – returned as theresult of evaluating the <code>let</code> expression – is <code>new-withdraw</code>,which behaves in precisely the same way as <code>withdraw</code> but whosevariable <code>balance</code> is not accessible by any otherprocedure.<a name="call_footnote_Temp_324" href="#footnote_Temp_324" id="call_footnote_Temp_324"><sup><small>4</small></sup></a></p>
+<p>Combining <code>set!</code> with local variables is the general programmingtechnique we will use for constructing computational objects withlocal state.  Unfortunately, using this technique raises a seriousproblem: When we first introduced procedures, we also introduced thesubstitution model of evaluation(section <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>) to provide an interpretation ofwhat procedure application means.  We said that applying a procedureshould be interpreted as evaluating the body of the procedure with theformal parameters replaced by their values.  The trouble is that, assoon as we introduce assignment into our language, substitution is nolonger an adequate model of procedure application.  (We will see whythis is so in section <a href="#%_sec_3.1.3">3.1.3</a>.)  As aconsequence, we technically have at this point no way to understandwhy the <code>new-withdraw</code> procedure behaves as claimed above.  Inorder to really understand a procedure such as <code>new-withdraw</code>, wewill need to develop a new model of procedure application.  Insection <a href="book-Z-H-21.html#%_sec_3.2">3.2</a> we will introduce such a model,together with an explanation of <code>set!</code> and local variables.First, however, we examine some variations on the theme established by<code>new-withdraw</code>.</p>
+<p>The following procedure, <code>make-withdraw</code>, creates “withdrawalprocessors.”  The formal parameter <code>balance</code> in <code>make-withdraw</code> specifies the initial amount of money in theaccount.<a name="call_footnote_Temp_325" href="#footnote_Temp_325" id="call_footnote_Temp_325"><sup><small>5</small></sup></a></p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2894" id="%_idx_2894"></a>(define (make-withdraw balance)
+  (lambda (amount)
+    (if (&gt;= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds")))
+</pre></p>
+<p></p>
+<p><code>Make-withdraw</code> can be used as follows to create two objects<code>W1</code> and <code>W2</code>:</p>
+<p></p>
+<p></p>
+<p><pre>(define W1 (make-withdraw 100))
+(define W2 (make-withdraw 100))
+(W1 50)
+<i>50</i>
+(W2 70)
+<i>30</i>
+(W2 40)
+<i>"Insufficient funds"</i>
+(W1 40)
+<i>10</i>
+</pre></p>
+<p></p>
+<p>Observe that <code>W1</code> and <code>W2</code> are completely independent objects,each with its own local state variable <code>balance</code>.  Withdrawalsfrom one do not affect the other.</p>
+<p>We can also create objects that handle deposits as well aswithdrawals, and thus we can represent simple bank accounts.  Here isa procedure that returns a “bank-account object” witha specified initial balance:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2896" id="%_idx_2896"></a><a name="%_idx_2898" id="%_idx_2898"></a>(define (make-account balance)
+  (define (withdraw amount)
+    (if (&gt;= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit) deposit)
+          (else (error "Unknown request -- MAKE-ACCOUNT"
+                       m))))
+  dispatch)
+</pre></p>
+<p></p>
+<p>Each call to <code>make-account</code> sets up an environment with a localstate variable <code>balance</code>.  Within this environment, <code>make-account</code> defines procedures <code>deposit</code> and <code>withdraw</code>that access <code>balance</code> and an additional procedure <code>dispatch</code>that takes a “message” as input and returns one of the two localprocedures.  The <code>dispatch</code> procedure itself is returned as thevalue that represents the bank-account object.This is precisely the <a name="%_idx_2900" id="%_idx_2900"></a><em>message-passing</em>style of programming that we saw in section <a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a>, althoughhere we are using it in conjunction with the ability to modify localvariables.</p>
+<p><code>Make-account</code> can be used as follows:</p>
+<p></p>
+<p></p>
+<p><pre>(define acc (make-account 100))
+((acc 'withdraw) 50)
+<i>50</i>
+((acc 'withdraw) 60)
+<i>"Insufficient funds"</i>
+((acc 'deposit) 40)
+<i>90</i>
+((acc 'withdraw) 60)
+<i>30</i>
+</pre></p>
+<p></p>
+<p>Each call to <code>acc</code> returns the locally defined <code>deposit</code> or<code>withdraw</code> procedure, which is then applied to the specified <code>amount</code>.  As was the case with <code>make-withdraw</code>, another call to <code>make-account</code></p>
+<p></p>
+<p></p>
+<p><pre>(define acc2 (make-account 100))
+</pre></p>
+<p></p>
+<p>will produce a completely separate account object, which maintains itsown local <code>balance</code>.</p>
+<p></p>
+<p><a name="%_thm_3.1" id="%_thm_3.1"></a><b>Exercise 3.1.</b>  An <a name="%_idx_2902" id="%_idx_2902"></a><em>accumulator</em> is a procedure that is called repeatedly with asingle numeric argument and accumulates its arguments into a sum.Each time it is called, it returns the currently accumulated sum.Write a procedure <a name="%_idx_2904" id="%_idx_2904"></a><code>make-accumulator</code> that generates accumulators,each maintaining an independent sum.  The input to <code>make-accumulator</code> should specify the initial value of the sum; forexample</p>
+<p></p>
+<p></p>
+<p><pre>(define A (make-accumulator 5))
+(A 10)
+<i>15</i>
+(A 10)
+<i>25</i>
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_3.2" id="%_thm_3.2"></a><b>Exercise 3.2.</b>  In software-testing applications, it is useful to be able to count thenumber of times a given procedure is called during the course of acomputation.  Write a procedure <a name="%_idx_2906" id="%_idx_2906"></a><a name="%_idx_2908" id="%_idx_2908"></a><a name="%_idx_2910" id="%_idx_2910"></a><code>make-monitored</code> that takes asinput a procedure, <code>f</code>, that itself takes one input.  The resultreturned by <code>make-monitored</code> is a third procedure, say <code>mf</code>,that keeps track of the number of times it has been called bymaintaining an internal counter.  If the input to <code>mf</code> is thespecial symbol <code>how-many-calls?</code>, then <code>mf</code> returns thevalue of the counter.  If the input is the special symbol <code>reset-count</code>, then <code>mf</code> resets the counter to zero.  For any otherinput, <code>mf</code> returns the result of calling <code>f</code> on that inputand increments the counter.  For instance, we could make a monitoredversion of the <code>sqrt</code> procedure:</p>
+<p></p>
+<p></p>
+<p><pre>(define s (make-monitored sqrt))
+
+(s 100)
+<i>10</i>
+
+(s 'how-many-calls?)
+<i>1</i>
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_3.3" id="%_thm_3.3"></a><b>Exercise 3.3.</b>  <a name="%_idx_2912" id="%_idx_2912"></a><a name="%_idx_2914" id="%_idx_2914"></a>Modify the <code>make-account</code> procedure so that it createspassword-protected accounts.  That is, <code>make-account</code> should takea symbol as an additional argument, as in</p>
+<p></p>
+<p></p>
+<p><pre>(define acc (make-account 100 'secret-password))
+</pre></p>
+<p></p>
+<p>The resulting account object should process a request only if it isaccompanied by the password with which the account was created, andshould otherwise return a complaint:</p>
+<p></p>
+<p></p>
+<p><pre>((acc 'secret-password 'withdraw) 40)
+<i>60</i>
+
+((acc 'some-other-password 'deposit) 50)
+<i>"Incorrect password"</i>
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_3.4" id="%_thm_3.4"></a><b>Exercise 3.4.</b>  Modify the <code>make-account</code> procedure ofexercise <a href="#%_thm_3.3">3.3</a> by adding another local statevariable so that, if an account is accessed more than sevenconsecutive times with an incorrect password, it invokes the procedure<code>call-the-cops</code>.</p>
+<p></p>
+<p><a name="%_sec_3.1.2" id="%_sec_3.1.2"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.2">3.1.2  The Benefits of Introducing Assignment</a></h3>
+<p><a name="%_idx_2916" id="%_idx_2916"></a><a name="%_idx_2918" id="%_idx_2918"></a><a name="%_idx_2920" id="%_idx_2920"></a>As we shall see, introducing assignment into our programming languageleads us into a thicket of difficult conceptual issues.  Nevertheless,viewing systems as collections of objects with local state is apowerful technique for maintaining a modular design.  As a simpleexample, consider the design of a procedure <code>rand</code> that, wheneverit is called, returns an integer chosen at random.</p>
+<p><a name="%_idx_2922" id="%_idx_2922"></a>It is not at all clear what is meant by “chosen at random.”  What wepresumably want is for successive calls to <code>rand</code> to produce asequence of numbers that has statistical properties of uniformdistribution.  We will not discuss methods for generating suitablesequences here.  Rather, let us assume that we have a procedure <code>rand-update</code> that has the property that if we start with a givennumber <em>x</em><sub>1</sub> and form</p>
+<p></p>
+<p></p>
+<p><pre><em>x</em><sub>2</sub> = (rand-update <em>x</em><sub>1</sub>)
+<em>x</em><sub>3</sub> = (rand-update <em>x</em><sub>2</sub>)
+</pre></p>
+<p></p>
+<p>then the sequence of values <em>x</em><sub>1</sub>, <em>x</em><sub>2</sub>, <em>x</em><sub>3</sub>, <code>...</code>, will have thedesired statistical properties.<a name="call_footnote_Temp_330" href="#footnote_Temp_330" id="call_footnote_Temp_330"><sup><small>6</small></sup></a></p>
+<p>We can implement <code>rand</code> as a procedure with a local state variable<code>x</code> that is initialized to some fixed value <code>random-init</code>.Each call to <code>rand</code> computes <code>rand-update</code> of the currentvalue of <code>x</code>, returns this as the random number, and also storesthis as the new value of <code>x</code>.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2934" id="%_idx_2934"></a>(define rand
+  (let ((x random-init))
+    (lambda ()
+      (set! x (rand-update x))
+      x)))
+</pre></p>
+<p></p>
+<p></p>
+<p>Of course, we could generate the same sequence of random numberswithout using assignment by simply calling <code>rand-update</code> directly.However, this would mean that any part of our program that used randomnumbers would have to explicitly remember the current value of <code>x</code>to be passed as an argument to <code>rand-update</code>.  To realize what anannoyance this would be, consider using random numbers to implement atechnique called <a name="%_idx_2936" id="%_idx_2936"></a><a name="%_idx_2938" id="%_idx_2938"></a><em>Monte Carlo simulation</em>.</p>
+<p>The Monte Carlo method consists of choosing sample experiments atrandom from a large set and then making deductions on the basis of theprobabilities estimated from tabulating the results of thoseexperiments.  For example, we can approximate <a name="%_idx_2940" id="%_idx_2940"></a>π using the factthat 6/π<sup>2</sup> is the probability that two integers chosen at randomwill have no factors in common; that is, that their greatest commondivisor will be 1.<a name="call_footnote_Temp_331" href="#footnote_Temp_331" id="call_footnote_Temp_331"><sup><small>7</small></sup></a> To obtainthe approximation to π, we perform a large number of experiments.In each experiment we choose two integers at random and perform a test<a name="%_idx_2946" id="%_idx_2946"></a>to see if their GCD is 1.  The fraction of times that the test ispassed gives us our estimate of 6/π<sup>2</sup>, and from this we obtain ourapproximation to π.</p>
+<p>The heart of our program is a procedure <code>monte-carlo</code>, which takesas arguments the number of times to try an experiment, together withthe experiment, represented as a no-argument procedure that willreturn either true or false each time it is run.  <code>Monte-carlo</code>runs the experiment for the designated number of trials and returns anumber telling the fraction of the trials in which the experiment wasfound to be true.</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2948" id="%_idx_2948"></a>(define (estimate-pi trials)
+  (sqrt (/ 6 (monte-carlo trials cesaro-test))))
+<a name="%_idx_2950" id="%_idx_2950"></a>(define (cesaro-test)
+   (= (gcd (rand) (rand)) 1))
+<a name="%_idx_2952" id="%_idx_2952"></a>(define (monte-carlo trials experiment)
+  (define (iter trials-remaining trials-passed)
+    (cond ((= trials-remaining 0)
+           (/ trials-passed trials))
+          ((experiment)
+           (iter (- trials-remaining 1) (+ trials-passed 1)))
+          (else
+           (iter (- trials-remaining 1) trials-passed))))
+  (iter trials 0))
+</pre></p>
+<p></p>
+<p></p>
+<p>Now let us try the same computation using <code>rand-update</code> directlyrather than <code>rand</code>, the way we would be forced to proceed if wedid not use assignment to model local state:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2954" id="%_idx_2954"></a>(define (estimate-pi trials)
+  (sqrt (/ 6 (random-gcd-test trials random-init))))
+(define (random-gcd-test trials initial-x)
+  (define (iter trials-remaining trials-passed x)
+    (let ((x1 (rand-update x)))
+      (let ((x2 (rand-update x1)))
+        (cond ((= trials-remaining 0)   
+               (/ trials-passed trials))
+              ((= (gcd x1 x2) 1)
+               (iter (- trials-remaining 1)
+                     (+ trials-passed 1)
+                     x2))
+              (else
+               (iter (- trials-remaining 1)
+                     trials-passed
+                     x2))))))
+  (iter trials 0 initial-x))
+</pre></p>
+<p></p>
+<p></p>
+<p>While the program is still simple, it betrays some painfulbreaches of modularity.  In our first version of the program, using<code>rand</code>, we can express the Monte Carlo method directly asa general <code>monte-carlo</code> procedure that takes as an argument anarbitrary <code>experiment</code> procedure.  In our second version of theprogram, with no local state for the random-number generator, <code>random-gcd-test</code> must explicitly manipulate the random numbers <code>x1</code> and <code>x2</code> and recycle <code>x2</code> through the iterative loop asthe new input to <code>rand-update</code>.  This explicit handling of therandom numbers intertwines the structure of accumulating test resultswith the fact that our particular experiment uses two random numbers,whereas other Monte Carlo experiments might use one random number orthree.  Even the top-level procedure <code>estimate-pi</code> has to beconcerned with supplying an initial random number.  The fact that therandom-number generator's insides are leaking out into other parts ofthe program makes it difficult for us to isolate the Monte Carlo ideaso that it can be applied to other tasks.  In the first version of theprogram, assignment encapsulates the state of the random-numbergenerator within the <code>rand</code> procedure, so that the details ofrandom-number generation remain independent of the rest of theprogram.</p>
+<p>The general phenomenon illustrated by the Monte Carlo example is this:From the point of view of one part of a complex process, the otherparts appear to change with time.  They have hidden time-varying localstate.  If we wish to write computer programs whose structure reflectsthis decomposition, we makecomputational objects (such as bank accounts and random-numbergenerators) whose behavior changes with time.  We model state withlocal state variables, and we model the changes of state withassignments to those variables.</p>
+<p>It is tempting to conclude this discussion by saying that, byintroducing assignment and the technique of hiding state in localvariables, we are able to structure systems in a more modular fashionthan if all state had to be manipulated explicitly, by passingadditional parameters.  Unfortunately, as we shall see, the story isnot so simple.</p>
+<p></p>
+<p><a name="%_thm_3.5" id="%_thm_3.5"></a><b>Exercise 3.5.</b>  <a name="%_idx_2956" id="%_idx_2956"></a><a name="%_idx_2958" id="%_idx_2958"></a><a name="%_idx_2960" id="%_idx_2960"></a><em>Monte Carlo integration</em> is a method of estimating definiteintegrals by means of Monte Carlo simulation.  Consider computing thearea of a region of space described by a predicate <em>P</em>(<em>x</em>, <em>y</em>) that istrue for points (<em>x</em>, <em>y</em>) in the region and false for points not in theregion.  For example, the region contained within a circle of radius3 centered at (5, 7) is described by the predicate that testswhether (<em>x</em> - 5)<sup>2</sup>  +  (<em>y</em> - 7)<sup>2</sup><u>&lt;</u> 3<sup>2</sup>.  To estimate the area of theregion described by such a predicate, begin by choosing a rectanglethat contains the region.  For example, a rectangle with diagonallyopposite corners at (2, 4) and (8, 10) contains the circle above.The desired integral is the area of that portion of the rectangle thatlies in the region.  We can estimate the integral by picking, atrandom, points (<em>x</em>,<em>y</em>) that lie in the rectangle, and testing <em>P</em>(<em>x</em>,<em>y</em>) for each point to determine whether the point lies in the region.If we try this with many points, then the fraction of points that fallin the region should give an estimate of the proportion of therectangle that lies in the region.  Hence, multiplying this fractionby the area of the entire rectangle should produce an estimate of theintegral.</p>
+<p>Implement Monte Carlo integration as a procedure <a name="%_idx_2962" id="%_idx_2962"></a><code>estimate-integral</code> that takes as arguments a predicate <code>P</code>, upperand lower bounds <code>x1</code>, <code>x2</code>, <code>y1</code>, and <code>y2</code> for therectangle, and the number of trials to perform in order to produce theestimate.  Your procedure should use the same <code>monte-carlo</code> procedure that was used above to estimate π.  Useyour <code>estimate-integral</code> to produce an estimate of π bymeasuring the area of a unit circle.</p>
+<p>You will find it useful to have a procedure that returns a numberchosen at random from a given range.  The following <code>random-in-range</code>procedure implements this in terms of the <code>random</code>procedure used in section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>, which returns a nonnegativenumber less than its input.<a name="call_footnote_Temp_333" href="#footnote_Temp_333" id="call_footnote_Temp_333"><sup><small>8</small></sup></a></p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2970" id="%_idx_2970"></a>(define (random-in-range low high)
+  (let ((range (- high low)))
+    (+ low (random range))))
+</pre></p>
+<p></p>
+<p></p>
+<p></p>
+<p></p>
+<p><a name="%_thm_3.6" id="%_thm_3.6"></a><b>Exercise 3.6.</b>  <a name="%_idx_2972" id="%_idx_2972"></a><a name="%_idx_2974" id="%_idx_2974"></a>It is useful to be able to reset a random-number generator to producea sequence starting from a given value.  Design a new <code>rand</code>procedure that is called with an argument that is either the symbol<code>generate</code> or the symbol <code>reset</code> and behaves as follows: <code>(rand'generate)</code> produces a new random number; <code>((rand 'reset)&lt;<em>new-value</em>&gt;)</code> resets the internal state variable to the designated&lt;<em>new-value</em>&gt;.  Thus, by resetting the state, one can generaterepeatable sequences.  These are very handy to have when testing anddebugging programs that use random numbers.</p>
+<p></p>
+<p><a name="%_sec_3.1.3" id="%_sec_3.1.3"></a></p>
+<h3><a href="book-Z-H-4.html#%_toc_%_sec_3.1.3">3.1.3  The Costs of Introducing Assignment</a></h3>
+<p><a name="%_idx_2976" id="%_idx_2976"></a>As we have seen, the <code>set!</code> operation enables us to model objectsthat have local state.  However, this advantage comes at a price.  Ourprogramming language can no longer be interpreted in terms of thesubstitution model of procedure application that we introduced insection <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>.  Moreover, no simple model with“nice” mathematical properties can be an adequate framework fordealing with objects and assignment in programming languages.</p>
+<p>So long as we do not use assignments, two evaluations of the sameprocedure with the same arguments will produce the same result, sothat procedures can be viewed as computing mathematical functions.Programming without any use of assignments, as we did throughout thefirst two chapters of this book, is accordingly known as <a name="%_idx_2978" id="%_idx_2978"></a><em>functional programming</em>.</p>
+<p><a name="%_idx_2980" id="%_idx_2980"></a>To understand how assignment complicates matters, consider asimplified version of the <code>make-withdraw</code> procedure ofsection <a href="#%_sec_3.1.1">3.1.1</a> that does not bother to checkfor an insufficient amount:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2982" id="%_idx_2982"></a>(define (make-simplified-withdraw balance)
+  (lambda (amount)
+    (set! balance (- balance amount))
+    balance))
+(define W (make-simplified-withdraw 25))
+(W 20)
+<i>5</i>
+(W 10)
+<i> - 5</i>
+</pre></p>
+<p></p>
+<p>Compare this procedure with the following <code>make-decrementer</code>procedure, which does not use <code>set!</code>:</p>
+<p></p>
+<p></p>
+<p><pre><a name="%_idx_2984" id="%_idx_2984"></a>(define (make-decrementer balance)
+  (lambda (amount)
+    (- balance amount)))
+</pre></p>
+<p></p>
+<p><code>Make-decrementer</code> returns a procedure that subtracts its inputfrom a designated amount <code>balance</code>, but there is no accumulated effectover successive calls, as with <code>make-simplified-withdraw</code>:</p>
+<p></p>
+<p></p>
+<p><pre>(define D (make-decrementer 25))
+(D 20)
+<i>5</i>
+(D 10)
+<i>15</i>
+</pre></p>
+<p></p>
+<p>We can use the substitution model to explain how <code>make-decrementer</code> works.  For instance, let us analyze the evaluationof the expression</p>
+<p></p>
+<p></p>
+<p><pre>((make-decrementer 25) 20)
+</pre></p>
+<p></p>
+<p>We first simplify the operator of the combination by substituting 25for <code>balance</code> in the body of <code>make-decrementer</code>.  This reducesthe expression to</p>
+<p></p>
+<p></p>
+<p><pre>((lambda (amount) (- 25 amount)) 20)
+</pre></p>
+<p></p>
+<p>Now we apply the operator by substituting 20 for <code>amount</code> in thebody of the <code>lambda</code> expression:</p>
+<p></p>
+<p></p>
+<p><pre>(- 25 20)
+</pre></p>
+<p></p>
+<p>The final answer is 5.</p>
+<p>Observe, however, what happens if we attempt a similar substitutionanalysis with <code>make-simplified-withdraw</code>:</p>
+<p></p>
+<p></p>
+<p><pre>((make-simplified-withdraw 25) 20)
+</pre></p>
+<p></p>
+<p>We first simplify the operator by substituting 25 for <code>balance</code> inthe body of <code>make-simplified-withdraw</code>.This reduces the expression to<a name="call_footnote_Temp_335" href="#footnote_Temp_335" id="call_footnote_Temp_335"><sup><small>9</small></sup></a></p>
+<p></p>
+<p></p>
+<p><pre>((lambda (amount) (set! balance (- 25 amount)) 25) 20)
+</pre></p>
+<p></p>
+<p>Now we apply the operator by substituting 20 for <code>amount</code> in thebody of the <code>lambda</code> expression:</p>
+<p></p>
+<p></p>
+<p><pre>(set! balance (- 25 20)) 25
+</pre></p>
+<p></p>
+<p>If we adhered to the substitution model, we would have to say that themeaning of the procedure application is to first set <code>balance</code> to5 and then return 25 as the value of the expression.  This gets thewrong answer.  In order to get the correct answer, we would have tosomehow distinguish the first occurrence of <code>balance</code> (before theeffect of the <code>set!</code>)  from the second occurrence of <code>balance</code>(after the effect of the <code>set!</code>), and the substitution modelcannot do this.</p>
+<p>The trouble here is that substitution is based ultimately on thenotion that the symbols in our language are essentially names forvalues.  But as soon as we introduce <code>set!</code> and the idea that thevalue of a variable can change, a variable can no longer be simply aname.  Now a variable somehow refers to a place where a value can bestored, and the value stored at this place can change.  Insection <a href="book-Z-H-21.html#%_sec_3.2">3.2</a>we will see how environments play this role of “place” in ourcomputational model.</p>
+<p><a name="%_sec_Temp_336" id="%_sec_Temp_336"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_336">Sameness and change</a></h4>
+<p><a name="%_idx_2986" id="%_idx_2986"></a><a name="%_idx_2988" id="%_idx_2988"></a>The issue surfacing here is more profound than the mere breakdown of aparticular model of computation.  As soon as we introduce change intoour computational models, many notions that were previouslystraightforward become problematical.  Consider the concept of twothings being “the same.”</p>
+<p>Suppose we call <code>make-decrementer</code> twice with the same argument tocreate two procedures:</p>
+<p></p>
+<p></p>
+<p><pre>(define D1 (make-decrementer 25))
+(define D2 (make-decrementer 25))
+</pre></p>
+<p></p>
+<p>Are <code>D1</code> and <code>D2</code> the same?  An acceptable answer is yes,because <code>D1</code> and <code>D2</code> have the same computationalbehavior – each is a procedure that subtracts its input from 25.  Infact, <code>D1</code> could be substituted for <code>D2</code> in any computationwithout changing the result.</p>
+<p>Contrast this with making two calls to <code>make-simplified-withdraw</code>:</p>
+<p></p>
+<p></p>
+<p><pre>(define W1 (make-simplified-withdraw 25))
+(define W2 (make-simplified-withdraw 25))
+</pre></p>
+<p></p>
+<p>Are <code>W1</code> and <code>W2</code> the same?  Surely not, because calls to <code>W1</code> and <code>W2</code> have distinct effects, as shown by the followingsequence of interactions:</p>
+<p></p>
+<p></p>
+<p><pre>(W1 20)
+<i>5</i>
+(W1 20)
+<i> - 15</i>
+(W2 20)
+<i>5</i>
+</pre></p>
+<p></p>
+<p>Even though <code>W1</code> and <code>W2</code> are “equal” in the sense that theyare both created by evaluating the same expression, <code>(make-simplified-withdraw 25)</code>, it is not true that <code>W1</code> could besubstituted for <code>W2</code> in any expression without changing the resultof evaluating the expression.</p>
+<p>A language that supports the concept that “equals can be substitutedfor equals” in an expresssionwithout changing the value of the expression is said to be<a name="%_idx_2990" id="%_idx_2990"></a><a name="%_idx_2992" id="%_idx_2992"></a><a name="%_idx_2994" id="%_idx_2994"></a><em>referentially transparent</em>.  Referential transparency is violatedwhen we include <code>set!</code> in our computer language.  This makes ittricky to determine when we can simplify expressions by substitutingequivalent expressions.  Consequently, reasoning about programs thatuse assignment becomes drastically more difficult.</p>
+<p>Once we forgo referential transparency, the notion of what it meansfor computational objects to be “the same” becomes difficult tocapture in a formal way.  Indeed, the meaning of “same” in the realworld that our programs model is hardly clear in itself.  In general,we can determine that two apparently identical objects are indeed“the same one” only by modifying one object and then observingwhether the other object has changed in the same way.  But how can wetell if an object has “changed” other than by observing the “same”object twice and seeing whether some property of the object differsfrom one observation to the next?  Thus, we cannot determine“change” without some <em>a priori</em> notion of “sameness,” and wecannot determine sameness without observing the effects of change.</p>
+<p><a name="%_idx_2996" id="%_idx_2996"></a>As an example of how this issue arises in programming, consider thesituation where Peter and Paul have a bank account with $100 init.  There is a substantial difference between modeling this as</p>
+<p></p>
+<p></p>
+<p><pre>(define peter-acc (make-account 100))
+(define paul-acc (make-account 100))
+</pre></p>
+<p></p>
+<p>and modeling it as</p>
+<p></p>
+<p></p>
+<p><pre>(define peter-acc (make-account 100))
+(define paul-acc peter-acc)
+</pre></p>
+<p></p>
+<p>In the first situation, the two bank accounts are distinct.Transactions made by Peter will not affect Paul's account, and viceversa.  In the second situation, however, we have defined <code>paul-acc</code> to be <em>the same thing</em> as <code>peter-acc</code>.  In effect,Peter and Paul now have a joint bank account, and if Peter makes awithdrawal from <code>peter-acc</code> Paul will observe less money in <code>paul-acc</code>.  These two similar but distinct situations can causeconfusion in building computational models.  With the shared account,in particular, it can be especially confusing that there is one object(the bank account) that has two different names (<code>peter-acc</code> and<code>paul-acc</code>); if we are searching for all the places in our programwhere <code>paul-acc</code> can be changed, we must remember to look also atthings that change <code>peter-acc</code>.<a name="call_footnote_Temp_337" href="#footnote_Temp_337" id="call_footnote_Temp_337"><sup><small>10</small></sup></a></p>
+<p>With reference to the above remarks on “sameness” and “change,”observe that if Peter and Paul could only examine their bank balances,and could not perform operations that changed the balance, then theissue of whether the two accounts are distinct would be moot.  Ingeneral, so long as we never modify data objects, we can regard acompound data object to be precisely the totality of its pieces.  Forexample, a rational number is determined by giving its numerator andits denominator.  But this view is no longer valid in the presence ofchange, where a compound data object has an “identity” that issomething different from the pieces of which it is composed.  A bankaccount is still “the same” bank account even if we change thebalance by making a withdrawal; conversely, we could have twodifferent bank accounts with the same state information.  Thiscomplication is a consequence, not of our programming language, but ofour perception of a bank account as an object.  We do not, forexample, ordinarily regard a rational number as a changeable objectwith identity, such that we could change the numerator and still have“the same” rational number.<a name="%_sec_Temp_338" id="%_sec_Temp_338"></a></p>
+<h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_338">Pitfalls of imperative programming</a></h4>
+<p>In contrast to functional programming, programming that makesextensive use of assignment is known as <a name="%_idx_3014" id="%_idx_3014"></a><a name="%_idx_3016" id="%_idx_3016"></a><em>imperativeprogramming</em>.  In addition to raising complications aboutcomputational models, programs written in imperative style aresusceptible to bugs that cannot occur in functional programs.  Forexample, recall the iterative factorial program fromsection <a href="book-Z-H-11.html#%_sec_1.2.1">1.2.1</a>:</p>
+<p></p>
+<p><pre>(define (factorial n)
+  (define (iter product counter)
+    (if (&gt; counter n)
+        product
+        (iter (* counter product)
+              (+ counter 1))))
+  (iter 1 1))
+</pre></p>
+<p></p>
+<p>Instead of passing arguments in the internal iterative loop, we couldadopt a more imperative style by using explicit assignmentto update the values of the variables <code>product</code> and <code>counter</code>:</p>
+<p></p>
+<p><pre><a name="%_idx_3018" id="%_idx_3018"></a>(define (factorial n)
+  (let ((product 1)
+        (counter 1))
+    (define (iter)
+      (if (&gt; counter n)
+          product
+          (begin (set! product (* counter product))
+                 (set! counter (+ counter 1))
+                 (iter))))
+    (iter)))
+</pre></p>
+<p></p>
+<p><a name="%_idx_3020" id="%_idx_3020"></a><a name="%_idx_3022" id="%_idx_3022"></a>This does not change the results produced by the program, but it doesintroduce a subtle trap.  How do we decide the order of the assignments?As it happens, the program is correct as written.  Butwriting the assignments in the opposite order</p>
+<p></p>
+<p><pre>(set! counter (+ counter 1))
+(set! product (* counter product))
+</pre></p>
+<p></p>
+<p>would have produced a different, incorrect result.In general, programming with assignment forces us tocarefully consider the relative orders of the assignments to make surethat each statement is using the correct version of the variables thathave been changed.  This issue simply does not arise in functionalprograms.<a name="call_footnote_Temp_339" href="#footnote_Temp_339" id="call_footnote_Temp_339"><sup><small>11</small></sup></a>The complexity of imperative programs becomes even worse if weconsider applications in which several processes execute concurrently.  Wewill return to this in section <a href="book-Z-H-23.html#%_sec_3.4">3.4</a>.First, however, we will address the issue of providing a computationalmodel for expressions that involve assignment, and explore the uses ofobjects with local state in designing simulations.</p>
+<p></p>
+<p><a name="%_thm_3.7" id="%_thm_3.7"></a><b>Exercise 3.7.</b>  <a name="%_idx_3026" id="%_idx_3026"></a>Consider the bank account objects created by <code>make-account</code>, withthe password modification described inexercise <a href="#%_thm_3.3">3.3</a>.  Suppose that our bankingsystem requires the ability to make joint accounts.  Define aprocedure <a name="%_idx_3028" id="%_idx_3028"></a><code>make-joint</code> that accomplishes this.  <code>Make-joint</code>should take three arguments.  The first is a password-protectedaccount.  The second argument must match the password with which theaccount was defined in order for the <code>make-joint</code> operation toproceed.  The third argument is a new password.  <code>Make-joint</code> isto create an additional access to the original account using the newpassword.  For example, if <code>peter-acc</code> is a bank account withpassword <code>open-sesame</code>, then</p>
+<p></p>
+<p></p>
+<p><pre>(define paul-acc
+  (make-joint peter-acc 'open-sesame 'rosebud))
+</pre></p>
+<p></p>
+<p>will allow one to make transactions on <code>peter-acc</code> using the name<code>paul-acc</code> and the password <code>rosebud</code>.  You may wish to modifyyour solution to exercise <a href="#%_thm_3.3">3.3</a> to accommodatethis new feature.</p>
+<p></p>
+<p></p>
+<p><a name="%_thm_3.8" id="%_thm_3.8"></a><b>Exercise 3.8.</b>  <a name="%_idx_3030" id="%_idx_3030"></a><a name="%_idx_3032" id="%_idx_3032"></a>When we defined the evaluation model insection <a href="book-Z-H-10.html#%_sec_1.1.3">1.1.3</a>, we said that the first stepin evaluating an expression is to evaluate its subexpressions.  But wenever specified the order in which the subexpressions should beevaluated (e.g., left to right or right to left).  When we introduceassignment, the order in which the arguments to a procedure areevaluated can make a difference to the result.  Define a simpleprocedure <code>f</code> such that evaluating <code>(+ (f 0) (f 1))</code> willreturn 0 if the arguments to <code>+</code> are evaluated from left to rightbut will return 1 if the arguments are evaluated from right to left.</p>
+<p></p>
+<p></p>
+<p></p>
+<div class="smallprint"><hr></div>
+<p></p>
+<div class="footnote">
+<p><a name="footnote_Temp_321" href="#call_footnote_Temp_321" id="footnote_Temp_321"><sup><small>1</small></sup></a> Actually,this is not quite true.  One exception was the <a name="%_idx_2852" id="%_idx_2852"></a><a name="%_idx_2854" id="%_idx_2854"></a>random-number generatorin section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>.  Another exception involved the<a name="%_idx_2856" id="%_idx_2856"></a>operation/type tables we introduced in section <a href="book-Z-H-17.html#%_sec_2.4.3">2.4.3</a>,where the values of two calls to <code>get</code> with the same argumentsdepended on intervening calls to <code>put</code>.On the other hand, until we introduceassignment, we have no way to create such procedures ourselves.</p>
+<p><a name="footnote_Temp_322" href="#call_footnote_Temp_322" id="footnote_Temp_322"><sup><small>2</small></sup></a> <a name="%_idx_2864" id="%_idx_2864"></a><a name="%_idx_2866" id="%_idx_2866"></a>The value of a <code>set!</code> expression is implementation-dependent.<code>Set!</code> should be used only for its effect, not for its value.</p>
+<p><a name="%_idx_2868" id="%_idx_2868"></a><a name="%_idx_2870" id="%_idx_2870"></a><a name="%_idx_2872" id="%_idx_2872"></a>The name<code>set!</code> reflects a naming convention used in Scheme: Operationsthat change the values of variables (or that change data structures,as we will see in section <a href="book-Z-H-22.html#%_sec_3.3">3.3</a>) are given names thatend with an exclamation point.  This is similar to the convention ofdesignating predicates by names that end with a question mark.</p>
+<p><a name="footnote_Temp_323" href="#call_footnote_Temp_323" id="footnote_Temp_323"><sup><small>3</small></sup></a> We have already used <a name="%_idx_2878" id="%_idx_2878"></a><code>begin</code> implicitly in ourprograms, because in Scheme the body of a procedure can be a sequenceof expressions.  Also, the &lt;<em>consequent</em>&gt; part of each clause in a<a name="%_idx_2880" id="%_idx_2880"></a><a name="%_idx_2882" id="%_idx_2882"></a><code>cond</code> expression can be a sequence of expressions rather than asingle expression.</p>
+<p><a name="footnote_Temp_324" href="#call_footnote_Temp_324" id="footnote_Temp_324"><sup><small>4</small></sup></a> In programming-language jargon, the variable <code>balance</code> is said to be <a name="%_idx_2886" id="%_idx_2886"></a><a name="%_idx_2888" id="%_idx_2888"></a><em>encapsulated</em> within the <code>new-withdraw</code> procedure.  Encapsulation reflects the generalsystem-design principle known as the <a name="%_idx_2890" id="%_idx_2890"></a><a name="%_idx_2892" id="%_idx_2892"></a><em>hiding principle</em>: One canmake a system more modular and robust by protecting parts of thesystem from each other; that is, by providing information access onlyto those parts of the system that have a “need to know.”</p>
+<p><a name="footnote_Temp_325" href="#call_footnote_Temp_325" id="footnote_Temp_325"><sup><small>5</small></sup></a> In contrast with <code>new-withdraw</code> above, we do nothave to use <code>let</code> to make <code>balance</code> a local variable, sinceformal parameters are already local.  This will be clearer after thediscussion of the environment model of evaluation in section <a href="book-Z-H-21.html#%_sec_3.2">3.2</a>.(See also exercise <a href="book-Z-H-21.html#%_thm_3.10">3.10</a>.)</p>
+<p><a name="footnote_Temp_330" href="#call_footnote_Temp_330" id="footnote_Temp_330"><sup><small>6</small></sup></a> One common way to implement<code>rand-update</code> is to use the rule that <em>x</em> is updated to <em>a</em><em>x</em> + <em>b</em>modulo <em>m</em>, where <em>a</em>, <em>b</em>, and <em>m</em> are appropriately chosen integers.Chapter 3 of <a name="%_idx_2924" id="%_idx_2924"></a>Knuth 1981 includes an extensive discussion of techniquesfor generating sequences of random numbers and establishing theirstatistical properties.  Notice that the <code>rand-update</code> procedurecomputes a mathematical function: Given the same input twice, itproduces the same output.  Therefore, the number sequence produced by<code>rand-update</code> certainly is not “random,” if by “random” weinsist that each number in the sequence is unrelated to the precedingnumber.  The relation between “real randomness” and so-called <a name="%_idx_2926" id="%_idx_2926"></a><em>pseudo-random</em> sequences, which are produced by well-determinedcomputations and yet have suitable statistical properties, is acomplex question involving difficult issues in mathematics andphilosophy.  <a name="%_idx_2928" id="%_idx_2928"></a><a name="%_idx_2930" id="%_idx_2930"></a><a name="%_idx_2932" id="%_idx_2932"></a>Kolmogorov, Solomonoff, and Chaitin have made greatprogress in clarifying these issues; a discussion can be found inChaitin 1975.</p>
+<p><a name="footnote_Temp_331" href="#call_footnote_Temp_331" id="footnote_Temp_331"><sup><small>7</small></sup></a> This theorem is due to E. <a name="%_idx_2942" id="%_idx_2942"></a>Cesàro.  Seesection 4.5.2 of <a name="%_idx_2944" id="%_idx_2944"></a>Knuth 1981 for a discussion and a proof.</p>
+<p><a name="footnote_Temp_333" href="#call_footnote_Temp_333" id="footnote_Temp_333"><sup><small>8</small></sup></a> <a name="%_idx_2964" id="%_idx_2964"></a>MIT Scheme provides such a procedure.  If <a name="%_idx_2966" id="%_idx_2966"></a><a name="%_idx_2968" id="%_idx_2968"></a><code>random</code>is given an exactinteger (as in section <a href="book-Z-H-11.html#%_sec_1.2.6">1.2.6</a>) it returns an exact integer,but if it is given a decimal value (as in this exercise) it returnsa decimal value.</p>
+<p><a name="footnote_Temp_335" href="#call_footnote_Temp_335" id="footnote_Temp_335"><sup><small>9</small></sup></a> We don't substitute forthe occurrence of <code>balance</code> in the <code>set!</code> expression becausethe &lt;<em>name</em>&gt; in a <code>set!</code> is not evaluated.If we did substitute for it, we would get<code>(set! 25 (- 25 amount))</code>, which makes no sense.</p>
+<p><a name="footnote_Temp_337" href="#call_footnote_Temp_337" id="footnote_Temp_337"><sup><small>10</small></sup></a> The phenomenon of asingle computational object being accessed by more than one name isknown as <a name="%_idx_2998" id="%_idx_2998"></a><em>aliasing</em>.  The joint bank account situation illustratesa very simple example of an alias.  In section <a href="book-Z-H-22.html#%_sec_3.3">3.3</a>we will see much more complex examples, such as “distinct” compounddata structures that share parts.  Bugs can occur in our programs if<a name="%_idx_3000" id="%_idx_3000"></a><a name="%_idx_3002" id="%_idx_3002"></a><a name="%_idx_3004" id="%_idx_3004"></a>we forget that a change to an object may also, as a “side effect,”change a “different” object because the two “different” objectsare actually a single object appearing under different aliases.  Theseso-called <em>side-effect bugs</em> are so difficult to locate and toanalyze that some people have proposed that programming languages bedesigned in such a way as to not allow side effects or aliasing<a name="%_idx_3006" id="%_idx_3006"></a><a name="%_idx_3008" id="%_idx_3008"></a><a name="%_idx_3010" id="%_idx_3010"></a><a name="%_idx_3012" id="%_idx_3012"></a>(Lampson et al. 1981; Morris, Schmidt, and Wadler 1980).</p>
+<p><a name="footnote_Temp_339" href="#call_footnote_Temp_339" id="footnote_Temp_339"><sup><small>11</small></sup></a> In view of this, it is ironic that introductory programmingis most often taught in a highly imperative style.  This may be avestige of a belief, common throughout the 1960s and 1970s, thatprograms that call procedures must inherently be less efficient thanprograms that perform assignments.  (Steele (1977) <a name="%_idx_3024" id="%_idx_3024"></a>debunks thisargument.)  Alternatively it may reflect a view that step-by-stepassignment is easier for beginners to visualize than procedure call.Whatever the reason, it often saddles beginning programmers with“should I set this variable before or after that one” concerns that cancomplicate programming and obscure the important ideas.</p>
+</div></body>
 </html>
-

@@ -1,25 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
+<?xml version="1.0" encoding="utf-8"?><html xmlns="http://www.w3.org/1999/xhtml" xmlns:ops="http://www.idpf.org/2007/ops">
 <!-- Generated from TeX source by tex2page, v 4o,
-     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
-    <title>Structure and Interpretation of Computer Programs</title>
-    <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
-  </head>
-  <body>
+     (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page --><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type: text/html; charset=utf-8">
+<title>Structure and Interpretation of Computer Programs</title>
+<link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default">
+</head>
+<body>
 
 
 
 <a name="%_chap_5" id="%_chap_5"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_5">Chapter 5</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_5">Computing with Register Machines</a></p><p>
+<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_5">Chapter 5</a></div>
+</h1>
+<p>
+<a href="book-Z-H-4.html#%_toc_%_chap_5">Computing with Register Machines</a></p>
+<p>
 
-</p><p>
-</p><div align="right">
+</p>
+<p>
+</p>
+<div align="right">
 <table width="60%"><tr><td>
 <span class="epigraph">
 <p>
@@ -28,14 +31,18 @@ My aim is to show that the heavenly machine is not a kind of divine,
 live being, but a kind of clockwork (and he who believes that a clock
 has soul attributes the maker's glory to the work), insofar as nearly
 all the manifold motions are caused by a most simple and material
-force, just as all motions of the clock are caused by a single weight.</p><p>
+force, just as all motions of the clock are caused by a single weight.</p>
+<p>
 
-<a name="%_idx_5456" id="%_idx_5456"></a>Johannes Kepler (letter to Herwart von Hohenburg, 1605)</p><p>
+<a name="%_idx_5456" id="%_idx_5456"></a>Johannes Kepler (letter to Herwart von Hohenburg, 1605)</p>
+<p>
 
 </p></span>
-</td></tr></table></div>
+</td></tr></table>
+</div>
 
-<p></p><p>
+<p></p>
+<p>
 
 
 We began this book by studying processes and by describing processes
@@ -56,7 +63,8 @@ processes.  These questions remain unanswered because the metacircular
 evaluator is itself a Lisp program and hence inherits the control
 structure of the underlying Lisp system.  In order to provide a more
 complete description of the control structure of the Lisp evaluator,
-we must work at a more primitive level than Lisp itself.</p><p>
+we must work at a more primitive level than Lisp itself.</p>
+<p>
 
 In this chapter we will describe processes in terms of the step-by-step
 operation of a traditional computer.  Such a computer, or <a name="%_idx_5458" id="%_idx_5458"></a><em>register
@@ -76,17 +84,19 @@ constructs such as recursion.  We will also present a language for
 describing designs for register machines.  In
 section <a href="book-Z-H-32.html#%_sec_5.2">5.2</a> we will
 implement a Lisp program that
-uses these descriptions to simulate the machines we design.</p><p>
+uses these descriptions to simulate the machines we design.</p>
+<p>
 
 Most of the primitive operations of our register machines are very
 simple.  For example, an operation might add the numbers fetched from
 two registers, producing a result to be stored into a third register.
 Such an operation can be performed by easily described hardware.  In
 order to deal with list structure, however, we will also use the
-memory operations <tt>car</tt>, <tt>cdr</tt>, and <tt>cons</tt>, which require
+memory operations <code>car</code>, <code>cdr</code>, and <code>cons</code>, which require
 an elaborate storage-allocation mechanism.  In
 section <a href="book-Z-H-33.html#%_sec_5.3">5.3</a> we study their implementation in
-terms of more elementary operations.</p><p>
+terms of more elementary operations.</p>
+<p>
 
 In section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a>, after we have accumulated experience
 formulating simple procedures as register machines, we will design a
@@ -98,11 +108,12 @@ evaluator.
 In section <a href="book-Z-H-35.html#%_sec_5.5">5.5</a> we will study a simple compiler that
 translates Scheme programs into sequences of instructions that can be
 executed directly with the registers and operations of the evaluator
-register machine.</p><p>
+register machine.</p>
+<p>
 
 
 
 
-</p></body>
+</p>
+</body>
 </html>
-
