@@ -26,7 +26,7 @@ all: sicp.epub
 
 sicp.epub: $(CONTENT)
 	cd src && zip -0Xq ../$@ mimetype
-	cd src && zip -r ../$@ $(^:src/%=%)
+	cd src && zip -Xr9D ../$@ $(^:src/%=%)
 
 check:
 	xmllint --noout $(XML)
