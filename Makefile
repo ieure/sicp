@@ -25,6 +25,7 @@ XML     := $(shell find src -type f -name \*html)
 all: sicp.epub
 
 sicp.epub: $(CONTENT)
+	cd src && zip -0Xq ../$@ mimetype
 	cd src && zip -r ../$@ $(^:src/%=%)
 
 check:
