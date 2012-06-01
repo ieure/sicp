@@ -25,7 +25,10 @@ XML     := $(shell find src -type f -name \*html)
 all: sicp.epub
 
 sicp.epub: $(CONTENT)
-	cd src && zip -r ../$@ $(^:src/%=%)
+	echo -n application/epub+zip > src/mimetype
+	cd src && zip -0Xq ../$@ mimetype
+	rm src/mimetype
+	cd src && zip -Xr9D ../$@ $(^:src/%=%)
 
 check:
 	xmllint --noout $(XML)
