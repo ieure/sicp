@@ -24,6 +24,7 @@
         <item id="book-Z-H-7" href="book-Z-H-7.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-8" href="book-Z-H-8.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-9" href="book-Z-H-9.html" media-type="application/xhtml+xml"/>
+        <item id="book-Z-H-9a" href="book-Z-H-9a.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-10" href="book-Z-H-10.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-11" href="book-Z-H-11.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-12" href="book-Z-H-12.html" media-type="application/xhtml+xml"/>
@@ -222,6 +223,7 @@
         <itemref idref="book-Z-H-7" linear="yes"/>
         <itemref idref="book-Z-H-8" linear="yes"/>
         <itemref idref="book-Z-H-9" linear="yes"/>
+        <itemref idref="book-Z-H-9a" linear="yes"/>
         <itemref idref="book-Z-H-10" linear="yes"/>
         <itemref idref="book-Z-H-11" linear="yes"/>
         <itemref idref="book-Z-H-12" linear="yes"/>
