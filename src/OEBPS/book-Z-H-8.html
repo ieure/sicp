@@ -9,148 +9,136 @@
     <title>Structure and Interpretation of Computer Programs</title>
     <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
   </head>
-  <body>&#13;
-&#13;
-&#13;
-&#13;
-<a name="%_chap_Temp_5" id="%_chap_Temp_5"></a>&#13;
-<h1 class="chapter">&#13;
-<div class="chapterheading"> </div></h1><p>&#13;
-<a href="book-Z-H-4.html#%_toc_%_chap_Temp_5">Acknowledgments</a></p><p>&#13;
-&#13;
-We would like to thank the many people who have helped us develop this&#13;
-book and this curriculum.</p><p>&#13;
-&#13;
-Our subject is a clear intellectual descendant of “6.231,” a&#13;
-wonderful subject on programming linguistics and the lambda calculus&#13;
-taught at MIT in the late 1960s by Jack Wozencraft and Arthur Evans,&#13;
-Jr.</p><p>&#13;
-&#13;
-We owe a great debt to Robert Fano, who reorganized MIT's introductory&#13;
-curriculum in electrical engineering and computer science to emphasize&#13;
-the principles of engineering design.  He led us in starting out on&#13;
-this enterprise and wrote the first set of subject notes from which&#13;
-this book evolved.</p><p>&#13;
-&#13;
-Much of the style and aesthetics of programming that we try to teach&#13;
-were developed in conjunction with Guy Lewis Steele Jr., who&#13;
-collaborated with Gerald Jay Sussman in the initial development of the&#13;
-Scheme language.  In addition, David Turner, Peter Henderson, Dan&#13;
-Friedman, David Wise, and Will Clinger have taught us many of the&#13;
-techniques of the functional programming community that appear in this&#13;
-book.</p><p>&#13;
-&#13;
-Joel Moses taught us about structuring large systems.  His experience&#13;
-with the Macsyma system for symbolic computation provided the insight&#13;
-that one should avoid complexities of control and concentrate on&#13;
-organizing the data to reflect the real structure of the world being&#13;
-modeled.</p><p>&#13;
-&#13;
-Marvin Minsky and Seymour Papert formed many of our attitudes about&#13;
-programming and its place in our intellectual lives.  To them we owe&#13;
-the understanding that computation provides a means of expression for&#13;
-exploring ideas that would otherwise be too complex to deal with&#13;
-precisely.  They emphasize that a student's ability to write and&#13;
-modify programs provides a powerful medium in which exploring becomes&#13;
-a natural activity.</p><p>&#13;
-&#13;
-We also strongly agree with Alan Perlis that programming is lots of&#13;
-fun and we had better be careful to support the joy of programming.&#13;
-Part of this joy derives from observing great masters at work.  We are&#13;
-fortunate to have been apprentice programmers at the feet of Bill&#13;
-Gosper and Richard Greenblatt.</p><p>&#13;
-&#13;
-It is difficult to identify all the people who have contributed to the&#13;
-development of our curriculum.  We thank all the lecturers, recitation&#13;
-instructors, and tutors who have worked with us over the past fifteen&#13;
-years and put in many extra hours on our subject, especially Bill&#13;
-Siebert, Albert Meyer, Joe Stoy, Randy Davis, Louis Braida, Eric&#13;
-Grimson, Rod Brooks, Lynn Stein, and Peter Szolovits.&#13;
-We would like to specially acknowledge the outstanding teaching&#13;
-contributions of Franklyn Turbak, now at Wellesley; his work&#13;
-in undergraduate instruction set a standard that we can&#13;
-all aspire to.&#13;
-We are grateful to Jerry Saltzer and Jim Miller for&#13;
-helping us grapple with the mysteries of concurrency, and to&#13;
-Peter Szolovits and David McAllester for their contributions&#13;
-to the exposition of nondeterministic evaluation in chapter 4.</p><p>&#13;
-&#13;
-Many people have put in significant effort presenting this material at&#13;
-other universities.  Some of the people we have worked closely with&#13;
-are Jacob Katzenelson at the Technion, Hardy Mayer at the University&#13;
-of California at Irvine, Joe Stoy at Oxford, Elisha Sacks at Purdue,&#13;
-and Jan Komorowski at the Norwegian University of Science and&#13;
-Technology.  We are exceptionally proud of our colleagues who have&#13;
-received major teaching awards for their adaptations of this subject&#13;
-at other universities, including Kenneth Yip at Yale, Brian Harvey at&#13;
-the University of California at Berkeley, and Dan Huttenlocher at&#13;
-Cornell.</p><p>&#13;
-&#13;
-Al Moyé arranged for us to teach this material to engineers at&#13;
-Hewlett-Packard, and for the production of videotapes of these&#13;
-lectures.&#13;
-We would like to thank the talented instructors – in&#13;
-particular Jim Miller, Bill Siebert, and Mike Eisenberg – who have&#13;
-designed continuing education courses incorporating these tapes and&#13;
-taught them at universities and industry all over the world.</p><p>&#13;
-&#13;
-Many educators in other countries have put in significant&#13;
-work translating the first edition.&#13;
-Michel Briand, Pierre Chamard, and André Pic produced a French edition;&#13;
-Susanne Daniels-Herold produced a German&#13;
-edition; and Fumio Motoyoshi produced a Japanese edition.&#13;
-We do not know who produced the Chinese edition,&#13;
-but we consider it an honor to have been selected as the&#13;
-subject of an “unauthorized”  translation.</p><p>&#13;
-&#13;
-It is hard to enumerate all the people who have made technical&#13;
-contributions to the development of the Scheme systems we use for&#13;
-instructional purposes.  In addition to Guy Steele, principal wizards&#13;
-have included Chris Hanson, Joe Bowbeer, Jim Miller, Guillermo Rozas,&#13;
-and Stephen Adams.  Others who have put in significant time are&#13;
-Richard Stallman, Alan Bawden, Kent Pitman, Jon Taft, Neil Mayle, John&#13;
-Lamping, Gwyn Osnos, Tracy Larrabee, George Carrette, Soma&#13;
-Chaudhuri, Bill Chiarchiaro, Steven Kirsch, Leigh Klotz, Wayne Noss,&#13;
-Todd Cass, Patrick O'Donnell, Kevin Theobald, Daniel Weise, Kenneth&#13;
-Sinclair, Anthony Courtemanche, Henry M. Wu, Andrew Berlin, and Ruth&#13;
-Shyu.</p><p>&#13;
-&#13;
-Beyond the MIT implementation, we would like to thank the many people&#13;
-who worked on the IEEE Scheme standard, including William Clinger and&#13;
-Jonathan Rees, who edited the R<sup>4</sup>RS, and Chris Haynes, David&#13;
-Bartley, Chris Hanson, and Jim Miller, who prepared the IEEE standard.</p><p>&#13;
-&#13;
-Dan Friedman has been a long-time leader of the Scheme community.&#13;
-The community's broader work goes beyond issues of language design to&#13;
-encompass significant educational innovations, such as the high-school&#13;
-curriculum based on EdScheme by Schemer's Inc., and the wonderful&#13;
-books by Mike Eisenberg and by Brian Harvey and Matthew Wright.</p><p>&#13;
-&#13;
-We appreciate the work of those who contributed to making this a real&#13;
-book, especially Terry Ehling, Larry Cohen, and Paul Bethge at the MIT&#13;
-Press.  Ella Mazel found the wonderful cover image.  For the second&#13;
-edition we are particularly grateful to Bernard and Ella Mazel for&#13;
-help with the book design, and to David Jones, T<small>E</small>X wizard&#13;
-extraordinaire.  We also are indebted to those readers who made&#13;
-penetrating comments on the new draft: Jacob Katzenelson, Hardy&#13;
-Mayer, Jim Miller, and especially Brian Harvey, who did unto this book&#13;
-as Julie did unto his book <em>Simply Scheme</em>.&#13;
-</p><p> Finally, we would like to acknowledge the support of the organizations that&#13;
-  have encouraged this work over the years, including support from Hewlett-Packard,&#13;
-  made possible by Ira Goldstein and Joel Birnbaum, and support from DARPA, made&#13;
-  possible by Bob Kahn.&#13;
-</p><p>&#13;
-&#13;
-&#13;
-</p><p>&#13;
-&#13;
-</p><p>&#13;
-&#13;
-</p><p>&#13;
-&#13;
-&#13;
-&#13;
-&#13;
-&#13;
-</p></body>
+  <body>
+<a name="%_chap_Temp_5" id="%_chap_Temp_5"></a>
+<h1 class="chapter chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_Temp_5">Acknowledgments</a></h1>
+
+
+
+<p>We would like to thank the many people who have helped us develop this
+book and this curriculum.</p>
+
+<p>Our subject is a clear intellectual descendant of “6.231,” a
+wonderful subject on programming linguistics and the lambda calculus
+taught at MIT in the late 1960s by Jack Wozencraft and Arthur Evans,
+Jr.</p>
+
+<p>We owe a great debt to Robert Fano, who reorganized MIT's introductory
+curriculum in electrical engineering and computer science to emphasize
+the principles of engineering design.  He led us in starting out on
+this enterprise and wrote the first set of subject notes from which
+this book evolved.</p>
+
+<p>Much of the style and aesthetics of programming that we try to teach
+were developed in conjunction with Guy Lewis Steele Jr., who
+collaborated with Gerald Jay Sussman in the initial development of the
+Scheme language.  In addition, David Turner, Peter Henderson, Dan
+Friedman, David Wise, and Will Clinger have taught us many of the
+techniques of the functional programming community that appear in this
+book.</p>
+
+<p>Joel Moses taught us about structuring large systems.  His experience
+with the Macsyma system for symbolic computation provided the insight
+that one should avoid complexities of control and concentrate on
+organizing the data to reflect the real structure of the world being
+modeled.</p>
+
+<p>Marvin Minsky and Seymour Papert formed many of our attitudes about
+programming and its place in our intellectual lives.  To them we owe
+the understanding that computation provides a means of expression for
+exploring ideas that would otherwise be too complex to deal with
+precisely.  They emphasize that a student's ability to write and
+modify programs provides a powerful medium in which exploring becomes
+a natural activity.</p>
+
+<p>We also strongly agree with Alan Perlis that programming is lots of
+fun and we had better be careful to support the joy of programming.
+Part of this joy derives from observing great masters at work.  We are
+fortunate to have been apprentice programmers at the feet of Bill
+Gosper and Richard Greenblatt.</p>
+
+<p>It is difficult to identify all the people who have contributed to the
+development of our curriculum.  We thank all the lecturers, recitation
+instructors, and tutors who have worked with us over the past fifteen
+years and put in many extra hours on our subject, especially Bill
+Siebert, Albert Meyer, Joe Stoy, Randy Davis, Louis Braida, Eric
+Grimson, Rod Brooks, Lynn Stein, and Peter Szolovits.
+We would like to specially acknowledge the outstanding teaching
+contributions of Franklyn Turbak, now at Wellesley; his work
+in undergraduate instruction set a standard that we can
+all aspire to.
+We are grateful to Jerry Saltzer and Jim Miller for
+helping us grapple with the mysteries of concurrency, and to
+Peter Szolovits and David McAllester for their contributions
+to the exposition of nondeterministic evaluation in chapter 4.</p>
+
+<p>Many people have put in significant effort presenting this material at
+other universities.  Some of the people we have worked closely with
+are Jacob Katzenelson at the Technion, Hardy Mayer at the University
+of California at Irvine, Joe Stoy at Oxford, Elisha Sacks at Purdue,
+and Jan Komorowski at the Norwegian University of Science and
+Technology.  We are exceptionally proud of our colleagues who have
+received major teaching awards for their adaptations of this subject
+at other universities, including Kenneth Yip at Yale, Brian Harvey at
+the University of California at Berkeley, and Dan Huttenlocher at
+Cornell.</p>
+
+<p>Al Moyé arranged for us to teach this material to engineers at
+Hewlett-Packard, and for the production of videotapes of these
+lectures.
+We would like to thank the talented instructors – in
+particular Jim Miller, Bill Siebert, and Mike Eisenberg – who have
+designed continuing education courses incorporating these tapes and
+taught them at universities and industry all over the world.</p>
+
+<p>Many educators in other countries have put in significant
+work translating the first edition.
+Michel Briand, Pierre Chamard, and André Pic produced a French edition;
+Susanne Daniels-Herold produced a German
+edition; and Fumio Motoyoshi produced a Japanese edition.
+We do not know who produced the Chinese edition,
+but we consider it an honor to have been selected as the
+subject of an “unauthorized”  translation.</p>
+
+<p>It is hard to enumerate all the people who have made technical
+contributions to the development of the Scheme systems we use for
+instructional purposes.  In addition to Guy Steele, principal wizards
+have included Chris Hanson, Joe Bowbeer, Jim Miller, Guillermo Rozas,
+and Stephen Adams.  Others who have put in significant time are
+Richard Stallman, Alan Bawden, Kent Pitman, Jon Taft, Neil Mayle, John
+Lamping, Gwyn Osnos, Tracy Larrabee, George Carrette, Soma
+Chaudhuri, Bill Chiarchiaro, Steven Kirsch, Leigh Klotz, Wayne Noss,
+Todd Cass, Patrick O'Donnell, Kevin Theobald, Daniel Weise, Kenneth
+Sinclair, Anthony Courtemanche, Henry M. Wu, Andrew Berlin, and Ruth
+Shyu.</p>
+
+<p>Beyond the MIT implementation, we would like to thank the many people
+who worked on the IEEE Scheme standard, including William Clinger and
+Jonathan Rees, who edited the R<sup>4</sup>RS, and Chris Haynes, David
+Bartley, Chris Hanson, and Jim Miller, who prepared the IEEE standard.</p>
+
+<p>Dan Friedman has been a long-time leader of the Scheme community.
+The community's broader work goes beyond issues of language design to
+encompass significant educational innovations, such as the high-school
+curriculum based on EdScheme by Schemer's Inc., and the wonderful
+books by Mike Eisenberg and by Brian Harvey and Matthew Wright.</p>
+
+<p>We appreciate the work of those who contributed to making this a real
+book, especially Terry Ehling, Larry Cohen, and Paul Bethge at the MIT
+Press.  Ella Mazel found the wonderful cover image.  For the second
+edition we are particularly grateful to Bernard and Ella Mazel for
+help with the book design, and to David Jones, T<small>E</small>X wizard
+extraordinaire.  We also are indebted to those readers who made
+penetrating comments on the new draft: Jacob Katzenelson, Hardy
+Mayer, Jim Miller, and especially Brian Harvey, who did unto this book
+as Julie did unto his book <em>Simply Scheme</em>.
+</p>
+
+<p> Finally, we would like to acknowledge the support of the organizations that
+  have encouraged this work over the years, including support from Hewlett-Packard,
+  made possible by Ira Goldstein and Joel Birnbaum, and support from DARPA, made
+  possible by Bob Kahn.
+</p>
+
+</body>
 </html>
