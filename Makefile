@@ -16,7 +16,7 @@ NORMAL_MARK := $(BUILD_DIR)/normal.mark
 TEX_FILES := $(wildcard $(LATEX_DIR)/*.tex)
 SVG_FILES := $(patsubst %.tex,%.svg,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
 GIF_FILES := $(patsubst %.tex,%.gif,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
-CONTENT := $(shell find src -type f -not -name .DS_Store)
+CONTENT := $(shell find src -type f -not -name .DS_Store) src/mimetype
 XML     := $(shell find src -type f -name \*html)
 
 
@@ -24,15 +24,15 @@ XML     := $(shell find src -type f -name \*html)
 
 all: sicp.epub
 
+src/mimetype:
+	echo -n application/epub+zip > $@
+
 sicp.epub: $(CONTENT)
-	echo -n application/epub+zip > src/mimetype
 	cd src && zip -0Xq ../$@ mimetype
-	rm src/mimetype
-	cd src && zip -Xr9D ../$@ $(^:src/%=%)
+	cd src && zip -Xr9D ../$@ $(^:src/%=%) -x mimetype
 
 check:
 	xmllint --noout $(XML)
-
 
 $(BUILD_DIR)/huge/%_cropped.pdf: $(BUILD_DIR)/huge/ $(LATEX_DIR)/%.tex
 	sed 's/\\sicpsize}{\\fontsize{16}{18}/\\sicpsize}{\\fontsize{200}{220}/' < $(LATEX_DIR)/sicpstyle.sty > $(LATEX_DIR)/sicpstyle2.sty
@@ -70,4 +70,4 @@ svg: $(SVG_FILES)
 gif: $(GIF_FILES)
 
 clean:
-	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES) $(GIF_FILES)
+	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES) $(GIF_FILES) src/mimetype
