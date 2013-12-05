@@ -6,7 +6,7 @@
     <metadata>
         <dc:title>Structure and Interpretation of Computer Programs</dc:title>
         <dc:creator>Harold Abelson and Gerald Jay Sussman with Julie Sussman</dc:creator>
-        <dc:identifier opf:scheme="ISBN">0-262-01153-0</dc:identifier>
+        <dc:identifier opf:scheme="ISBN" id="ISBN">0-262-01153-0</dc:identifier>
         <dc:rights>Creative Commons Attribution-Noncommercial 3.0 Unported License.</dc:rights>
         <dc:language>en-US</dc:language>
         <dc:source>http://mitpress.mit.edu/sicp/full-text/book/book.html</dc:source>
