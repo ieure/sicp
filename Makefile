@@ -1,6 +1,15 @@
 # TODO: Add potrace for gif -> svg conversion; convert still gives
 #       rasterized images
 
+#
+# On Mac OS X the default shell's echo does not understand -n, so we
+# need to force bash
+#
+ifeq ($(shell echo -n test && true),-n test)
+	SHELL := /bin/bash
+endif
+
+
 LATEX_DIR := src/latex
 IMAGES_DIR := src/OEBPS/images
 BUILD_DIR := $(LATEX_DIR)/build
