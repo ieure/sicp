@@ -13,7 +13,7 @@
 
 
 
-<a name="%_chap_4" id="%_chap_4"></a>
+<a id="%_chap_4"></a>
 <h1 class="chapter">
 <div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_4">Chapter 4</a></div></h1><p>
 <a href="book-Z-H-4.html#%_toc_%_chap_4">Metalinguistic Abstraction</a></p><p>
@@ -33,7 +33,7 @@ alphabet: a couple-dozen squiggles we can draw with the pen.  This is
 the key!  And the treasure, too, if we can only get our hands on it!
 It's as if – as if the key to the treasure <em>is</em> the treasure!</p><p>
 
-<a name="%_idx_4188" id="%_idx_4188"></a>John Barth, <em>Chimera</em></p><p>
+<a id="%_idx_4188"></a>John Barth, <em>Chimera</em></p><p>
 
 </p></span>
 </td></tr></table></div>
@@ -58,9 +58,9 @@ engineering design; we can often enhance our ability to deal with a
 complex problem by adopting a new language that enables us to describe
 (and hence to think about) the problem in a different way, using
 primitives, means of combination, and means of abstraction that are
-particularly well suited to the problem at hand.<a name="call_footnote_Temp_508" href="#footnote_Temp_508" id="call_footnote_Temp_508"><sup><small>1</small></sup></a></p><p>
+particularly well suited to the problem at hand.<a href="#footnote_Temp_508" id="call_footnote_Temp_508"><sup><small>1</small></sup></a></p><p>
 
-<a name="%_idx_4190" id="%_idx_4190"></a><a name="%_idx_4192" id="%_idx_4192"></a>Programming is endowed with a multitude of languages.  There are
+<a id="%_idx_4190"></a><a id="%_idx_4192"></a>Programming is endowed with a multitude of languages.  There are
 physical languages, such as the machine languages for particular
 computers.  These languages are concerned with the representation of
 data and control in terms of individual bits of storage and primitive
@@ -74,11 +74,11 @@ These languages have means of combination and abstraction, such as
 procedure definition, that are appropriate to the larger-scale
 organization of systems.</p><p>
 
-<a name="%_idx_4194" id="%_idx_4194"></a><a name="%_idx_4196" id="%_idx_4196"></a><em>Metalinguistic abstraction</em> – establishing new
+<a id="%_idx_4194"></a><a id="%_idx_4196"></a><em>Metalinguistic abstraction</em> – establishing new
 languages – plays an important role in all branches of engineering
 design.  It is particularly important to computer programming, because
 in programming not only can we formulate new languages but we can also
-implement these languages by constructing evaluators.  An <a name="%_idx_4198" id="%_idx_4198"></a><em>evaluator</em> (or <em>interpreter</em>) for a programming language is a procedure
+implement these languages by constructing evaluators.  An <a id="%_idx_4198"></a><em>evaluator</em> (or <em>interpreter</em>) for a programming language is a procedure
 that, when applied to an expression of the language, performs the
 actions required to evaluate that expression.</p><p>
 
@@ -106,13 +106,13 @@ section <a href="book-Z-H-22.html#%_sec_3.3.5">3.3.5</a> are legitimate languag
 right, each with its own primitives, means of combination, and means
 of abstraction.  Seen from this perspective, the technology for coping
 with large-scale computer systems merges with the technology for
-building new computer languages, and <a name="%_idx_4200" id="%_idx_4200"></a>computer science itself becomes
+building new computer languages, and <a id="%_idx_4200"></a>computer science itself becomes
 no more (and no less) than the discipline of constructing appropriate
 descriptive languages.</p><p>
 
 We now embark on a tour of the technology by which languages are
 established in terms of other languages.  In this chapter we shall use
-Lisp as a base, implementing evaluators as Lisp procedures.  <a name="%_idx_4202" id="%_idx_4202"></a>Lisp is
+Lisp as a base, implementing evaluators as Lisp procedures.  <a id="%_idx_4202"></a>Lisp is
 particularly well suited to this task, because of its ability to
 represent and manipulate symbolic expressions.  We will take the first
 step in understanding how languages are implemented by building an
@@ -127,7 +127,7 @@ evaluator has been simplified for the purposes of illustration and
 discussion, and some features have been left out that would be
 important to include in a production-quality Lisp system.
 Nevertheless, this simple evaluator is adequate to execute most of the
-programs in this book.<a name="call_footnote_Temp_509" href="#footnote_Temp_509" id="call_footnote_Temp_509"><sup><small>2</small></sup></a></p><p>
+programs in this book.<a href="#footnote_Temp_509" id="call_footnote_Temp_509"><sup><small>2</small></sup></a></p><p>
 
 
 An important advantage of making the evaluator accessible as a Lisp
@@ -164,7 +164,7 @@ the logic-programming evaluator shares the essential structure of the
 Lisp evaluator.</p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_508" href="#call_footnote_Temp_508" id="footnote_Temp_508"><sup><small>1</small></sup></a> The same idea
+</p><div class="footnote"><p><a href="#call_footnote_Temp_508" id="footnote_Temp_508"><sup><small>1</small></sup></a> The same idea
 is pervasive throughout all of engineering.  For example, electrical
 engineers use many different languages for describing circuits.  Two
 of these are the language of electrical <em>networks</em> and the
@@ -188,9 +188,9 @@ assumed.  This layered collection of languages is another example of
 the stratified design technique illustrated by the picture
 language of section <a href="book-Z-H-15.html#%_sec_2.2.4">2.2.4</a>.
 
-</p><p><a name="footnote_Temp_509" href="#call_footnote_Temp_509" id="footnote_Temp_509"><sup><small>2</small></sup></a> The most important features that our evaluator leaves out
+</p><p><a href="#call_footnote_Temp_509" id="footnote_Temp_509"><sup><small>2</small></sup></a> The most important features that our evaluator leaves out
 are mechanisms for handling errors and supporting debugging.  For a
-more extensive discussion of evaluators, see <a name="%_idx_4204" id="%_idx_4204"></a><a name="%_idx_4206" id="%_idx_4206"></a><a name="%_idx_4208" id="%_idx_4208"></a>Friedman, Wand, and Haynes
+more extensive discussion of evaluators, see <a id="%_idx_4204"></a><a id="%_idx_4206"></a><a id="%_idx_4208"></a>Friedman, Wand, and Haynes
 1992, which gives an exposition of programming languages that proceeds
 via a sequence of evaluators written in Scheme.
 

@@ -13,46 +13,46 @@
 
 
 
-<a name="%_sec_5.5" id="%_sec_5.5"></a>
+<a id="%_sec_5.5"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_5.5">5.5  Compilation</a></h2><p>
 
 
-<a name="%_idx_6194" id="%_idx_6194"></a>
+<a id="%_idx_6194"></a>
 The explicit-control evaluator of section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a> is a
 register machine whose controller interprets Scheme programs.  In this
 section we will see how to run Scheme programs on a register machine
 whose controller is not a Scheme interpreter.</p><p>
 
-<a name="%_idx_6196" id="%_idx_6196"></a><a name="%_idx_6198" id="%_idx_6198"></a>The explicit-control evaluator machine is universal – it can carry out
+<a id="%_idx_6196"></a><a id="%_idx_6198"></a>The explicit-control evaluator machine is universal – it can carry out
 any computational process that can be described in Scheme.  The
 evaluator's controller orchestrates the use of its data paths to
 perform the desired computation.  Thus, the evaluator's data paths are
 universal: They are sufficient to perform any computation we desire,
-given an appropriate controller.<a name="call_footnote_Temp_794" href="#footnote_Temp_794" id="call_footnote_Temp_794"><sup><small>33</small></sup></a></p><p>
+given an appropriate controller.<a href="#footnote_Temp_794" id="call_footnote_Temp_794"><sup><small>33</small></sup></a></p><p>
 
-<a name="%_idx_6200" id="%_idx_6200"></a><a name="%_idx_6202" id="%_idx_6202"></a>Commercial general-purpose computers are register machines organized
+<a id="%_idx_6200"></a><a id="%_idx_6202"></a>Commercial general-purpose computers are register machines organized
 around a collection of registers and operations that constitute
 an efficient and convenient universal set of data paths.
 The controller for a general-purpose machine is an interpreter for
 a register-machine language like the one we have been using.  This
-language is called the <a name="%_idx_6204" id="%_idx_6204"></a><em>native language</em> of the machine, or simply
-<a name="%_idx_6206" id="%_idx_6206"></a><em>machine language</em>.  Programs written in machine language are
+language is called the <a id="%_idx_6204"></a><em>native language</em> of the machine, or simply
+<a id="%_idx_6206"></a><em>machine language</em>.  Programs written in machine language are
 sequences of instructions that use the machine's data paths.
-For example, the <a name="%_idx_6208" id="%_idx_6208"></a>explicit-control evaluator's instruction sequence
+For example, the <a id="%_idx_6208"></a>explicit-control evaluator's instruction sequence
 can be thought of as a machine-language program for a general-purpose
 computer rather than as the controller for a specialized interpreter
 machine.</p><p>
 
-<a name="%_idx_6210" id="%_idx_6210"></a><a name="%_idx_6212" id="%_idx_6212"></a>There are two common strategies for bridging the gap between
+<a id="%_idx_6210"></a><a id="%_idx_6212"></a>There are two common strategies for bridging the gap between
 higher-level languages and register-machine languages.  The
 explicit-control evaluator illustrates the
 strategy of interpretation.  An interpreter written in the native
 language of a machine configures the machine to execute programs
-written in a language (called the <a name="%_idx_6214" id="%_idx_6214"></a><em>source language</em>) that may
+written in a language (called the <a id="%_idx_6214"></a><em>source language</em>) that may
 differ from the native language of the machine performing the
 evaluation.  The primitive procedures of the source language are
 implemented as a library of subroutines written in the native language
-of the given machine.  A program to be interpreted (called the <a name="%_idx_6216" id="%_idx_6216"></a><em>source program</em>) is represented as a data structure.  The interpreter
+of the given machine.  A program to be interpreted (called the <a id="%_idx_6216"></a><em>source program</em>) is represented as a data structure.  The interpreter
 traverses this data structure, analyzing the source program.  As it
 does so, it simulates the intended behavior of the source program by
 calling appropriate primitive subroutines from the library.</p><p>
@@ -60,10 +60,10 @@ calling appropriate primitive subroutines from the library.</p><p>
 
 In this section, we explore the alternative strategy of <em>compilation</em>.  A compiler for a given source language and machine
 translates a source program into an equivalent program (called the
-<a name="%_idx_6218" id="%_idx_6218"></a><em>object program</em>) written in the machine's native language.  The
+<a id="%_idx_6218"></a><em>object program</em>) written in the machine's native language.  The
 compiler that we implement in this section translates programs written
 in Scheme into sequences of instructions to be executed using
-the explicit-control evaluator machine's data paths.<a name="call_footnote_Temp_795" href="#footnote_Temp_795" id="call_footnote_Temp_795"><sup><small>34</small></sup></a></p><p>
+the explicit-control evaluator machine's data paths.<a href="#footnote_Temp_795" id="call_footnote_Temp_795"><sup><small>34</small></sup></a></p><p>
 
 Compared with interpretation, compilation can provide a great increase
 in the efficiency of program execution, as we will explain below in
@@ -87,16 +87,16 @@ section <a href="#%_sec_5.5.7">5.5.7</a>, after we have implemented
 the compiler, we will show how to interface it with our interpreter to
 produce an integrated interpreter-compiler development system.</p><p>
 
-<a name="%_sec_Temp_796" id="%_sec_Temp_796"></a>
+<a id="%_sec_Temp_796"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_796">An overview of the compiler</a></h4><p>
 
-<a name="%_idx_6224" id="%_idx_6224"></a><a name="%_idx_6226" id="%_idx_6226"></a>
+<a id="%_idx_6224"></a><a id="%_idx_6226"></a>
 Our compiler is much like our interpreter, both in its structure and in
 the function it performs.  Accordingly, the mechanisms used by the
 compiler for analyzing expressions will be similar to those used by
 the interpreter.  Moreover, to make it easy to interface compiled and
 interpreted code, we will design the compiler to generate code that
-obeys the same conventions of <a name="%_idx_6228" id="%_idx_6228"></a>register usage as the interpreter: The
+obeys the same conventions of <a id="%_idx_6228"></a>register usage as the interpreter: The
 environment will be kept in the <tt>env</tt> register, argument lists
 will be accumulated in <tt>argl</tt>, a procedure to be applied will be
 in <tt>proc</tt>, procedures will return their answers in <tt>val</tt>,
@@ -112,7 +112,7 @@ interpreter does.  When we encounter a register instruction that the
 interpreter would perform in evaluating the expression, we do not
 execute the instruction but instead accumulate it into a sequence.  The
 resulting sequence of instructions will be the object code.  Observe
-the <a name="%_idx_6230" id="%_idx_6230"></a><a name="%_idx_6232" id="%_idx_6232"></a>efficiency advantage of compilation over interpretation.  Each
+the <a id="%_idx_6230"></a><a id="%_idx_6232"></a>efficiency advantage of compilation over interpretation.  Each
 time the interpreter evaluates an expression – for example,
 <tt>(f 84 96)</tt> – it performs the work of
 classifying the expression (discovering that this
@@ -125,7 +125,7 @@ the operator and the two operands, assemble the argument list,
 and apply the procedure (in <tt>proc</tt>) to the arguments (in <tt>argl</tt>).</p><p>
 
 
-<a name="%_idx_6234" id="%_idx_6234"></a>This is the same kind of optimization we implemented in the
+<a id="%_idx_6234"></a>This is the same kind of optimization we implemented in the
 analyzing evaluator of section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.
 But there are further opportunities to gain efficiency in compiled code.
 As the interpreter runs, it follows a process that must be applicable
@@ -173,12 +173,12 @@ exercise <a href="#%_thm_5.38">5.38</a>); but we will not emphasize these here.
 Our main goal in this section is to illustrate the compilation process
 in a simplified (but still interesting) context.</p><p>
 
-<a name="%_sec_5.5.1" id="%_sec_5.5.1"></a>
+<a id="%_sec_5.5.1"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.1">5.5.1  Structure of the Compiler</a></h3><p>
 
 
-<a name="%_idx_6236" id="%_idx_6236"></a>
-<a name="%_idx_6238" id="%_idx_6238"></a>In section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a> we modified our original
+<a id="%_idx_6236"></a>
+<a id="%_idx_6238"></a>In section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a> we modified our original
 metacircular interpreter to separate analysis from execution.  We
 analyzed each expression to produce an execution procedure that took
 an environment as argument and performed the required operations.  In
@@ -193,14 +193,14 @@ section <a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>, the <tt>analyze</tt> 
 section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>, and the <tt>eval-dispatch</tt>
 entry point of the explicit-control-evaluator in
 section <a href="book-Z-H-34.html#%_sec_5.4.1">5.4.1</a>.
-The compiler, like the interpreters, uses the <a name="%_idx_6240" id="%_idx_6240"></a>expression-syntax
-procedures defined in section <a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a>.<a name="call_footnote_Temp_797" href="#footnote_Temp_797" id="call_footnote_Temp_797"><sup><small>35</small></sup></a>
+The compiler, like the interpreters, uses the <a id="%_idx_6240"></a>expression-syntax
+procedures defined in section <a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a>.<a href="#footnote_Temp_797" id="call_footnote_Temp_797"><sup><small>35</small></sup></a>
 <tt>Compile</tt> performs a case
 analysis on the syntactic type of the expression to be compiled.  For
-each type of expression, it dispatches to a specialized <a name="%_idx_6242" id="%_idx_6242"></a><em>code
+each type of expression, it dispatches to a specialized <a id="%_idx_6242"></a><em>code
 generator</em>:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6244" id="%_idx_6244"></a>(define (compile exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6244"></a>(define (compile exp target linkage)<br />
   (cond ((self-evaluating? exp)<br />
          (compile-self-evaluating exp target linkage))<br />
         ((quoted? exp) (compile-quoted exp target linkage))<br />
@@ -223,23 +223,23 @@ generator</em>:</p><p>
          (error "Unknown expression type -- COMPILE" exp))))<br /></tt></p><p></p><p></p><p>
 
 
-<a name="%_sec_Temp_798" id="%_sec_Temp_798"></a>
+<a id="%_sec_Temp_798"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_798">Targets and linkages</a></h4><p>
 
-<a name="%_idx_6246" id="%_idx_6246"></a><tt>Compile</tt> and the code generators that it calls take two arguments
-in addition to the expression to compile.  There is a <a name="%_idx_6248" id="%_idx_6248"></a><em>target</em>,
+<a id="%_idx_6246"></a><tt>Compile</tt> and the code generators that it calls take two arguments
+in addition to the expression to compile.  There is a <a id="%_idx_6248"></a><em>target</em>,
 which specifies the register in which the compiled code is to return
-the value of the expression.  There is also a <a name="%_idx_6250" id="%_idx_6250"></a><em>linkage
+the value of the expression.  There is also a <a id="%_idx_6250"></a><em>linkage
 descriptor</em>, which describes how the code resulting from the
 compilation of the expression should proceed when it has finished its
 execution.  The linkage descriptor can require that the code do one of
 the following three things:</p><p>
 
 </p><p></p><ul><li>continue at the next instruction in sequence (this is
-<a name="%_idx_6252" id="%_idx_6252"></a>specified by the linkage descriptor <tt>next</tt>),<p>
+<a id="%_idx_6252"></a>specified by the linkage descriptor <tt>next</tt>),<p>
 
 </p></li><li>return from the procedure being compiled (this is specified
-<a name="%_idx_6254" id="%_idx_6254"></a>by the linkage descriptor <tt>return</tt>), or<p>
+<a id="%_idx_6254"></a>by the linkage descriptor <tt>return</tt>), or<p>
 
 </p></li><li>jump to a named entry point (this is specified by using the
 designated label as the linkage descriptor).
@@ -260,12 +260,12 @@ in the sequence. In the second case, we will return from a procedure
 call.  In both cases, the value of the expression will be placed into
 the target <tt>val</tt> register.</p><p>
 
-<a name="%_sec_Temp_799" id="%_sec_Temp_799"></a>
+<a id="%_sec_Temp_799"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_799">Instruction sequences and stack usage</a></h4><p>
 
 </p><p>
 
-<a name="%_idx_6256" id="%_idx_6256"></a><a name="%_idx_6258" id="%_idx_6258"></a>Each code generator returns an <em>instruction sequence</em> containing
+<a id="%_idx_6256"></a><a id="%_idx_6258"></a>Each code generator returns an <em>instruction sequence</em> containing
 the object code it has generated for the expression.  Code generation
 for a compound expression is accomplished by combining the output from
 simpler code generators for component expressions, just as
@@ -274,7 +274,7 @@ component expressions.</p><p>
 
 
 The simplest method for combining instruction sequences is a procedure
-<a name="%_idx_6260" id="%_idx_6260"></a>called <tt>append-instruction-sequences</tt>.  It takes as arguments any
+<a id="%_idx_6260"></a>called <tt>append-instruction-sequences</tt>.  It takes as arguments any
 number of instruction sequences that are to be executed sequentially;
 it appends them and returns the combined sequence.  That is, if
 &lt;<em><em>s</em><em>e</em><em>q</em><sub>1</sub></em>&gt; and &lt;<em><em>s</em><em>e</em><em>q</em><sub>2</sub></em>&gt; are sequences of instructions, then
@@ -284,8 +284,8 @@ produces the sequence
 </p><p></p><p><tt>&lt;<em><em>s</em><em>e</em><em>q</em><sub>1</sub></em>&gt;<br />
 &lt;<em><em>s</em><em>e</em><em>q</em><sub>2</sub></em>&gt;<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_6262" id="%_idx_6262"></a>Whenever registers might need to be saved, the compiler's code generators use
-<a name="%_idx_6264" id="%_idx_6264"></a><tt>preserving</tt>, which is a more subtle method for combining
+<a id="%_idx_6262"></a>Whenever registers might need to be saved, the compiler's code generators use
+<a id="%_idx_6264"></a><tt>preserving</tt>, which is a more subtle method for combining
 instruction sequences.  <tt>Preserving</tt> takes three arguments: a set
 of registers and two instruction sequences that are to be executed
 sequentially.  It appends the sequences in such a way that the
@@ -343,7 +343,7 @@ the sequence.
 We will represent an instruction sequence as a list of its three
 parts.  The constructor for instruction sequences is thus</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6266" id="%_idx_6266"></a>(define (make-instruction-sequence needs modifies statements)<br />
+</p><p></p><p><tt><a id="%_idx_6266"></a>(define (make-instruction-sequence needs modifies statements)<br />
   (list needs modifies statements))<br /></tt></p><p></p><p></p><p>
 
 For example, the two-instruction sequence that looks up the value of
@@ -357,15 +357,15 @@ This sequence would therefore be constructed as</p><p>
    (goto (reg continue))))<br /></tt></p><p></p><p></p><p>
 
 We sometimes need to construct an instruction sequence with no statements:
-</p><p></p><p><tt><a name="%_idx_6268" id="%_idx_6268"></a>(define (empty-instruction-sequence)<br />
+</p><p></p><p><tt><a id="%_idx_6268"></a>(define (empty-instruction-sequence)<br />
   (make-instruction-sequence '() '() '()))<br /></tt></p><p></p><p>
 </p><p>
 
 The procedures for combining instruction sequences are shown in
 section <a href="#%_sec_5.5.4">5.5.4</a>.</p><p>
 
-</p><p><a name="%_thm_5.31" id="%_thm_5.31"></a>
-<b>Exercise 5.31.</b>  <a name="%_idx_6270" id="%_idx_6270"></a><a name="%_idx_6272" id="%_idx_6272"></a>In evaluating a procedure application, the explicit-control evaluator
+</p><p><a id="%_thm_5.31"></a>
+<b>Exercise 5.31.</b>  <a id="%_idx_6270"></a><a id="%_idx_6272"></a>In evaluating a procedure application, the explicit-control evaluator
 always saves and restores
 the <tt>env</tt> register around the evaluation of the operator, saves and
 restores <tt>env</tt> around the evaluation of each operand (except the
@@ -381,8 +381,8 @@ thus could be eliminated by the compiler's <tt>preserving</tt> mechanism:</p><p>
 (f (g 'x) 'y)<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.32" id="%_thm_5.32"></a>
-<b>Exercise 5.32.</b>  <a name="%_idx_6274" id="%_idx_6274"></a><a name="%_idx_6276" id="%_idx_6276"></a>Using the <tt>preserving</tt> mechanism, the compiler will avoid saving
+</p><p><a id="%_thm_5.32"></a>
+<b>Exercise 5.32.</b>  <a id="%_idx_6274"></a><a id="%_idx_6276"></a>Using the <tt>preserving</tt> mechanism, the compiler will avoid saving
 and restoring <tt>env</tt> around the evaluation of the operator of a
 combination in the case where the operator is a symbol.  We could also
 build such optimizations into the evaluator.  Indeed, the
@@ -400,15 +400,15 @@ optimizations, and that this would eliminate the advantage of compilation
 altogether.  What do you think of this idea?
 </p><p></p><p>
 
-<a name="%_sec_5.5.2" id="%_sec_5.5.2"></a>
+<a id="%_sec_5.5.2"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.2">5.5.2  Compiling Expressions</a></h3><p>
 
 In this section and the next we implement the code generators to which the <tt>compile</tt> procedure dispatches.</p><p>
 
-<a name="%_sec_Temp_802" id="%_sec_Temp_802"></a>
+<a id="%_sec_Temp_802"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_802">Compiling linkage code</a></h4><p>
 
-<a name="%_idx_6278" id="%_idx_6278"></a>In general, the output of each code generator will end with
+<a id="%_idx_6278"></a>In general, the output of each code generator will end with
 instructions – generated by the procedure <tt>compile-linkage</tt> – that
 implement the required linkage.  If the linkage is <tt>return</tt> then
 we must generate the instruction <tt>(goto (reg continue))</tt>.  This
@@ -416,10 +416,10 @@ needs the <tt>continue</tt> register and does not modify any registers.
 If the linkage is <tt>next</tt>, then we needn't include any additional
 instructions.  Otherwise, the linkage is a label, and we generate a
 <tt>goto</tt> to that label, an instruction that does not need or modify
-any registers.<a name="call_footnote_Temp_803" href="#footnote_Temp_803" id="call_footnote_Temp_803"><sup><small>36</small></sup></a></p><p>
+any registers.<a href="#footnote_Temp_803" id="call_footnote_Temp_803"><sup><small>36</small></sup></a></p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_6292" id="%_idx_6292"></a>(define (compile-linkage linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6292"></a>(define (compile-linkage linkage)<br />
   (cond ((eq? linkage 'return)<br />
          (make-instruction-sequence '(continue) '()<br />
           '((goto (reg continue)))))<br />
@@ -435,29 +435,29 @@ If the given instruction sequence modifies <tt>continue</tt> and the
 linkage code needs it, <tt>continue</tt> will be saved and restored.</p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_6294" id="%_idx_6294"></a>(define (end-with-linkage linkage instruction-sequence)<br />
+</p><p></p><p><tt><a id="%_idx_6294"></a>(define (end-with-linkage linkage instruction-sequence)<br />
   (preserving '(continue)<br />
    instruction-sequence<br />
    (compile-linkage linkage)))<br /></tt></p><p></p><p></p><p>
 
 </p><p>
 
-<a name="%_sec_Temp_804" id="%_sec_Temp_804"></a>
+<a id="%_sec_Temp_804"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_804">Compiling simple expressions</a></h4><p>
 
-<a name="%_idx_6296" id="%_idx_6296"></a><a name="%_idx_6298" id="%_idx_6298"></a><a name="%_idx_6300" id="%_idx_6300"></a>The code generators for self-evaluating expressions,
+<a id="%_idx_6296"></a><a id="%_idx_6298"></a><a id="%_idx_6300"></a>The code generators for self-evaluating expressions,
 quotations, and variables construct instruction
 sequences that assign the required value to the target register
 and then proceed as specified by the linkage descriptor.</p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_6302" id="%_idx_6302"></a>(define (compile-self-evaluating exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6302"></a>(define (compile-self-evaluating exp target linkage)<br />
   (end-with-linkage linkage<br />
    (make-instruction-sequence '() (list target)<br />
-    `((assign ,target (const ,exp))))))<br /><a name="%_idx_6304" id="%_idx_6304"></a>(define (compile-quoted exp target linkage)<br />
+    `((assign ,target (const ,exp))))))<br /><a id="%_idx_6304"></a>(define (compile-quoted exp target linkage)<br />
   (end-with-linkage linkage<br />
    (make-instruction-sequence '() (list target)<br />
-    `((assign ,target (const ,(text-of-quotation exp)))))))<br /><a name="%_idx_6306" id="%_idx_6306"></a>(define (compile-variable exp target linkage)<br />
+    `((assign ,target (const ,(text-of-quotation exp)))))))<br /><a id="%_idx_6306"></a>(define (compile-variable exp target linkage)<br />
   (end-with-linkage linkage<br />
    (make-instruction-sequence '(env) (list target)<br />
     `((assign ,target<br />
@@ -467,7 +467,7 @@ and then proceed as specified by the linkage descriptor.</p><p>
 All these assignment instructions modify the target register,
 and the one that looks up a variable needs the <tt>env</tt> register.</p><p>
 
-<a name="%_idx_6308" id="%_idx_6308"></a><a name="%_idx_6310" id="%_idx_6310"></a>Assignments and definitions are handled much as they are in the
+<a id="%_idx_6308"></a><a id="%_idx_6310"></a>Assignments and definitions are handled much as they are in the
 interpreter.  We recursively generate code that computes the value to
 be assigned to the variable, and append to it a two-instruction
 sequence that actually sets or defines the variable and assigns the
@@ -480,7 +480,7 @@ or defining the variable and the code for the variable value could be
 the compilation of a complex expression that might modify the
 registers in arbitrary ways.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6312" id="%_idx_6312"></a>(define (compile-assignment exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6312"></a>(define (compile-assignment exp target linkage)<br />
   (let ((var (assignment-variable exp))<br />
         (get-value-code<br />
          (compile (assignment-value exp) 'val 'next)))<br />
@@ -492,7 +492,7 @@ registers in arbitrary ways.</p><p>
                   (const ,var)<br />
                   (reg val)<br />
                   (reg env))<br />
-         (assign ,target (const ok))))))))<br /><a name="%_idx_6314" id="%_idx_6314"></a>(define (compile-definition exp target linkage)<br />
+         (assign ,target (const ok))))))))<br /><a id="%_idx_6314"></a>(define (compile-definition exp target linkage)<br />
   (let ((var (definition-variable exp))<br />
         (get-value-code<br />
          (compile (definition-value exp) 'val 'next)))<br />
@@ -511,10 +511,10 @@ this sequence, we do not preserve <tt>val</tt>, because the <tt>get-value-code</
 (In fact, if we did preserve <tt>val</tt>, we would
 have a bug, because this would cause the previous contents of <tt>val</tt> to be restored right after the <tt>get-value-code</tt> is run.)</p><p>
 
-<a name="%_sec_Temp_805" id="%_sec_Temp_805"></a>
+<a id="%_sec_Temp_805"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_805">Compiling conditional expressions</a></h4><p>
 
-<a name="%_idx_6316" id="%_idx_6316"></a>The code for an <tt>if</tt> expression
+<a id="%_idx_6316"></a>The code for an <tt>if</tt> expression
 compiled with a given target and linkage has the form</p><p>
 
 </p><p></p><p><tt> &lt;<em>compilation of predicate, target <tt>val</tt>, linkage <tt>next</tt></em>&gt;<br />
@@ -529,7 +529,7 @@ after-if<br /></tt></p><p></p><p></p><p>
 To generate this code, we compile the predicate, consequent,
 and alternative, and combine the resulting code with instructions
 to test the predicate result and with newly generated labels
-to mark the true and false branches and the end of the conditional.<a name="call_footnote_Temp_806" href="#footnote_Temp_806" id="call_footnote_Temp_806"><sup><small>37</small></sup></a>
+to mark the true and false branches and the end of the conditional.<a href="#footnote_Temp_806" id="call_footnote_Temp_806"><sup><small>37</small></sup></a>
 In this arrangement of code, we must branch around the true branch
 if the test is false.  The only slight complication is in how the
 linkage for the true branch should be handled.  If the linkage for the
@@ -539,7 +539,7 @@ branch to the label at the end of the conditional.</p><p>
 
 
 
-</p><p></p><p><tt><a name="%_idx_6324" id="%_idx_6324"></a>(define (compile-if exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6324"></a>(define (compile-if exp target linkage)<br />
   (let ((t-branch (make-label 'true-branch))<br />
         (f-branch (make-label 'false-branch))                    <br />
         (after-if (make-label 'after-if)))<br />
@@ -574,10 +574,10 @@ compiler needs to do handle it is to apply the <tt>cond-&gt;if</tt>
 transformer (from section <a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</a>) and
 compile the resulting <tt>if</tt> expression.</p><p>
 
-<a name="%_sec_Temp_807" id="%_sec_Temp_807"></a>
+<a id="%_sec_Temp_807"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_807">Compiling sequences</a></h4><p>
 
-<a name="%_idx_6326" id="%_idx_6326"></a>The compilation of sequences (from procedure bodies or explicit <tt>begin</tt> expressions) parallels their evaluation.  Each expression of the
+<a id="%_idx_6326"></a>The compilation of sequences (from procedure bodies or explicit <tt>begin</tt> expressions) parallels their evaluation.  Each expression of the
 sequence is compiled – the last expression with the linkage specified
 for the sequence, and the other expressions with linkage <tt>next</tt>
 (to execute the rest of the sequence).
@@ -586,17 +586,17 @@ to form a single instruction sequence, such that <tt>env</tt> (needed for
 the rest of the sequence) and <tt>continue</tt> (possibly needed for the
 linkage at the end of the sequence) are preserved.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6328" id="%_idx_6328"></a>(define (compile-sequence seq target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6328"></a>(define (compile-sequence seq target linkage)<br />
   (if (last-exp? seq)<br />
       (compile (first-exp seq) target linkage)<br />
       (preserving '(env continue)<br />
        (compile (first-exp seq) target 'next)<br />
        (compile-sequence (rest-exps seq) target linkage))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_808" id="%_sec_Temp_808"></a>
+<a id="%_sec_Temp_808"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_808">Compiling <tt>lambda</tt> expressions</a></h4><p>
 
-<a name="%_idx_6330" id="%_idx_6330"></a><tt>Lambda</tt> expressions construct procedures.
+<a id="%_idx_6330"></a><tt>Lambda</tt> expressions construct procedures.
 The object code for a <tt>lambda</tt> expression must have the form</p><p>
 
 </p><p></p><p><tt>&lt;<em>construct procedure object and assign it to target register</em>&gt;<br />
@@ -620,9 +620,9 @@ object followed by the code for the procedure body.
 The procedure object will be constructed at run time by combining
 the current environment (the environment at the point of definition)
 with the entry point to the compiled procedure body (a newly generated
-label).<a name="call_footnote_Temp_809" href="#footnote_Temp_809" id="call_footnote_Temp_809"><sup><small>38</small></sup></a></p><p>
+label).<a href="#footnote_Temp_809" id="call_footnote_Temp_809"><sup><small>38</small></sup></a></p><p>
 
-</p><p></p><p><tt><a name="%_idx_6340" id="%_idx_6340"></a>(define (compile-lambda exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6340"></a>(define (compile-lambda exp target linkage)<br />
   (let ((proc-entry (make-label 'entry))<br />
         (after-lambda (make-label 'after-lambda)))<br />
     (let ((lambda-linkage<br />
@@ -669,11 +669,11 @@ procedure result in <tt>val</tt>.</p><p>
                 (reg env))))<br />
      (compile-sequence (lambda-body exp) 'val 'return))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_5.5.3" id="%_sec_5.5.3"></a>
+<a id="%_sec_5.5.3"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.3">5.5.3  Compiling Combinations</a></h3><p>
 
 
-<a name="%_idx_6342" id="%_idx_6342"></a><a name="%_idx_6344" id="%_idx_6344"></a>
+<a id="%_idx_6342"></a><a id="%_idx_6344"></a>
 The essence of the compilation process is the compilation of procedure
 applications.
 The code for a combination compiled with a given target and linkage
@@ -704,7 +704,7 @@ modify <tt>proc</tt>, which will be needed for the actual procedure
 application).  <tt>Continue</tt> must also be preserved throughout, since
 it is needed for the linkage in the procedure call.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6346" id="%_idx_6346"></a>(define (compile-application exp target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6346"></a>(define (compile-application exp target linkage)<br />
   (let ((proc-code (compile (operator exp) 'proc 'next))<br />
         (operand-codes<br />
          (map (lambda (operand) (compile operand 'val 'next))<br />
@@ -750,7 +750,7 @@ succession.  In order to process the arguments from last to
 first, we must reverse the list of operand code sequences from the order
 supplied by <tt>compile-application</tt>.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6348" id="%_idx_6348"></a>(define (construct-arglist operand-codes)<br />
+</p><p></p><p><tt><a id="%_idx_6348"></a>(define (construct-arglist operand-codes)<br />
   (let ((operand-codes (reverse operand-codes)))<br />
     (if (null? operand-codes)<br />
         (make-instruction-sequence '() '(argl)<br />
@@ -779,7 +779,7 @@ supplied by <tt>compile-application</tt>.</p><p>
          code-for-next-arg<br />
          (code-to-get-rest-args (cdr operand-codes))))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_810" id="%_sec_Temp_810"></a>
+<a id="%_sec_Temp_810"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_810">Applying procedures</a></h4><p>
 
 After evaluating the elements of a combination, the compiled code must
@@ -810,7 +810,7 @@ branch.  Therefore, if the linkage for the original procedure call was
 label that is inserted after the primitive branch.  (This is similar
 to the linkage used for the true branch in <tt>compile-if</tt>.)</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6350" id="%_idx_6350"></a>(define (compile-procedure-call target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6350"></a>(define (compile-procedure-call target linkage)<br />
   (let ((primitive-branch (make-label 'primitive-branch))<br />
         (compiled-branch (make-label 'compiled-branch))<br />
         (after-call (make-label 'after-call)))<br />
@@ -839,7 +839,7 @@ and false branches in <tt>compile-if</tt>, are appended using
 <tt>parallel-instruction-sequences</tt> rather than the ordinary <tt>append-instruction-sequences</tt>, because they will
 not be executed sequentially.</p><p>
 
-<a name="%_sec_Temp_811" id="%_sec_Temp_811"></a>
+<a id="%_sec_Temp_811"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_811">Applying compiled procedures</a></h4><p>
 
 The code that handles procedure application is the most subtle part of
@@ -878,7 +878,7 @@ compound-procedure branch by an <tt>after-call</tt> label.)</p><p>
 
 
 In fact, if the target is not <tt>val</tt>, that is exactly the code our
-compiler will generate.<a name="call_footnote_Temp_812" href="#footnote_Temp_812" id="call_footnote_Temp_812"><sup><small>39</small></sup></a>
+compiler will generate.<a href="#footnote_Temp_812" id="call_footnote_Temp_812"><sup><small>39</small></sup></a>
 Usually, however, the target is <tt>val</tt> (the only time the compiler
 specifies a different register is when targeting the evaluation of an
 operator to <tt>proc</tt>), so the procedure result is put directly into
@@ -905,7 +905,7 @@ have gone.)
 
 </p><p></p><p><tt>(assign val (op compiled-procedure-entry) (reg proc))<br />
 (goto (reg val))<br /></tt></p><p></p><p>
-<a name="%_idx_6352" id="%_idx_6352"></a><a name="%_idx_6354" id="%_idx_6354"></a>With this implementation of the <tt>return</tt> linkage, the compiler
+<a id="%_idx_6352"></a><a id="%_idx_6354"></a>With this implementation of the <tt>return</tt> linkage, the compiler
 generates tail-recursive code.  Calling a procedure as the final step
 in a procedure body does a direct transfer, without saving any
 information on the stack.</p><p>
@@ -917,14 +917,14 @@ a non-<tt>val</tt> target.  This would destroy tail recursion.  Our
 system would still give the same value for any expression.  But each
 time we called a procedure, we would save <tt>continue</tt> and return
 after the call to undo the (useless) save.  These extra saves would
-accumulate during a nest of procedure calls.<a name="call_footnote_Temp_813" href="#footnote_Temp_813" id="call_footnote_Temp_813"><sup><small>40</small></sup></a></p><p>
+accumulate during a nest of procedure calls.<a href="#footnote_Temp_813" id="call_footnote_Temp_813"><sup><small>40</small></sup></a></p><p>
 
 <tt>Compile-proc-appl</tt> generates the above procedure-application code by
 considering four cases, depending on whether the target for the call
 is <tt>val</tt> and whether the linkage is <tt>return</tt>.
 Observe that the instruction sequences are
 declared to modify all the registers, since executing the procedure
-body can change the registers in arbitrary ways.<a name="call_footnote_Temp_814" href="#footnote_Temp_814" id="call_footnote_Temp_814"><sup><small>41</small></sup></a>
+body can change the registers in arbitrary ways.<a href="#footnote_Temp_814" id="call_footnote_Temp_814"><sup><small>41</small></sup></a>
 Also note that the code sequence for the case with target <tt>val</tt>
 and linkage <tt>return</tt> is declared to need <tt>continue</tt>:  Even
 though <tt>continue</tt> is not explicitly used in the two-instruction
@@ -932,7 +932,7 @@ sequence, we must be sure that <tt>continue</tt> will have the correct
 value when we enter the compiled procedure.</p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_6376" id="%_idx_6376"></a>(define (compile-proc-appl target linkage)<br />
+</p><p></p><p><tt><a id="%_idx_6376"></a>(define (compile-proc-appl target linkage)<br />
   (cond ((and (eq? target 'val) (not (eq? linkage 'return)))<br />
          (make-instruction-sequence '(proc) all-regs<br />
            `((assign continue (label ,linkage))<br />
@@ -960,11 +960,11 @@ value when we enter the compiled procedure.</p><p>
                 target))))<br /></tt></p><p></p><p>
 </p><p>
 
-<a name="%_sec_5.5.4" id="%_sec_5.5.4"></a>
+<a id="%_sec_5.5.4"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.4">5.5.4  Combining Instruction Sequences</a></h3><p>
 
 
-<a name="%_idx_6378" id="%_idx_6378"></a>
+<a id="%_idx_6378"></a>
 This section describes the details on how instruction sequences are
 represented and combined.  Recall from
 section <a href="#%_sec_5.5.1">5.5.1</a> that an instruction sequence
@@ -974,14 +974,14 @@ modified, and the actual instructions.  We will also consider a label
 need or modify any registers.
 So to determine the registers needed
 and modified by instruction sequences we use the selectors
-</p><p></p><p><tt><a name="%_idx_6380" id="%_idx_6380"></a>(define (registers-needed s)<br />
-  (if (symbol? s) '() (car s)))<br /><a name="%_idx_6382" id="%_idx_6382"></a>(define (registers-modified s)<br />
-  (if (symbol? s) '() (cadr s)))<br /><a name="%_idx_6384" id="%_idx_6384"></a>(define (statements s)<br />
+</p><p></p><p><tt><a id="%_idx_6380"></a>(define (registers-needed s)<br />
+  (if (symbol? s) '() (car s)))<br /><a id="%_idx_6382"></a>(define (registers-modified s)<br />
+  (if (symbol? s) '() (cadr s)))<br /><a id="%_idx_6384"></a>(define (statements s)<br />
   (if (symbol? s) (list s) (caddr s)))<br /></tt></p><p></p><p>
 and to determine whether a given
 sequence needs or modifies a given register we use the predicates
-</p><p></p><p><tt><a name="%_idx_6386" id="%_idx_6386"></a>(define (needs-register? seq reg)<br />
-  (memq reg (registers-needed seq)))<br /><a name="%_idx_6388" id="%_idx_6388"></a>(define (modifies-register? seq reg)<br />
+</p><p></p><p><tt><a id="%_idx_6386"></a>(define (needs-register? seq reg)<br />
+  (memq reg (registers-needed seq)))<br /><a id="%_idx_6388"></a>(define (modifies-register? seq reg)<br />
   (memq reg (registers-modified seq)))<br /></tt></p><p></p><p>
 In terms of these predicates and selectors, we can implement the
 various instruction sequence combiners used throughout the compiler.</p><p>
@@ -1008,7 +1008,7 @@ of set operations, the new set of needed registers is the union of the set of
 registers needed by <tt>seq1</tt> with the set difference of the registers needed
 by <tt>seq2</tt> and the registers modified by <tt>seq1</tt>.)  Thus, <tt>append-instruction-sequences</tt> is implemented as follows:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6390" id="%_idx_6390"></a>(define (append-instruction-sequences . seqs)<br />
+</p><p></p><p><tt><a id="%_idx_6390"></a>(define (append-instruction-sequences . seqs)<br />
   (define (append-2-sequences seq1 seq2)<br />
     (make-instruction-sequence<br />
      (list-union (registers-needed seq1)<br />
@@ -1027,10 +1027,10 @@ by <tt>seq2</tt> and the registers modified by <tt>seq1</tt>.)  Thus, <tt>append
 This procedure uses some simple operations for manipulating sets
 represented as lists, similar to the (unordered) set representation
 described in section <a href="book-Z-H-16.html#%_sec_2.3.3">2.3.3</a>:
-</p><p></p><p><tt><a name="%_idx_6392" id="%_idx_6392"></a>(define (list-union s1 s2)<br />
+</p><p></p><p><tt><a id="%_idx_6392"></a>(define (list-union s1 s2)<br />
   (cond ((null? s1) s2)<br />
         ((memq (car s1) s2) (list-union (cdr s1) s2))<br />
-        (else (cons (car s1) (list-union (cdr s1) s2)))))<br /><a name="%_idx_6394" id="%_idx_6394"></a>(define (list-difference s1 s2)<br />
+        (else (cons (car s1) (list-union (cdr s1) s2)))))<br /><a id="%_idx_6394"></a>(define (list-difference s1 s2)<br />
   (cond ((null? s1) '())<br />
         ((memq (car s1) s2) (list-difference (cdr s1) s2))<br />
         (else (cons (car s1)<br />
@@ -1048,8 +1048,8 @@ addition to the registers needed by <tt>seq1</tt>, and modifies the registers
 modified by <tt>seq1</tt> except for the ones being saved and restored.  This
 augmented sequence and <tt>seq2</tt> are then appended in the usual way.  The
 following procedure implements this strategy recursively, walking down the
-list of registers to be preserved:<a name="call_footnote_Temp_815" href="#footnote_Temp_815" id="call_footnote_Temp_815"><sup><small>42</small></sup></a>
-</p><p></p><p><tt><a name="%_idx_6398" id="%_idx_6398"></a>(define (preserving regs seq1 seq2)<br />
+list of registers to be preserved:<a href="#footnote_Temp_815" id="call_footnote_Temp_815"><sup><small>42</small></sup></a>
+</p><p></p><p><tt><a id="%_idx_6398"></a>(define (preserving regs seq1 seq2)<br />
   (if (null? regs)<br />
       (append-instruction-sequences seq1 seq2)<br />
       (let ((first-reg (car regs)))<br />
@@ -1075,7 +1075,7 @@ impact on the register use of the sequence in which it is embedded.
 We thus ignore the procedure body's sets of needed and modified
 registers when we tack it onto the other sequence.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6400" id="%_idx_6400"></a>(define (tack-on-instruction-sequence seq body-seq)<br />
+</p><p></p><p><tt><a id="%_idx_6400"></a>(define (tack-on-instruction-sequence seq body-seq)<br />
   (make-instruction-sequence<br />
    (registers-needed seq)<br />
    (registers-modified seq)<br />
@@ -1089,7 +1089,7 @@ branch or the other will be entered.  Because of this, the registers
 needed by the second branch are still needed by the combined sequence,
 even if these are modified by the first branch.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6402" id="%_idx_6402"></a>(define (parallel-instruction-sequences seq1 seq2)<br />
+</p><p></p><p><tt><a id="%_idx_6402"></a>(define (parallel-instruction-sequences seq1 seq2)<br />
   (make-instruction-sequence<br />
    (list-union (registers-needed seq1)<br />
                (registers-needed seq2))<br />
@@ -1097,10 +1097,10 @@ even if these are modified by the first branch.</p><p>
                (registers-modified seq2))<br />
    (append (statements seq1) (statements seq2))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_5.5.5" id="%_sec_5.5.5"></a>
+<a id="%_sec_5.5.5"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.5">5.5.5  An Example of Compiled Code</a></h3><p>
 
-<a name="%_idx_6404" id="%_idx_6404"></a><a name="%_idx_6406" id="%_idx_6406"></a>
+<a id="%_idx_6404"></a><a id="%_idx_6406"></a>
 Now that we have seen all the elements of the compiler, let us examine
 an example of compiled code to see how things fit together.  We will
 compile the definition of a recursive <tt>factorial</tt> procedure by
@@ -1245,7 +1245,7 @@ call in the predicate and needed for the procedure call and the
 <tt>return</tt> linkage in the branches.
 
 
-</p><p><a name="%_thm_5.33" id="%_thm_5.33"></a>
+</p><p><a id="%_thm_5.33"></a>
 <b>Exercise 5.33.</b>  Consider the following definition of a factorial procedure, which is
 slightly different from the one given above:
 </p><p></p><p><tt>(define (factorial-alt n)<br />
@@ -1257,8 +1257,8 @@ Compile this procedure and compare the resulting code with that produced for
 program execute more efficiently than the other?
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.34" id="%_thm_5.34"></a>
-<b>Exercise 5.34.</b>  <a name="%_idx_6408" id="%_idx_6408"></a><a name="%_idx_6410" id="%_idx_6410"></a>Compile the iterative factorial procedure
+</p><p><a id="%_thm_5.34"></a>
+<b>Exercise 5.34.</b>  <a id="%_idx_6408"></a><a id="%_idx_6410"></a>Compile the iterative factorial procedure
 </p><p></p><p><tt>(define (factorial n)<br />
   (define (iter product counter)<br />
     (if (&gt; counter n)<br />
@@ -1275,7 +1275,7 @@ stack space.
 
 </p><p>
 
-<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; construct the procedure and skip over code for the procedure body</em><br />
+<a id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; construct the procedure and skip over code for the procedure body</em><br />
   (assign val<br />
           (op make-compiled-procedure) (label entry2) (reg env))<br />
   (goto (label after-lambda1))<br /><br />
@@ -1318,11 +1318,11 @@ false-branch4<br /><em>;; compute and return <tt>(* (factorial (- n 1))�
   (save proc)  <em>; save <tt>factorial</tt> procedure</em><br /></tt></p><p></p><p>
 </p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.17:</b>  Compilation of the definition of the <tt>factorial</tt>
 procedure (continued on next page).</div></caption><tr><td>
-<a name="%_idx_6412" id="%_idx_6412"></a>
+<a id="%_idx_6412"></a>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; compute <tt>(- n 1)</tt>, which is the argument for <tt>factorial</tt></em><br />
+<a id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; compute <tt>(- n 1)</tt>, which is the argument for <tt>factorial</tt></em><br />
   (assign proc (op lookup-variable-value) (const -) (reg env))<br />
   (assign val (const 1))<br />
   (assign argl (op list) (reg val))<br />
@@ -1369,10 +1369,10 @@ after-lambda1<br /><em>;; assign the procedure to the variable <tt>factor
 </p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.17:</b>  (continued)</div></caption><tr><td>
 </td></tr></table></div><p></p><p>
 
-</p><p><a name="%_thm_5.35" id="%_thm_5.35"></a>
+</p><p><a id="%_thm_5.35"></a>
 <b>Exercise 5.35.</b>  What expression was compiled to produce the code shown in
 figure <a href="#%_fig_5.18">5.18</a>?
-<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>  (assign val (op make-compiled-procedure) (label entry16)<br />
+<a id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>  (assign val (op make-compiled-procedure) (label entry16)<br />
                                            (reg env))<br />
   (goto (label after-lambda15))<br />
 entry16<br />
@@ -1415,7 +1415,7 @@ See exercise <a href="#%_thm_5.35">5.35</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>after-call20<br />
+<a id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>after-call20<br />
   (assign argl (op list) (reg val))<br />
   (restore env)<br />
   (assign val (op lookup-variable-value) (const x) (reg env))<br />
@@ -1438,8 +1438,8 @@ after-lambda15<br />
 </td></tr></table></div><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.36" id="%_thm_5.36"></a>
-<b>Exercise 5.36.</b>  <a name="%_idx_6414" id="%_idx_6414"></a><a name="%_idx_6416" id="%_idx_6416"></a>What order of evaluation does our compiler produce for operands of a
+</p><p><a id="%_thm_5.36"></a>
+<b>Exercise 5.36.</b>  <a id="%_idx_6414"></a><a id="%_idx_6416"></a>What order of evaluation does our compiler produce for operands of a
 combination?  Is it left-to-right, right-to-left, or some other order?
 Where in the compiler is this order determined?  Modify the compiler
 so that it produces some other order of evaluation.  (See the
@@ -1449,8 +1449,8 @@ operand evaluation affect the efficiency of the code that constructs
 the argument list?
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.37" id="%_thm_5.37"></a>
-<b>Exercise 5.37.</b>  <a name="%_idx_6418" id="%_idx_6418"></a><a name="%_idx_6420" id="%_idx_6420"></a>One way to understand the compiler's <tt>preserving</tt> mechanism for
+</p><p><a id="%_thm_5.37"></a>
+<b>Exercise 5.37.</b>  <a id="%_idx_6418"></a><a id="%_idx_6420"></a>One way to understand the compiler's <tt>preserving</tt> mechanism for
 optimizing stack usage is to see what extra operations would
 be generated if we did not use this idea.  Modify <tt>preserving</tt> so
 that it always generates the <tt>save</tt> and <tt>restore</tt> operations.
@@ -1459,8 +1459,8 @@ operations that are generated.
 Compare the code to that generated with the <tt>preserving</tt> mechanism intact.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.38" id="%_thm_5.38"></a>
-<b>Exercise 5.38.</b>  <a name="%_idx_6422" id="%_idx_6422"></a><a name="%_idx_6424" id="%_idx_6424"></a>Our compiler is clever about avoiding unnecessary stack operations,
+</p><p><a id="%_thm_5.38"></a>
+<b>Exercise 5.38.</b>  <a id="%_idx_6422"></a><a id="%_idx_6424"></a>Our compiler is clever about avoiding unnecessary stack operations,
 but it is not clever at all when it comes to compiling calls to the primitive
 procedures of the language in terms of the primitive operations
 supplied by the machine.  For example, consider how much code is
@@ -1475,7 +1475,7 @@ primitives, but we presume that these instructions make use of
 primitive arithmetic operations in the machine's data paths.  Consider
 how much less code would be generated if the compiler could <em>open-code</em> primitives – that is, if it could generate code to directly
 use these primitive machine operations.  The expression <tt>(+ a 1)</tt>
-might be compiled into something as simple as <a name="call_footnote_Temp_822" href="#footnote_Temp_822" id="call_footnote_Temp_822"><sup><small>43</small></sup></a>
+might be compiled into something as simple as <a href="#footnote_Temp_822" id="call_footnote_Temp_822"><sup><small>43</small></sup></a>
 </p><p></p><p><tt>(assign val (op lookup-variable-value) (const a) (reg env))<br />
 (assign val (op +) (reg val) (const 1))<br /></tt></p><p></p><p>
 In this exercise we will extend our compiler to support open coding of
@@ -1490,8 +1490,8 @@ inputs from <tt>arg1</tt> and <tt>arg2</tt>. The results may be put into
 The compiler must be able to recognize the application of an
 open-coded primitive in the source program.  We will augment the
 dispatch in the <tt>compile</tt> procedure to recognize the names of
-these primitives in addition to the <a name="%_idx_6426" id="%_idx_6426"></a>reserved words (the special forms)
-it currently recognizes.<a name="call_footnote_Temp_823" href="#footnote_Temp_823" id="call_footnote_Temp_823"><sup><small>44</small></sup></a> For each special form our compiler has a code generator.  In
+these primitives in addition to the <a id="%_idx_6426"></a>reserved words (the special forms)
+it currently recognizes.<a href="#footnote_Temp_823" id="call_footnote_Temp_823"><sup><small>44</small></sup></a> For each special form our compiler has a code generator.  In
 this exercise we will construct a family of code generators for the
 open-coded primitives.</p><p>
 
@@ -1522,11 +1522,11 @@ sequence of operations, each with only two inputs.
 
 </p><p></p><p>
 
-<a name="%_sec_5.5.6" id="%_sec_5.5.6"></a>
+<a id="%_sec_5.5.6"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.6">5.5.6  Lexical Addressing</a></h3><p>
 
 
-<a name="%_idx_6428" id="%_idx_6428"></a><a name="%_idx_6430" id="%_idx_6430"></a>
+<a id="%_idx_6428"></a><a id="%_idx_6430"></a>
 
 One of the most common optimizations performed by compilers is the
 optimization of variable lookup.  Our compiler, as we have implemented
@@ -1557,26 +1557,26 @@ Each time <tt>lookup-variable-value</tt> searches for <tt>x</tt>, it must
 determine that the symbol <tt>x</tt> is not <tt>eq?</tt> to <tt>y</tt> or <tt>z</tt> (in the first frame), nor to <tt>a</tt>, <tt>b</tt>, <tt>c</tt>, <tt>d</tt>, or
 <tt>e</tt> (in the second frame).  We will assume, for the moment, that
 our programs do not use <tt>define</tt> – that variables are
-bound only with <tt>lambda</tt>.  Because our language is <a name="%_idx_6432" id="%_idx_6432"></a>lexically
+bound only with <tt>lambda</tt>.  Because our language is <a id="%_idx_6432"></a>lexically
 scoped, the run-time environment for any expression will have a
 structure that parallels the lexical structure of the program in which
-the expression appears.<a name="call_footnote_Temp_824" href="#footnote_Temp_824" id="call_footnote_Temp_824"><sup><small>45</small></sup></a>
+the expression appears.<a href="#footnote_Temp_824" id="call_footnote_Temp_824"><sup><small>45</small></sup></a>
 Thus, the compiler can know, when it analyzes the
 above expression, that each time the procedure is applied the variable
 <tt>x</tt> in <tt>(* x y z)</tt> will be found two frames out from the
 current frame and will be the first variable in that frame.</p><p>
 
-<a name="%_idx_6434" id="%_idx_6434"></a>We can exploit this fact by inventing a new kind of variable-lookup
+<a id="%_idx_6434"></a>We can exploit this fact by inventing a new kind of variable-lookup
 operation, <tt>lexical-address-lookup</tt>, that takes as arguments an
 environment and a <em>lexical address</em> that consists of two numbers:
 a <em>frame number</em>, which specifies how many frames to pass over,
 and a <em>displacement number</em>, which specifies how many variables to
-pass over in that frame.  <a name="%_idx_6436" id="%_idx_6436"></a><tt>Lexical-address-lookup</tt> will produce
+pass over in that frame.  <a id="%_idx_6436"></a><tt>Lexical-address-lookup</tt> will produce
 the value of the variable stored at that lexical address relative to
 the current environment.  If we add the <tt>lexical-address-lookup</tt>
 operation to our machine, we can make the compiler generate code that
 references variables using this operation, rather than <tt>lookup-variable-value</tt>.  Similarly, our compiled code can use a new
-<a name="%_idx_6438" id="%_idx_6438"></a><tt>lexical-address-set!</tt>  operation instead of <tt>set-variable-value!</tt>.</p><p>
+<a id="%_idx_6438"></a><tt>lexical-address-set!</tt>  operation instead of <tt>set-variable-value!</tt>.</p><p>
 
 In order to generate such code, the compiler must be able to determine
 the lexical address of a variable it is about to compile a reference
@@ -1595,7 +1595,7 @@ address (0,0) and <tt>c</tt> is at address (1,2).  In expression
  3<br />
  4)<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_6440" id="%_idx_6440"></a>One way for the compiler to produce code that uses lexical addressing
+<a id="%_idx_6440"></a>One way for the compiler to produce code that uses lexical addressing
 is to maintain a data structure called a <em>compile-time
 environment</em>.  This keeps track of which variables will be at which
 positions in which frames in the run-time environment when a
@@ -1619,27 +1619,27 @@ into the compiler.
 Exercise <a href="#%_thm_5.44">5.44</a> describes another use for the
 compile-time environment.</p><p>
 
-</p><p><a name="%_thm_5.39" id="%_thm_5.39"></a>
-<b>Exercise 5.39.</b>  <a name="%_idx_6442" id="%_idx_6442"></a><a name="%_idx_6444" id="%_idx_6444"></a>Write a procedure <tt>lexical-address-lookup</tt> that implements the new
+</p><p><a id="%_thm_5.39"></a>
+<b>Exercise 5.39.</b>  <a id="%_idx_6442"></a><a id="%_idx_6444"></a>Write a procedure <tt>lexical-address-lookup</tt> that implements the new
 lookup operation.  It should take two arguments – a lexical address
 and a run-time environment – and return the value of the variable
 stored at the specified lexical address.  <tt>Lexical-address-lookup</tt>
-should signal an error if the value of the variable is the symbol <tt>*unassigned*</tt>.<a name="call_footnote_Temp_826" href="#footnote_Temp_826" id="call_footnote_Temp_826"><sup><small>46</small></sup></a> Also write a procedure <tt>lexical-address-set!</tt> that
+should signal an error if the value of the variable is the symbol <tt>*unassigned*</tt>.<a href="#footnote_Temp_826" id="call_footnote_Temp_826"><sup><small>46</small></sup></a> Also write a procedure <tt>lexical-address-set!</tt> that
 implements the operation that changes the value of the variable at a
 specified lexical address.
 
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.40" id="%_thm_5.40"></a>
-<b>Exercise 5.40.</b>  <a name="%_idx_6450" id="%_idx_6450"></a>Modify the compiler to maintain the compile-time environment as
+</p><p><a id="%_thm_5.40"></a>
+<b>Exercise 5.40.</b>  <a id="%_idx_6450"></a>Modify the compiler to maintain the compile-time environment as
 described above.  That is, add a compile-time-environment argument to
 <tt>compile</tt> and the various code generators, and extend it in
 <tt>compile-lambda-body</tt>.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.41" id="%_thm_5.41"></a>
-<b>Exercise 5.41.</b>  <a name="%_idx_6452" id="%_idx_6452"></a>Write a procedure <tt>find-variable</tt> that takes as arguments a
+</p><p><a id="%_thm_5.41"></a>
+<b>Exercise 5.41.</b>  <a id="%_idx_6452"></a>Write a procedure <tt>find-variable</tt> that takes as arguments a
 variable and a compile-time environment and returns the lexical
 address of the variable with respect to that environment.  For
 example, in the program fragment that is shown above, the compile-time
@@ -1651,7 +1651,7 @@ z) (a b c d e) (x y))</tt>.  <tt>Find-variable</tt> should produce</p><p>
 (find-variable 'w '((y z) (a b c d e) (x y)))<br /><i>not-found</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.42" id="%_thm_5.42"></a>
+</p><p><a id="%_thm_5.42"></a>
 <b>Exercise 5.42.</b>  Using <tt>find-variable</tt> from exercise <a href="#%_thm_5.41">5.41</a>,
 rewrite <tt>compile-variable</tt> and <tt>compile-assignment</tt> to output
 lexical-address instructions.  In cases where <tt>find-variable</tt>
@@ -1660,7 +1660,7 @@ compile-time environment), you should have the code generators use the
 evaluator operations, as before, to search for the binding.
 (The only place a variable that is not found at compile time can be is in
 the global environment, which is part of the run-time environment but
-is not part of the compile-time environment.<a name="call_footnote_Temp_830" href="#footnote_Temp_830" id="call_footnote_Temp_830"><sup><small>47</small></sup></a>
+is not part of the compile-time environment.<a href="#footnote_Temp_830" id="call_footnote_Temp_830"><sup><small>47</small></sup></a>
 Thus, if you wish, you may have the evaluator operations look directly in
 the global environment, which can be obtained with the operation <tt>(op get-global-environment)</tt>, instead of having them search the whole run-time
 environment found in <tt>env</tt>.)
@@ -1669,8 +1669,8 @@ Test the modified compiler on a few simple cases, such as the nested
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.43" id="%_thm_5.43"></a>
-<b>Exercise 5.43.</b>  <a name="%_idx_6454" id="%_idx_6454"></a><a name="%_idx_6456" id="%_idx_6456"></a>We argued in section <a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a> that internal definitions
+</p><p><a id="%_thm_5.43"></a>
+<b>Exercise 5.43.</b>  <a id="%_idx_6454"></a><a id="%_idx_6456"></a>We argued in section <a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a> that internal definitions
 for block structure should not be considered “real” <tt>define</tt>s.  Rather,
 a procedure body should be interpreted as if the internal variables being
 defined were installed as ordinary <tt>lambda</tt> variables initialized to their
@@ -1683,8 +1683,8 @@ body.
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.44" id="%_thm_5.44"></a>
-<b>Exercise 5.44.</b>  <a name="%_idx_6458" id="%_idx_6458"></a><a name="%_idx_6460" id="%_idx_6460"></a><a name="%_idx_6462" id="%_idx_6462"></a><a name="%_idx_6464" id="%_idx_6464"></a>In this section we have focused on the use of the compile-time
+</p><p><a id="%_thm_5.44"></a>
+<b>Exercise 5.44.</b>  <a id="%_idx_6458"></a><a id="%_idx_6460"></a><a id="%_idx_6462"></a><a id="%_idx_6464"></a>In this section we have focused on the use of the compile-time
 environment to produce lexical addresses.  But there are other uses
 for compile-time environments.  For instance, in
 exercise <a href="#%_thm_5.38">5.38</a> we increased the efficiency of compiled
@@ -1706,17 +1706,17 @@ expressions involving the names of primitive procedures.
 
 </p><p></p><p>
 
-<a name="%_sec_5.5.7" id="%_sec_5.5.7"></a>
+<a id="%_sec_5.5.7"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.5.7">5.5.7  Interfacing Compiled Code to the Evaluator</a></h3><p>
 
 
-<a name="%_idx_6466" id="%_idx_6466"></a><a name="%_idx_6468" id="%_idx_6468"></a><a name="%_idx_6470" id="%_idx_6470"></a>
+<a id="%_idx_6466"></a><a id="%_idx_6468"></a><a id="%_idx_6470"></a>
 We have not yet explained how to load compiled code into the evaluator machine
 or how to run it.  We will assume that the explicit-control-evaluator machine
 has been defined as in section <a href="book-Z-H-34.html#%_sec_5.4.4">5.4.4</a>, with the
 additional operations specified in footnote <a href="#footnote_Temp_809">38</a>.
 We will implement
-a procedure <a name="%_idx_6472" id="%_idx_6472"></a><tt>compile-and-go</tt> that compiles a Scheme expression, loads the
+a procedure <a id="%_idx_6472"></a><tt>compile-and-go</tt> that compiles a Scheme expression, loads the
 resulting object code into the evaluator machine,
 and causes the machine to run the code in the
 evaluator global environment, print the result, and
@@ -1739,15 +1739,15 @@ we need to change the code at <tt>apply-dispatch</tt>
 (section <a href="book-Z-H-34.html#%_sec_5.4.1">5.4.1</a>) so that it recognizes
 compiled procedures (as distinct from compound or primitive
 procedures) and transfers control directly to the entry point of the
-compiled code:<a name="call_footnote_Temp_833" href="#footnote_Temp_833" id="call_footnote_Temp_833"><sup><small>48</small></sup></a>
-</p><p></p><p><tt><a name="%_idx_6474" id="%_idx_6474"></a>apply-dispatch<br />
+compiled code:<a href="#footnote_Temp_833" id="call_footnote_Temp_833"><sup><small>48</small></sup></a>
+</p><p></p><p><tt><a id="%_idx_6474"></a>apply-dispatch<br />
   (test (op primitive-procedure?) (reg proc))<br />
   (branch (label primitive-apply))<br />
   (test (op compound-procedure?) (reg proc))  <br />
   (branch (label compound-apply))<br />
   (test (op compiled-procedure?) (reg proc))  <br />
   (branch (label compiled-apply))<br />
-  (goto (label unknown-procedure-type))<br /><a name="%_idx_6476" id="%_idx_6476"></a>compiled-apply<br />
+  (goto (label unknown-procedure-type))<br /><a id="%_idx_6476"></a>compiled-apply<br />
   (restore continue)<br />
   (assign val (op compiled-procedure-entry) (reg proc))<br />
   (goto (reg val))<br /></tt></p><p></p><p>
@@ -1761,7 +1761,7 @@ restored before the compiled code is executed.</p><p>
 To enable us to run some compiled code when we start the evaluator
 machine, we add a <tt>branch</tt> instruction at
 the beginning of the evaluator machine, which causes the machine to
-go to a new entry point if the <tt>flag</tt> register is set.<a name="call_footnote_Temp_834" href="#footnote_Temp_834" id="call_footnote_Temp_834"><sup><small>49</small></sup></a></p><p>
+go to a new entry point if the <tt>flag</tt> register is set.<a href="#footnote_Temp_834" id="call_footnote_Temp_834"><sup><small>49</small></sup></a></p><p>
 
 
 </p><p></p><p><tt>  (branch (label external-entry))      <em>; branches if <tt>flag</tt> is set</em><br />
@@ -1774,10 +1774,10 @@ puts a result into <tt>val</tt> and ends with <tt>(goto (reg
 continue))</tt>.  Starting at this entry point jumps to the location designated
 by <tt>val</tt>, but first assigns <tt>continue</tt> so that execution will return
 to <tt>print-result</tt>, which prints the value in <tt>val</tt> and then goes to
-the beginning of the evaluator's read-eval-print loop.<a name="call_footnote_Temp_835" href="#footnote_Temp_835" id="call_footnote_Temp_835"><sup><small>50</small></sup></a></p><p>
+the beginning of the evaluator's read-eval-print loop.<a href="#footnote_Temp_835" id="call_footnote_Temp_835"><sup><small>50</small></sup></a></p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_6482" id="%_idx_6482"></a>external-entry<br />
+</p><p></p><p><tt><a id="%_idx_6482"></a>external-entry<br />
   (perform (op initialize-stack))<br />
   (assign env (op get-global-environment))<br />
   (assign continue (label print-result))<br />
@@ -1795,7 +1795,7 @@ the <tt>val</tt> register to point to the list of instructions, set the
 <tt>flag</tt> so that the evaluator will go to <tt>external-entry</tt>, and start
 the evaluator.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_6484" id="%_idx_6484"></a>(define (compile-and-go expression)<br />
+</p><p></p><p><tt><a id="%_idx_6484"></a>(define (compile-and-go expression)<br />
   (let ((instructions<br />
          (assemble (statements<br />
                     (compile expression 'val 'return))<br />
@@ -1805,7 +1805,7 @@ the evaluator.</p><p>
     (set-register-contents! eceval 'flag true)<br />
     (start eceval)))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_6486" id="%_idx_6486"></a>If we have set up stack monitoring, as at the end of
+<a id="%_idx_6486"></a>If we have set up stack monitoring, as at the end of
 section <a href="book-Z-H-34.html#%_sec_5.4.4">5.4.4</a>, we can examine the
 stack usage of compiled code:</p><p>
 
@@ -1815,19 +1815,19 @@ stack usage of compiled code:</p><p>
         1<br />
         (* (factorial (- n 1)) n))))<br /><br /><i>(total-pushes = 0 maximum-depth = 0)</i><br /><i> ;;; EC-Eval value:</i><br /><i>ok</i><br /><i> ;;; EC-Eval input:</i><br />
 (factorial 5)<br /><i>(total-pushes = 31 maximum-depth = 14)</i><br /><i>;;; EC-Eval value:</i><br /><i>120</i><br /></tt></p><p></p><p>
-<a name="%_idx_6488" id="%_idx_6488"></a>Compare this example with the evaluation of <tt>(factorial 5)</tt> using
+<a id="%_idx_6488"></a>Compare this example with the evaluation of <tt>(factorial 5)</tt> using
 the interpreted version of the same procedure, shown at the end of
 section <a href="book-Z-H-34.html#%_sec_5.4.4">5.4.4</a>.  The interpreted version required
 144 pushes and a maximum stack depth of 28.  This illustrates the
 optimization that results from our compilation strategy.</p><p>
 
-<a name="%_sec_Temp_836" id="%_sec_Temp_836"></a>
+<a id="%_sec_Temp_836"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_836">Interpretation and compilation</a></h4><p>
 
-<a name="%_idx_6490" id="%_idx_6490"></a><a name="%_idx_6492" id="%_idx_6492"></a>
+<a id="%_idx_6490"></a><a id="%_idx_6492"></a>
 With the programs in this section, we can now experiment with the
 alternative execution strategies of interpretation and
-compilation.<a name="call_footnote_Temp_837" href="#footnote_Temp_837" id="call_footnote_Temp_837"><sup><small>51</small></sup></a>  An interpreter raises
+compilation.<a href="#footnote_Temp_837" id="call_footnote_Temp_837"><sup><small>51</small></sup></a>  An interpreter raises
 the machine to the level of the user program; a compiler lowers the
 user program to the level of the machine language.  We can regard the
 Scheme language (or any programming language) as a coherent family of
@@ -1838,11 +1838,11 @@ are therefore more intelligible to the programmer.  Compiled code can
 execute faster, because the steps of program execution are organized
 in terms of the machine language, and the compiler is free to make
 optimizations that cut across the higher-level
-abstractions.<a name="call_footnote_Temp_838" href="#footnote_Temp_838" id="call_footnote_Temp_838"><sup><small>52</small></sup></a></p><p>
+abstractions.<a href="#footnote_Temp_838" id="call_footnote_Temp_838"><sup><small>52</small></sup></a></p><p>
 
 
 The alternatives of interpretation and compilation also lead to
-<a name="%_idx_6504" id="%_idx_6504"></a>different strategies for porting languages to new computers. Suppose
+<a id="%_idx_6504"></a>different strategies for porting languages to new computers. Suppose
 that we wish to implement Lisp for a new machine.  One strategy is
 to begin with the explicit-control evaluator of section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a>
 and translate its instructions to instructions for the
@@ -1851,13 +1851,13 @@ change the code generators so that they generate code for the new
 machine.  The second strategy allows us to run any Lisp program on
 the new machine by first compiling it with the compiler running on our
 original Lisp system, and linking it with a compiled version of the
-run-time library.<a name="call_footnote_Temp_839" href="#footnote_Temp_839" id="call_footnote_Temp_839"><sup><small>53</small></sup></a>  Better yet, we can compile the compiler itself, and run
-this on the new machine to compile other Lisp programs.<a name="call_footnote_Temp_840" href="#footnote_Temp_840" id="call_footnote_Temp_840"><sup><small>54</small></sup></a>  Or we can
+run-time library.<a href="#footnote_Temp_839" id="call_footnote_Temp_839"><sup><small>53</small></sup></a>  Better yet, we can compile the compiler itself, and run
+this on the new machine to compile other Lisp programs.<a href="#footnote_Temp_840" id="call_footnote_Temp_840"><sup><small>54</small></sup></a>  Or we can
 compile one of the interpreters of section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a> to
 produce an interpreter that runs on the new machine.</p><p>
 
-</p><p><a name="%_thm_5.45" id="%_thm_5.45"></a>
-<b>Exercise 5.45.</b>  <a name="%_idx_6506" id="%_idx_6506"></a><a name="%_idx_6508" id="%_idx_6508"></a>By comparing the stack operations used by compiled code to the stack
+</p><p><a id="%_thm_5.45"></a>
+<b>Exercise 5.45.</b>  <a id="%_idx_6506"></a><a id="%_idx_6508"></a>By comparing the stack operations used by compiled code to the stack
 operations used by the evaluator for the same computation, we can
 determine the extent to which the compiler optimizes use of the stack,
 both in speed (reducing the total number of stack operations) and in
@@ -1893,8 +1893,8 @@ hand-tailored version?
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.46" id="%_thm_5.46"></a>
-<b>Exercise 5.46.</b>  <a name="%_idx_6510" id="%_idx_6510"></a><a name="%_idx_6512" id="%_idx_6512"></a>Carry out an analysis like the one in
+</p><p><a id="%_thm_5.46"></a>
+<b>Exercise 5.46.</b>  <a id="%_idx_6510"></a><a id="%_idx_6512"></a>Carry out an analysis like the one in
 exercise <a href="#%_thm_5.45">5.45</a> to determine the effectiveness of
 compiling the tree-recursive Fibonacci procedure</p><p>
 
@@ -1910,7 +1910,7 @@ ratios of stack operations will not approach a limiting value that is
 independent of <em>n</em>.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.47" id="%_thm_5.47"></a>
+</p><p><a id="%_thm_5.47"></a>
 <b>Exercise 5.47.</b>  This section described how to modify the explicit-control evaluator so
 that interpreted code can call compiled procedures.  Show how to
 modify the compiler so that compiled procedures can call not only
@@ -1936,8 +1936,8 @@ define <tt>g</tt> and try to call <tt>f</tt>.
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.48" id="%_thm_5.48"></a>
-<b>Exercise 5.48.</b>  <a name="%_idx_6514" id="%_idx_6514"></a>The <tt>compile-and-go</tt> interface implemented in this section is
+</p><p><a id="%_thm_5.48"></a>
+<b>Exercise 5.48.</b>  <a id="%_idx_6514"></a>The <tt>compile-and-go</tt> interface implemented in this section is
 awkward, since the compiler can be called only once (when the
 evaluator machine is started).  Augment the compiler-interpreter
 interface by providing a <tt>compile-and-run</tt> primitive that can be
@@ -1952,7 +1952,7 @@ called from within the explicit-control evaluator as follows:</p><p>
 (factorial 5)<br /><i>;;; EC-Eval value:</i><br /><i>120</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.49" id="%_thm_5.49"></a>
+</p><p><a id="%_thm_5.49"></a>
 <b>Exercise 5.49.</b>  As an alternative to using the explicit-control evaluator's
 read-eval-print loop, design a register machine that performs a
 read-compile-execute-print loop.  That is, the machine should run a
@@ -1964,8 +1964,8 @@ operations.”
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.50" id="%_thm_5.50"></a>
-<b>Exercise 5.50.</b>  <a name="%_idx_6516" id="%_idx_6516"></a>Use the compiler to compile the metacircular evaluator of
+</p><p><a id="%_thm_5.50"></a>
+<b>Exercise 5.50.</b>  <a id="%_idx_6516"></a>Use the compiler to compile the metacircular evaluator of
 section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a> and run this program using the register-machine
 simulator.  (To compile more than one definition at a time, you can
 package the definitions in a <tt>begin</tt>.)  The resulting interpreter
@@ -1973,8 +1973,8 @@ will run very slowly because of the multiple levels of interpretation,
 but getting all the details to work is an instructive exercise.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.51" id="%_thm_5.51"></a>
-<b>Exercise 5.51.</b>  <a name="%_idx_6518" id="%_idx_6518"></a>Develop a rudimentary implementation of Scheme in C (or some other
+</p><p><a id="%_thm_5.51"></a>
+<b>Exercise 5.51.</b>  <a id="%_idx_6518"></a>Develop a rudimentary implementation of Scheme in C (or some other
 low-level language of your choice) by translating the explicit-control
 evaluator of section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a> into C.  In order to run this code
 you will need to also
@@ -1983,8 +1983,8 @@ support.
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.52" id="%_thm_5.52"></a>
-<b>Exercise 5.52.</b>  <a name="%_idx_6520" id="%_idx_6520"></a><a name="%_idx_6522" id="%_idx_6522"></a><a name="%_idx_6524" id="%_idx_6524"></a>As a counterpoint to exercise <a href="#%_thm_5.51">5.51</a>, modify the compiler
+</p><p><a id="%_thm_5.52"></a>
+<b>Exercise 5.52.</b>  <a id="%_idx_6520"></a><a id="%_idx_6522"></a><a id="%_idx_6524"></a>As a counterpoint to exercise <a href="#%_thm_5.51">5.51</a>, modify the compiler
 so that it compiles Scheme procedures into sequences of C
 instructions.  Compile the metacircular evaluator of
 section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a> to produce a Scheme interpreter written in C.
@@ -1995,24 +1995,24 @@ section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a> to produce a Scheme interp
 
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_794" href="#call_footnote_Temp_794" id="footnote_Temp_794"><sup><small>33</small></sup></a> This is a theoretical statement.  We are not claiming
+</p><div class="footnote"><p><a href="#call_footnote_Temp_794" id="footnote_Temp_794"><sup><small>33</small></sup></a> This is a theoretical statement.  We are not claiming
 that the evaluator's data paths are a particularly convenient or
 efficient set of data paths for a general-purpose computer.  For example,
 they are not very good for implementing high-performance floating-point
 calculations or calculations that intensively manipulate bit vectors.
 
-</p><p><a name="footnote_Temp_795" href="#call_footnote_Temp_795" id="footnote_Temp_795"><sup><small>34</small></sup></a> Actually, the machine that runs
+</p><p><a href="#call_footnote_Temp_795" id="footnote_Temp_795"><sup><small>34</small></sup></a> Actually, the machine that runs
 compiled code can be simpler than the interpreter machine, because we
-<a name="%_idx_6220" id="%_idx_6220"></a>won't use the <tt>exp</tt> and <tt>unev</tt> registers.  The interpreter
+<a id="%_idx_6220"></a>won't use the <tt>exp</tt> and <tt>unev</tt> registers.  The interpreter
 used these to hold pieces of unevaluated expressions.  With the
 compiler, however, these expressions get built into the
 compiled code that the register machine will run.  For the same
-reason, <a name="%_idx_6222" id="%_idx_6222"></a>we don't need the machine operations that deal with expression
+reason, <a id="%_idx_6222"></a>we don't need the machine operations that deal with expression
 syntax.  But compiled code will use a few additional machine
 operations (to represent compiled procedure objects) that didn't
 appear in the explicit-control evaluator machine.
 
-</p><p><a name="footnote_Temp_797" href="#call_footnote_Temp_797" id="footnote_Temp_797"><sup><small>35</small></sup></a> Notice, however, that our
+</p><p><a href="#call_footnote_Temp_797" id="footnote_Temp_797"><sup><small>35</small></sup></a> Notice, however, that our
 compiler is a Scheme program, and the syntax procedures that it uses
 to manipulate expressions are the actual Scheme procedures used with
 the metacircular evaluator.  For the explicit-control evaluator, in
@@ -2021,7 +2021,7 @@ as operations for the register machine.  (Of course, when we simulated
 the register machine in Scheme, we used the actual Scheme procedures
 in our register machine simulation.)
 
-</p><p><a name="footnote_Temp_803" href="#call_footnote_Temp_803" id="footnote_Temp_803"><sup><small>36</small></sup></a> This procedure uses a feature of Lisp called <em><a name="%_idx_6280" id="%_idx_6280"></a><a name="%_idx_6282" id="%_idx_6282"></a><a name="%_idx_6284" id="%_idx_6284"></a><a name="%_idx_6286" id="%_idx_6286"></a><a name="%_idx_6288" id="%_idx_6288"></a><a name="%_idx_6290" id="%_idx_6290"></a>backquote</em> (or <em>quasiquote</em>) that is handy for constructing lists.
+</p><p><a href="#call_footnote_Temp_803" id="footnote_Temp_803"><sup><small>36</small></sup></a> This procedure uses a feature of Lisp called <em><a id="%_idx_6280"></a><a id="%_idx_6282"></a><a id="%_idx_6284"></a><a id="%_idx_6286"></a><a id="%_idx_6288"></a><a id="%_idx_6290"></a>backquote</em> (or <em>quasiquote</em>) that is handy for constructing lists.
 Preceding a list with a backquote symbol is much like quoting it,
 except that anything in the list that is flagged with a comma is evaluated.</p><p>
 
@@ -2035,11 +2035,11 @@ Similarly, if the value of <tt>x</tt> is the list <tt>(a b c)</tt>, then
 evaluates to the list
 <tt>(1 2 a)</tt>.
 
-</p><p><a name="footnote_Temp_806" href="#call_footnote_Temp_806" id="footnote_Temp_806"><sup><small>37</small></sup></a> We can't just
+</p><p><a href="#call_footnote_Temp_806" id="footnote_Temp_806"><sup><small>37</small></sup></a> We can't just
 use the labels <tt>true-branch</tt>, <tt>false-branch</tt>, and
 <tt>after-if</tt> as shown above,
 because there might be more than one <tt>if</tt> in the program.
-<a name="%_idx_6318" id="%_idx_6318"></a>The compiler uses the procedure <tt>make-label</tt> to generate labels.
+<a id="%_idx_6318"></a>The compiler uses the procedure <tt>make-label</tt> to generate labels.
 <tt>Make-label</tt> takes a symbol as argument and returns a new symbol
 that begins with the given symbol.  For example, successive calls to
 <tt>(make-label 'a)</tt> would return <tt>a1</tt>, <tt>a2</tt>, and so on.
@@ -2048,32 +2048,32 @@ unique variable names in the query language, as follows:
 </p><p></p><p><tt>(define label-counter 0)<br /><br />
 (define (new-label-number)<br />
   (set! label-counter (+ 1 label-counter))<br />
-  label-counter)<br /><br /><a name="%_idx_6320" id="%_idx_6320"></a><a name="%_idx_6322" id="%_idx_6322"></a>(define (make-label name)<br />
+  label-counter)<br /><br /><a id="%_idx_6320"></a><a id="%_idx_6322"></a>(define (make-label name)<br />
   (string-&gt;symbol<br />
     (string-append (symbol-&gt;string name)<br />
                    (number-&gt;string (new-label-number)))))<br /></tt></p><p></p><p>
 
 
-</p><p><a name="footnote_Temp_809" href="#call_footnote_Temp_809" id="footnote_Temp_809"><sup><small>38</small></sup></a> We need machine operations to implement a data
+</p><p><a href="#call_footnote_Temp_809" id="footnote_Temp_809"><sup><small>38</small></sup></a> We need machine operations to implement a data
 structure for representing compiled procedures, analogous to the structure for
 compound procedures described in section <a href="book-Z-H-26.html#%_sec_4.1.3">4.1.3</a>:
-</p><p></p><p><tt><a name="%_idx_6332" id="%_idx_6332"></a>(define (make-compiled-procedure entry env)<br />
-  (list 'compiled-procedure entry env))<br /><br /><a name="%_idx_6334" id="%_idx_6334"></a>(define (compiled-procedure? proc)<br />
-  (tagged-list? proc 'compiled-procedure))<br /><br /><a name="%_idx_6336" id="%_idx_6336"></a>(define (compiled-procedure-entry c-proc) (cadr c-proc))<br /><br /><a name="%_idx_6338" id="%_idx_6338"></a>(define (compiled-procedure-env c-proc) (caddr c-proc))<br /></tt></p><p></p><p>
+</p><p></p><p><tt><a id="%_idx_6332"></a>(define (make-compiled-procedure entry env)<br />
+  (list 'compiled-procedure entry env))<br /><br /><a id="%_idx_6334"></a>(define (compiled-procedure? proc)<br />
+  (tagged-list? proc 'compiled-procedure))<br /><br /><a id="%_idx_6336"></a>(define (compiled-procedure-entry c-proc) (cadr c-proc))<br /><br /><a id="%_idx_6338"></a>(define (compiled-procedure-env c-proc) (caddr c-proc))<br /></tt></p><p></p><p>
 
 
-</p><p><a name="footnote_Temp_812" href="#call_footnote_Temp_812" id="footnote_Temp_812"><sup><small>39</small></sup></a> Actually, we signal an error when the target is not <tt>val</tt>
+</p><p><a href="#call_footnote_Temp_812" id="footnote_Temp_812"><sup><small>39</small></sup></a> Actually, we signal an error when the target is not <tt>val</tt>
 and the linkage is <tt>return</tt>, since
 the only place we request <tt>return</tt> linkages is in compiling
 procedures, and our convention is that procedures return their
 values in <tt>val</tt>.
 
-</p><p><a name="footnote_Temp_813" href="#call_footnote_Temp_813" id="footnote_Temp_813"><sup><small>40</small></sup></a> Making a
-<a name="%_idx_6356" id="%_idx_6356"></a>compiler generate tail-recursive code might seem like a
+</p><p><a href="#call_footnote_Temp_813" id="footnote_Temp_813"><sup><small>40</small></sup></a> Making a
+<a id="%_idx_6356"></a>compiler generate tail-recursive code might seem like a
 straightforward idea.  But most compilers for common languages,
 including C and Pascal, do not do this, and therefore these languages
 cannot represent iterative processes in terms of procedure call alone.
-The difficulty with <a name="%_idx_6358" id="%_idx_6358"></a><a name="%_idx_6360" id="%_idx_6360"></a><a name="%_idx_6362" id="%_idx_6362"></a>tail recursion in these languages is that their
+The difficulty with <a id="%_idx_6358"></a><a id="%_idx_6360"></a><a id="%_idx_6362"></a>tail recursion in these languages is that their
 implementations use the stack to store procedure arguments and local
 variables as well as return addresses.  The Scheme implementations
 described in this book store arguments and variables in memory to be
@@ -2082,29 +2082,29 @@ arguments is that it avoids the need for garbage collection in
 languages that would not otherwise require it, and is generally
 believed to be more efficient.  Sophisticated Lisp compilers can, in
 fact, use the stack for arguments without destroying tail recursion.
-(See <a name="%_idx_6364" id="%_idx_6364"></a>Hanson 1990 for a description.)  There is also some debate about
+(See <a id="%_idx_6364"></a>Hanson 1990 for a description.)  There is also some debate about
 whether stack allocation is actually more efficient than garbage
 collection in the first place, but the details seem to hinge on fine
-points of computer architecture.  (See <a name="%_idx_6366" id="%_idx_6366"></a>Appel 1987 and <a name="%_idx_6368" id="%_idx_6368"></a><a name="%_idx_6370" id="%_idx_6370"></a>Miller and Rozas
+points of computer architecture.  (See <a id="%_idx_6366"></a>Appel 1987 and <a id="%_idx_6368"></a><a id="%_idx_6370"></a>Miller and Rozas
 1994 for opposing views on this issue.)
 
-</p><p><a name="footnote_Temp_814" href="#call_footnote_Temp_814" id="footnote_Temp_814"><sup><small>41</small></sup></a> The variable
-<a name="%_idx_6372" id="%_idx_6372"></a><tt>all-regs</tt> is bound to the list of names of all the registers:
-</p><p></p><p><tt><a name="%_idx_6374" id="%_idx_6374"></a>(define all-regs '(env proc val argl continue))<br /></tt></p><p></p><p>
+</p><p><a href="#call_footnote_Temp_814" id="footnote_Temp_814"><sup><small>41</small></sup></a> The variable
+<a id="%_idx_6372"></a><tt>all-regs</tt> is bound to the list of names of all the registers:
+</p><p></p><p><tt><a id="%_idx_6374"></a>(define all-regs '(env proc val argl continue))<br /></tt></p><p></p><p>
 
 
-</p><p><a name="footnote_Temp_815" href="#call_footnote_Temp_815" id="footnote_Temp_815"><sup><small>42</small></sup></a> Note that <tt>preserving</tt> calls <tt>append</tt> with three
-<a name="%_idx_6396" id="%_idx_6396"></a>arguments.  Though the definition of <tt>append</tt> shown in this book
+</p><p><a href="#call_footnote_Temp_815" id="footnote_Temp_815"><sup><small>42</small></sup></a> Note that <tt>preserving</tt> calls <tt>append</tt> with three
+<a id="%_idx_6396"></a>arguments.  Though the definition of <tt>append</tt> shown in this book
 accepts only two arguments, Scheme standardly provides an <tt>append</tt>
 procedure that takes an arbitrary number of arguments.
 
-</p><p><a name="footnote_Temp_822" href="#call_footnote_Temp_822" id="footnote_Temp_822"><sup><small>43</small></sup></a> We have used
+</p><p><a href="#call_footnote_Temp_822" id="footnote_Temp_822"><sup><small>43</small></sup></a> We have used
 the same symbol <tt>+</tt> here to denote both the source-language
 procedure and the machine operation.  In general there will not be a
 one-to-one correspondence between primitives of the source language
 and primitives of the machine.
 
-</p><p><a name="footnote_Temp_823" href="#call_footnote_Temp_823" id="footnote_Temp_823"><sup><small>44</small></sup></a> Making the primitives into reserved
+</p><p><a href="#call_footnote_Temp_823" id="footnote_Temp_823"><sup><small>44</small></sup></a> Making the primitives into reserved
 words is in general a bad idea, since a user cannot then rebind these
 names to different procedures.  Moreover, if we add reserved words to
 a compiler that is in use, existing programs that define procedures
@@ -2112,17 +2112,17 @@ with these names will stop working.  See
 exercise <a href="#%_thm_5.44">5.44</a> for ideas on how to avoid this
 problem.
 
-</p><p><a name="footnote_Temp_824" href="#call_footnote_Temp_824" id="footnote_Temp_824"><sup><small>45</small></sup></a> This is not true if we allow
+</p><p><a href="#call_footnote_Temp_824" id="footnote_Temp_824"><sup><small>45</small></sup></a> This is not true if we allow
 internal definitions, unless we scan them out.
 See exercise <a href="#%_thm_5.43">5.43</a>.
 
-</p><p><a name="footnote_Temp_826" href="#call_footnote_Temp_826" id="footnote_Temp_826"><sup><small>46</small></sup></a> This is the modification to variable lookup
-<a name="%_idx_6446" id="%_idx_6446"></a><a name="%_idx_6448" id="%_idx_6448"></a>required if we implement the scanning method to eliminate internal
+</p><p><a href="#call_footnote_Temp_826" id="footnote_Temp_826"><sup><small>46</small></sup></a> This is the modification to variable lookup
+<a id="%_idx_6446"></a><a id="%_idx_6448"></a>required if we implement the scanning method to eliminate internal
 definitions (exercise <a href="#%_thm_5.43">5.43</a>).  We will need
 to eliminate these definitions in order for lexical addressing to
 work.
 
-</p><p><a name="footnote_Temp_830" href="#call_footnote_Temp_830" id="footnote_Temp_830"><sup><small>47</small></sup></a> Lexical addresses cannot be used to access variables in the global
+</p><p><a href="#call_footnote_Temp_830" id="footnote_Temp_830"><sup><small>47</small></sup></a> Lexical addresses cannot be used to access variables in the global
 environment, because these names can be defined and redefined
 interactively at any time.  With internal definitions scanned out, as
 in exercise <a href="#%_thm_5.43">5.43</a>, the only definitions the
@@ -2130,27 +2130,27 @@ compiler sees are those at top level, which act on the global
 environment.  Compilation of a definition does not cause the defined
 name to be entered in the compile-time environment.
 
-</p><p><a name="footnote_Temp_833" href="#call_footnote_Temp_833" id="footnote_Temp_833"><sup><small>48</small></sup></a> Of course, compiled procedures as well as interpreted
+</p><p><a href="#call_footnote_Temp_833" id="footnote_Temp_833"><sup><small>48</small></sup></a> Of course, compiled procedures as well as interpreted
 procedures are compound (nonprimitive).  For compatibility with
 the terminology used in the explicit-control evaluator, in this
 section we will use “compound” to mean interpreted (as opposed
 to compiled).
 
-</p><p><a name="footnote_Temp_834" href="#call_footnote_Temp_834" id="footnote_Temp_834"><sup><small>49</small></sup></a> Now that the evaluator machine starts
+</p><p><a href="#call_footnote_Temp_834" id="footnote_Temp_834"><sup><small>49</small></sup></a> Now that the evaluator machine starts
 with a <tt>branch</tt>, we must always initialize the <tt>flag</tt> register
 before starting the evaluator machine.  To start the machine at
 its ordinary read-eval-print loop, we could use
-</p><p></p><p><tt><a name="%_idx_6478" id="%_idx_6478"></a>(define (start-eceval)<br />
+</p><p></p><p><tt><a id="%_idx_6478"></a>(define (start-eceval)<br />
   (set! the-global-environment (setup-environment))<br />
   (set-register-contents! eceval 'flag false)<br />
   (start eceval))<br /></tt></p><p></p><p>
 
-</p><p><a name="footnote_Temp_835" href="#call_footnote_Temp_835" id="footnote_Temp_835"><sup><small>50</small></sup></a> Since a compiled procedure is an
+</p><p><a href="#call_footnote_Temp_835" id="footnote_Temp_835"><sup><small>50</small></sup></a> Since a compiled procedure is an
 object that the system may try to print, we also modify the system
 print operation <tt>user-print</tt> (from section <a href="book-Z-H-26.html#%_sec_4.1.4">4.1.4</a>)
 so that it will not attempt to print the
 components of a compiled procedure:
-</p><p></p><p><tt><a name="%_idx_6480" id="%_idx_6480"></a>(define (user-print object)<br />
+</p><p></p><p><tt><a id="%_idx_6480"></a>(define (user-print object)<br />
   (cond ((compound-procedure? object)<br />
          (display (list 'compound-procedure<br />
                         (procedure-parameters object)<br />
@@ -2161,12 +2161,12 @@ components of a compiled procedure:
         (else (display object))))<br /></tt></p><p></p><p>
 
 
-</p><p><a name="footnote_Temp_837" href="#call_footnote_Temp_837" id="footnote_Temp_837"><sup><small>51</small></sup></a> We can do even better by extending the compiler
+</p><p><a href="#call_footnote_Temp_837" id="footnote_Temp_837"><sup><small>51</small></sup></a> We can do even better by extending the compiler
 to allow compiled code to call interpreted procedures.  See
 exercise <a href="#%_thm_5.47">5.47</a>.
 
-</p><p><a name="footnote_Temp_838" href="#call_footnote_Temp_838" id="footnote_Temp_838"><sup><small>52</small></sup></a> Independent of the strategy of execution, we
-<a name="%_idx_6494" id="%_idx_6494"></a>incur significant overhead if we insist that errors encountered in
+</p><p><a href="#call_footnote_Temp_838" id="footnote_Temp_838"><sup><small>52</small></sup></a> Independent of the strategy of execution, we
+<a id="%_idx_6494"></a>incur significant overhead if we insist that errors encountered in
 execution of a user program be detected and signaled, rather than being
 allowed to kill the system or produce wrong answers.  For example, an
 out-of-bounds array reference can be detected by checking the validity
@@ -2178,18 +2178,18 @@ code with such checks, should avoid redundant checks, and should allow
 programmers to control the extent and type of error checking in the
 compiled code.</p><p>
 
-<a name="%_idx_6496" id="%_idx_6496"></a>Compilers for popular languages, such as C and C++,
+<a id="%_idx_6496"></a>Compilers for popular languages, such as C and C++,
 put hardly any error-checking operations into
 running code, so as to make things run as fast as possible.  As a
 result, it falls to programmers to explicitly provide error checking.
 Unfortunately, people often neglect to do this, even in
 critical applications where speed is not a constraint.  Their programs
-lead fast and dangerous lives.  For example, the notorious <a name="%_idx_6498" id="%_idx_6498"></a>“Worm”
-that paralyzed the Internet in 1988 exploited the <a name="%_idx_6500" id="%_idx_6500"></a>UNIX<sup><em>T</em><em>M</em></sup>
+lead fast and dangerous lives.  For example, the notorious <a id="%_idx_6498"></a>“Worm”
+that paralyzed the Internet in 1988 exploited the <a id="%_idx_6500"></a>UNIX<sup><em>T</em><em>M</em></sup>
 operating system's failure to check whether the input buffer has
-<a name="%_idx_6502" id="%_idx_6502"></a>overflowed in the finger daemon. (See Spafford 1989.)
+<a id="%_idx_6502"></a>overflowed in the finger daemon. (See Spafford 1989.)
 
-</p><p><a name="footnote_Temp_839" href="#call_footnote_Temp_839" id="footnote_Temp_839"><sup><small>53</small></sup></a> Of course, with either the
+</p><p><a href="#call_footnote_Temp_839" id="footnote_Temp_839"><sup><small>53</small></sup></a> Of course, with either the
 interpretation or the compilation strategy we must also implement for
 the new machine storage allocation, input and output, and all the
 various operations that we took as “primitive” in our discussion of
@@ -2200,7 +2200,7 @@ small kernel (such as garbage collection and the mechanism for
 applying actual machine primitives) that is hand-coded for the new
 machine.
 
-</p><p><a name="footnote_Temp_840" href="#call_footnote_Temp_840" id="footnote_Temp_840"><sup><small>54</small></sup></a>
+</p><p><a href="#call_footnote_Temp_840" id="footnote_Temp_840"><sup><small>54</small></sup></a>
 This strategy leads to amusing tests of correctness of
 the compiler, such as checking
 whether the compilation of a program on the new machine, using the

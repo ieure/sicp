@@ -13,11 +13,11 @@
 
 
 
-<a name="%_sec_5.2" id="%_sec_5.2"></a>
+<a id="%_sec_5.2"></a>
 <h2><a href="book-Z-H-4.html#%_toc_%_sec_5.2">5.2  A Register-Machine Simulator</a></h2><p>
 
 
-<a name="%_idx_5622" id="%_idx_5622"></a><a name="%_idx_5624" id="%_idx_5624"></a>
+<a id="%_idx_5622"></a><a id="%_idx_5624"></a>
 In order to gain a good understanding of the design of register
 machines, we must test the machines we design to see if they perform
 as expected.  One way to test a design is to hand-simulate the
@@ -32,18 +32,18 @@ other three allow us to simulate the machine by manipulating the
 model:</p><p>
 
 </p><blockquote>
-<p><a name="%_idx_5626" id="%_idx_5626"></a><tt>(make-machine &lt;<em>register-names</em>&gt; &lt;<em>operations</em>&gt; &lt;<em>controller</em>&gt;)</tt><br />
+<p><a id="%_idx_5626"></a><tt>(make-machine &lt;<em>register-names</em>&gt; &lt;<em>operations</em>&gt; &lt;<em>controller</em>&gt;)</tt><br />
 constructs and returns a model of the machine with the given
 registers, operations, and controller.</p><p>
 
-</p><p><a name="%_idx_5628" id="%_idx_5628"></a><tt>(set-register-contents! &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt; &lt;<em>value</em>&gt;)</tt><br />
+</p><p><a id="%_idx_5628"></a><tt>(set-register-contents! &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt; &lt;<em>value</em>&gt;)</tt><br />
 stores a value in a simulated register in the given
 machine.</p><p>
 
-<a name="%_idx_5630" id="%_idx_5630"></a></p><p><tt>(get-register-contents &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt;)</tt><br />
+<a id="%_idx_5630"></a></p><p><tt>(get-register-contents &lt;<em>machine-model</em>&gt; &lt;<em>register-name</em>&gt;)</tt><br />
 returns the contents of a simulated register in the given machine.</p><p>
 
-<a name="%_idx_5632" id="%_idx_5632"></a></p><p><tt>(start &lt;<em>machine-model</em>&gt;)</tt><br />
+<a id="%_idx_5632"></a></p><p><tt>(start &lt;<em>machine-model</em>&gt;)</tt><br />
 simulates the execution of the given
 machine, starting from the beginning of the controller sequence and
 stopping when it reaches the end of the sequence.
@@ -53,7 +53,7 @@ As an example of how these procedures are used, we can define
 <tt>gcd-machine</tt> to be a model of the GCD machine
 of section <a href="book-Z-H-31.html#%_sec_5.1.1">5.1.1</a> as follows:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5634" id="%_idx_5634"></a>(define gcd-machine<br />
+</p><p></p><p><tt><a id="%_idx_5634"></a>(define gcd-machine<br />
   (make-machine<br />
    '(a b t)<br />
    (list (list 'rem remainder) (list '= =))<br />
@@ -84,12 +84,12 @@ This computation will run much more slowly than a <tt>gcd</tt> procedure
 written in Scheme, because we will simulate low-level machine
 instructions, such as <tt>assign</tt>, by much more complex operations.</p><p>
 
-</p><p><a name="%_thm_5.7" id="%_thm_5.7"></a>
+</p><p><a id="%_thm_5.7"></a>
 <b>Exercise 5.7.</b>  Use the simulator to test the machines you designed in
 exercise <a href="book-Z-H-31.html#%_thm_5.4">5.4</a>.
 </p><p></p><p>
 
-<a name="%_sec_5.2.1" id="%_sec_5.2.1"></a>
+<a id="%_sec_5.2.1"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.1">5.2.1  The Machine Model</a></h3><p>
 
 </p><p>
@@ -107,11 +107,11 @@ instructions one by one.</p><p>
 messages) to include the registers, operations, and controller of the
 particular machine being defined.  First it allocates a register in
 the new machine for each of the supplied register names and installs
-the designated operations in the machine.  Then it uses an <a name="%_idx_5636" id="%_idx_5636"></a><em>assembler</em> (described below in section <a href="#%_sec_5.2.2">5.2.2</a>) to
+the designated operations in the machine.  Then it uses an <a id="%_idx_5636"></a><em>assembler</em> (described below in section <a href="#%_sec_5.2.2">5.2.2</a>) to
 transform the controller list into instructions for the new machine
 and installs these as the machine's instruction sequence.  <tt>Make-machine</tt> returns as its value the modified machine model.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5638" id="%_idx_5638"></a>(define (make-machine register-names ops controller-text)<br />
+</p><p></p><p><tt><a id="%_idx_5638"></a>(define (make-machine register-names ops controller-text)<br />
   (let ((machine (make-new-machine)))<br />
     (for-each (lambda (register-name)<br />
                 ((machine 'allocate-register) register-name))<br />
@@ -121,15 +121,15 @@ and installs these as the machine's instruction sequence.  <tt>Make-machine</tt>
      (assemble controller-text machine))<br />
     machine))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_724" id="%_sec_Temp_724"></a>
+<a id="%_sec_Temp_724"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_724">Registers</a></h4><p>
 
-<a name="%_idx_5640" id="%_idx_5640"></a>
+<a id="%_idx_5640"></a>
 We will represent a register as a procedure with local state, as in
 chapter 3.  The procedure <tt>make-register</tt> creates a register that
 holds a value that can be accessed or changed:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5642" id="%_idx_5642"></a>(define (make-register name)<br />
+</p><p></p><p><tt><a id="%_idx_5642"></a>(define (make-register name)<br />
   (let ((contents '*unassigned*))<br />
     (define (dispatch message)<br />
       (cond ((eq? message 'get) contents)<br />
@@ -140,20 +140,20 @@ holds a value that can be accessed or changed:</p><p>
     dispatch))<br /></tt></p><p></p><p>
 The following procedures are used to access registers:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5644" id="%_idx_5644"></a>(define (get-contents register)<br />
-  (register 'get))<br /><br /><a name="%_idx_5646" id="%_idx_5646"></a>(define (set-contents! register value)<br />
+</p><p></p><p><tt><a id="%_idx_5644"></a>(define (get-contents register)<br />
+  (register 'get))<br /><br /><a id="%_idx_5646"></a>(define (set-contents! register value)<br />
   ((register 'set) value))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_725" id="%_sec_Temp_725"></a>
+<a id="%_sec_Temp_725"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_725">The stack</a></h4><p>
 
-<a name="%_idx_5648" id="%_idx_5648"></a>
+<a id="%_idx_5648"></a>
 We can also represent a stack as a procedure with local state.  The
 procedure <tt>make-stack</tt> creates a stack whose local state consists
 of a list of the items on the stack.  A stack accepts requests to <tt>push</tt> an item onto the stack, to <tt>pop</tt> the top item off the stack
 and return it, and to <tt>initialize</tt> the stack to empty.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5650" id="%_idx_5650"></a>(define (make-stack)<br />
+</p><p></p><p><tt><a id="%_idx_5650"></a>(define (make-stack)<br />
   (let ((s '()))<br />
     (define (push x)<br />
       (set! s (cons x s)))<br />
@@ -175,19 +175,19 @@ and return it, and to <tt>initialize</tt> the stack to empty.</p><p>
     dispatch))<br /></tt></p><p></p><p>
 The following procedures are used to access stacks:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5652" id="%_idx_5652"></a>(define (pop stack)<br />
-  (stack 'pop))<br /><br /><a name="%_idx_5654" id="%_idx_5654"></a>(define (push stack value)<br />
+</p><p></p><p><tt><a id="%_idx_5652"></a>(define (pop stack)<br />
+  (stack 'pop))<br /><br /><a id="%_idx_5654"></a>(define (push stack value)<br />
   ((stack 'push) value))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_726" id="%_sec_Temp_726"></a>
+<a id="%_sec_Temp_726"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_726">The basic machine</a></h4><p>
 
 The <tt>make-new-machine</tt> procedure, shown in
 figure <a href="#%_fig_5.13">5.13</a>, constructs an object whose local
 state consists of a stack, an initially empty instruction sequence, a
-list of operations that initially contains an operation to <a name="%_idx_5656" id="%_idx_5656"></a>initialize
-the stack, and a <a name="%_idx_5658" id="%_idx_5658"></a><em>register table</em> that initially contains two
-<a name="%_idx_5660" id="%_idx_5660"></a><a name="%_idx_5662" id="%_idx_5662"></a>registers, named <tt>flag</tt> and <tt>pc</tt> <a name="%_idx_5664" id="%_idx_5664"></a>(for “program counter”).
+list of operations that initially contains an operation to <a id="%_idx_5656"></a>initialize
+the stack, and a <a id="%_idx_5658"></a><em>register table</em> that initially contains two
+<a id="%_idx_5660"></a><a id="%_idx_5662"></a>registers, named <tt>flag</tt> and <tt>pc</tt> <a id="%_idx_5664"></a>(for “program counter”).
 The internal procedure <tt>allocate-register</tt> adds new entries to the
 register table, and the internal procedure <tt>lookup-register</tt> looks
 up registers in the table.</p><p>
@@ -202,16 +202,16 @@ The <tt>pc</tt> register determines the sequencing of instructions as
 the machine runs.  This sequencing is implemented by the internal
 procedure <tt>execute</tt>.
 In the simulation model, each machine instruction is a data structure
-that includes a procedure of no arguments, called the <a name="%_idx_5666" id="%_idx_5666"></a><a name="%_idx_5668" id="%_idx_5668"></a><em>instruction
+that includes a procedure of no arguments, called the <a id="%_idx_5666"></a><a id="%_idx_5668"></a><em>instruction
 execution procedure</em>, such that calling this procedure simulates
 executing the instruction.  As the simulation runs, <tt>pc</tt> points to
 the place in the instruction sequence beginning with the next
-instruction to be executed.  <a name="%_idx_5670" id="%_idx_5670"></a><tt>Execute</tt> gets that instruction,
+instruction to be executed.  <a id="%_idx_5670"></a><tt>Execute</tt> gets that instruction,
 executes it by calling the instruction execution procedure, and
 repeats this cycle until there are no more instructions to execute
 (i.e., until <tt>pc</tt> points to the end of the instruction sequence).</p><p>
 
-<a name="%_fig_5.13" id="%_fig_5.13"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><a name="%_idx_5672" id="%_idx_5672"></a>(define (make-new-machine)<br />
+<a id="%_fig_5.13"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><a id="%_idx_5672"></a>(define (make-new-machine)<br />
   (let ((pc (make-register 'pc))<br />
         (flag (make-register 'flag))<br />
         (stack (make-stack))<br />
@@ -279,24 +279,24 @@ machine's <tt>start</tt> operation,
 as well as procedures to set and examine register contents,
 as specified at the beginning of section <a href="#%_sec_5.2">5.2</a>:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5674" id="%_idx_5674"></a>(define (start machine)<br />
-  (machine 'start))<br /><a name="%_idx_5676" id="%_idx_5676"></a>(define (get-register-contents machine register-name)<br />
-  (get-contents (get-register machine register-name)))<br /><a name="%_idx_5678" id="%_idx_5678"></a>(define (set-register-contents! machine register-name value)<br />
+</p><p></p><p><tt><a id="%_idx_5674"></a>(define (start machine)<br />
+  (machine 'start))<br /><a id="%_idx_5676"></a>(define (get-register-contents machine register-name)<br />
+  (get-contents (get-register machine register-name)))<br /><a id="%_idx_5678"></a>(define (set-register-contents! machine register-name value)<br />
   (set-contents! (get-register machine register-name) value)<br />
   'done)<br /></tt></p><p></p><p>
 These procedures (and many procedures in sections <a href="#%_sec_5.2.2">5.2.2</a>
 and <a href="#%_sec_5.2.3">5.2.3</a>) use the following to look up the register with a
 given name in a given machine:
-</p><p></p><p><tt><a name="%_idx_5680" id="%_idx_5680"></a>(define (get-register machine reg-name)<br />
+</p><p></p><p><tt><a id="%_idx_5680"></a>(define (get-register machine reg-name)<br />
   ((machine 'get-register) reg-name))<br /></tt></p><p></p><p></p><p>
 
 </p><p>
 
-<a name="%_sec_5.2.2" id="%_sec_5.2.2"></a>
+<a id="%_sec_5.2.2"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.2">5.2.2  The Assembler</a></h3><p>
 
 
-<a name="%_idx_5682" id="%_idx_5682"></a>
+<a id="%_idx_5682"></a>
 The assembler transforms the sequence of controller expressions for a
 machine into a corresponding list of machine instructions, each with
 its execution procedure.  Overall, the assembler is much like the
@@ -304,7 +304,7 @@ evaluators we studied in chapter 4 – there is an input language (in
 this case, the register-machine language) and we must perform an
 appropriate action for each type of expression in the language.</p><p>
 
-<a name="%_idx_5684" id="%_idx_5684"></a>The technique of producing an execution procedure for each instruction
+<a id="%_idx_5684"></a>The technique of producing an execution procedure for each instruction
 is just what we used in section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a> to speed
 up the evaluator by separating analysis from runtime execution.  As we
 saw in chapter 4, much useful analysis of Scheme expressions could be
@@ -333,7 +333,7 @@ to <tt>extract-labels</tt> is a procedure to be called to process these results:
 This procedure uses <tt>update-insts!</tt> to generate the instruction execution
 procedures and insert them into the instruction list,
 and returns the modified list.
-</p><p></p><p><tt><a name="%_idx_5686" id="%_idx_5686"></a>(define (assemble controller-text machine)<br />
+</p><p></p><p><tt><a id="%_idx_5686"></a>(define (assemble controller-text machine)<br />
   (extract-labels controller-text<br />
     (lambda (insts labels)<br />
       (update-insts! insts labels machine)<br />
@@ -347,7 +347,7 @@ data structures, each containing an instruction from <tt>text</tt>; and
 (2) a table called <tt>labels</tt>, which associates each label from <tt>text</tt>
 with the position in the list <tt>insts</tt> that the label designates.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5688" id="%_idx_5688"></a>(define (extract-labels text receive)<br />
+</p><p></p><p><tt><a id="%_idx_5688"></a>(define (extract-labels text receive)<br />
   (if (null? text)<br />
       (receive '() '())<br />
       (extract-labels (cdr text)<br />
@@ -365,14 +365,14 @@ with the position in the list <tt>insts</tt> that the label designates.</p><p>
 the <tt>text</tt> and accumulating the <tt>insts</tt> and the <tt>labels</tt>.
 If an element is a symbol (and thus a label) an appropriate entry is
 added to the <tt>labels</tt> table.  Otherwise the element is accumulated
-onto the <tt>insts</tt> list.<a name="call_footnote_Temp_727" href="#footnote_Temp_727" id="call_footnote_Temp_727"><sup><small>4</small></sup></a></p><p>
+onto the <tt>insts</tt> list.<a href="#footnote_Temp_727" id="call_footnote_Temp_727"><sup><small>4</small></sup></a></p><p>
 
 <tt>Update-insts!</tt> modifies the instruction list, which initially
 contains only the text of the instructions, to include the
 corresponding execution procedures:</p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_5702" id="%_idx_5702"></a>(define (update-insts! insts labels machine)<br />
+</p><p></p><p><tt><a id="%_idx_5702"></a>(define (update-insts! insts labels machine)<br />
   (let ((pc (get-register machine 'pc))<br />
         (flag (get-register machine 'flag))<br />
         (stack (machine 'stack))<br />
@@ -392,27 +392,27 @@ instruction text with the corresponding execution procedure.
 The execution procedure is not yet available when <tt>extract-labels</tt>
 constructs the instruction, and is inserted later by <tt>update-insts!</tt>.
 
-</p><p></p><p><tt><a name="%_idx_5704" id="%_idx_5704"></a>(define (make-instruction text)<br />
-  (cons text '()))<br /><a name="%_idx_5706" id="%_idx_5706"></a>(define (instruction-text inst)<br />
-  (car inst))<br /><a name="%_idx_5708" id="%_idx_5708"></a>(define (instruction-execution-proc inst)<br />
-  (cdr inst))<br /><a name="%_idx_5710" id="%_idx_5710"></a>(define (set-instruction-execution-proc! inst proc)<br />
+</p><p></p><p><tt><a id="%_idx_5704"></a>(define (make-instruction text)<br />
+  (cons text '()))<br /><a id="%_idx_5706"></a>(define (instruction-text inst)<br />
+  (car inst))<br /><a id="%_idx_5708"></a>(define (instruction-execution-proc inst)<br />
+  (cdr inst))<br /><a id="%_idx_5710"></a>(define (set-instruction-execution-proc! inst proc)<br />
   (set-cdr! inst proc))<br /></tt></p><p></p><p>
 The instruction text is not used by our simulator, but it is handy to keep
 around for debugging (see exercise <a href="#%_thm_5.16">5.16</a>).</p><p>
 
 Elements of the label table are pairs:
 
-</p><p></p><p><tt><a name="%_idx_5712" id="%_idx_5712"></a>(define (make-label-entry label-name insts)<br />
+</p><p></p><p><tt><a id="%_idx_5712"></a>(define (make-label-entry label-name insts)<br />
   (cons label-name insts))<br /></tt></p><p></p><p>
 Entries will be looked up in the table with
 
-</p><p></p><p><tt><a name="%_idx_5714" id="%_idx_5714"></a>(define (lookup-label labels label-name)<br />
+</p><p></p><p><tt><a id="%_idx_5714"></a>(define (lookup-label labels label-name)<br />
   (let ((val (assoc label-name labels)))<br />
     (if val<br />
         (cdr val)<br />
         (error "Undefined label -- ASSEMBLE" label-name))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a name="%_thm_5.8" id="%_thm_5.8"></a>
+</p><p><a id="%_thm_5.8"></a>
 <b>Exercise 5.8.</b>  The following register-machine code is ambiguous, because the label
 <tt>here</tt> is defined more than once:
 </p><p></p><p><tt>start<br />
@@ -431,17 +431,17 @@ name is used to indicate two different locations.
 </p><p>
 </p><p>
 
-<a name="%_sec_5.2.3" id="%_sec_5.2.3"></a>
+<a id="%_sec_5.2.3"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.3">5.2.3  Generating Execution Procedures for Instructions</a></h3><p>
 
 
-<a name="%_idx_5716" id="%_idx_5716"></a>
+<a id="%_idx_5716"></a>
 The assembler calls <tt>make-execution-procedure</tt> to
 generate the execution procedure for an instruction.
 Like the <tt>analyze</tt> procedure in the evaluator of
 section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>, this dispatches on the type of
 instruction to generate the appropriate execution procedure.
-</p><p></p><p><tt><a name="%_idx_5718" id="%_idx_5718"></a>(define (make-execution-procedure inst labels machine<br />
+</p><p></p><p><tt><a id="%_idx_5718"></a>(define (make-execution-procedure inst labels machine<br />
                                   pc flag stack ops)<br />
   (cond ((eq? (car inst) 'assign)<br />
          (make-assign inst machine labels ops pc))<br />
@@ -470,12 +470,12 @@ we did for evaluators in section <a href="book-Z-H-26.html#%_sec_4.1.2">4.1.2</
 by using syntax procedures to extract and classify the parts of an instruction.</p><p>
 
 
-<a name="%_sec_Temp_729" id="%_sec_Temp_729"></a>
+<a id="%_sec_Temp_729"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_729"><tt>Assign</tt> instructions</a></h4><p>
 
-<a name="%_idx_5720" id="%_idx_5720"></a>
+<a id="%_idx_5720"></a>
 The <tt>make-assign</tt> procedure handles <tt>assign</tt> instructions:
-</p><p></p><p><tt><a name="%_idx_5722" id="%_idx_5722"></a>(define (make-assign inst machine labels operations pc)<br />
+</p><p></p><p><tt><a id="%_idx_5722"></a>(define (make-assign inst machine labels operations pc)<br />
   (let ((target<br />
          (get-register machine (assign-reg-name inst)))<br />
         (value-exp (assign-value-exp inst)))<br />
@@ -492,20 +492,20 @@ The <tt>make-assign</tt> procedure handles <tt>assign</tt> instructions:
 second element of the instruction) and the value expression
 (the rest of the list that forms the instruction)
 from the <tt>assign</tt> instruction using the selectors
-</p><p></p><p><tt><a name="%_idx_5724" id="%_idx_5724"></a>(define (assign-reg-name assign-instruction)<br />
-  (cadr assign-instruction))<br /><a name="%_idx_5726" id="%_idx_5726"></a>(define (assign-value-exp assign-instruction)<br />
+</p><p></p><p><tt><a id="%_idx_5724"></a>(define (assign-reg-name assign-instruction)<br />
+  (cadr assign-instruction))<br /><a id="%_idx_5726"></a>(define (assign-value-exp assign-instruction)<br />
   (cddr assign-instruction))<br /></tt></p><p></p><p>
 The register name is looked up with <tt>get-register</tt> to produce the
 target register object.  The value expression is passed to <tt>make-operation-exp</tt> if the value is the result of an operation, and to
 <tt>make-primitive-exp</tt> otherwise.  These procedures (shown below)
 parse the value expression and produce an execution procedure for the
-value.  This is a procedure of no arguments, called <a name="%_idx_5728" id="%_idx_5728"></a><tt>value-proc</tt>,
+value.  This is a procedure of no arguments, called <a id="%_idx_5728"></a><tt>value-proc</tt>,
 which will be evaluated during the simulation to produce the actual
 value to be assigned to the register.  Notice that the work of looking
 up the register name and parsing the value expression is performed
 just once, at assembly time, not every time the instruction is
 simulated.  This saving of work is the reason we use execution
-<a name="%_idx_5730" id="%_idx_5730"></a>procedures, and corresponds directly to the saving in work we obtained
+<a id="%_idx_5730"></a>procedures, and corresponds directly to the saving in work we obtained
 by separating program analysis from execution in the evaluator of
 section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.</p><p>
 
@@ -515,20 +515,20 @@ called (by the machine model's <tt>execute</tt> procedure),
 it sets the contents of the target register to the result
 obtained by executing <tt>value-proc</tt>.  Then it advances
 the <tt>pc</tt> to the next instruction by running the procedure
-</p><p></p><p><tt><a name="%_idx_5732" id="%_idx_5732"></a>(define (advance-pc pc)<br />
+</p><p></p><p><tt><a id="%_idx_5732"></a>(define (advance-pc pc)<br />
   (set-contents! pc (cdr (get-contents pc))))<br /></tt></p><p></p><p>
 <tt>Advance-pc</tt> is the normal termination for all instructions except
 <tt>branch</tt> and <tt>goto</tt>.</p><p>
 
-<a name="%_sec_Temp_730" id="%_sec_Temp_730"></a>
+<a id="%_sec_Temp_730"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_730"><tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions</a></h4><p>
 
-<a name="%_idx_5734" id="%_idx_5734"></a><tt>Make-test</tt> handles <tt>test</tt> instructions in a similar way.  It
+<a id="%_idx_5734"></a><tt>Make-test</tt> handles <tt>test</tt> instructions in a similar way.  It
 extracts the expression that specifies the condition to be tested and
 generates an execution procedure for it.  At simulation time, the
 procedure for the condition is called, the result is assigned to the
 <tt>flag</tt> register, and the <tt>pc</tt> is advanced:
-</p><p></p><p><tt><a name="%_idx_5736" id="%_idx_5736"></a>(define (make-test inst machine labels operations flag pc)<br />
+</p><p></p><p><tt><a id="%_idx_5736"></a>(define (make-test inst machine labels operations flag pc)<br />
   (let ((condition (test-condition inst)))<br />
     (if (operation-exp? condition)<br />
         (let ((condition-proc<br />
@@ -537,10 +537,10 @@ procedure for the condition is called, the result is assigned to the
           (lambda ()<br />
             (set-contents! flag (condition-proc))<br />
             (advance-pc pc)))<br />
-        (error "Bad TEST instruction -- ASSEMBLE" inst))))<br /><a name="%_idx_5738" id="%_idx_5738"></a>(define (test-condition test-instruction)<br />
+        (error "Bad TEST instruction -- ASSEMBLE" inst))))<br /><a id="%_idx_5738"></a>(define (test-condition test-instruction)<br />
   (cdr test-instruction))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_5740" id="%_idx_5740"></a>The execution procedure for a <tt>branch</tt> instruction checks the
+<a id="%_idx_5740"></a>The execution procedure for a <tt>branch</tt> instruction checks the
 contents of the <tt>flag</tt> register and either sets the contents of
 the <tt>pc</tt> to the branch destination (if the branch is taken) or
 else just advances the <tt>pc</tt> (if the branch is not taken).  Notice
@@ -549,7 +549,7 @@ label, and the <tt>make-branch</tt> procedure enforces this.  Notice
 also that the label is looked up at assembly time, not each time the
 <tt>branch</tt> instruction is simulated.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5742" id="%_idx_5742"></a>(define (make-branch inst machine labels flag pc)<br />
+</p><p></p><p><tt><a id="%_idx_5742"></a>(define (make-branch inst machine labels flag pc)<br />
   (let ((dest (branch-dest inst)))<br />
     (if (label-exp? dest)<br />
         (let ((insts<br />
@@ -558,14 +558,14 @@ also that the label is looked up at assembly time, not each time the
             (if (get-contents flag)<br />
                 (set-contents! pc insts)<br />
                 (advance-pc pc))))<br />
-        (error "Bad BRANCH instruction -- ASSEMBLE" inst))))<br /><a name="%_idx_5744" id="%_idx_5744"></a>(define (branch-dest branch-instruction)<br />
+        (error "Bad BRANCH instruction -- ASSEMBLE" inst))))<br /><a id="%_idx_5744"></a>(define (branch-dest branch-instruction)<br />
   (cadr branch-instruction))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_5746" id="%_idx_5746"></a>A <tt>goto</tt> instruction is similar to a branch, except that the
+<a id="%_idx_5746"></a>A <tt>goto</tt> instruction is similar to a branch, except that the
 destination may be specified either as a label or as a register, and
 there is no condition to check – the <tt>pc</tt> is always set to the
 new destination.
-</p><p></p><p><tt><a name="%_idx_5748" id="%_idx_5748"></a>(define (make-goto inst machine labels pc)<br />
+</p><p></p><p><tt><a id="%_idx_5748"></a>(define (make-goto inst machine labels pc)<br />
   (let ((dest (goto-dest inst)))<br />
     (cond ((label-exp? dest)<br />
            (let ((insts<br />
@@ -579,33 +579,33 @@ new destination.
              (lambda ()<br />
                (set-contents! pc (get-contents reg)))))<br />
           (else (error "Bad GOTO instruction -- ASSEMBLE"<br />
-                       inst)))))<br /><a name="%_idx_5750" id="%_idx_5750"></a>(define (goto-dest goto-instruction)<br />
+                       inst)))))<br /><a id="%_idx_5750"></a>(define (goto-dest goto-instruction)<br />
   (cadr goto-instruction))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_731" id="%_sec_Temp_731"></a>
+<a id="%_sec_Temp_731"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_731">Other instructions</a></h4><p>
 
 The stack instructions <tt>save</tt> and <tt>restore</tt> simply use the
 stack with the designated register and advance the <tt>pc</tt>:
 
-</p><p></p><p><tt><a name="%_idx_5752" id="%_idx_5752"></a><a name="%_idx_5754" id="%_idx_5754"></a>(define (make-save inst machine stack pc)<br />
+</p><p></p><p><tt><a id="%_idx_5752"></a><a id="%_idx_5754"></a>(define (make-save inst machine stack pc)<br />
   (let ((reg (get-register machine<br />
                            (stack-inst-reg-name inst))))<br />
     (lambda ()<br />
       (push stack (get-contents reg))<br />
-      (advance-pc pc))))<br /><a name="%_idx_5756" id="%_idx_5756"></a><a name="%_idx_5758" id="%_idx_5758"></a>(define (make-restore inst machine stack pc)<br />
+      (advance-pc pc))))<br /><a id="%_idx_5756"></a><a id="%_idx_5758"></a>(define (make-restore inst machine stack pc)<br />
   (let ((reg (get-register machine<br />
                            (stack-inst-reg-name inst))))<br />
     (lambda ()<br />
       (set-contents! reg (pop stack))    <br />
-      (advance-pc pc))))<br /><a name="%_idx_5760" id="%_idx_5760"></a>(define (stack-inst-reg-name stack-instruction)<br />
+      (advance-pc pc))))<br /><a id="%_idx_5760"></a>(define (stack-inst-reg-name stack-instruction)<br />
   (cadr stack-instruction))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_5762" id="%_idx_5762"></a>The final instruction type, handled by <tt>make-perform</tt>, generates
+<a id="%_idx_5762"></a>The final instruction type, handled by <tt>make-perform</tt>, generates
 an execution procedure for the action to be performed.  At simulation
 time, the action procedure is executed and the <tt>pc</tt> advanced.
 
-</p><p></p><p><tt><a name="%_idx_5764" id="%_idx_5764"></a>(define (make-perform inst machine labels operations pc)<br />
+</p><p></p><p><tt><a id="%_idx_5764"></a>(define (make-perform inst machine labels operations pc)<br />
   (let ((action (perform-action inst)))<br />
     (if (operation-exp? action)<br />
         (let ((action-proc<br />
@@ -614,19 +614,19 @@ time, the action procedure is executed and the <tt>pc</tt> advanced.
           (lambda ()<br />
             (action-proc)<br />
             (advance-pc pc)))<br />
-        (error "Bad PERFORM instruction -- ASSEMBLE" inst))))<br /><a name="%_idx_5766" id="%_idx_5766"></a>(define (perform-action inst) (cdr inst))<br /></tt></p><p></p><p></p><p>
+        (error "Bad PERFORM instruction -- ASSEMBLE" inst))))<br /><a id="%_idx_5766"></a>(define (perform-action inst) (cdr inst))<br /></tt></p><p></p><p></p><p>
 
 
-<a name="%_sec_Temp_732" id="%_sec_Temp_732"></a>
+<a id="%_sec_Temp_732"></a>
 </p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_732">Execution procedures for subexpressions</a></h4><p>
 
-<a name="%_idx_5768" id="%_idx_5768"></a><a name="%_idx_5770" id="%_idx_5770"></a><a name="%_idx_5772" id="%_idx_5772"></a>The value of a <tt>reg</tt>, <tt>label</tt>, or <tt>const</tt> expression
+<a id="%_idx_5768"></a><a id="%_idx_5770"></a><a id="%_idx_5772"></a>The value of a <tt>reg</tt>, <tt>label</tt>, or <tt>const</tt> expression
 may be needed for assignment to a register (<tt>make-assign</tt>) or for input to
 an operation (<tt>make-operation-exp</tt>, below).  The following procedure
 generates execution procedures to produce values for these expressions
 during the simulation:
 
-</p><p></p><p><tt><a name="%_idx_5774" id="%_idx_5774"></a>(define (make-primitive-exp exp machine labels)<br />
+</p><p></p><p><tt><a id="%_idx_5774"></a>(define (make-primitive-exp exp machine labels)<br />
   (cond ((constant-exp? exp)<br />
          (let ((c (constant-exp-value exp)))<br />
            (lambda () c)))<br />
@@ -643,18 +643,18 @@ during the simulation:
          (error "Unknown expression type -- ASSEMBLE" exp))))<br /></tt></p><p></p><p>
 The syntax of <tt>reg</tt>, <tt>label</tt>, and <tt>const</tt> expressions
 is determined by
-</p><p></p><p><tt><a name="%_idx_5776" id="%_idx_5776"></a>(define (register-exp? exp) (tagged-list? exp 'reg))<br /><a name="%_idx_5778" id="%_idx_5778"></a>(define (register-exp-reg exp) (cadr exp))<br /><a name="%_idx_5780" id="%_idx_5780"></a>(define (constant-exp? exp) (tagged-list? exp 'const))<br /><a name="%_idx_5782" id="%_idx_5782"></a>(define (constant-exp-value exp) (cadr exp))<br /><a name="%_idx_5784" id="%_idx_5784"></a>(define (label-exp? exp) (tagged-list? exp 'label))<br /><a name="%_idx_5786" id="%_idx_5786"></a>(define (label-exp-label exp) (cadr exp))<br /></tt></p><p></p><p>
+</p><p></p><p><tt><a id="%_idx_5776"></a>(define (register-exp? exp) (tagged-list? exp 'reg))<br /><a id="%_idx_5778"></a>(define (register-exp-reg exp) (cadr exp))<br /><a id="%_idx_5780"></a>(define (constant-exp? exp) (tagged-list? exp 'const))<br /><a id="%_idx_5782"></a>(define (constant-exp-value exp) (cadr exp))<br /><a id="%_idx_5784"></a>(define (label-exp? exp) (tagged-list? exp 'label))<br /><a id="%_idx_5786"></a>(define (label-exp-label exp) (cadr exp))<br /></tt></p><p></p><p>
 </p><p>
 
 
-<a name="%_idx_5788" id="%_idx_5788"></a><tt>Assign</tt>, <tt>perform</tt>, and <tt>test</tt> instructions
+<a id="%_idx_5788"></a><tt>Assign</tt>, <tt>perform</tt>, and <tt>test</tt> instructions
 may include the application of a machine operation (specified by
 an <tt>op</tt> expression) to some operands (specified by <tt>reg</tt>
 and <tt>const</tt> expressions).
 The following procedure produces an execution procedure
 for an “operation expression” – a list containing the operation and
 operand expressions from the instruction:
-</p><p></p><p><tt><a name="%_idx_5790" id="%_idx_5790"></a>(define (make-operation-exp exp machine labels operations)<br />
+</p><p></p><p><tt><a id="%_idx_5790"></a>(define (make-operation-exp exp machine labels operations)<br />
   (let ((op (lookup-prim (operation-exp-op exp) operations))<br />
         (aprocs<br />
          (map (lambda (e)<br />
@@ -663,9 +663,9 @@ operand expressions from the instruction:
     (lambda ()<br />
       (apply op (map (lambda (p) (p)) aprocs)))))<br /></tt></p><p></p><p>
 The syntax of operation expressions is determined by
-</p><p></p><p><tt><a name="%_idx_5792" id="%_idx_5792"></a>(define (operation-exp? exp)<br />
-  (and (pair? exp) (tagged-list? (car exp) 'op)))<br /><a name="%_idx_5794" id="%_idx_5794"></a>(define (operation-exp-op operation-exp)<br />
-  (cadr (car operation-exp)))<br /><a name="%_idx_5796" id="%_idx_5796"></a>(define (operation-exp-operands operation-exp)<br />
+</p><p></p><p><tt><a id="%_idx_5792"></a>(define (operation-exp? exp)<br />
+  (and (pair? exp) (tagged-list? (car exp) 'op)))<br /><a id="%_idx_5794"></a>(define (operation-exp-op operation-exp)<br />
+  (cadr (car operation-exp)))<br /><a id="%_idx_5796"></a>(define (operation-exp-operands operation-exp)<br />
   (cdr operation-exp))<br /></tt></p><p></p><p>
 Observe that the treatment of operation expressions is very much like
 the treatment of procedure applications by the <tt>analyze-application</tt> procedure in the evaluator of
@@ -675,28 +675,28 @@ operand procedures and apply the Scheme procedure that simulates
 the operation to the resulting values.
 The simulation procedure is found by looking up the operation name in
 the operation table for the machine:
-</p><p></p><p><tt><a name="%_idx_5798" id="%_idx_5798"></a>(define (lookup-prim symbol operations)<br />
+</p><p></p><p><tt><a id="%_idx_5798"></a>(define (lookup-prim symbol operations)<br />
   (let ((val (assoc symbol operations)))<br />
     (if val<br />
         (cadr val)<br />
         (error "Unknown operation -- ASSEMBLE" symbol))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a name="%_thm_5.9" id="%_thm_5.9"></a>
+</p><p><a id="%_thm_5.9"></a>
 <b>Exercise 5.9.</b>  The treatment of machine operations above permits them to operate
 on labels as well as on constants and the contents of registers.
 Modify the expression-processing procedures to enforce the condition
 that operations can be used only with registers and constants.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.10" id="%_thm_5.10"></a>
+</p><p><a id="%_thm_5.10"></a>
 <b>Exercise 5.10.</b>  Design a new syntax for register-machine instructions and modify the
 simulator to use your new syntax.  Can you implement your new
 syntax without changing any part of the simulator except the
 syntax procedures in this section?
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.11" id="%_thm_5.11"></a>
-<b>Exercise 5.11.</b>  <a name="%_idx_5800" id="%_idx_5800"></a><a name="%_idx_5802" id="%_idx_5802"></a>When we introduced <tt>save</tt> and <tt>restore</tt> in
+</p><p><a id="%_thm_5.11"></a>
+<b>Exercise 5.11.</b>  <a id="%_idx_5800"></a><a id="%_idx_5802"></a>When we introduced <tt>save</tt> and <tt>restore</tt> in
 section <a href="book-Z-H-31.html#%_sec_5.1.4">5.1.4</a>, we didn't specify what would happen
 if you tried to restore a register that was not the last one saved, as
 in the sequence</p><p>
@@ -724,7 +724,7 @@ associate a separate stack with each register.  You should make the
 <tt>initialize-stack</tt> operation initialize all the register stacks.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.12" id="%_thm_5.12"></a>
+</p><p><a id="%_thm_5.12"></a>
 <b>Exercise 5.12.</b>  The simulator can be used to help determine the data paths required
 for implementing a machine with a given controller.  Extend
 the assembler to store the following information in the machine model:
@@ -749,7 +749,7 @@ information.  To test your analyzer, define the Fibonacci machine from
 figure <a href="book-Z-H-31.html#%_fig_5.12">5.12</a> and examine the lists you constructed.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.13" id="%_thm_5.13"></a>
+</p><p><a id="%_thm_5.13"></a>
 <b>Exercise 5.13.</b>  Modify the simulator so that it uses the controller sequence to
 determine what registers the machine has rather than requiring a list
 of registers as an argument to <tt>make-machine</tt>.  Instead of
@@ -758,12 +758,12 @@ them one at a time when they are first seen during assembly of the
 instructions.
 </p><p>
 
-<a name="%_sec_5.2.4" id="%_sec_5.2.4"></a>
+<a id="%_sec_5.2.4"></a>
 </p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.2.4">5.2.4  Monitoring Machine Performance</a></h3><p>
 
 
-<a name="%_idx_5804" id="%_idx_5804"></a>
-<a name="%_idx_5806" id="%_idx_5806"></a>Simulation is useful not only for verifying the correctness of a
+<a id="%_idx_5804"></a>
+<a id="%_idx_5806"></a>Simulation is useful not only for verifying the correctness of a
 proposed machine design but also for measuring the machine's
 performance.  For example, we can install in our simulation program a
 “meter” that measures the number of stack operations used in a
@@ -773,12 +773,12 @@ maximum depth reached by the stack, and add a message to the stack's
 interface that prints the statistics, as shown below.
 We also add an operation to the basic machine model to print the
 stack statistics, by initializing <tt>the-ops</tt> in <tt>make-new-machine</tt> to
-</p><p></p><p><tt><a name="%_idx_5808" id="%_idx_5808"></a><a name="%_idx_5810" id="%_idx_5810"></a>(list (list 'initialize-stack<br />
+</p><p></p><p><tt><a id="%_idx_5808"></a><a id="%_idx_5810"></a>(list (list 'initialize-stack<br />
             (lambda () (stack 'initialize)))<br />
       (list 'print-stack-statistics<br />
             (lambda () (stack 'print-statistics))))<br /></tt></p><p></p><p>
 Here is the new version of <tt>make-stack</tt>:
-</p><p></p><p><tt><a name="%_idx_5812" id="%_idx_5812"></a>(define (make-stack)<br />
+</p><p></p><p><tt><a id="%_idx_5812"></a>(define (make-stack)<br />
   (let ((s '())<br />
         (number-pushes 0)<br />
         (max-depth 0)<br />
@@ -822,8 +822,8 @@ added to the register-machine simulator.</p><p>
 
 </p><p>
 
-</p><p><a name="%_thm_5.14" id="%_thm_5.14"></a>
-<b>Exercise 5.14.</b>  <a name="%_idx_5814" id="%_idx_5814"></a>Measure the number of pushes and the maximum stack depth required to
+</p><p><a id="%_thm_5.14"></a>
+<b>Exercise 5.14.</b>  <a id="%_idx_5814"></a>Measure the number of pushes and the maximum stack depth required to
 compute <em>n</em>! for various small values of <em>n</em> using the factorial
 machine shown in figure <a href="book-Z-H-31.html#%_fig_5.11">5.11</a>.  From your data
 determine formulas in terms of <em>n</em> for the total number of push
@@ -841,22 +841,22 @@ invoke <tt>get-register-contents</tt>, <tt>set-register-contents!</tt>, and
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.15" id="%_thm_5.15"></a>
-<b>Exercise 5.15.</b>  Add <a name="%_idx_5816" id="%_idx_5816"></a><em>instruction counting</em> to the register machine simulation.
+</p><p><a id="%_thm_5.15"></a>
+<b>Exercise 5.15.</b>  Add <a id="%_idx_5816"></a><em>instruction counting</em> to the register machine simulation.
 That is, have the machine model keep track of the number of
 instructions executed.  Extend the machine model's interface to accept
 a new message that prints the value of the instruction count and
 resets the count to zero.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.16" id="%_thm_5.16"></a>
-<b>Exercise 5.16.</b>  Augment the simulator to provide for <a name="%_idx_5818" id="%_idx_5818"></a><a name="%_idx_5820" id="%_idx_5820"></a><em>instruction tracing</em>.
+</p><p><a id="%_thm_5.16"></a>
+<b>Exercise 5.16.</b>  Augment the simulator to provide for <a id="%_idx_5818"></a><a id="%_idx_5820"></a><em>instruction tracing</em>.
 That is, before each instruction is executed, the simulator should print
 the text of the instruction.  Make the machine model accept <tt>trace-on</tt> and
 <tt>trace-off</tt> messages to turn tracing on and off.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.17" id="%_thm_5.17"></a>
+</p><p><a id="%_thm_5.17"></a>
 <b>Exercise 5.17.</b>  Extend the instruction tracing of
 exercise <a href="#%_thm_5.16">5.16</a> so that before
 printing an instruction, the simulator prints any labels that
@@ -866,8 +866,8 @@ counting (exercise <a href="#%_thm_5.15">5.15</a>).
 You will have to make the simulator retain the necessary label information.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.18" id="%_thm_5.18"></a>
-<b>Exercise 5.18.</b>  <a name="%_idx_5822" id="%_idx_5822"></a><a name="%_idx_5824" id="%_idx_5824"></a>Modify the <tt>make-register</tt> procedure of
+</p><p><a id="%_thm_5.18"></a>
+<b>Exercise 5.18.</b>  <a id="%_idx_5822"></a><a id="%_idx_5824"></a>Modify the <tt>make-register</tt> procedure of
 section <a href="#%_sec_5.2.1">5.2.1</a> so that registers can be traced.
 Registers should accept messages that turn tracing on and off.  When a
 register is traced, assigning a value to the register should print the
@@ -876,8 +876,8 @@ contents being assigned.  Extend the interface to the machine model
 to permit you to turn tracing on and off for designated machine registers.
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.19" id="%_thm_5.19"></a>
-<b>Exercise 5.19.</b>  Alyssa P. Hacker wants a <a name="%_idx_5826" id="%_idx_5826"></a><em>breakpoint</em> feature in the simulator to
+</p><p><a id="%_thm_5.19"></a>
+<b>Exercise 5.19.</b>  Alyssa P. Hacker wants a <a id="%_idx_5826"></a><em>breakpoint</em> feature in the simulator to
 help her debug her machine designs.  You have been hired to install
 this feature for her.  She wants to be able to specify a place in the
 controller sequence where the simulator will stop and allow her to
@@ -908,11 +908,11 @@ or to remove all breakpoints by means of</p><p>
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_727" href="#call_footnote_Temp_727" id="footnote_Temp_727"><sup><small>4</small></sup></a> <a name="%_idx_5690" id="%_idx_5690"></a>Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values – <tt>labels</tt> and
+</p><div class="footnote"><p><a href="#call_footnote_Temp_727" id="footnote_Temp_727"><sup><small>4</small></sup></a> <a id="%_idx_5690"></a>Using the <tt>receive</tt> procedure here is a way to get <tt>extract-labels</tt> to effectively return two values – <tt>labels</tt> and
 <tt>insts</tt> – without explicitly making a compound data structure to
 hold them.  An alternative implementation, which returns an explicit
 pair of values, is
-</p><p></p><p><tt><a name="%_idx_5692" id="%_idx_5692"></a>(define (extract-labels text)<br />
+</p><p></p><p><tt><a id="%_idx_5692"></a>(define (extract-labels text)<br />
   (if (null? text)<br />
       (cons '() '())<br />
       (let ((result (extract-labels (cdr text))))<br />
@@ -924,12 +924,12 @@ pair of values, is
                 (cons (cons (make-instruction next-inst) insts)<br />
                       labels)))))))<br /></tt></p><p></p><p>
 which would be called by <tt>assemble</tt> as follows:
-</p><p></p><p><tt><a name="%_idx_5694" id="%_idx_5694"></a>(define (assemble controller-text machine)<br />
+</p><p></p><p><tt><a id="%_idx_5694"></a>(define (assemble controller-text machine)<br />
   (let ((result (extract-labels controller-text)))<br />
     (let ((insts (car result)) (labels (cdr result)))<br />
       (update-insts! insts labels machine)<br />
       insts)))<br /></tt></p><p></p><p>
-<a name="%_idx_5696" id="%_idx_5696"></a><a name="%_idx_5698" id="%_idx_5698"></a><a name="%_idx_5700" id="%_idx_5700"></a>You can consider our use of <tt>receive</tt> as demonstrating an elegant
+<a id="%_idx_5696"></a><a id="%_idx_5698"></a><a id="%_idx_5700"></a>You can consider our use of <tt>receive</tt> as demonstrating an elegant
 way to return multiple values, or simply an excuse to show off a
 programming trick.  An argument like <tt>receive</tt> that is the next
 procedure to be invoked is called a “continuation.”  Recall that we

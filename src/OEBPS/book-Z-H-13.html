@@ -13,7 +13,7 @@
 
 
 
-<a name="%_chap_2" id="%_chap_2"></a>
+<a id="%_chap_2"></a>
 <h1 class="chapter">
 <div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_2">Chapter 2</a></div></h1><p>
 <a href="book-Z-H-4.html#%_toc_%_chap_2">Building Abstractions with Data</a></p><p>
@@ -30,14 +30,14 @@ need not be idle; there are many operations which he may carry out
 with these symbols, without ever having to look at the things they
 stand for.</p><p>
 
-<a name="%_idx_1254" id="%_idx_1254"></a>Hermann Weyl, <em>The Mathematical Way of Thinking</em></p><p>
+<a id="%_idx_1254"></a>Hermann Weyl, <em>The Mathematical Way of Thinking</em></p><p>
 
 </p></span>
 </td></tr></table></div>
 
 <p></p><p>
 
-<a name="%_idx_1256" id="%_idx_1256"></a><a name="%_idx_1258" id="%_idx_1258"></a>We concentrated in chapter 1 on computational processes and on the
+<a id="%_idx_1256"></a><a id="%_idx_1258"></a>We concentrated in chapter 1 on computational processes and on the
 role of procedures in program design.  We saw how to use primitive
 data (numbers) and primitive operations (arithmetic operations), how to
 combine procedures to form compound procedures through composition,
@@ -73,7 +73,7 @@ operations of the language, the ability to construct compound data
 objects enables us to deal with data at a higher conceptual level than
 that of the primitive data objects of the language.</p><p>
 
-<a name="%_idx_1260" id="%_idx_1260"></a>Consider the task of designing a system to perform arithmetic with
+<a id="%_idx_1260"></a>Consider the task of designing a system to perform arithmetic with
 rational numbers.  We could imagine an operation <tt>add-rat</tt> that takes
 two rational numbers and produces their sum.  In terms of
 simple data, a rational number can be thought of as two integers: a
@@ -100,7 +100,7 @@ how rational numbers may be represented as pairs of integers.  The
 general technique of isolating the parts of a program that deal with
 how data objects are represented from the parts of a program that deal
 with how data objects are used is a powerful design methodology called
-<a name="%_idx_1262" id="%_idx_1262"></a><em>data abstraction</em>.  We will see how data abstraction makes
+<a id="%_idx_1262"></a><em>data abstraction</em>.  We will see how data abstraction makes
 programs much easier to design, maintain, and modify.</p><p>
 
 The use of compound data leads to a real increase in the expressive
@@ -135,14 +135,14 @@ our programming language provide the ability to manipulate compound
 objects directly: Without this, there is no way for a procedure such
 as <tt>linear-combination</tt> to pass its arguments along to <tt>add</tt>
 and <tt>mul</tt> without having to know their detailed
-structure.<a name="call_footnote_Temp_131" href="#footnote_Temp_131" id="call_footnote_Temp_131"><sup><small>1</small></sup></a>
+structure.<a href="#footnote_Temp_131" id="call_footnote_Temp_131"><sup><small>1</small></sup></a>
 
 We begin this chapter by implementing the rational-number arithmetic
 system mentioned above.  This will form the background for our
 discussion of compound data and data abstraction.  As with compound
 procedures, the main issue to be addressed is that of abstraction as a
 technique for coping with complexity, and we will see how data
-abstraction enables us to erect suitable <a name="%_idx_1264" id="%_idx_1264"></a><em>abstraction barriers</em>
+abstraction enables us to erect suitable <a id="%_idx_1264"></a><em>abstraction barriers</em>
 between different parts of a program.</p><p>
 
 We will see that the key to forming compound data is that a
@@ -154,15 +154,15 @@ procedures.  This will further blur the distinction between
 “procedure” and “data,” which was already becoming tenuous toward
 the end of chapter 1.  We will also explore some conventional
 techniques for representing sequences and trees.  One key idea in
-dealing with compound data is the notion of <a name="%_idx_1266" id="%_idx_1266"></a><em>closure</em> – that the
+dealing with compound data is the notion of <a id="%_idx_1266"></a><em>closure</em> – that the
 glue we use for combining data objects should allow us to combine not
 only primitive data objects, but compound data objects as well.
-Another key idea is that compound data objects can serve as <a name="%_idx_1268" id="%_idx_1268"></a><em>conventional interfaces</em> for combining program modules in
+Another key idea is that compound data objects can serve as <a id="%_idx_1268"></a><em>conventional interfaces</em> for combining program modules in
 mix-and-match ways.  We illustrate some of these ideas by presenting a
 simple graphics language that exploits closure.</p><p>
 
 We will then augment the representational power of our language by
-introducing <a name="%_idx_1270" id="%_idx_1270"></a><a name="%_idx_1272" id="%_idx_1272"></a><em>symbolic expressions</em> – data whose elementary parts
+introducing <a id="%_idx_1270"></a><a id="%_idx_1272"></a><em>symbolic expressions</em> – data whose elementary parts
 can be arbitrary symbols rather than only numbers.  We explore various
 alternatives for representing sets of objects.  We will find that,
 just as a given numerical function can be computed by many different
@@ -175,13 +175,13 @@ the representation of sets, and the encoding of information.</p><p>
 
 Next we will take up the problem of working with data that may be
 represented differently by different parts of a program.  This leads
-to the need to implement <a name="%_idx_1274" id="%_idx_1274"></a><a name="%_idx_1276" id="%_idx_1276"></a><em>generic operations</em>, which must handle
+to the need to implement <a id="%_idx_1274"></a><a id="%_idx_1276"></a><em>generic operations</em>, which must handle
 many different types of data.  Maintaining modularity in the
 presence of generic operations requires more powerful abstraction
 barriers than can be erected with simple data abstraction alone.  In
 particular, we introduce <em>data-directed programming</em> as a
 technique that allows individual data representations to be designed
-in isolation and then combined <a name="%_idx_1278" id="%_idx_1278"></a><em>additively</em> (i.e., without
+in isolation and then combined <a id="%_idx_1278"></a><em>additively</em> (i.e., without
 modification).  To illustrate the power of this approach to system
 design, we close the chapter by applying what we have learned to the
 implementation of a package for performing symbolic arithmetic on
@@ -190,7 +190,7 @@ integers, rational numbers, complex numbers, and even other
 polynomials.</p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_131" href="#call_footnote_Temp_131" id="footnote_Temp_131"><sup><small>1</small></sup></a> The ability to directly manipulate procedures
+</p><div class="footnote"><p><a href="#call_footnote_Temp_131" id="footnote_Temp_131"><sup><small>1</small></sup></a> The ability to directly manipulate procedures
 provides an analogous increase in the expressive power of a
 programming language.  For example, in
 section <a href="book-Z-H-12.html#%_sec_1.3.1">1.3.1</a> we introduced the <tt>sum</tt>
