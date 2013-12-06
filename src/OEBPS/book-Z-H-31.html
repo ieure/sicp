@@ -91,7 +91,7 @@ machine that could be constructed from electrical components.</p><p>
 
 </p><p>
 
-<a id="__fig_5.1"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-1.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.1:</b>  Data paths for a GCD machine.</div></caption><tr><td>
+<a id="__fig_5.1"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-1.gif" alt="ch5-Z-G-1" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.1:</b>  Data paths for a GCD machine.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -117,7 +117,7 @@ marble) at the place marked <tt>start</tt>, after placing numbers in
 registers <tt>a</tt> and <tt>b</tt>.  When the controller reaches <tt>done</tt>, we will find the value of the GCD in register <tt>a</tt>.
 
 <a id="__fig_5.2"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td>
-<img src="images/ch5-Z-G-2.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.2:</b>  Controller for a GCD machine.</div></caption><tr><td>
+<img src="images/ch5-Z-G-2.gif" alt="ch5-Z-G-2" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.2:</b>  Controller for a GCD machine.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -320,7 +320,7 @@ reads a pair of numbers, computes their GCD, and prints the result.
 This structure is like the driver loops we used in the interpreters of
 chapter 4.</p><p>
 
-<a id="__fig_5.4"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-3.gif" border="0" /><p></p><p><tt> (controller<br />
+<a id="__fig_5.4"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-3.gif" alt="ch5-Z-G-3" border="0" /><p></p><p><tt> (controller<br />
   gcd-loop<br />
     (assign a (op read))<br />
     (assign b (op read))<br />
@@ -370,7 +370,7 @@ Figure <a href="#__fig_5.5">5.5</a> shows the data paths and controller
 for the elaborated machine.
 The instruction</p><p>
 
-<a id="__fig_5.5"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-4.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.5:</b>  Data paths and controller for the elaborated GCD  machine.</div></caption><tr><td>
+<a id="__fig_5.5"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-4.gif" alt="ch5-Z-G-4" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.5:</b>  Data paths and controller for the elaborated GCD  machine.</div></caption><tr><td>
 
 
 </td></tr></table></div><p>                                </p><p>
@@ -440,7 +440,7 @@ resulting machine's data paths, without showing how they connect to
 the rest of the machine.  The figure also shows the corresponding
 portions of the machine's controller sequence.</p><p>
 
-<a id="__fig_5.7"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-5.gif" border="0" /><p></p><p><tt>gcd-1<br />
+<a id="__fig_5.7"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-5.gif" alt="ch5-Z-G-5" border="0" /><p></p><p><tt>gcd-1<br />
  (test (op =) (reg b) (const 0))<br />
  (branch (label after-gcd-1))<br />
  (assign t (op rem) (reg a) (reg b))<br />
@@ -772,7 +772,7 @@ recursive call, the answer is in <tt>val</tt>.
 Figure <a href="#__fig_5.12">5.12</a> shows the controller sequence for this
 machine.</p><p>
 
-<a id="__fig_5.11"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-6.gif" border="0" /><p></p><p><tt>(controller<br />
+<a id="__fig_5.11"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-6.gif" alt="ch5-Z-G-6" border="0" /><p></p><p><tt>(controller<br />
    (assign continue (label fact-done))     <em>; set up final return address</em><br />
  fact-loop<br />
    (test (op =) (reg n) (const 1))<br />
