@@ -30,12 +30,18 @@ def subsection_source(content_src, subsection_number):
 
 
 class SectionFinder(HTMLParser):
-    def __init__(self, section_title):
+    def __init__(self, src_file, section_title):
         HTMLParser.__init__(self)
         self.last_href = None
         self.new_src = None
         self.current_text = ''
         self.section_title = section_title
+        self.src_file = src_file
+
+    def build_src(self, content_href):
+        _, fragment = urldefrag(content_href)
+        fragment = fragment.replace('__toc_', '')
+        return '#'.join([self.src_file, fragment])
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -45,7 +51,7 @@ class SectionFinder(HTMLParser):
     def handle_endtag(self, tag):
         if self.last_href and tag == 'a':
             if self.current_text == self.section_title:
-                self.new_src = self.last_href
+                self.new_src = self.build_src(self.last_href)
 
             self.last_href = None
             self.current_text = ''
@@ -57,7 +63,7 @@ class SectionFinder(HTMLParser):
 
 def find_content_source(section_title, content_src):
     source_path = os.path.join(content_dir, content_src)
-    section_finder = SectionFinder(section_title)
+    section_finder = SectionFinder(content_src, section_title)
 
     with open(source_path) as source_file:
         section_finder.feed(source_file.read())

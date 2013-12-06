@@ -25,7 +25,7 @@ NORMAL_MARK := $(BUILD_DIR)/normal.mark
 TEX_FILES := $(wildcard $(LATEX_DIR)/*.tex)
 SVG_FILES := $(patsubst %.tex,%.svg,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
 GIF_FILES := $(patsubst %.tex,%.gif,$(subst $(LATEX_DIR),$(IMAGES_DIR),$(TEX_FILES)))
-CONTENT := $(shell find src -type f -not -name .DS_Store -not -name \*.tex -not -name \*.sty) src/mimetype
+CONTENT := $(shell find src -type f -not -name .DS_Store -not -name \*.tex -not -name \*.sty -not -name \*book-Z-H-4.html) src/mimetype
 XML     := $(shell find src -type f -name \*html)
 
 
