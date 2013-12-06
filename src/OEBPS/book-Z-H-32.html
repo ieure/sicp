@@ -211,7 +211,7 @@ executes it by calling the instruction execution procedure, and
 repeats this cycle until there are no more instructions to execute
 (i.e., until <tt>pc</tt> points to the end of the instruction sequence).</p><p>
 
-<a name="%_fig_5.13" id="%_fig_5.13"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt><a name="%_idx_5672" id="%_idx_5672"></a>(define (make-new-machine)<br />
+<a name="%_fig_5.13" id="%_fig_5.13"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><a name="%_idx_5672" id="%_idx_5672"></a>(define (make-new-machine)<br />
   (let ((pc (make-register 'pc))<br />
         (flag (make-register 'flag))<br />
         (stack (make-stack))<br />
@@ -254,7 +254,7 @@ repeats this cycle until there are no more instructions to execute
               ((eq? message 'operations) the-ops)<br />
               (else (error "Unknown request -- MACHINE" message))))<br />
       dispatch)))<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.13:</b>  The <tt>make-new-machine</tt> procedure, which implements
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.13:</b>  The <tt>make-new-machine</tt> procedure, which implements
 the basic machine model.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>

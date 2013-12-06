@@ -63,22 +63,22 @@ far, such as <tt>append</tt> and <tt>list</tt>, since these can be defined
 in terms of <tt>cons</tt>, <tt>car</tt>, and <tt>cdr</tt>.  To modify list
 structures we need new operations.</p><p>
 
-<a name="%_fig_3.12" id="%_fig_3.12"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-13.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.12:</b>  Lists <tt>x</tt>: <tt>((a b) c d)</tt> and <tt>y</tt>: <tt>(e
+<a name="%_fig_3.12" id="%_fig_3.12"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-13.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.12:</b>  Lists <tt>x</tt>: <tt>((a b) c d)</tt> and <tt>y</tt>: <tt>(e
 f)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_3.13" id="%_fig_3.13"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-14.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.13:</b>  Effect of <tt>(set-car! x y)</tt> on the lists in
+<a name="%_fig_3.13" id="%_fig_3.13"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-14.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.13:</b>  Effect of <tt>(set-car! x y)</tt> on the lists in
 figure <a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_3.14" id="%_fig_3.14"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-15.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.14:</b>  Effect of <tt>(define z (cons y (cdr x)))</tt> on
+<a name="%_fig_3.14" id="%_fig_3.14"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-15.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.14:</b>  Effect of <tt>(define z (cons y (cdr x)))</tt> on
 the lists in figure <a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_3.15" id="%_fig_3.15"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-16.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.15:</b>  Effect of <tt>(set-cdr! x y)</tt> on the lists in
+<a name="%_fig_3.15" id="%_fig_3.15"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-16.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.15:</b>  Effect of <tt>(set-cdr! x y)</tt> on the lists in
 figure <a href="#%_fig_3.12">3.12</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -224,11 +224,11 @@ general, using <tt>cons</tt> to construct lists will result in an
 interlinked structure of pairs in which many individual pairs are
 shared by many different structures.</p><p>
 
-<a name="%_fig_3.16" id="%_fig_3.16"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-17.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.16:</b>  The list <tt>z1</tt> formed by <tt>(cons x x)</tt>.</div></caption><tr><td>
+<a name="%_fig_3.16" id="%_fig_3.16"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-17.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.16:</b>  The list <tt>z1</tt> formed by <tt>(cons x x)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_3.17" id="%_fig_3.17"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-18.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.17:</b>  The list <tt>z2</tt> formed by
+<a name="%_fig_3.17" id="%_fig_3.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-18.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.17:</b>  The list <tt>z2</tt> formed by
 <tt>(cons (list 'a 'b) (list 'a 'b))</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -399,8 +399,8 @@ removed.  Because items are always removed in the order in which they
 are inserted, a queue is sometimes called a <a name="%_idx_3226" id="%_idx_3226"></a><em>FIFO</em> (first in,
 first out) buffer.</p><p>
 
-<a name="%_fig_3.18" id="%_fig_3.18"></a></p><p></p><div align="left"><table width="100%"><tr><td><table border="0"><tr><td valign="top">Operation </td><td valign="top">Resulting Queue  </td></tr><tr><td valign="top"><tt>(define q (make-queue))</tt> </td><td valign="top"></td></tr><tr><td valign="top"><tt>(insert-queue! q 'a)</tt> </td><td valign="top"><tt>a</tt></td></tr><tr><td valign="top"><tt>(insert-queue! q 'b)</tt> </td><td valign="top"><tt>a b</tt></td></tr><tr><td valign="top"><tt>(delete-queue! q)</tt> </td><td valign="top"><tt>b</tt></td></tr><tr><td valign="top"><tt>(insert-queue! q 'c)</tt> </td><td valign="top"><tt>b c</tt></td></tr><tr><td valign="top"><tt>(insert-queue! q 'd)</tt> </td><td valign="top"><tt>b c d</tt></td></tr><tr><td valign="top"><tt>(delete-queue! q)</tt> </td><td valign="top"><tt>c d</tt>
-</td></tr></table></td></tr><caption align="bottom"><div align="left"><b>Figure 3.18:</b>  Queue operations.</div></caption><tr><td>
+<a name="%_fig_3.18" id="%_fig_3.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><table border="0"><tr><td vstyle="text-align: top;">Operation </td><td vstyle="text-align: top;">Resulting Queue  </td></tr><tr><td vstyle="text-align: top;"><tt>(define q (make-queue))</tt> </td><td vstyle="text-align: top;"></td></tr><tr><td vstyle="text-align: top;"><tt>(insert-queue! q 'a)</tt> </td><td vstyle="text-align: top;"><tt>a</tt></td></tr><tr><td vstyle="text-align: top;"><tt>(insert-queue! q 'b)</tt> </td><td vstyle="text-align: top;"><tt>a b</tt></td></tr><tr><td vstyle="text-align: top;"><tt>(delete-queue! q)</tt> </td><td vstyle="text-align: top;"><tt>b</tt></td></tr><tr><td vstyle="text-align: top;"><tt>(insert-queue! q 'c)</tt> </td><td vstyle="text-align: top;"><tt>b c</tt></td></tr><tr><td vstyle="text-align: top;"><tt>(insert-queue! q 'd)</tt> </td><td vstyle="text-align: top;"><tt>b c d</tt></td></tr><tr><td vstyle="text-align: top;"><tt>(delete-queue! q)</tt> </td><td vstyle="text-align: top;"><tt>c d</tt>
+</td></tr></table></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.18:</b>  Queue operations.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -455,7 +455,7 @@ pointers.  Thus, the queue itself will be the <tt>cons</tt> of the two
 pointers.  Figure <a href="#%_fig_3.19">3.19</a> illustrates this
 representation.</p><p>
 
-<a name="%_fig_3.19" id="%_fig_3.19"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-19.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.19:</b>  Implementation of a queue as a list with front and rear
+<a name="%_fig_3.19" id="%_fig_3.19"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-19.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.19:</b>  Implementation of a queue as a list with front and rear
 pointers.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -494,7 +494,7 @@ rear pointers of the queue to this new pair.  Otherwise, we modify the
 final pair in the queue to point to the new pair, and also set the
 rear pointer to the new pair.</p><p>
 
-<a name="%_fig_3.20" id="%_fig_3.20"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-20.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.20:</b>  Result of using <tt>(insert-queue! q 'd)</tt>
+<a name="%_fig_3.20" id="%_fig_3.20"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-20.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.20:</b>  Result of using <tt>(insert-queue! q 'd)</tt>
 on the queue of figure <a href="#%_fig_3.19">3.19</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -516,7 +516,7 @@ front pointer so that it now points at the second item in the queue,
 which can be found by following the <tt>cdr</tt> pointer of the first
 item (see figure <a href="#%_fig_3.21">3.21</a>):<a name="call_footnote_Temp_366" href="#footnote_Temp_366" id="call_footnote_Temp_366"><sup><small>22</small></sup></a></p><p>
 
-<a name="%_fig_3.21" id="%_fig_3.21"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-21.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.21:</b>  Result of using <tt>(delete-queue! q)</tt> on
+<a name="%_fig_3.21" id="%_fig_3.21"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-21.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.21:</b>  Result of using <tt>(delete-queue! q)</tt> on
 the queue of figure <a href="#%_fig_3.20">3.20</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -606,7 +606,7 @@ Figure <a href="#%_fig_3.22">3.22</a> shows the box-and-pointer diagram for the
 b:  2<br />
 c:  3<br /></tt></p><p></p><p></p><p>
 
-<a name="%_fig_3.22" id="%_fig_3.22"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-22.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.22:</b>  A table represented as a headed list.</div></caption><tr><td>
+<a name="%_fig_3.22" id="%_fig_3.22"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-22.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.22:</b>  A table represented as a headed list.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -670,7 +670,7 @@ which has two subtables.  (The subtables don't need a
 special header symbol, since the key that identifies the subtable
 serves this purpose.)</p><p>
 
-<a name="%_fig_3.23" id="%_fig_3.23"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-23.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.23:</b>  A two-dimensional table.</div></caption><tr><td>
+<a name="%_fig_3.23" id="%_fig_3.23"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-23.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.23:</b>  A two-dimensional table.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -887,7 +887,7 @@ box that drives its output signal to a value that is the <a name="%_idx_3352" id
 or</em> of the inputs.  That is, the output will become 1 if at least one
 of the input signals is 1; otherwise the output will become 0.</p><p>
 
-<a name="%_fig_3.24" id="%_fig_3.24"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-24.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.24:</b>  Primitive functions in the digital logic simulator.</div></caption><tr><td>
+<a name="%_fig_3.24" id="%_fig_3.24"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-24.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.24:</b>  Primitive functions in the digital logic simulator.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -903,7 +903,7 @@ delays involved, the outputs may be generated at different times.
 Many of the difficulties in the design of digital circuits arise from
 this fact.</p><p>
 
-<a name="%_fig_3.25" id="%_fig_3.25"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-25.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.25:</b>  A half-adder circuit.</div></caption><tr><td>
+<a name="%_fig_3.25" id="%_fig_3.25"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-25.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.25:</b>  A half-adder circuit.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -960,7 +960,7 @@ Having defined <tt>full-adder</tt> as a procedure, we can now use it as a
 building block for creating still more complex circuits.  (For
 example, see exercise <a href="#%_thm_3.30">3.30</a>.)</p><p>
 
-<a name="%_fig_3.26" id="%_fig_3.26"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-26.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.26:</b>  A full-adder circuit.</div></caption><tr><td>
+<a name="%_fig_3.26" id="%_fig_3.26"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-26.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.26:</b>  A full-adder circuit.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -1061,7 +1061,7 @@ or-gates, and inverters?
 
 </p><p></p><p>
 
-<a name="%_fig_3.27" id="%_fig_3.27"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-27.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.27:</b>  A ripple-carry adder for <em>n</em>-bit numbers.</div></caption><tr><td>
+<a name="%_fig_3.27" id="%_fig_3.27"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-27.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.27:</b>  A ripple-carry adder for <em>n</em>-bit numbers.</div></caption><tr><td>
 
 </td></tr></table></div><p>
 
@@ -1414,7 +1414,7 @@ terminal, which the multiplier box constrains to be the product of
 of another multiplier box, whose <em>m</em>2 is connected to a constant 5 and
 whose <em>m</em>1 is connected to one of the terms in a sum.</p><p>
 
-<a name="%_fig_3.28" id="%_fig_3.28"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch3-Z-G-30.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 3.28:</b>  The relation 9<em>C</em>  =  5(<em>F</em>  -  32)
+<a name="%_fig_3.28" id="%_fig_3.28"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch3-Z-G-30.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 3.28:</b>  The relation 9<em>C</em>  =  5(<em>F</em>  -  32)
 expressed as a constraint network.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>

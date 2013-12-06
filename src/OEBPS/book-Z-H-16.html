@@ -174,13 +174,13 @@ built up using only the operations of addition and multiplication with
 two arguments.  Differentiation of any such expression can be carried
 out by applying the following reduction rules:</p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-45.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-45.gif" border="0" /></div><p></p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-46.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-46.gif" border="0" /></div><p></p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-47.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-47.gif" border="0" /></div><p></p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-48.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-48.gif" border="0" /></div><p></p><p>
 
 Observe that the latter two rules are recursive in nature.  That is,
 to obtain the derivative of a sum we first find the derivatives of the
@@ -200,11 +200,11 @@ construct expressions from parts.  Let us assume that we already have
 procedures to implement the following selectors, constructors, and
 predicates:</p><p>
 
-</p><table border="0"><tr><td valign="top"><tt>(variable? e)</tt> </td><td valign="top">Is <tt>e</tt> a variable?</td></tr><tr><td valign="top"><tt>(same-variable? v1 v2)</tt> </td><td valign="top">Are <tt>v1</tt> and <tt>v2</tt> the same variable?</td></tr><tr><td valign="top"><p>
+</p><table border="0"><tr><td vstyle="text-align: top;"><tt>(variable? e)</tt> </td><td vstyle="text-align: top;">Is <tt>e</tt> a variable?</td></tr><tr><td vstyle="text-align: top;"><tt>(same-variable? v1 v2)</tt> </td><td vstyle="text-align: top;">Are <tt>v1</tt> and <tt>v2</tt> the same variable?</td></tr><tr><td vstyle="text-align: top;"><p>
 
-<tt>(sum? e)</tt> </p></td><td valign="top">Is <tt>e</tt> a sum?</td></tr><tr><td valign="top"><tt>(addend e)</tt> </td><td valign="top">Addend of the sum <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(augend e)</tt> </td><td valign="top">Augend of the sum <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(make-sum a1 a2)</tt> </td><td valign="top">Construct the sum of <tt>a1</tt> and <tt>a2</tt>.</td></tr><tr><td valign="top"><p>
+<tt>(sum? e)</tt> </p></td><td vstyle="text-align: top;">Is <tt>e</tt> a sum?</td></tr><tr><td vstyle="text-align: top;"><tt>(addend e)</tt> </td><td vstyle="text-align: top;">Addend of the sum <tt>e</tt>.</td></tr><tr><td vstyle="text-align: top;"><tt>(augend e)</tt> </td><td vstyle="text-align: top;">Augend of the sum <tt>e</tt>.</td></tr><tr><td vstyle="text-align: top;"><tt>(make-sum a1 a2)</tt> </td><td vstyle="text-align: top;">Construct the sum of <tt>a1</tt> and <tt>a2</tt>.</td></tr><tr><td vstyle="text-align: top;"><p>
 
-<tt>(product? e)</tt> </p></td><td valign="top">Is <tt>e</tt> a product?</td></tr><tr><td valign="top"><tt>(multiplier e)</tt> </td><td valign="top">Multiplier of the product <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(multiplicand e)</tt> </td><td valign="top">Multiplicand of the product <tt>e</tt>.</td></tr><tr><td valign="top"><tt>(make-product m1 m2)</tt> </td><td valign="top">Construct the product of <tt>m1</tt> and <tt>m2</tt>.
+<tt>(product? e)</tt> </p></td><td vstyle="text-align: top;">Is <tt>e</tt> a product?</td></tr><tr><td vstyle="text-align: top;"><tt>(multiplier e)</tt> </td><td vstyle="text-align: top;">Multiplier of the product <tt>e</tt>.</td></tr><tr><td vstyle="text-align: top;"><tt>(multiplicand e)</tt> </td><td vstyle="text-align: top;">Multiplicand of the product <tt>e</tt>.</td></tr><tr><td vstyle="text-align: top;"><tt>(make-product m1 m2)</tt> </td><td vstyle="text-align: top;">Construct the product of <tt>m1</tt> and <tt>m2</tt>.
 </td></tr></table>
 Using these, and the primitive predicate <tt>number?</tt>,
 <a name="%_idx_2052" id="%_idx_2052"></a><a name="%_idx_2054" id="%_idx_2054"></a>which identifies numbers, we can express the differentiation rules as the
@@ -306,7 +306,7 @@ program.  Let us look at some examples of its behavior:</p><p>
 The program produces answers that are correct; however, they are
 unsimplified.  It is true that</p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-49.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-49.gif" border="0" /></div><p></p><p>
 
 but we would like the program to know that <em>x</em> ·  0  =  0, 1 ·  <em>y</em>  =
 <em>y</em>, and 0 + <em>y</em> = <em>y</em>.  The answer for the second example should have been
@@ -358,7 +358,7 @@ another.
 <b>Exercise 2.56.</b>  <a name="%_idx_2094" id="%_idx_2094"></a>Show how to extend the basic differentiator to handle more kinds of
 expressions.  For instance, implement the differentiation rule</p><p>
 
-</p><p></p><div align="left"><img src="images/ch2-Z-G-50.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch2-Z-G-50.gif" border="0" /></div><p></p><p>
 
 by adding a new clause to the <tt>deriv</tt> program
 and defining
@@ -612,7 +612,7 @@ representation is that all elements in the left subtree be smaller
 than the node entry and that all elements in the right subtree be
 larger.</p><p>
 
-<a name="%_fig_2.16" id="%_fig_2.16"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-51.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.16:</b>  Various binary trees that represent the set { 1,3,5,7,9,11 }.</div></caption><tr><td>
+<a name="%_fig_2.16" id="%_fig_2.16"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-51.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.16:</b>  Various binary trees that represent the set { 1,3,5,7,9,11 }.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -695,7 +695,7 @@ solve this problem, most of which involve designing new data
 structures for which searching and insertion both can be done in
 θ(<tt>log</tt> <em>n</em>) steps.<a name="call_footnote_Temp_250" href="#footnote_Temp_250" id="call_footnote_Temp_250"><sup><small>40</small></sup></a></p><p>
 
-<a name="%_fig_2.17" id="%_fig_2.17"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-52.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.17:</b>  Unbalanced tree produced by adjoining 1 through 7 in sequence.</div></caption><tr><td>
+<a name="%_fig_2.17" id="%_fig_2.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-52.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.17:</b>  Unbalanced tree produced by adjoining 1 through 7 in sequence.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -841,7 +841,7 @@ characters.  In general, if we want to distinguish <em>n</em> different
 symbols, we will need to use <tt>log</tt><sub>2</sub><em>n</em> bits per symbol.  If all our
 messages are made up of the eight symbols A, B, C, D, E, F, G, and H,
 we can choose a code with three bits per character, for example
-</p><table border="0"><tr><td valign="top">A 000 </td><td valign="top">C 010 </td><td valign="top">E 100 </td><td valign="top">G 110</td></tr><tr><td valign="top">B 001 </td><td valign="top">D 011 </td><td valign="top">F 101 </td><td valign="top">H 111
+</p><table border="0"><tr><td vstyle="text-align: top;">A 000 </td><td vstyle="text-align: top;">C 010 </td><td vstyle="text-align: top;">E 100 </td><td vstyle="text-align: top;">G 110</td></tr><tr><td vstyle="text-align: top;">B 001 </td><td vstyle="text-align: top;">D 011 </td><td vstyle="text-align: top;">F 101 </td><td vstyle="text-align: top;">H 111
 </td></tr></table>
 With this code, the message<p>
 
@@ -862,7 +862,7 @@ symbols appear very frequently and some very rarely, we can encode
 data more efficiently (i.e., using fewer bits per message) if we
 assign shorter codes to the frequent symbols.  Consider the following
 alternative code for the letters A through H:
-</p><table border="0"><tr><td valign="top">A 0 </td><td valign="top">C 1010 </td><td valign="top">E 1100 </td><td valign="top">G 1110</td></tr><tr><td valign="top">B 100 </td><td valign="top">D 1011 </td><td valign="top">F 1101 </td><td valign="top">H 1111
+</p><table border="0"><tr><td vstyle="text-align: top;">A 0 </td><td vstyle="text-align: top;">C 1010 </td><td vstyle="text-align: top;">E 1100 </td><td vstyle="text-align: top;">G 1110</td></tr><tr><td vstyle="text-align: top;">B 100 </td><td vstyle="text-align: top;">D 1011 </td><td vstyle="text-align: top;">F 1101 </td><td vstyle="text-align: top;">H 1111
 </td></tr></table>
 With this code, the same message as above is encoded as the string<p>
 
@@ -897,7 +897,7 @@ leaves lying below it.  The weights are not used in the encoding or
 the decoding process.  We will see below how they are used to help
 construct the tree.</p><p>
 
-<a name="%_fig_2.18" id="%_fig_2.18"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch2-Z-G-53.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 2.18:</b>  A Huffman encoding tree.</div></caption><tr><td>
+<a name="%_fig_2.18" id="%_fig_2.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-53.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.18:</b>  A Huffman encoding tree.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -961,25 +961,25 @@ these two as its left and right branches. The process stops when
 there is only one node left, which is the root of the entire tree.
 Here is how the Huffman tree of figure <a href="#%_fig_2.18">2.18</a> was generated:</p><p>
 
-</p><table border="0"><tr><td valign="top">Initial leaves </td><td valign="top">{(A 8)  (B 3)  (C 1)
- (D 1)  (E 1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
+</p><table border="0"><tr><td vstyle="text-align: top;">Initial leaves </td><td vstyle="text-align: top;">{(A 8)  (B 3)  (C 1)
+ (D 1)  (E 1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)  (E
-1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)  (B 3)  ({C D} 2)  (E
+1)  (F 1)  (G 1)  (H 1)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)
-({E F} 2)  (G 1)  (H 1)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)  (B 3)  ({C D} 2)
+({E F} 2)  (G 1)  (H 1)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)  (B 3)  ({C D} 2)
-({E F} 2)   ({G H} 2)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)  (B 3)  ({C D} 2)
+({E F} 2)   ({G H} 2)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)   (B 3)  ({C D} 2)  ({E F G H} 4)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)   (B 3)  ({C D} 2)  ({E F G H} 4)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)  ({B C D} 5)  ({E F G H} 4)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)  ({B C D} 5)  ({E F G H} 4)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Merge </p></td><td valign="top">{(A 8)  ({B C D E F G H} 9)}</td></tr><tr><td valign="top"><p>
+Merge </p></td><td vstyle="text-align: top;">{(A 8)  ({B C D E F G H} 9)}</td></tr><tr><td vstyle="text-align: top;"><p>
 
-Final merge </p></td><td valign="top">{({A B C D E F G H} 17)}</td></tr><tr><td valign="top"></td></tr></table>
+Final merge </p></td><td vstyle="text-align: top;">{({A B C D E F G H} 17)}</td></tr><tr><td vstyle="text-align: top;"></td></tr></table>
 The algorithm does not always specify a unique tree, because there may
 not be unique smallest-weight nodes at each step.  Also, the choice of
 the order in which the two nodes are merged (i.e., which will be the
@@ -1161,7 +1161,7 @@ frequencies was designed to efficiently encode the lyrics of 1950s
 rock songs.  (Note that the “symbols” of an “alphabet” need not be
 individual letters.)</p><p>
 
-</p><table border="0"><tr><td valign="top">A    </td><td valign="top">2 </td><td valign="top">NA  </td><td valign="top">16</td></tr><tr><td valign="top">BOOM </td><td valign="top">1 </td><td valign="top">SHA </td><td valign="top">3</td></tr><tr><td valign="top">GET  </td><td valign="top">2 </td><td valign="top">YIP </td><td valign="top">9</td></tr><tr><td valign="top">JOB  </td><td valign="top">2 </td><td valign="top">WAH </td><td valign="top">1
+</p><table border="0"><tr><td vstyle="text-align: top;">A    </td><td vstyle="text-align: top;">2 </td><td vstyle="text-align: top;">NA  </td><td vstyle="text-align: top;">16</td></tr><tr><td vstyle="text-align: top;">BOOM </td><td vstyle="text-align: top;">1 </td><td vstyle="text-align: top;">SHA </td><td vstyle="text-align: top;">3</td></tr><tr><td vstyle="text-align: top;">GET  </td><td vstyle="text-align: top;">2 </td><td vstyle="text-align: top;">YIP </td><td vstyle="text-align: top;">9</td></tr><tr><td vstyle="text-align: top;">JOB  </td><td vstyle="text-align: top;">2 </td><td vstyle="text-align: top;">WAH </td><td vstyle="text-align: top;">1
 </td></tr></table>
 Use <tt>generate-huffman-tree</tt> (exercise <a href="#%_thm_2.69">2.69</a>)
 to generate a corresponding Huffman tree, and use

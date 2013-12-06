@@ -91,7 +91,7 @@ machine that could be constructed from electrical components.</p><p>
 
 </p><p>
 
-<a name="%_fig_5.1" id="%_fig_5.1"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-1.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 5.1:</b>  Data paths for a GCD machine.</div></caption><tr><td>
+<a name="%_fig_5.1" id="%_fig_5.1"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch5-Z-G-1.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.1:</b>  Data paths for a GCD machine.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -116,8 +116,8 @@ a machine for computing GCDs.  We start the controller (the rolling
 marble) at the place marked <tt>start</tt>, after placing numbers in
 registers <tt>a</tt> and <tt>b</tt>.  When the controller reaches <tt>done</tt>, we will find the value of the GCD in register <tt>a</tt>.
 
-<a name="%_fig_5.2" id="%_fig_5.2"></a></p><p></p><div align="left"><table width="100%"><tr><td>
-<img src="images/ch5-Z-G-2.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 5.2:</b>  Controller for a GCD machine.</div></caption><tr><td>
+<a name="%_fig_5.2" id="%_fig_5.2"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td>
+<img src="images/ch5-Z-G-2.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.2:</b>  Controller for a GCD machine.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -181,7 +181,7 @@ sequence and stops when execution reaches the end of the sequence.
 Except when a branch changes the flow of control, instructions are
 executed in the order in which they are listed.</p><p>
 
-<a name="%_fig_5.3" id="%_fig_5.3"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>(data-paths<br />
+<a name="%_fig_5.3" id="%_fig_5.3"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>(data-paths<br />
  (registers<br />
   ((name a)<br />
    (buttons ((name a&lt;-b) (source (register b)))))<br />
@@ -203,7 +203,7 @@ executed in the order in which they are listed.</p><p>
    (b&lt;-t)                         <em>; button push</em><br />
    (goto (label test-b))          <em>; unconditional branch</em><br />
  gcd-done)                        <em>; label</em><br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.3:</b>  A specification of the GCD machine.</div></caption><tr><td>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.3:</b>  A specification of the GCD machine.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -320,7 +320,7 @@ reads a pair of numbers, computes their GCD, and prints the result.
 This structure is like the driver loops we used in the interpreters of
 chapter 4.</p><p>
 
-<a name="%_fig_5.4" id="%_fig_5.4"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-3.gif" border="0" /><p></p><p><tt> (controller<br />
+<a name="%_fig_5.4" id="%_fig_5.4"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch5-Z-G-3.gif" border="0" /><p></p><p><tt> (controller<br />
   gcd-loop<br />
     (assign a (op read))<br />
     (assign b (op read))<br />
@@ -334,7 +334,7 @@ chapter 4.</p><p>
   gcd-done<br />
     (perform (op print) (reg a))<br />
     (goto (label gcd-loop)))<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.4:</b>  A GCD machine that reads inputs and prints results.</div></caption><tr><td>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.4:</b>  A GCD machine that reads inputs and prints results.</div></caption><tr><td>
 
 </td></tr></table></div><p>
 
@@ -370,7 +370,7 @@ Figure <a href="#%_fig_5.5">5.5</a> shows the data paths and controller
 for the elaborated machine.
 The instruction</p><p>
 
-<a name="%_fig_5.5" id="%_fig_5.5"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-4.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 5.5:</b>  Data paths and controller for the elaborated GCD  machine.</div></caption><tr><td>
+<a name="%_fig_5.5" id="%_fig_5.5"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch5-Z-G-4.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.5:</b>  Data paths and controller for the elaborated GCD  machine.</div></caption><tr><td>
 
 
 </td></tr></table></div><p>                                </p><p>
@@ -380,7 +380,7 @@ in the GCD controller definition is replaced by a sequence of
 instructions that contains a loop, as shown in
 figure <a href="#%_fig_5.6">5.6</a>.</p><p>
 
-<a name="%_fig_5.6" id="%_fig_5.6"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>(controller<br />
+<a name="%_fig_5.6" id="%_fig_5.6"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>(controller<br />
  test-b<br />
    (test (op =) (reg b) (const 0))<br />
    (branch (label gcd-done))<br />
@@ -395,7 +395,7 @@ figure <a href="#%_fig_5.6">5.6</a>.</p><p>
    (assign b (reg t))<br />
    (goto (label test-b))<br />
  gcd-done)<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.6:</b>  Controller instruction sequence for the GCD machine in
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.6:</b>  Controller instruction sequence for the GCD machine in
 figure <a href="#%_fig_5.5">5.5</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -440,7 +440,7 @@ resulting machine's data paths, without showing how they connect to
 the rest of the machine.  The figure also shows the corresponding
 portions of the machine's controller sequence.</p><p>
 
-<a name="%_fig_5.7" id="%_fig_5.7"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-5.gif" border="0" /><p></p><p><tt>gcd-1<br />
+<a name="%_fig_5.7" id="%_fig_5.7"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch5-Z-G-5.gif" border="0" /><p></p><p><tt>gcd-1<br />
  (test (op =) (reg b) (const 0))<br />
  (branch (label after-gcd-1))<br />
  (assign t (op rem) (reg a) (reg b))<br />
@@ -457,7 +457,7 @@ gcd-2<br />
  (assign d (reg s))<br />
  (goto (label gcd-2))<br />
 after-gcd-2<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.7:</b>  Portions of the data paths and controller sequence for
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.7:</b>  Portions of the data paths and controller sequence for
 a machine with two GCD computations.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -491,7 +491,7 @@ Figure <a href="#%_fig_5.9">5.9</a> shows the relevant portion of the
 resulting controller sequence, which includes only a single copy of the
 <tt>gcd</tt> instructions.</p><p>
 
-<a name="%_fig_5.8" id="%_fig_5.8"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>gcd-1<br />
+<a name="%_fig_5.8" id="%_fig_5.8"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>gcd-1<br />
  (test (op =) (reg b) (const 0))<br />
  (branch (label after-gcd-1))<br />
  (assign t (op rem) (reg a) (reg b))<br />
@@ -508,13 +508,13 @@ gcd-2<br />
  (assign b (reg t))<br />
  (goto (label gcd-2))<br />
 after-gcd-2<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.8:</b>  Portions of the controller sequence for a machine that
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.8:</b>  Portions of the controller sequence for a machine that
 uses the same data-path components for two different GCD
 computations.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.9" id="%_fig_5.9"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>gcd<br />
+<a name="%_fig_5.9" id="%_fig_5.9"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>gcd<br />
  (test (op =) (reg b) (const 0))<br />
  (branch (label gcd-done))<br />
  (assign t (op rem) (reg a) (reg b))<br />
@@ -533,12 +533,12 @@ after-gcd-1<br />
  (assign continue (const 1))<br />
  (goto (label gcd))<br />
 after-gcd-2<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.9:</b>  Using a <tt>continue</tt> register to avoid
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.9:</b>  Using a <tt>continue</tt> register to avoid
 the duplicate controller sequence in figure <a href="#%_fig_5.8">5.8</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.10" id="%_fig_5.10"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p>
+<a name="%_fig_5.10" id="%_fig_5.10"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p>
 </p><p></p><p><tt>gcd<br />
  (test (op =) (reg b) (const 0))<br />
  (branch (label gcd-done))<br />
@@ -556,7 +556,7 @@ after-gcd-1<br />
  (assign continue (label after-gcd-2))<br />
  (goto (label gcd))<br />
 after-gcd-2<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.10:</b>  Assigning labels to the <tt>continue</tt> register simplifies
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.10:</b>  Assigning labels to the <tt>continue</tt> register simplifies
 and generalizes the strategy shown in figure <a href="#%_fig_5.9">5.9</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -772,7 +772,7 @@ recursive call, the answer is in <tt>val</tt>.
 Figure <a href="#%_fig_5.12">5.12</a> shows the controller sequence for this
 machine.</p><p>
 
-<a name="%_fig_5.11" id="%_fig_5.11"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-6.gif" border="0" /><p></p><p><tt>(controller<br />
+<a name="%_fig_5.11" id="%_fig_5.11"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch5-Z-G-6.gif" border="0" /><p></p><p><tt>(controller<br />
    (assign continue (label fact-done))     <em>; set up final return address</em><br />
  fact-loop<br />
    (test (op =) (reg n) (const 1))<br />
@@ -794,11 +794,11 @@ machine.</p><p>
    (assign val (const 1))                  <em>; base case: </em>1! = 1<br />
    (goto (reg continue))                   <em>; return to caller</em><br />
  fact-done)<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.11:</b>  A recursive factorial machine.</div></caption><tr><td>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.11:</b>  A recursive factorial machine.</div></caption><tr><td>
 <a name="%_idx_5586" id="%_idx_5586"></a>
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.12" id="%_fig_5.12"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>(controller<br />
+<a name="%_fig_5.12" id="%_fig_5.12"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>(controller<br />
    (assign continue (label fib-done))<br />
  fib-loop<br />
    (test (op &lt;) (reg n) (const 2))<br />
@@ -829,7 +829,7 @@ machine.</p><p>
    (assign val (reg n))               <em>; base case:  <em>F</em><em>i</em><em>b</em>(<em>n</em>) = <em>n</em></em><br />
    (goto (reg continue))<br />
  fib-done)<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.12:</b>  Controller for a machine to compute Fibonacci
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.12:</b>  Controller for a machine to compute Fibonacci
 numbers.</div></caption><tr><td>
 <a name="%_idx_5588" id="%_idx_5588"></a>
 </td></tr></table></div><p></p><p>

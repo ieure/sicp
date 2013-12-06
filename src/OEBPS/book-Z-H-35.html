@@ -301,7 +301,7 @@ instruction sequences.  Thus, for example,
 produces one of the following four sequences of instructions, depending on how
 &lt;<em><em>s</em><em>e</em><em>q</em><sub>1</sub></em>&gt; and &lt;<em><em>s</em><em>e</em><em>q</em><sub>2</sub></em>&gt; use &lt;<em><em>r</em><em>e</em><em>g</em><sub>1</sub></em>&gt; and &lt;<em><em>r</em><em>e</em><em>g</em><sub>2</sub></em>&gt;:</p><p>
 
-</p><p></p><p></p><p></p><div align="left"><img src="images/ch5-Z-G-9.gif" border="0" /></div><p></p><p>
+</p><p></p><p></p><p></p><div style="text-align: left;"><img src="images/ch5-Z-G-9.gif" border="0" /></div><p></p><p>
 
 By using <tt>preserving</tt> to combine instruction sequences the
 compiler avoids unnecessary stack operations.  This also isolates the
@@ -1275,7 +1275,7 @@ stack space.
 
 </p><p>
 
-<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt><em>;; construct the procedure and skip over code for the procedure body</em><br />
+<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; construct the procedure and skip over code for the procedure body</em><br />
   (assign val<br />
           (op make-compiled-procedure) (label entry2) (reg env))<br />
   (goto (label after-lambda1))<br /><br />
@@ -1316,13 +1316,13 @@ false-branch4<br /><em>;; compute and return <tt>(* (factorial (- n 1))�
   (assign proc<br />
           (op lookup-variable-value) (const factorial) (reg env))<br />
   (save proc)  <em>; save <tt>factorial</tt> procedure</em><br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.17:</b>  Compilation of the definition of the <tt>factorial</tt>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.17:</b>  Compilation of the definition of the <tt>factorial</tt>
 procedure (continued on next page).</div></caption><tr><td>
 <a name="%_idx_6412" id="%_idx_6412"></a>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt><em>;; compute <tt>(- n 1)</tt>, which is the argument for <tt>factorial</tt></em><br />
+<a name="%_fig_5.17" id="%_fig_5.17"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt><em>;; compute <tt>(- n 1)</tt>, which is the argument for <tt>factorial</tt></em><br />
   (assign proc (op lookup-variable-value) (const -) (reg env))<br />
   (assign val (const 1))<br />
   (assign argl (op list) (reg val))<br />
@@ -1366,13 +1366,13 @@ after-lambda1<br /><em>;; assign the procedure to the variable <tt>factor
   (perform<br />
    (op define-variable!) (const factorial) (reg val) (reg env))<br />
   (assign val (const ok))<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.17:</b>  (continued)</div></caption><tr><td>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.17:</b>  (continued)</div></caption><tr><td>
 </td></tr></table></div><p></p><p>
 
 </p><p><a name="%_thm_5.35" id="%_thm_5.35"></a>
 <b>Exercise 5.35.</b>  What expression was compiled to produce the code shown in
 figure <a href="#%_fig_5.18">5.18</a>?
-<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>  (assign val (op make-compiled-procedure) (label entry16)<br />
+<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>  (assign val (op make-compiled-procedure) (label entry16)<br />
                                            (reg env))<br />
   (goto (label after-lambda15))<br />
 entry16<br />
@@ -1409,13 +1409,13 @@ compiled-branch21<br />
   (goto (reg val))<br />
 primitive-branch22<br />
   (assign val (op apply-primitive-procedure) (reg proc) (reg argl))<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.18:</b>  An example of compiler output (continued on next page).
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.18:</b>  An example of compiler output (continued on next page).
 See exercise <a href="#%_thm_5.35">5.35</a>.</div></caption><tr><td>
 
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div align="left"><table width="100%"><tr><td><p></p><p><tt>after-call20<br />
+<a name="%_fig_5.18" id="%_fig_5.18"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><p></p><p><tt>after-call20<br />
   (assign argl (op list) (reg val))<br />
   (restore env)<br />
   (assign val (op lookup-variable-value) (const x) (reg env))<br />
@@ -1434,7 +1434,7 @@ after-call23<br />
 after-lambda15<br />
   (perform (op define-variable!) (const f) (reg val) (reg env))<br />
   (assign val (const ok))<br /></tt></p><p></p><p>
-</p><p></p><p></p></td></tr><caption align="bottom"><div align="left"><b>Figure 5.18:</b>  (continued)</div></caption><tr><td>
+</p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.18:</b>  (continued)</div></caption><tr><td>
 </td></tr></table></div><p>
 </p><p></p><p>
 

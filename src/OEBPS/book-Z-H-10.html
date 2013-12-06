@@ -237,7 +237,7 @@ hierarchical, treelike objects.  In fact, the “percolate values
 upward” form of the evaluation rule is an example of a general kind
 of process known as <a name="%_idx_262" id="%_idx_262"></a><em>tree accumulation</em>.</p><p>
 
-<a name="%_fig_1.1" id="%_fig_1.1"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch1-Z-G-1.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 1.1:</b>  Tree representation, showing the value of each subcombination.</div></caption><tr><td>
+<a name="%_fig_1.1" id="%_fig_1.1"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch1-Z-G-1.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 1.1:</b>  Tree representation, showing the value of each subcombination.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
@@ -528,7 +528,7 @@ value of a number by testing whether the number is positive, negative,
 or zero and taking different actions in the different cases according
 to the rule</p><p>
 
-</p><p></p><div align="left"><img src="images/ch1-Z-G-2.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch1-Z-G-2.gif" border="0" /></div><p></p><p>
 
 <a name="%_idx_350" id="%_idx_350"></a>This construct is called a <em>case analysis</em>, and
 there is a special form in Lisp for notating such a case
@@ -675,7 +675,7 @@ in which it is presented.</p><p>
 
 </p><p><a name="%_thm_1.2" id="%_thm_1.2"></a>
 <b>Exercise 1.2.</b>  Translate the following expression into prefix form
-</p><p></p><div align="left"><img src="images/ch1-Z-G-3.gif" border="0" /></div><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch1-Z-G-3.gif" border="0" /></div><p>
 </p><p></p><p>
 
 </p><p><a name="%_thm_1.3" id="%_thm_1.3"></a>
@@ -727,7 +727,7 @@ effective.</p><p>
 
 As a case in point, consider the problem of computing square
 roots.  We can define the square-root function as
-</p><p></p><div align="left"><img src="images/ch1-Z-G-4.gif" border="0" /></div><p></p><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch1-Z-G-4.gif" border="0" /></div><p></p><p>
 
 This describes a perfectly legitimate mathematical function.  We could
 use it to recognize whether one number is the square root of another, or
@@ -757,10 +757,10 @@ to the actual square root) by averaging <em>y</em> with
 <em>x</em>/<em>y</em>.<a name="call_footnote_Temp_33" href="#footnote_Temp_33" id="call_footnote_Temp_33"><sup><small>21</small></sup></a> For example, we can compute
 the square root of 2 as follows.  Suppose our initial guess is 1:</p><p>
 
-</p><table border="0"><tr><td valign="top">Guess </td><td valign="top">Quotient </td><td valign="top">Average</td></tr><tr><td valign="top">  </td></tr><tr><td valign="top">1      </td><td valign="top"> (2/1)  =  2        </td><td valign="top">
-((2 + 1)/2)  =  1.5 </td></tr><tr><td valign="top">  </td></tr><tr><td valign="top">1.5    </td><td valign="top"> (2/1.5)  =  1.3333 </td><td valign="top">
-((1.3333 + 1.5)/2)  =  1.4167 </td></tr><tr><td valign="top">  </td></tr><tr><td valign="top">1.4167 </td><td valign="top"> (2/1.4167)  =  1.4118 </td><td valign="top">
-((1.4167 + 1.4118)/2)  =  1.4142 </td></tr><tr><td valign="top">  </td></tr><tr><td valign="top">1.4142 </td><td valign="top"><tt>...</tt></td><td valign="top"><tt>...</tt></td></tr><tr><td valign="top"></td></tr></table><p>
+</p><table border="0"><tr><td vstyle="text-align: top;">Guess </td><td vstyle="text-align: top;">Quotient </td><td vstyle="text-align: top;">Average</td></tr><tr><td vstyle="text-align: top;">  </td></tr><tr><td vstyle="text-align: top;">1      </td><td vstyle="text-align: top;"> (2/1)  =  2        </td><td vstyle="text-align: top;">
+((2 + 1)/2)  =  1.5 </td></tr><tr><td vstyle="text-align: top;">  </td></tr><tr><td vstyle="text-align: top;">1.5    </td><td vstyle="text-align: top;"> (2/1.5)  =  1.3333 </td><td vstyle="text-align: top;">
+((1.3333 + 1.5)/2)  =  1.4167 </td></tr><tr><td vstyle="text-align: top;">  </td></tr><tr><td vstyle="text-align: top;">1.4167 </td><td vstyle="text-align: top;"> (2/1.4167)  =  1.4118 </td><td vstyle="text-align: top;">
+((1.4167 + 1.4118)/2)  =  1.4142 </td></tr><tr><td vstyle="text-align: top;">  </td></tr><tr><td vstyle="text-align: top;">1.4142 </td><td vstyle="text-align: top;"><tt>...</tt></td><td vstyle="text-align: top;"><tt>...</tt></td></tr><tr><td vstyle="text-align: top;"></td></tr></table><p>
 
 Continuing this process, we obtain better and better
 approximations to the square root.</p><p>
@@ -862,7 +862,7 @@ small and large numbers?
 <b>Exercise 1.8.</b>  <a name="%_idx_560" id="%_idx_560"></a><a name="%_idx_562" id="%_idx_562"></a>Newton's method for cube roots is based on the fact that if <em>y</em> is an
 approximation to the cube root of <em>x</em>, then a better approximation is
 given by the value
-</p><p></p><div align="left"><img src="images/ch1-Z-G-5.gif" border="0" /></div><p>
+</p><p></p><div style="text-align: left;"><img src="images/ch1-Z-G-5.gif" border="0" /></div><p>
 Use this formula to implement a cube-root procedure analogous to the
 square-root procedure.  (In section <a href="book-Z-H-12.html#%_sec_1.3.4">1.3.4</a> we
 will see how to implement Newton's method in general as an abstraction
@@ -892,7 +892,7 @@ can be viewed as a cluster of procedures (shown in
 figure <a href="#%_fig_1.2">1.2</a>) that mirrors the decomposition of
 the problem into subproblems.</p><p>
 
-<a name="%_fig_1.2" id="%_fig_1.2"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch1-Z-G-6.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 1.2:</b>  Procedural decomposition of the <tt>sqrt</tt> program.</div></caption><tr><td>
+<a name="%_fig_1.2" id="%_fig_1.2"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch1-Z-G-6.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 1.2:</b>  Procedural decomposition of the <tt>sqrt</tt> program.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
