@@ -13,17 +13,17 @@
 
 
 
-<a id="%_sec_2.2"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_2.2">2.2  Hierarchical Data and the Closure Property</a></h2><p>
+<a id="__sec_2.2"></a>
+<h2><a href="book-Z-H-4.html#__toc___sec_2.2">2.2  Hierarchical Data and the Closure Property</a></h2><p>
 
 </p><p>
 
 As we have seen, pairs provide a primitive “glue” that we can use to
 construct compound data objects.
-Figure <a href="#%_fig_2.2">2.2</a> shows a standard way to
-visualize a <a id="%_idx_1526"></a>pair – in this case, the pair formed by <tt>(cons 1 2)</tt>.
-In this representation, which is called <a id="%_idx_1528"></a><em>box-and-pointer
-notation</em>, each object is shown as a <a id="%_idx_1530"></a><em>pointer</em> to a box.  The box
+Figure <a href="#__fig_2.2">2.2</a> shows a standard way to
+visualize a <a id="__idx_1526"></a>pair – in this case, the pair formed by <tt>(cons 1 2)</tt>.
+In this representation, which is called <a id="__idx_1528"></a><em>box-and-pointer
+notation</em>, each object is shown as a <a id="__idx_1530"></a><em>pointer</em> to a box.  The box
 for a primitive object contains a representation of the object.  For
 example, the box for a number contains a numeral.  The box for a pair
 is actually a double box, the left part containing (a pointer to) the
@@ -32,28 +32,28 @@ is actually a double box, the left part containing (a pointer to) the
 
 We have already seen that <tt>cons</tt> can be used to combine not
 only numbers but pairs as well.  (You made use of this fact, or
-should have, in doing exercises <a href="book-Z-H-14.html#%_thm_2.2">2.2</a>
-and <a href="book-Z-H-14.html#%_thm_2.3">2.3</a>.)  As a consequence, pairs provide a universal
+should have, in doing exercises <a href="book-Z-H-14.html#__thm_2.2">2.2</a>
+and <a href="book-Z-H-14.html#__thm_2.3">2.3</a>.)  As a consequence, pairs provide a universal
 building block from which we can construct all sorts of data
-structures.  Figure <a href="#%_fig_2.3">2.3</a> shows two ways
+structures.  Figure <a href="#__fig_2.3">2.3</a> shows two ways
 to use pairs to combine the numbers 1, 2, 3, and 4.</p><p>
 
-<a id="%_fig_2.2"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-11.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.2:</b>  Box-and-pointer representation of <tt>(cons 1 2)</tt>.</div></caption><tr><td>
+<a id="__fig_2.2"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-11.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.2:</b>  Box-and-pointer representation of <tt>(cons 1 2)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a id="%_fig_2.3"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-12.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.3:</b>  Two ways to combine 1, 2, 3, and 4 using pairs.</div></caption><tr><td>
+<a id="__fig_2.3"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-12.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.3:</b>  Two ways to combine 1, 2, 3, and 4 using pairs.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
 The ability to create pairs whose elements are pairs is the essence of
 list structure's importance as a representational tool.  We refer to
-this ability as the <a id="%_idx_1532"></a><a id="%_idx_1534"></a><em>closure property</em> of <tt>cons</tt>.  In general,
+this ability as the <a id="__idx_1532"></a><a id="__idx_1534"></a><em>closure property</em> of <tt>cons</tt>.  In general,
 an operation for combining data objects satisfies the closure property
 if the results of combining things with that operation can themselves
 be combined using the same operation.<a href="#footnote_Temp_154" id="call_footnote_Temp_154"><sup><small>6</small></sup></a>
 Closure is the key to power in
-any means of combination because it permits us to create <a id="%_idx_1538"></a><a id="%_idx_1540"></a><em>hierarchical</em> structures – structures made up of parts, which
+any means of combination because it permits us to create <a id="__idx_1538"></a><a id="__idx_1540"></a><em>hierarchical</em> structures – structures made up of parts, which
 themselves are made up of parts, and so on.</p><p>
 
 From the outset of chapter 1, we've made essential use of closure in
@@ -64,26 +64,26 @@ for compound data.  We describe some conventional techniques for using
 pairs to represent sequences and trees, and we exhibit a graphics
 language that illustrates closure in a vivid way.<a href="#footnote_Temp_155" id="call_footnote_Temp_155"><sup><small>7</small></sup></a></p><p>
 
-<a id="%_sec_2.2.1"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.2.1">2.2.1  Representing Sequences</a></h3><p>
+<a id="__sec_2.2.1"></a>
+</p><h3><a href="book-Z-H-4.html#__toc___sec_2.2.1">2.2.1  Representing Sequences</a></h3><p>
 
 </p><p>
 
-<a id="%_fig_2.4"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-13.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.4:</b>  The sequence 1, 2, 3, 4 represented as a chain of pairs.</div></caption><tr><td>
+<a id="__fig_2.4"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-13.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.4:</b>  The sequence 1, 2, 3, 4 represented as a chain of pairs.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-One of the useful structures we can build with pairs is a <a id="%_idx_1554"></a><a id="%_idx_1556"></a><a id="%_idx_1558"></a><em>sequence</em> – an ordered collection of data objects.  There are, of
+One of the useful structures we can build with pairs is a <a id="__idx_1554"></a><a id="__idx_1556"></a><a id="__idx_1558"></a><em>sequence</em> – an ordered collection of data objects.  There are, of
 course, many ways to represent sequences in terms of pairs.  One
 particularly straightforward representation is illustrated in
-figure <a href="#%_fig_2.4">2.4</a>, where the sequence 1, 2, 3, 4 is
+figure <a href="#__fig_2.4">2.4</a>, where the sequence 1, 2, 3, 4 is
 represented as a chain of pairs.  The <tt>car</tt> of each pair is the
 corresponding item in the chain, and the <tt>cdr</tt> of the pair is
 the next pair in the chain.  The <tt>cdr</tt> of the final pair
 signals the end of the sequence by pointing to a distinguished
 value that is not a pair,
 represented in box-and-pointer diagrams as a diagonal line
-<a id="%_idx_1560"></a>and in programs as the value of the variable <a id="%_idx_1562"></a><a id="%_idx_1564"></a><tt>nil</tt>.
+<a id="__idx_1560"></a>and in programs as the value of the variable <a id="__idx_1562"></a><a id="__idx_1564"></a><tt>nil</tt>.
 The entire sequence is constructed by nested <tt>cons</tt> operations:</p><p>
 
 </p><p></p><p><tt>(cons 1<br />
@@ -93,8 +93,8 @@ The entire sequence is constructed by nested <tt>cons</tt> operations:</p><p>
 
 
 Such a sequence of pairs, formed by nested <tt>cons</tt>es, is called a
-<a id="%_idx_1566"></a><em>list</em>, and Scheme provides a
-primitive called <a id="%_idx_1568"></a><a id="%_idx_1570"></a><tt>list</tt> to help in constructing lists.<a href="#footnote_Temp_156" id="call_footnote_Temp_156"><sup><small>8</small></sup></a>
+<a id="__idx_1566"></a><em>list</em>, and Scheme provides a
+primitive called <a id="__idx_1568"></a><a id="__idx_1570"></a><tt>list</tt> to help in constructing lists.<a href="#footnote_Temp_156" id="call_footnote_Temp_156"><sup><small>8</small></sup></a>
 The above sequence could be produced by <tt>(list 1 2 3 4)</tt>.  In
 general,</p><p>
 
@@ -105,8 +105,8 @@ is equivalent to</p><p>
 
 </p><p></p><p><tt>(cons &lt;<em>a<sub>1</sub></em>&gt; (cons &lt;<em>a<sub>2</sub></em>&gt; (cons <tt>...</tt> (cons &lt;<em>a<sub><em>n</em></sub></em>&gt; nil) <tt>...</tt>)))<br /></tt></p><p></p><p>
 Lisp systems conventionally print lists by printing the sequence of
-<a id="%_idx_1576"></a>elements, enclosed in parentheses.  Thus, the data object in
-figure <a href="#%_fig_2.4">2.4</a> is printed as <tt>(1 2 3 4)</tt>:</p><p>
+<a id="__idx_1576"></a>elements, enclosed in parentheses.  Thus, the data object in
+figure <a href="#__fig_2.4">2.4</a> is printed as <tt>(1 2 3 4)</tt>:</p><p>
 
 
 </p><p></p><p><tt>(define one-through-four (list 1 2 3 4))<br /><br />
@@ -117,12 +117,12 @@ is evaluated.  Attempting to evaluate the expression <tt>(1 2 3 4)</tt> will
 signal an error when the interpreter tries to apply the procedure <tt>1</tt> to arguments <tt>2</tt>, <tt>3</tt>, and <tt>4</tt>.</p><p>
 
 
-We can think of <a id="%_idx_1578"></a><a id="%_idx_1580"></a><tt>car</tt> as selecting the first item in the list, and
-of <a id="%_idx_1582"></a><tt>cdr</tt> as selecting the sublist consisting of all but the first
+We can think of <a id="__idx_1578"></a><a id="__idx_1580"></a><tt>car</tt> as selecting the first item in the list, and
+of <a id="__idx_1582"></a><tt>cdr</tt> as selecting the sublist consisting of all but the first
 item.  Nested applications of <tt>car</tt> and <tt>cdr</tt> can be used to
 extract the second, third, and subsequent items in the
 list.<a href="#footnote_Temp_157" id="call_footnote_Temp_157"><sup><small>9</small></sup></a>
-The constructor <a id="%_idx_1592"></a><tt>cons</tt> makes a list like the original one,
+The constructor <a id="__idx_1592"></a><tt>cons</tt> makes a list like the original one,
 but with an additional item at the beginning.</p><p>
 
 
@@ -132,18 +132,18 @@ but with an additional item at the beginning.</p><p>
 (cons 10 one-through-four)<br /><i>(10 1 2 3 4)</i><br /><br />
 (cons 5 one-through-four)<br /><i>(5 1 2 3 4)</i><br /></tt></p><p></p><p>
 The value of <tt>nil</tt>, used to terminate the chain of pairs, can be
-thought of as a sequence of no elements, the <a id="%_idx_1594"></a><a id="%_idx_1596"></a><em>empty list</em>.  The
+thought of as a sequence of no elements, the <a id="__idx_1594"></a><a id="__idx_1596"></a><em>empty list</em>.  The
 word <em>nil</em> is a contraction of the Latin word <em>nihil</em>, which
 means “nothing.”<a href="#footnote_Temp_158" id="call_footnote_Temp_158"><sup><small>10</small></sup></a></p><p>
 
-<a id="%_sec_Temp_159"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_159">List operations</a></h4><p>
+<a id="__sec_Temp_159"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_159">List operations</a></h4><p>
 
-<a id="%_idx_1602"></a><a id="%_idx_1604"></a>
+<a id="__idx_1602"></a><a id="__idx_1604"></a>
 The use of pairs to represent sequences of elements as lists is
 accompanied by conventional programming techniques for manipulating
-lists by successively <a id="%_idx_1606"></a><a id="%_idx_1608"></a>“<tt>cdr</tt>ing down” the lists.  For example,
-the procedure <a id="%_idx_1610"></a><tt>list-ref</tt> takes as arguments a list and a number
+lists by successively <a id="__idx_1606"></a><a id="__idx_1608"></a>“<tt>cdr</tt>ing down” the lists.  For example,
+the procedure <a id="__idx_1610"></a><tt>list-ref</tt> takes as arguments a list and a number
 <em>n</em> and returns the <em>n</em>th item of the list.  It is customary to
 number the elements of the list beginning with 0.  The method for
 computing <tt>list-ref</tt> is the following:</p><p>
@@ -154,7 +154,7 @@ computing <tt>list-ref</tt> is the following:</p><p>
 <tt>cdr</tt> of the list.
 </li></ul><p></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1612"></a>(define (list-ref items n)<br />
+</p><p></p><p><tt><a id="__idx_1612"></a>(define (list-ref items n)<br />
   (if (= n 0)<br />
       (car items)<br />
       (list-ref (cdr items) (- n 1))))<br />
@@ -162,12 +162,12 @@ computing <tt>list-ref</tt> is the following:</p><p>
 (list-ref squares 3)<br /><i>16</i><br /></tt></p><p></p><p></p><p>
 
 Often we <tt>cdr</tt> down the whole list.  To aid in this, Scheme includes
-a primitive predicate <a id="%_idx_1614"></a><a id="%_idx_1616"></a><a id="%_idx_1618"></a><tt>null?</tt>, which tests whether its argument is
-the empty list.  The procedure <a id="%_idx_1620"></a><a id="%_idx_1622"></a><tt>length</tt>, which
+a primitive predicate <a id="__idx_1614"></a><a id="__idx_1616"></a><a id="__idx_1618"></a><tt>null?</tt>, which tests whether its argument is
+the empty list.  The procedure <a id="__idx_1620"></a><a id="__idx_1622"></a><tt>length</tt>, which
 returns the number of items in a list, illustrates this typical
 pattern of use:</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1624"></a>(define (length items)<br />
+</p><p></p><p><tt><a id="__idx_1624"></a>(define (length items)<br />
   (if (null? items)<br />
       0<br />
       (+ 1 (length (cdr items)))))<br />
@@ -187,15 +187,15 @@ This is applied successively until we reach the base case:</p><p>
 
 We could also compute <tt>length</tt> in an iterative style:</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1626"></a>(define (length items)<br />
+</p><p></p><p><tt><a id="__idx_1626"></a>(define (length items)<br />
   (define (length-iter a count)<br />
     (if (null? a)<br />
         count<br />
         (length-iter (cdr a) (+ 1 count))))<br />
   (length-iter items 0))<br /></tt></p><p></p><p></p><p>
 
-Another conventional programming technique is to <a id="%_idx_1628"></a><a id="%_idx_1630"></a>“<tt>cons</tt> up” an
-answer list while <tt>cdr</tt>ing down a list, as in the procedure <a id="%_idx_1632"></a><a id="%_idx_1634"></a><tt>append</tt>, which takes two lists as arguments and combines their
+Another conventional programming technique is to <a id="__idx_1628"></a><a id="__idx_1630"></a>“<tt>cons</tt> up” an
+answer list while <tt>cdr</tt>ing down a list, as in the procedure <a id="__idx_1632"></a><a id="__idx_1634"></a><tt>append</tt>, which takes two lists as arguments and combines their
 elements to make a new list:</p><p>
 
 </p><p></p><p><tt>(append squares odds)<br /><i>(1 4 9 16 25 1 3 5 7)</i><br /><br />
@@ -209,28 +209,28 @@ lists <tt>list1</tt> and <tt>list2</tt>, do the following:</p><p>
 <tt>list2</tt>, and <tt>cons</tt> the <tt>car</tt> of <tt>list1</tt> onto the result:
 </li></ul><p></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1636"></a>(define (append list1 list2)<br />
+</p><p></p><p><tt><a id="__idx_1636"></a>(define (append list1 list2)<br />
   (if (null? list1)<br />
       list2<br />
       (cons (car list1) (append (cdr list1) list2))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.17"></a>
-<b>Exercise 2.17.</b>  Define a procedure <a id="%_idx_1638"></a><a id="%_idx_1640"></a><tt>last-pair</tt> that returns the list that contains only
+</p><p><a id="__thm_2.17"></a>
+<b>Exercise 2.17.</b>  Define a procedure <a id="__idx_1638"></a><a id="__idx_1640"></a><tt>last-pair</tt> that returns the list that contains only
 the last element of a given (nonempty) list:</p><p>
 
 </p><p></p><p><tt>(last-pair (list 23 72 149 34))<br /><i>(34)</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.18"></a>
-<b>Exercise 2.18.</b>  Define a procedure <a id="%_idx_1642"></a><a id="%_idx_1644"></a><tt>reverse</tt> that takes a list as argument and
+</p><p><a id="__thm_2.18"></a>
+<b>Exercise 2.18.</b>  Define a procedure <a id="__idx_1642"></a><a id="__idx_1644"></a><tt>reverse</tt> that takes a list as argument and
 returns a list of the same elements in reverse order:</p><p>
 
 </p><p></p><p><tt>(reverse (list 1 4 9 16 25))<br /><i>(25 16 9 4 1)</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.19"></a>
-<b>Exercise 2.19.</b>  Consider the <a id="%_idx_1646"></a>change-counting program of
-section <a href="book-Z-H-11.html#%_sec_1.2.2">1.2.2</a>.  It would be nice to be able to
+</p><p><a id="__thm_2.19"></a>
+<b>Exercise 2.19.</b>  Consider the <a id="__idx_1646"></a>change-counting program of
+section <a href="book-Z-H-11.html#__sec_1.2.2">1.2.2</a>.  It would be nice to be able to
 easily change the currency used by the program, so that we could
 compute the number of ways to change a British pound, for example.  As
 the program is written, the knowledge of the currency is distributed
@@ -267,8 +267,8 @@ operations on list structures.  Does the order of the list <tt>coin-values</tt> 
 </p><p></p><p>
 
 
-</p><p><a id="%_thm_2.20"></a>
-<b>Exercise 2.20.</b>  <a id="%_idx_1648"></a><a id="%_idx_1650"></a><a id="%_idx_1652"></a><a id="%_idx_1654"></a>The procedures <tt>+</tt>, <tt>*</tt>, and <tt>list</tt> take arbitrary numbers
+</p><p><a id="__thm_2.20"></a>
+<b>Exercise 2.20.</b>  <a id="__idx_1648"></a><a id="__idx_1650"></a><a id="__idx_1652"></a><a id="__idx_1654"></a>The procedures <tt>+</tt>, <tt>*</tt>, and <tt>list</tt> take arbitrary numbers
 of arguments. One way to define such procedures is to use <tt>define</tt>
 with <em>dotted-tail notation</em>.  In a procedure definition, a parameter
 list that has a dot before the last parameter name indicates that, when the
@@ -303,16 +303,16 @@ parity as the first argument.  For example,
 (same-parity 2 3 4 5 6 7)<br /><i>(2 4 6)</i><br /></tt></p><p></p><p>
 </p><p>
 
-<a id="%_sec_Temp_165"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_165">Mapping over lists</a></h4><p>
+<a id="__sec_Temp_165"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_165">Mapping over lists</a></h4><p>
 
-<a id="%_idx_1658"></a><a id="%_idx_1660"></a>
+<a id="__idx_1658"></a><a id="__idx_1660"></a>
 One extremely useful operation is to apply some transformation
 to each element in a list and generate the list of results.
 For instance, the following procedure scales each number in a list by
 a given factor:</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1662"></a>(define (scale-list items factor)<br />
+</p><p></p><p><tt><a id="__idx_1662"></a>(define (scale-list items factor)<br />
   (if (null? items)<br />
       nil<br />
       (cons (* (car items) factor)<br />
@@ -321,13 +321,13 @@ a given factor:</p><p>
 
 We can abstract this general idea and capture it as a common pattern
 expressed as a higher-order procedure, just as in
-section <a href="book-Z-H-12.html#%_sec_1.3">1.3</a>.  The higher-order procedure
+section <a href="book-Z-H-12.html#__sec_1.3">1.3</a>.  The higher-order procedure
 here is called <tt>map</tt>.  <tt>Map</tt> takes as arguments a procedure
 of one argument
 and a list, and returns a list of the results produced by
 applying the procedure to each element in the list:<a href="#footnote_Temp_166" id="call_footnote_Temp_166"><sup><small>12</small></sup></a></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1666"></a>(define (map proc items)<br />
+</p><p></p><p><tt><a id="__idx_1666"></a>(define (map proc items)<br />
   (if (null? items)<br />
       nil<br />
       (cons (proc (car items))<br />
@@ -336,7 +336,7 @@ applying the procedure to each element in the list:<a href="#footnote_Temp_166" 
 (map (lambda (x) (* x x))<br />
      (list 1 2 3 4))<br /><i>(1 4 9 16)</i><br /></tt></p><p></p><p>
 Now we can give a new definition of <tt>scale-list</tt> in terms of <tt>map</tt>:
-</p><p></p><p><tt><a id="%_idx_1668"></a>(define (scale-list items factor)<br />
+</p><p></p><p><tt><a id="__idx_1668"></a>(define (scale-list items factor)<br />
   (map (lambda (x) (* x factor))<br />
        items))<br /></tt></p><p></p><p>
 </p><p>
@@ -352,14 +352,14 @@ think about the process differently.  In effect, <tt>map</tt> helps
 establish an abstraction barrier that isolates the implementation of
 procedures that transform lists from the details of how the
 elements of the list are extracted and combined.  Like the barriers
-shown in figure <a href="book-Z-H-14.html#%_fig_2.1">2.1</a>, this abstraction gives
+shown in figure <a href="book-Z-H-14.html#__fig_2.1">2.1</a>, this abstraction gives
 us the flexibility to change the low-level details of how sequences
 are implemented, while preserving the conceptual framework of
 operations that transform sequences to sequences.
-Section <a href="#%_sec_2.2.3">2.2.3</a> expands on this use
+Section <a href="#__sec_2.2.3">2.2.3</a> expands on this use
 of sequences as a framework for organizing programs.</p><p>
 
-</p><p><a id="%_thm_2.21"></a>
+</p><p><a id="__thm_2.21"></a>
 <b>Exercise 2.21.</b>  The procedure <tt>square-list</tt> takes a list of
 numbers as argument and returns a list of the squares of those
 numbers.</p><p>
@@ -376,9 +376,9 @@ both of them by filling in the missing expressions:</p><p>
   (map &lt;<em>??</em>&gt; &lt;<em>??</em>&gt;))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.22"></a>
+</p><p><a id="__thm_2.22"></a>
 <b>Exercise 2.22.</b>  Louis Reasoner tries to rewrite the first <tt>square-list</tt> procedure of
-exercise <a href="#%_thm_2.21">2.21</a> so that it evolves an iterative
+exercise <a href="#__thm_2.21">2.21</a> so that it evolves an iterative
 process:</p><p>
 
 </p><p></p><p><tt>(define (square-list items)<br />
@@ -407,8 +407,8 @@ This doesn't work either.  Explain.
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.23"></a>
-<b>Exercise 2.23.</b>  The procedure <a id="%_idx_1670"></a><tt>for-each</tt> is similar to <tt>map</tt>.  It takes as
+</p><p><a id="__thm_2.23"></a>
+<b>Exercise 2.23.</b>  The procedure <a id="__idx_1670"></a><tt>for-each</tt> is similar to <tt>map</tt>.  It takes as
 arguments a procedure and a list of elements.  However, rather than
 forming a list of the  results, <tt>for-each</tt> just applies the procedure
 to each of the elements in turn, from left to right.  The values
@@ -424,11 +424,11 @@ implementation of <tt>for-each</tt>.
 </p><p>
 </p><p>
 
-<a id="%_sec_2.2.2"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.2.2">2.2.2  Hierarchical Structures</a></h3><p>
+<a id="__sec_2.2.2"></a>
+</p><h3><a href="book-Z-H-4.html#__toc___sec_2.2.2">2.2.2  Hierarchical Structures</a></h3><p>
 
 
-<a id="%_idx_1672"></a><a id="%_idx_1674"></a><a id="%_idx_1676"></a><a id="%_idx_1678"></a>
+<a id="__idx_1672"></a><a id="__idx_1674"></a><a id="__idx_1676"></a><a id="__idx_1678"></a>
 The representation of sequences in terms of lists generalizes
 naturally to represent sequences whose elements may
 themselves be sequences.  For example, we can regard the object
@@ -436,30 +436,30 @@ themselves be sequences.  For example, we can regard the object
 
 </p><p></p><p><tt>(cons (list 1 2) (list 3 4))<br /></tt></p><p></p><p>
 as a list of three items, the first of which is itself a list, <tt>(1 2)</tt>.  Indeed, this is suggested by the form in which the result is
-printed by the interpreter.  Figure <a href="#%_fig_2.5">2.5</a> shows
+printed by the interpreter.  Figure <a href="#__fig_2.5">2.5</a> shows
 the representation of this structure in terms of pairs.</p><p>
 
-<a id="%_fig_2.5"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-15.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.5:</b>  Structure formed by <tt>(cons (list 1 2) (list 3 4))</tt>.</div></caption><tr><td>
+<a id="__fig_2.5"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-15.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.5:</b>  Structure formed by <tt>(cons (list 1 2) (list 3 4))</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
 Another way to think of sequences whose elements are sequences is as
 <em>trees</em>.  The elements of the sequence are the branches of the
 tree, and elements that are themselves sequences are subtrees.
-Figure <a href="#%_fig_2.6">2.6</a> shows the structure in
-figure <a href="#%_fig_2.5">2.5</a> viewed as a tree.</p><p>
+Figure <a href="#__fig_2.6">2.6</a> shows the structure in
+figure <a href="#__fig_2.5">2.5</a> viewed as a tree.</p><p>
 
-<a id="%_fig_2.6"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-16.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.6:</b>  The list structure in figure <a href="#%_fig_2.5">2.5</a> viewed as a tree.</div></caption><tr><td>
+<a id="__fig_2.6"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-16.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.6:</b>  The list structure in figure <a href="#__fig_2.5">2.5</a> viewed as a tree.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
 
-<a id="%_idx_1680"></a>Recursion is a natural tool for dealing with tree structures, since
+<a id="__idx_1680"></a>Recursion is a natural tool for dealing with tree structures, since
 we can often reduce operations on trees to operations on their
 branches, which reduce in turn to operations on the branches of the
 branches, and so on, until we reach the leaves of the tree.
 As an example, compare the <tt>length</tt> procedure of
-section <a href="#%_sec_2.2.1">2.2.1</a> with the <a id="%_idx_1682"></a><a id="%_idx_1684"></a><tt>count-leaves</tt> procedure, which
+section <a href="#__sec_2.2.1">2.2.1</a> with the <a id="__idx_1682"></a><a id="__idx_1684"></a><tt>count-leaves</tt> procedure, which
 returns the total number of leaves of a tree:</p><p>
 
 
@@ -506,24 +506,24 @@ actual leaves, so we need another base case:</p><p>
 
 To aid
 in writing recursive procedures on trees, Scheme provides the primitive
-predicate <a id="%_idx_1686"></a><a id="%_idx_1688"></a><tt>pair?</tt>, which tests whether its argument is a pair.
+predicate <a id="__idx_1686"></a><a id="__idx_1688"></a><tt>pair?</tt>, which tests whether its argument is a pair.
 Here is the complete procedure:<a href="#footnote_Temp_170" id="call_footnote_Temp_170"><sup><small>13</small></sup></a></p><p>
 
 
-</p><p></p><p><tt><a id="%_idx_1690"></a>(define (count-leaves x)<br />
+</p><p></p><p><tt><a id="__idx_1690"></a>(define (count-leaves x)<br />
   (cond ((null? x) 0)  <br />
         ((not (pair? x)) 1)<br />
         (else (+ (count-leaves (car x))<br />
                  (count-leaves (cdr x))))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.24"></a>
+</p><p><a id="__thm_2.24"></a>
 <b>Exercise 2.24.</b>  Suppose we evaluate the expression <tt>(list 1 (list 2 (list 3 4)))</tt>.
 Give the result printed by the interpreter, the corresponding
 box-and-pointer structure, and the interpretation of this as a tree
-(as in figure <a href="#%_fig_2.6">2.6</a>).
+(as in figure <a href="#__fig_2.6">2.6</a>).
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.25"></a>
+</p><p><a id="__thm_2.25"></a>
 <b>Exercise 2.25.</b>  Give combinations of <tt>car</tt>s and <tt>cdr</tt>s that will pick 7 from
 each of the following lists:</p><p>
 
@@ -532,7 +532,7 @@ each of the following lists:</p><p>
 (1 (2 (3 (4 (5 (6 7))))))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.26"></a>
+</p><p><a id="__thm_2.26"></a>
 <b>Exercise 2.26.</b>  Suppose we define <tt>x</tt> and <tt>y</tt> to be two lists:</p><p>
 
 </p><p></p><p><tt>(define x (list 1 2 3))<br />
@@ -545,9 +545,9 @@ each of the following expressions:</p><p>
 (list x y)<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.27"></a>
-<b>Exercise 2.27.</b>  Modify your <tt>reverse</tt> procedure of exercise <a href="#%_thm_2.18">2.18</a> to
-produce a <a id="%_idx_1692"></a><a id="%_idx_1694"></a><tt>deep-reverse</tt> procedure that takes a list as argument
+</p><p><a id="__thm_2.27"></a>
+<b>Exercise 2.27.</b>  Modify your <tt>reverse</tt> procedure of exercise <a href="#__thm_2.18">2.18</a> to
+produce a <a id="__idx_1692"></a><a id="__idx_1694"></a><tt>deep-reverse</tt> procedure that takes a list as argument
 and returns as its value the list with its elements reversed and with
 all sublists deep-reversed as well.  For example,</p><p>
 
@@ -557,8 +557,8 @@ x<br /><i>((1 2) (3 4))</i><br /><br />
 (deep-reverse x)<br /><i>((4 3) (2 1))</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.28"></a>
-<b>Exercise 2.28.</b>  Write a procedure <a id="%_idx_1696"></a><a id="%_idx_1698"></a><tt>fringe</tt> that takes as argument a tree
+</p><p><a id="__thm_2.28"></a>
+<b>Exercise 2.28.</b>  Write a procedure <a id="__idx_1696"></a><a id="__idx_1698"></a><tt>fringe</tt> that takes as argument a tree
 (represented as a list) and returns a list whose elements are all the
 leaves of the tree arranged in left-to-right order.  For example,</p><p>
 
@@ -568,8 +568,8 @@ leaves of the tree arranged in left-to-right order.  For example,</p><p>
 </p><p></p><p>
 
 
-</p><p><a id="%_thm_2.29"></a>
-<b>Exercise 2.29.</b>  <a id="%_idx_1700"></a>A binary mobile consists of two branches, a left branch and a right
+</p><p><a id="__thm_2.29"></a>
+<b>Exercise 2.29.</b>  <a id="__idx_1700"></a>A binary mobile consists of two branches, a left branch and a right
 branch.  Each branch is a rod of a certain length, from which hangs
 either a weight or another binary mobile.  We can represent a binary
 mobile using compound data by constructing it from two branches (for
@@ -594,7 +594,7 @@ the components of a branch.</p><p>
 b.  Using your selectors, define a procedure <tt>total-weight</tt>
 that returns the total weight of a mobile.</p><p>
 
-c.  A mobile is said to be <a id="%_idx_1702"></a><em>balanced</em> if the torque applied
+c.  A mobile is said to be <a id="__idx_1702"></a><em>balanced</em> if the torque applied
 by its top-left branch is equal to that applied by its top-right
 branch (that is, if the length of the left rod multiplied by the
 weight hanging from that rod is equal to the corresponding product for
@@ -616,21 +616,21 @@ representation?
 </p><p>
 </p><p>
 
-<a id="%_sec_Temp_177"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_177">Mapping over trees</a></h4><p>
+<a id="__sec_Temp_177"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_177">Mapping over trees</a></h4><p>
 
-<a id="%_idx_1704"></a><a id="%_idx_1706"></a>
+<a id="__idx_1704"></a><a id="__idx_1706"></a>
 Just as <tt>map</tt> is a powerful abstraction for dealing with sequences,
 <tt>map</tt> together with recursion is a powerful abstraction for
 dealing with trees.  For instance, the <tt>scale-tree</tt>
 procedure, analogous to <tt>scale-list</tt> of
-section <a href="#%_sec_2.2.1">2.2.1</a>, takes as arguments a numeric factor and a
+section <a href="#__sec_2.2.1">2.2.1</a>, takes as arguments a numeric factor and a
 tree whose leaves are numbers.  It returns a tree of the same shape,
 where each number is multiplied by the factor.
 The recursive plan for <tt>scale-tree</tt> is similar to the one for
 <tt>count-leaves</tt>:</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1708"></a>(define (scale-tree tree factor)<br />
+</p><p></p><p><tt><a id="__idx_1708"></a>(define (scale-tree tree factor)<br />
   (cond ((null? tree) nil)<br />
         ((not (pair? tree)) (* tree factor))<br />
         (else (cons (scale-tree (car tree) factor)<br />
@@ -644,7 +644,7 @@ over the sequence, scaling each sub-tree in turn, and return the list
 of results.  In the base case, where the tree is a leaf, we simply
 multiply by the factor:</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1710"></a>(define (scale-tree tree factor)<br />
+</p><p></p><p><tt><a id="__idx_1710"></a>(define (scale-tree tree factor)<br />
   (map (lambda (sub-tree)<br />
          (if (pair? sub-tree)<br />
              (scale-tree sub-tree factor)<br />
@@ -653,9 +653,9 @@ multiply by the factor:</p><p>
 Many tree operations can be implemented by similar combinations of
 sequence operations and recursion.</p><p>
 
-</p><p><a id="%_thm_2.30"></a>
+</p><p><a id="__thm_2.30"></a>
 <b>Exercise 2.30.</b>  Define a procedure <tt>square-tree</tt> analogous to the <tt>square-list</tt>
-procedure of exercise <a href="#%_thm_2.21">2.21</a>.  That is, <tt>square-list</tt> should behave as follows:</p><p>
+procedure of exercise <a href="#__thm_2.21">2.21</a>.  That is, <tt>square-list</tt> should behave as follows:</p><p>
 
 </p><p></p><p><tt>(square-tree<br />
  (list 1<br />
@@ -666,22 +666,22 @@ higher-order procedures) and also by using <tt>map</tt> and recursion.
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.31"></a>
-<b>Exercise 2.31.</b>  Abstract your answer to exercise <a href="#%_thm_2.30">2.30</a> to produce a
-procedure <a id="%_idx_1712"></a><tt>tree-map</tt> with the property that <tt>square-tree</tt>
+</p><p><a id="__thm_2.31"></a>
+<b>Exercise 2.31.</b>  Abstract your answer to exercise <a href="#__thm_2.30">2.30</a> to produce a
+procedure <a id="__idx_1712"></a><tt>tree-map</tt> with the property that <tt>square-tree</tt>
 could be defined as</p><p>
 
 </p><p></p><p><tt>(define (square-tree tree) (tree-map square tree))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.32"></a>
-<b>Exercise 2.32.</b>  We can represent a <a id="%_idx_1714"></a>set as a list of distinct elements, and we can
+</p><p><a id="__thm_2.32"></a>
+<b>Exercise 2.32.</b>  We can represent a <a id="__idx_1714"></a>set as a list of distinct elements, and we can
 represent the set of all subsets of the set as a list of lists.  For
 example, if the set is <tt>(1 2 3)</tt>, then the set of all subsets is
 <tt>(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))</tt>.  Complete the
 following definition of a procedure that generates the set of subsets
 of a set and give a clear explanation of why it works:
-</p><p></p><p><tt><a id="%_idx_1716"></a>(define (subsets s)<br />
+</p><p></p><p><tt><a id="__idx_1716"></a>(define (subsets s)<br />
   (if (null? s)<br />
       (list nil)<br />
       (let ((rest (subsets (cdr s))))<br />
@@ -689,11 +689,11 @@ of a set and give a clear explanation of why it works:
 </p><p>
 </p><p>
 
-<a id="%_sec_2.2.3"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.2.3">2.2.3  Sequences as Conventional Interfaces</a></h3><p>
+<a id="__sec_2.2.3"></a>
+</p><h3><a href="book-Z-H-4.html#__toc___sec_2.2.3">2.2.3  Sequences as Conventional Interfaces</a></h3><p>
 
 
-<a id="%_idx_1718"></a><a id="%_idx_1720"></a>
+<a id="__idx_1718"></a><a id="__idx_1720"></a>
 In working with compound data, we've stressed how data abstraction
 permits us to design programs without becoming enmeshed in the details
 of data representations, and how abstraction preserves for us the
@@ -701,16 +701,16 @@ flexibility to experiment with alternative representations.  In this
 section, we introduce another powerful design principle for working
 with data structures – the use of <em>conventional interfaces</em>.</p><p>
 
-In section <a href="book-Z-H-12.html#%_sec_1.3">1.3</a> we saw how program
+In section <a href="book-Z-H-12.html#__sec_1.3">1.3</a> we saw how program
 abstractions, implemented as higher-order procedures, can capture
 common patterns in programs that deal with numerical data.  Our
 ability to formulate analogous operations for working with compound
 data depends crucially on the style in which we manipulate our data
 structures.  Consider, for example, the following procedure, analogous
-to the <tt>count-leaves</tt> procedure of section <a href="#%_sec_2.2.2">2.2.2</a>, which
+to the <tt>count-leaves</tt> procedure of section <a href="#__sec_2.2.2">2.2.2</a>, which
 takes a tree as argument and computes the sum of the squares of the
 leaves that are odd:
-</p><p></p><p><tt><a id="%_idx_1722"></a>(define (sum-odd-squares tree)<br />
+</p><p></p><p><tt><a id="__idx_1722"></a>(define (sum-odd-squares tree)<br />
   (cond ((null? tree) 0)  <br />
         ((not (pair? tree))<br />
          (if (odd? tree) (square tree) 0))<br />
@@ -720,7 +720,7 @@ leaves that are odd:
 On the surface, this procedure is very different from the following
 one, which constructs a list of all the even Fibonacci numbers
  <em>F</em><em>i</em><em>b</em>(<em>k</em>), where <em>k</em> is less than or equal to a given integer <em>n</em>:
-</p><p></p><p><tt><a id="%_idx_1724"></a>(define (even-fibs n)<br />
+</p><p></p><p><tt><a id="__idx_1724"></a>(define (even-fibs n)<br />
   (define (next k)<br />
     (if (&gt; k n)<br />
         nil<br />
@@ -747,20 +747,20 @@ The second program
 empty list.
 </li></ul><p></p><p>
 
-<a id="%_idx_1726"></a><a id="%_idx_1728"></a>A signal-processing engineer would find it natural to conceptualize
+<a id="__idx_1726"></a><a id="__idx_1728"></a>A signal-processing engineer would find it natural to conceptualize
 these processes in terms of signals flowing through a cascade of
 stages, each of which implements part of the program plan, as shown in
-figure <a href="#%_fig_2.7">2.7</a>.  In <tt>sum-odd-squares</tt>, we
-begin with an <a id="%_idx_1730"></a><em>enumerator</em>, which generates a “signal”
+figure <a href="#__fig_2.7">2.7</a>.  In <tt>sum-odd-squares</tt>, we
+begin with an <a id="__idx_1730"></a><em>enumerator</em>, which generates a “signal”
 consisting of the leaves of a given tree.  This signal is passed
-through a <a id="%_idx_1732"></a><em>filter</em>, which eliminates all but the odd elements.
-The resulting signal is in turn passed through a <a id="%_idx_1734"></a><em>map</em>, which is a
+through a <a id="__idx_1732"></a><em>filter</em>, which eliminates all but the odd elements.
+The resulting signal is in turn passed through a <a id="__idx_1734"></a><em>map</em>, which is a
 “transducer” that applies the <tt>square</tt> procedure to each
-element.  The output of the map is then fed to an <a id="%_idx_1736"></a><em>accumulator</em>,
+element.  The output of the map is then fed to an <a id="__idx_1736"></a><em>accumulator</em>,
 which combines the elements using <tt>+</tt>, starting from an initial 0.
 The plan for <tt>even-fibs</tt> is analogous.</p><p>
 
-<a id="%_fig_2.7"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-17.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.7:</b>  The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the
+<a id="__fig_2.7"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-17.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.7:</b>  The signal-flow plans for the procedures <tt>sum-odd-squares</tt> (top) and <tt>even-fibs</tt> (bottom) reveal the
 commonality between the two programs.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
@@ -780,25 +780,25 @@ programs to make the signal-flow structure manifest in the procedures
 we write, this would increase the conceptual clarity of the resulting
 code.</p><p>
 
-<a id="%_sec_Temp_181"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_181">Sequence Operations</a></h4><p>
+<a id="__sec_Temp_181"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_181">Sequence Operations</a></h4><p>
 
 
-<a id="%_idx_1738"></a>
+<a id="__idx_1738"></a>
 The key to organizing programs so as to more clearly reflect the
 signal-flow structure is to concentrate on the “signals” that flow
 from one stage in the process to the next.  If we represent these
 signals as lists, then we can use list operations to implement the
 processing at each of the stages.  For instance, we can implement the
 mapping stages of the signal-flow diagrams using the <tt>map</tt>
-procedure from section <a href="#%_sec_2.2.1">2.2.1</a>:
+procedure from section <a href="#__sec_2.2.1">2.2.1</a>:
 
 </p><p></p><p><tt>(map square (list 1 2 3 4 5))<br /><i>(1 4 9 16 25)</i><br /></tt></p><p></p><p></p><p>
 
 Filtering a sequence to select only those elements that satisfy a
 given predicate is accomplished by
 
-</p><p></p><p><tt><a id="%_idx_1740"></a>(define (filter predicate sequence)<br />
+</p><p></p><p><tt><a id="__idx_1740"></a>(define (filter predicate sequence)<br />
   (cond ((null? sequence) nil)<br />
         ((predicate (car sequence))<br />
          (cons (car sequence)<br />
@@ -808,7 +808,7 @@ For example,
 </p><p></p><p><tt>(filter odd? (list 1 2 3 4 5))<br /><i>(1 3 5)</i><br /></tt></p><p></p><p></p><p>
 
 Accumulations can be implemented by
-</p><p></p><p><tt><a id="%_idx_1742"></a>(define (accumulate op initial sequence)<br />
+</p><p></p><p><tt><a id="__idx_1742"></a>(define (accumulate op initial sequence)<br />
   (if (null? sequence)<br />
       initial<br />
       (op (car sequence)<br />
@@ -822,13 +822,13 @@ All that remains to implement signal-flow diagrams is to enumerate the
 sequence of elements to be processed.  For <tt>even-fibs</tt>, we need to
 generate the sequence of
 integers in a given range, which we can do as follows:
-</p><p></p><p><tt><a id="%_idx_1744"></a>(define (enumerate-interval low high)<br />
+</p><p></p><p><tt><a id="__idx_1744"></a>(define (enumerate-interval low high)<br />
   (if (&gt; low high)<br />
       nil<br />
       (cons low (enumerate-interval (+ low 1) high))))<br />
 (enumerate-interval 2 7)<br /><i>(2 3 4 5 6 7)</i><br /></tt></p><p></p><p>
 To enumerate the leaves of a tree, we can use<a href="#footnote_Temp_182" id="call_footnote_Temp_182"><sup><small>14</small></sup></a>
-</p><p></p><p><tt><a id="%_idx_1748"></a><a id="%_idx_1750"></a>(define (enumerate-tree tree)<br />
+</p><p></p><p><tt><a id="__idx_1748"></a><a id="__idx_1750"></a>(define (enumerate-tree tree)<br />
   (cond ((null? tree) nil)<br />
         ((not (pair? tree)) (list tree))<br />
         (else (append (enumerate-tree (car tree))<br />
@@ -840,7 +840,7 @@ the signal-flow diagrams.  For <tt>sum-odd-squares</tt>, we enumerate the
 sequence of leaves of the tree, filter this to keep only the odd
 numbers in the sequence, square each element, and sum the results:
 
-</p><p></p><p><tt><a id="%_idx_1752"></a>(define (sum-odd-squares tree)<br />
+</p><p></p><p><tt><a id="__idx_1752"></a>(define (sum-odd-squares tree)<br />
   (accumulate +<br />
               0<br />
               (map square<br />
@@ -851,7 +851,7 @@ the Fibonacci number for each of these integers, filter the resulting
 sequence to keep only the even elements, and accumulate the results
 into a list:
 
-</p><p></p><p><tt><a id="%_idx_1754"></a>(define (even-fibs n)<br />
+</p><p></p><p><tt><a id="__idx_1754"></a>(define (even-fibs n)<br />
   (accumulate cons<br />
               nil<br />
               (filter even?<br />
@@ -866,7 +866,7 @@ encourage modular design by providing a library of standard components
 together with a conventional interface for connecting the components
 in flexible ways.</p><p>
 
-<a id="%_idx_1756"></a><a id="%_idx_1758"></a>Modular construction is a powerful strategy for
+<a id="__idx_1756"></a><a id="__idx_1758"></a>Modular construction is a powerful strategy for
 controlling complexity in engineering design.  In real
 signal-processing applications, for example, designers regularly build
 systems by cascading elements selected from standardized families of
@@ -912,25 +912,25 @@ sequences, we have localized the data-structure dependencies in our
 programs to a small number of sequence operations.  By changing these,
 we can experiment with alternative representations of sequences, while
 leaving the overall design of our programs intact.  We will exploit
-this capability in section <a href="book-Z-H-24.html#%_sec_3.5">3.5</a>, when we generalize the
+this capability in section <a href="book-Z-H-24.html#__sec_3.5">3.5</a>, when we generalize the
 sequence-processing paradigm to admit infinite sequences.</p><p>
 
-</p><p><a id="%_thm_2.33"></a>
+</p><p><a id="__thm_2.33"></a>
 <b>Exercise 2.33.</b>  Fill in the missing expressions to complete the following definitions
 of some basic list-manipulation operations as accumulations:
-</p><p></p><p><tt><a id="%_idx_1766"></a>(define (map p sequence)<br />
-  (accumulate (lambda (x y) &lt;<em>??</em>&gt;) nil sequence))<br /><a id="%_idx_1768"></a>(define (append seq1 seq2)<br />
-  (accumulate cons &lt;<em>??</em>&gt; &lt;<em>??</em>&gt;))<br /><a id="%_idx_1770"></a>(define (length sequence)<br />
+</p><p></p><p><tt><a id="__idx_1766"></a>(define (map p sequence)<br />
+  (accumulate (lambda (x y) &lt;<em>??</em>&gt;) nil sequence))<br /><a id="__idx_1768"></a>(define (append seq1 seq2)<br />
+  (accumulate cons &lt;<em>??</em>&gt; &lt;<em>??</em>&gt;))<br /><a id="__idx_1770"></a>(define (length sequence)<br />
   (accumulate &lt;<em>??</em>&gt; 0 sequence))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.34"></a>
-<b>Exercise 2.34.</b>  <a id="%_idx_1772"></a>Evaluating a polynomial in <em>x</em> at a given value of <em>x</em> can be
+</p><p><a id="__thm_2.34"></a>
+<b>Exercise 2.34.</b>  <a id="__idx_1772"></a>Evaluating a polynomial in <em>x</em> at a given value of <em>x</em> can be
 formulated as an accumulation.  We evaluate the polynomial</p>
 
 <p><em>a<sub>n</sub>x<sup>n</sup></em> + <em>a</em><sub><em>n</em>-1</sub><em>x</em><sup><em>n</em>-1</sup> + ⋯ + <em>a</em><sub>1</sub><em>x</em> + <em>a</em><sub>0</sub></p>
 
-<p>using a well-known algorithm called <a id="%_idx_1774"></a><em>Horner's rule</em>, which
+<p>using a well-known algorithm called <a id="__idx_1774"></a><em>Horner's rule</em>, which
 structures the computation as</p>
 
 <p>(⋯ (<em>a<sub>n</sub>x</em> + <em>a</em><sub><em>n</em>-1</sub>)<em>x</em> + ⋯ + <em>a</em><sub>1</sub>) <em>x</em> + <em>a</em><sub>0</sub></p>
@@ -949,14 +949,14 @@ For example, to compute 1 + 3<em>x</em> + 5<em>x</em><sup>3</sup> + <em>x</em><s
 </p><p></p><p><tt>(horner-eval 2 (list 1 3 0 5 0 1))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.35"></a>
-<b>Exercise 2.35.</b>  Redefine <tt>count-leaves</tt> from section <a href="#%_sec_2.2.2">2.2.2</a> as an
+</p><p><a id="__thm_2.35"></a>
+<b>Exercise 2.35.</b>  Redefine <tt>count-leaves</tt> from section <a href="#__sec_2.2.2">2.2.2</a> as an
 accumulation:
-</p><p></p><p><tt><a id="%_idx_1792"></a>(define (count-leaves t)<br />
+</p><p></p><p><tt><a id="__idx_1792"></a>(define (count-leaves t)<br />
   (accumulate &lt;<em>??</em>&gt; &lt;<em>??</em>&gt; (map &lt;<em>??</em>&gt; &lt;<em>??</em>&gt;)))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.36"></a>
+</p><p><a id="__thm_2.36"></a>
 <b>Exercise 2.36.</b>  The procedure <tt>accumulate-n</tt> is similar to <tt>accumulate</tt> except
 that it takes as its third argument a sequence of sequences, which are all
 assumed to have the same number of elements.  It applies the
@@ -966,14 +966,14 @@ returns a sequence of the results.  For instance, if <tt>s</tt> is a sequence
 containing four sequences, <tt>((1 2 3) (4 5 6) (7 8 9) (10 11 12)),</tt>
 then the value of <tt>(accumulate-n + 0 s)</tt> should be the sequence <tt>(22 26 30)</tt>.  Fill in the missing expressions
 in the following definition of <tt>accumulate-n</tt>:
-</p><p></p><p><tt><a id="%_idx_1794"></a>(define (accumulate-n op init seqs)<br />
+</p><p></p><p><tt><a id="__idx_1794"></a>(define (accumulate-n op init seqs)<br />
   (if (null? (car seqs))<br />
       nil<br />
       (cons (accumulate op init &lt;<em>??</em>&gt;)<br />
             (accumulate-n op init &lt;<em>??</em>&gt;))))<br /></tt></p><p></p><p>
 </p><p>
-</p><p><a id="%_thm_2.37"></a>
-<b>Exercise 2.37.</b>  <a id="%_idx_1796"></a><a id="%_idx_1798"></a><a id="%_idx_1800"></a>Suppose we represent vectors <em>v</em> = (<em>v</em><sub><em>i</em></sub>) as sequences of numbers, and
+</p><p><a id="__thm_2.37"></a>
+<b>Exercise 2.37.</b>  <a id="__idx_1796"></a><a id="__idx_1798"></a><a id="__idx_1800"></a>Suppose we represent vectors <em>v</em> = (<em>v</em><sub><em>i</em></sub>) as sequences of numbers, and
 matrices <em>m</em> = (<em>m</em><sub><em>i</em><em>j</em></sub>) as sequences of vectors (the rows of the matrix).
 For example, the matrix</p>
 
@@ -1024,24 +1024,24 @@ express the basic matrix and vector operations.  These operations
 </p>
 
 <p>We can define the dot product as<a href="#footnote_Temp_190" id="call_footnote_Temp_190"><sup><small>17</small></sup></a>
-</p><p></p><p><tt><a id="%_idx_1802"></a>(define (dot-product v w)<br />
+</p><p></p><p><tt><a id="__idx_1802"></a>(define (dot-product v w)<br />
   (accumulate + 0 (map * v w)))<br /></tt></p><p></p><p>
 Fill in the missing expressions in the following procedures for
 computing the other matrix operations.  (The procedure <tt>accumulate-n</tt> is
-defined in exercise <a href="#%_thm_2.36">2.36</a>.)
-</p><p></p><p><tt><a id="%_idx_1804"></a>(define (matrix-*-vector m v)<br />
-  (map &lt;<em>??</em>&gt; m))<br /><a id="%_idx_1806"></a>(define (transpose mat)<br />
-  (accumulate-n &lt;<em>??</em>&gt; &lt;<em>??</em>&gt; mat))<br /><a id="%_idx_1808"></a>(define (matrix-*-matrix m n)<br />
+defined in exercise <a href="#__thm_2.36">2.36</a>.)
+</p><p></p><p><tt><a id="__idx_1804"></a>(define (matrix-*-vector m v)<br />
+  (map &lt;<em>??</em>&gt; m))<br /><a id="__idx_1806"></a>(define (transpose mat)<br />
+  (accumulate-n &lt;<em>??</em>&gt; &lt;<em>??</em>&gt; mat))<br /><a id="__idx_1808"></a>(define (matrix-*-matrix m n)<br />
   (let ((cols (transpose n)))<br />
     (map &lt;<em>??</em>&gt; m)))<br /></tt></p><p></p><p>
 </p><p>
-</p><p><a id="%_thm_2.38"></a>
-<b>Exercise 2.38.</b>  <a id="%_idx_1810"></a><a id="%_idx_1812"></a>The <tt>accumulate</tt> procedure is also known as <tt>fold-right</tt>,
+</p><p><a id="__thm_2.38"></a>
+<b>Exercise 2.38.</b>  <a id="__idx_1810"></a><a id="__idx_1812"></a>The <tt>accumulate</tt> procedure is also known as <tt>fold-right</tt>,
 because it combines the first element of the sequence with the result
 of combining all the elements to the right.  There is also a <tt>fold-left</tt>, which is
 similar to <tt>fold-right</tt>, except
 that it combines elements working in the opposite direction:
-</p><p></p><p><tt><a id="%_idx_1814"></a>(define (fold-left op initial sequence)<br />
+</p><p></p><p><tt><a id="__idx_1814"></a>(define (fold-left op initial sequence)<br />
   (define (iter result rest)<br />
     (if (null? rest)<br />
         result<br />
@@ -1058,21 +1058,21 @@ sequence.
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.39"></a>
+</p><p><a id="__thm_2.39"></a>
 <b>Exercise 2.39.</b>  
 Complete the following definitions of <tt>reverse</tt>
-<a id="%_idx_1816"></a>(exercise <a href="#%_thm_2.18">2.18</a>) in terms of <tt>fold-right</tt> and <tt>fold-left</tt> from exercise <a href="#%_thm_2.38">2.38</a>:
+<a id="__idx_1816"></a>(exercise <a href="#__thm_2.18">2.18</a>) in terms of <tt>fold-right</tt> and <tt>fold-left</tt> from exercise <a href="#__thm_2.38">2.38</a>:
 </p><p></p><p><tt>(define (reverse sequence)<br />
   (fold-right (lambda (x y) &lt;<em>??</em>&gt;) nil sequence))<br />
 (define (reverse sequence)<br />
   (fold-left (lambda (x y) &lt;<em>??</em>&gt;) nil sequence))<br /></tt></p><p></p><p>
 </p><p>
 
-<a id="%_sec_Temp_193"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_193">Nested Mappings</a></h4><p>
+<a id="__sec_Temp_193"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_193">Nested Mappings</a></h4><p>
 
 
-<a id="%_idx_1818"></a>
+<a id="__idx_1818"></a>
 We can extend the sequence paradigm to include many
 computations that are commonly expressed using nested loops.<a href="#footnote_Temp_194" id="call_footnote_Temp_194"><sup><small>18</small></sup></a>
 Consider
@@ -1138,7 +1138,7 @@ Combining all the sequences for all the <em>i</em> (by accumulating with <tt>app
                  (enumerate-interval 1 n)))<br /></tt></p><p></p><p>
 The combination of mapping and accumulating with <tt>append</tt> is so common in this
 sort of program that we will isolate it as a separate procedure:
-</p><p></p><p><tt><a id="%_idx_1826"></a>(define (flatmap proc seq)<br />
+</p><p></p><p><tt><a id="__idx_1826"></a>(define (flatmap proc seq)<br />
   (accumulate append nil (map proc seq)))<br /></tt></p><p></p><p>
 Now filter this sequence of pairs to find those whose sum is prime. The
 filter predicate is called for each element of the sequence; its
@@ -1152,7 +1152,7 @@ consisting of the two elements of the pair along with their sum:
 </p><p></p><p><tt>(define (make-pair-sum pair)<br />
   (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))<br /></tt></p><p></p><p>
 Combining all these steps yields the complete procedure:
-</p><p></p><p><tt><a id="%_idx_1828"></a>(define (prime-sum-pairs n)<br />
+</p><p></p><p><tt><a id="__idx_1828"></a>(define (prime-sum-pairs n)<br />
   (map make-pair-sum<br />
        (filter prime-sum?<br />
                (flatmap<br />
@@ -1162,7 +1162,7 @@ Combining all these steps yields the complete procedure:
                 (enumerate-interval 1 n)))))<br /></tt></p><p></p><p></p><p>
 
 Nested mappings are also useful for sequences other than those that
-enumerate intervals.  Suppose we wish to generate all the <a id="%_idx_1830"></a><a id="%_idx_1832"></a>permutations
+enumerate intervals.  Suppose we wish to generate all the <a id="__idx_1830"></a><a id="__idx_1832"></a>permutations
 of a set <em>S</em>; that is, all the ways of ordering the items in
 the set.  For instance, the permutations of {1,2,3} are
 {1,2,3}, { 1,3,2}, {2,1,3}, { 2,3,1}, { 3,1,2}, and
@@ -1174,7 +1174,7 @@ of permutations of <em>S</em> that begin with <em>x</em>.  Combining these
 sequences for all <em>x</em> gives all the permutations of <em>S</em>:<a href="#footnote_Temp_197" id="call_footnote_Temp_197"><sup><small>21</small></sup></a></p><p>
 
 
-</p><p></p><p><tt><a id="%_idx_1840"></a>(define (permutations s)<br />
+</p><p></p><p><tt><a id="__idx_1840"></a>(define (permutations s)<br />
   (if (null? s)                    <em>; empty set?</em><br />
       (list nil)                   <em>; sequence containing empty set</em><br />
       (flatmap (lambda (x)<br />
@@ -1190,26 +1190,26 @@ item, namely the set with no elements.  The <tt>remove</tt> procedure
 used in <tt>permutations</tt> returns all the items in a given sequence
 except for a given item.  This can be expressed as a simple filter:
 
-</p><p></p><p><tt><a id="%_idx_1842"></a>(define (remove item sequence)<br />
+</p><p></p><p><tt><a id="__idx_1842"></a>(define (remove item sequence)<br />
   (filter (lambda (x) (not (= x item)))<br />
           sequence))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.40"></a>
-<b>Exercise 2.40.</b>  Define a procedure <a id="%_idx_1844"></a><tt>unique-pairs</tt> that, given an integer <em>n</em>,
+</p><p><a id="__thm_2.40"></a>
+<b>Exercise 2.40.</b>  Define a procedure <a id="__idx_1844"></a><tt>unique-pairs</tt> that, given an integer <em>n</em>,
 generates the sequence of pairs (<em>i</em>,<em>j</em>) with 1<u>&lt;</u> <em>j</em>&lt; <em>i</em><u>&lt;</u> <em>n</em>.  Use <tt>unique-pairs</tt> to simplify the definition of <tt>prime-sum-pairs</tt>
 given above.
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.41"></a>
+</p><p><a id="__thm_2.41"></a>
 <b>Exercise 2.41.</b>  Write a procedure to find all ordered
 triples of distinct positive integers <em>i</em>, <em>j</em>, and <em>k</em> less than or
 equal to a given integer <em>n</em> that sum to a given integer <em>s</em>.
 </p><p></p><p>
 
 
-</p><p><a id="%_thm_2.42"></a>
+</p><p><a id="__thm_2.42"></a>
 
-<b>Exercise 2.42.</b>  <a id="%_fig_2.8"></a></p><p></p><div style="text-align: left;">
+<b>Exercise 2.42.</b>  <a id="__fig_2.8"></a></p><p></p><div style="text-align: left;">
 
     <table id="ch2-Z-G-23">
         <tr><td></td><td></td><td></td><td></td><td></td><td>♕</td><td></td><td></td></tr>
@@ -1225,10 +1225,10 @@ equal to a given integer <em>n</em> that sum to a given integer <em>s</em>.
     </table>
 </div>
 
-<p>The <a id="%_idx_1846"></a><a id="%_idx_1848"></a><a id="%_idx_1850"></a>“eight-queens puzzle” asks how to place eight queens on a
+<p>The <a id="__idx_1846"></a><a id="__idx_1848"></a><a id="__idx_1850"></a>“eight-queens puzzle” asks how to place eight queens on a
 chessboard so that no queen is in check from any other (i.e., no two
 queens are in the same row, column, or diagonal).  One possible
-solution is shown in figure <a href="#%_fig_2.8">2.8</a>.  One way to solve the
+solution is shown in figure <a href="#__fig_2.8">2.8</a>.  One way to solve the
 puzzle is to work across the board, placing a queen in each column.
 Once we have placed <em>k</em> - 1 queens, we must place the <em>k</em>th queen in a
 position where it does not check any of the queens already on the
@@ -1249,7 +1249,7 @@ a sequence of all solutions to the problem of placing <em>n</em> queens on an
 <em>n</em>× <em>n</em> chessboard.  <tt>Queens</tt> has an internal procedure <tt>queen-cols</tt> that returns the sequence of all ways to place queens in
 the first <em>k</em> columns of the board.
 
-</p><p></p><p><tt><a id="%_idx_1852"></a>(define (queens board-size)<br />
+</p><p></p><p><tt><a id="__idx_1852"></a>(define (queens board-size)<br />
   (define (queen-cols k)  <br />
     (if (= k 0)<br />
         (list empty-board)<br />
@@ -1277,8 +1277,8 @@ each other.)
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.43"></a>
-<b>Exercise 2.43.</b>  Louis Reasoner is having a terrible time doing exercise <a href="#%_thm_2.42">2.42</a>.  His
+</p><p><a id="__thm_2.43"></a>
+<b>Exercise 2.43.</b>  Louis Reasoner is having a terrible time doing exercise <a href="#__thm_2.42">2.42</a>.  His
 <tt>queens</tt> procedure seems to work, but it runs extremely slowly.
 (Louis never does manage to wait long enough for it to solve even the
 6× 6 case.)  When Louis asks Eva Lu Ator for help, she points
@@ -1292,32 +1292,32 @@ out that he has interchanged the order of the nested mappings in the
  (enumerate-interval 1 board-size))<br /></tt></p><p></p><p>
 Explain why this interchange makes the program run slowly.  Estimate
 how long it will take Louis's program to solve the eight-queens
-puzzle, assuming that the program in exercise <a href="#%_thm_2.42">2.42</a> solves
+puzzle, assuming that the program in exercise <a href="#__thm_2.42">2.42</a> solves
 the puzzle in time <em>T</em>.
 </p><p></p><p>
 
-<a id="%_sec_2.2.4"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_2.2.4">2.2.4  Example: A Picture Language</a></h3><p>
+<a id="__sec_2.2.4"></a>
+</p><h3><a href="book-Z-H-4.html#__toc___sec_2.2.4">2.2.4  Example: A Picture Language</a></h3><p>
 
 
-<a id="%_idx_1854"></a>
+<a id="__idx_1854"></a>
 This section presents a simple language for drawing
 pictures that illustrates the
 power of data abstraction and closure,
 and also exploits higher-order procedures in
 an essential way.  The language
 is designed to make it easy to experiment with patterns
-such as the ones in figure <a href="#%_fig_2.9">2.9</a>, which are
+such as the ones in figure <a href="#__fig_2.9">2.9</a>, which are
 composed of repeated elements that are shifted and scaled.<a href="#footnote_Temp_202" id="call_footnote_Temp_202"><sup><small>22</small></sup></a> In this language,
 the data objects being combined
 are represented as procedures rather than as list structure.
-Just as <tt>cons</tt>, which satisfies the <a id="%_idx_1860"></a>closure property,
+Just as <tt>cons</tt>, which satisfies the <a id="__idx_1860"></a>closure property,
 allowed us to easily build arbitrarily complicated
 list structure, the operations in this language, which also
 satisfy the closure property, allow us to easily build
 arbitrarily complicated patterns.</p><p>
 
-<a id="%_fig_2.9"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-24.gif" border="0" />
+<a id="__fig_2.9"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-24.gif" border="0" />
           
 <img src="images/ch2-Z-G-25.gif" border="0" /> </div>
 
@@ -1325,48 +1325,48 @@ arbitrarily complicated patterns.</p><p>
 
 </td></tr></table></div><p></p><p>
 
-<a id="%_sec_Temp_203"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_203">The picture language</a></h4><p>
+<a id="__sec_Temp_203"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_203">The picture language</a></h4><p>
 
 When we began our study of programming in
-section <a href="book-Z-H-10.html#%_sec_1.1">1.1</a>, we emphasized the
+section <a href="book-Z-H-10.html#__sec_1.1">1.1</a>, we emphasized the
 importance of describing a language by focusing on the language's
 primitives, its means of combination, and its means of abstraction.
 We'll follow that framework here.</p><p>
 
 Part of the elegance of this picture language is that there is
-only one kind of element, called a <a id="%_idx_1862"></a><em>painter</em>.  A painter
+only one kind of element, called a <a id="__idx_1862"></a><em>painter</em>.  A painter
 draws an image that is shifted and scaled to fit within a designated
-<a id="%_idx_1864"></a>parallelogram-shaped frame.  For example, there's a primitive painter
+<a id="__idx_1864"></a>parallelogram-shaped frame.  For example, there's a primitive painter
 we'll call <tt>wave</tt> that makes a crude line drawing, as
-shown in figure <a href="#%_fig_2.10">2.10</a>.
+shown in figure <a href="#__fig_2.10">2.10</a>.
 The actual shape of the drawing depends on the frame – all
-four images in figure <a href="#%_fig_2.10">2.10</a> are produced by the same <tt>wave</tt> painter, but with respect to four different frames.  Painters
+four images in figure <a href="#__fig_2.10">2.10</a> are produced by the same <tt>wave</tt> painter, but with respect to four different frames.  Painters
 can be more elaborate than this:
 The primitive
 painter called <tt>rogers</tt> paints a picture of MIT's founder,
-William Barton Rogers, as shown in figure <a href="#%_fig_2.11">2.11</a>.<a href="#footnote_Temp_204" id="call_footnote_Temp_204"><sup><small>23</small></sup></a>
-The four images in figure <a href="#%_fig_2.11">2.11</a>
+William Barton Rogers, as shown in figure <a href="#__fig_2.11">2.11</a>.<a href="#footnote_Temp_204" id="call_footnote_Temp_204"><sup><small>23</small></sup></a>
+The four images in figure <a href="#__fig_2.11">2.11</a>
 are drawn with respect to the same four frames
-as the <tt>wave</tt> images in figure <a href="#%_fig_2.10">2.10</a>.</p><p>
+as the <tt>wave</tt> images in figure <a href="#__fig_2.10">2.10</a>.</p><p>
 
 
-<a id="%_idx_1876"></a>To combine images,
+<a id="__idx_1876"></a>To combine images,
 we use various operations that construct new painters
 from given painters.
-For example, the <a id="%_idx_1878"></a><tt>beside</tt> operation takes two painters and produces a new,
+For example, the <a id="__idx_1878"></a><tt>beside</tt> operation takes two painters and produces a new,
 compound painter that draws the first painter's image in the left half
 of the frame and the second painter's image in the right half of the frame.
-Similarly, <a id="%_idx_1880"></a><tt>below</tt> takes two painters and produces a compound
+Similarly, <a id="__idx_1880"></a><tt>below</tt> takes two painters and produces a compound
 painter that draws the first painter's image below the second
 painter's image.
 Some operations transform a single painter to produce
-a new painter.  For example, <a id="%_idx_1882"></a><tt>flip-vert</tt> takes a painter and
+a new painter.  For example, <a id="__idx_1882"></a><tt>flip-vert</tt> takes a painter and
 produces a painter that draws its image upside-down, and
-<a id="%_idx_1884"></a><tt>flip-horiz</tt> produces a painter that draws the original
+<a id="__idx_1884"></a><tt>flip-horiz</tt> produces a painter that draws the original
 painter's image left-to-right reversed.</p><p>
 
-<a id="%_fig_2.10"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-26.gif" border="0" />
+<a id="__fig_2.10"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-26.gif" border="0" />
           
 <img src="images/ch2-Z-G-27.gif" border="0" /> </div>
 
@@ -1380,7 +1380,7 @@ part of the images.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a id="%_fig_2.11"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-30.gif" border="0" />
+<a id="__fig_2.11"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-30.gif" border="0" />
           
 <img src="images/ch2-Z-G-31.gif" border="0" /> </div>
 
@@ -1390,29 +1390,29 @@ part of the images.</div></caption><tr><td>
 
 </td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.11:</b>  Images of William Barton Rogers, founder and first
 president of MIT, painted with respect to the same four frames as in
-figure <a href="#%_fig_2.10">2.10</a> (original image reprinted with the permission
+figure <a href="#__fig_2.10">2.10</a> (original image reprinted with the permission
 of the MIT Museum).</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
 
-Figure <a href="#%_fig_2.12">2.12</a> shows the drawing of a painter called
+Figure <a href="#__fig_2.12">2.12</a> shows the drawing of a painter called
 <tt>wave4</tt> that is built up in two stages starting from <tt>wave</tt>:
 </p><p></p><p><tt>(define wave2 (beside wave (flip-vert wave)))<br />
 (define wave4 (below wave2 wave2))<br /></tt></p><p></p><p></p><p>
 
-<a id="%_fig_2.12"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-34.gif" border="0" />
+<a id="__fig_2.12"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-34.gif" border="0" />
           
 <img src="images/ch2-Z-G-35.gif" border="0" /> </div>
 
 <p></p><p><tt>(define wave2                         (define wave4<br />
   (beside wave (flip-vert wave)))       (below wave2 wave2))<br /></tt></p><p></p><p>
 </p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.12:</b>  Creating a complex figure,
-starting from the <tt>wave</tt> painter of figure <a href="#%_fig_2.10">2.10</a>.</div></caption><tr><td>
+starting from the <tt>wave</tt> painter of figure <a href="#__fig_2.10">2.10</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p> </p><p>
 
-<a id="%_idx_1886"></a>In building up a complex image in this manner we are exploiting the
+<a id="__idx_1886"></a>In building up a complex image in this manner we are exploiting the
 fact that painters are closed under the language's means of
 combination.  The <tt>beside</tt> or <tt>below</tt> of two painters is
 itself a painter; therefore, we can use it as an element in making
@@ -1433,7 +1433,7 @@ procedures.
 For example, we can abstract the pattern in <tt>wave4</tt> as</p><p>
 
 
-</p><p></p><p><tt><a id="%_idx_1888"></a>(define (flipped-pairs painter)<br />
+</p><p></p><p><tt><a id="__idx_1888"></a>(define (flipped-pairs painter)<br />
   (let ((painter2 (beside painter (flip-vert painter))))<br />
     (below painter2 painter2)))<br /></tt></p><p></p><p>
 and define <tt>wave4</tt> as an instance of this pattern:</p><p>
@@ -1443,15 +1443,15 @@ and define <tt>wave4</tt> as an instance of this pattern:</p><p>
 
 We can also define recursive operations.
 Here's one that makes painters split and branch
-towards the right as shown in figures <a href="#%_fig_2.13">2.13</a>
-and  <a href="#%_fig_2.14">2.14</a>:
-</p><p></p><p><tt><a id="%_idx_1890"></a>(define (right-split painter n)<br />
+towards the right as shown in figures <a href="#__fig_2.13">2.13</a>
+and  <a href="#__fig_2.14">2.14</a>:
+</p><p></p><p><tt><a id="__idx_1890"></a>(define (right-split painter n)<br />
   (if (= n 0)<br />
       painter<br />
       (let ((smaller (right-split painter (- n 1))))<br />
         (beside painter (below smaller smaller)))))<br /></tt></p><p></p><p></p><p>
 
-<a id="%_fig_2.13"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-36.gif" border="0" />
+<a id="__fig_2.13"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-36.gif" border="0" />
                    
 <img src="images/ch2-Z-G-37.gif" border="0" /> </div>
 
@@ -1461,10 +1461,10 @@ and  <a href="#%_fig_2.14">2.14</a>:
 </td></tr></table></div><p> </p><p>
 
 We can produce balanced patterns by branching upwards
-as well as towards the right (see exercise <a href="#%_thm_2.44">2.44</a>
-and figures <a href="#%_fig_2.13">2.13</a> and  <a href="#%_fig_2.14">2.14</a>):</p><p>
+as well as towards the right (see exercise <a href="#__thm_2.44">2.44</a>
+and figures <a href="#__fig_2.13">2.13</a> and  <a href="#__fig_2.14">2.14</a>):</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1892"></a>(define (corner-split painter n)<br />
+</p><p></p><p><tt><a id="__idx_1892"></a>(define (corner-split painter n)<br />
   (if (= n 0)<br />
       painter<br />
       (let ((up (up-split painter (- n 1)))<br />
@@ -1475,7 +1475,7 @@ and figures <a href="#%_fig_2.13">2.13</a> and  <a href="#%_fig_2.14">2.14</a>
           (beside (below painter top-left)<br />
                   (below bottom-right corner))))))<br /></tt></p><p></p><p></p><p>
 
-<a id="%_fig_2.14"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-38.gif" border="0" />
+<a id="__fig_2.14"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><div style="text-align: left;"><img src="images/ch2-Z-G-38.gif" border="0" />
           
 <img src="images/ch2-Z-G-39.gif" border="0" /> </div>
 
@@ -1488,31 +1488,31 @@ and figures <a href="#%_fig_2.13">2.13</a> and  <a href="#%_fig_2.14">2.14</a>
 </p><p></p><p></p></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.14:</b>  The recursive operations <tt>right-split</tt> and <tt>corner-split</tt> applied to the painters <tt>wave</tt> and <tt>rogers</tt>.
 Combining four <tt>corner-split</tt> figures produces
 symmetric <tt>square-limit</tt> designs as shown
-in figure <a href="#%_fig_2.9">2.9</a>.</div></caption><tr><td>
+in figure <a href="#__fig_2.9">2.9</a>.</div></caption><tr><td>
 
 </td></tr></table></div><p> </p><p>
 
 By placing four copies of a <tt>corner-split</tt>
 appropriately, we obtain a pattern called <tt>square-limit</tt>, whose
 application to <tt>wave</tt> and <tt>rogers</tt> is shown in
-figure <a href="#%_fig_2.9">2.9</a>:
-</p><p></p><p><tt><a id="%_idx_1894"></a>(define (square-limit painter n)<br />
+figure <a href="#__fig_2.9">2.9</a>:
+</p><p></p><p><tt><a id="__idx_1894"></a>(define (square-limit painter n)<br />
   (let ((quarter (corner-split painter n)))<br />
     (let ((half (beside (flip-horiz quarter) quarter)))<br />
       (below (flip-vert half) half))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.44"></a>
-<b>Exercise 2.44.</b>  Define the procedure <a id="%_idx_1896"></a><tt>up-split</tt> used by <tt>corner-split</tt>.
+</p><p><a id="__thm_2.44"></a>
+<b>Exercise 2.44.</b>  Define the procedure <a id="__idx_1896"></a><tt>up-split</tt> used by <tt>corner-split</tt>.
 It is similar to <tt>right-split</tt>, except that it switches the
 roles of <tt>below</tt> and <tt>beside</tt>.
 
 </p><p></p><p>
 
 
-<a id="%_sec_Temp_206"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_206">Higher-order operations</a></h4><p>
+<a id="__sec_Temp_206"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_206">Higher-order operations</a></h4><p>
 
-<a id="%_idx_1898"></a>
+<a id="__idx_1898"></a>
 In addition to abstracting patterns of combining painters, we can work
 at a higher level, abstracting patterns of combining painter operations.
 That is, we can view the painter operations as elements to manipulate
@@ -1530,7 +1530,7 @@ painter with those four operations and arranges the results in a square.
 transformations to apply to the top left copy, the top right copy,
 the bottom left copy, and the bottom right copy, respectively.</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1900"></a>(define (square-of-four tl tr bl br)<br />
+</p><p></p><p><tt><a id="__idx_1900"></a>(define (square-of-four tl tr bl br)<br />
   (lambda (painter)<br />
     (let ((top (beside (tl painter) (tr painter)))<br />
           (bottom (beside (bl painter) (br painter))))<br />
@@ -1538,21 +1538,21 @@ the bottom left copy, and the bottom right copy, respectively.</p><p>
 Then <tt>flipped-pairs</tt> can be defined in terms
 of <tt>square-of-four</tt> as follows:<a href="#footnote_Temp_207" id="call_footnote_Temp_207"><sup><small>24</small></sup></a></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1904"></a>(define (flipped-pairs painter)<br />
+</p><p></p><p><tt><a id="__idx_1904"></a>(define (flipped-pairs painter)<br />
   (let ((combine4 (square-of-four identity flip-vert<br />
                                   identity flip-vert)))<br />
     (combine4 painter)))<br /></tt></p><p></p><p>
 and <tt>square-limit</tt> can be expressed as<a href="#footnote_Temp_208" id="call_footnote_Temp_208"><sup><small>25</small></sup></a></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1906"></a>(define (square-limit painter n)<br />
+</p><p></p><p><tt><a id="__idx_1906"></a>(define (square-limit painter n)<br />
   (let ((combine4 (square-of-four flip-horiz identity<br />
                                   rotate180 flip-vert)))<br />
     (combine4 (corner-split painter n))))<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.45"></a>
+</p><p><a id="__thm_2.45"></a>
 <b>Exercise 2.45.</b>  <tt>Right-split</tt> and <tt>up-split</tt> can be expressed as
 instances of a general splitting operation.
-Define a procedure <a id="%_idx_1908"></a><tt>split</tt> with the property that evaluating
+Define a procedure <a id="__idx_1908"></a><tt>split</tt> with the property that evaluating
 </p><p></p><p><tt>(define right-split (split beside below))<br />
 (define up-split (split below beside))<br /></tt></p><p></p><p>
 produces procedures <tt>right-split</tt> and <tt>up-split</tt> with the same
@@ -1560,34 +1560,34 @@ behaviors as the ones already defined.
 
 </p><p></p><p>
 
-<a id="%_sec_Temp_210"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_210">Frames</a></h4><p>
+<a id="__sec_Temp_210"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_210">Frames</a></h4><p>
 
-<a id="%_idx_1910"></a>
+<a id="__idx_1910"></a>
 Before we can show how to implement painters and their
 means of combination, we must first consider
-<a id="%_idx_1912"></a>frames.  A frame can be described by three vectors – an origin vector
+<a id="__idx_1912"></a>frames.  A frame can be described by three vectors – an origin vector
 and two edge vectors.  The origin vector specifies the offset of the
 frame's origin from some absolute origin in the plane, and the edge
 vectors specify the offsets of the frame's corners from its origin.
 If the edges are perpendicular, the frame will be rectangular.
 Otherwise the frame will be a more general parallelogram.</p><p>
 
-Figure <a href="#%_fig_2.15">2.15</a> shows a frame and its associated vectors.  In
+Figure <a href="#__fig_2.15">2.15</a> shows a frame and its associated vectors.  In
 accordance with data abstraction, we need not be
 specific yet about how frames are represented, other than to say that
-there is a constructor <a id="%_idx_1914"></a><tt>make-frame</tt>, which takes three vectors and
-produces a frame, and three corresponding selectors <a id="%_idx_1916"></a><tt>origin-frame</tt>, <a id="%_idx_1918"></a><tt>edge1-frame</tt>, and <a id="%_idx_1920"></a><tt>edge2-frame</tt> (see
-exercise <a href="#%_thm_2.47">2.47</a>).</p><p>
+there is a constructor <a id="__idx_1914"></a><tt>make-frame</tt>, which takes three vectors and
+produces a frame, and three corresponding selectors <a id="__idx_1916"></a><tt>origin-frame</tt>, <a id="__idx_1918"></a><tt>edge1-frame</tt>, and <a id="__idx_1920"></a><tt>edge2-frame</tt> (see
+exercise <a href="#__thm_2.47">2.47</a>).</p><p>
 
-<a id="%_fig_2.15"></a></p><p></p><div style="text-align: left;"><table width="100%"><tr><td><img src="images/ch2-Z-G-42.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.15:</b>  A frame is described by three vectors – an
+<a id="__fig_2.15"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch2-Z-G-42.gif" border="0" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 2.15:</b>  A frame is described by three vectors – an
 origin and two edges.</div></caption><tr><td>
 
 </td></tr></table></div><p> </p><p>
 
-<a id="%_idx_1922"></a>We will use coordinates in the unit square (0<u>&lt;</u> <em>x</em>,<em>y</em><u>&lt;</u> 1)
+<a id="__idx_1922"></a>We will use coordinates in the unit square (0<u>&lt;</u> <em>x</em>,<em>y</em><u>&lt;</u> 1)
 to specify images.
-With each frame, we associate a <a id="%_idx_1924"></a><em>frame coordinate map</em>, which
+With each frame, we associate a <a id="__idx_1924"></a><em>frame coordinate map</em>, which
 will be used to shift and scale images to fit the frame.  The map
 transforms the unit square into the frame by
 mapping the vector <strong><em>v</em></strong> = (<em>x</em>,<em>y</em>) to the vector sum
@@ -1597,7 +1597,7 @@ the vertex diagonally opposite the origin, and (0.5,0.5) to the
 center of the frame.  We can create a frame's coordinate map with the
 following procedure:<a href="#footnote_Temp_211" id="call_footnote_Temp_211"><sup><small>26</small></sup></a></p><p>
 
-</p><p></p><p><tt><a id="%_idx_1926"></a>(define (frame-coord-map frame)<br />
+</p><p></p><p><tt><a id="__idx_1926"></a>(define (frame-coord-map frame)<br />
   (lambda (v)<br />
     (add-vect<br />
      (origin-frame frame)<br />
@@ -1613,13 +1613,13 @@ will be in the frame.  For example,
 returns the same vector as
 </p><p></p><p><tt>(origin-frame a-frame)<br /></tt></p><p></p><p></p><p>
 
-</p><p><a id="%_thm_2.46"></a>
-<b>Exercise 2.46.</b>  <a id="%_idx_1928"></a><a id="%_idx_1930"></a>A two-dimensional vector <strong>v</strong> running from the origin to a point
+</p><p><a id="__thm_2.46"></a>
+<b>Exercise 2.46.</b>  <a id="__idx_1928"></a><a id="__idx_1930"></a>A two-dimensional vector <strong>v</strong> running from the origin to a point
 can be represented as a pair
 consisting of an <em>x</em>-coordinate and a <em>y</em>-coordinate.  Implement a data
-abstraction for vectors by giving a constructor <a id="%_idx_1932"></a><tt>make-vect</tt> and
-corresponding selectors <a id="%_idx_1934"></a><tt>xcor-vect</tt> and <a id="%_idx_1936"></a><tt>ycor-vect</tt>.  In
-terms of your selectors and constructor, implement procedures <a id="%_idx_1938"></a><tt>add-vect</tt>, <a id="%_idx_1940"></a><tt>sub-vect</tt>, and <a id="%_idx_1942"></a><tt>scale-vect</tt> that perform
+abstraction for vectors by giving a constructor <a id="__idx_1932"></a><tt>make-vect</tt> and
+corresponding selectors <a id="__idx_1934"></a><tt>xcor-vect</tt> and <a id="__idx_1936"></a><tt>ycor-vect</tt>.  In
+terms of your selectors and constructor, implement procedures <a id="__idx_1938"></a><tt>add-vect</tt>, <a id="__idx_1940"></a><tt>sub-vect</tt>, and <a id="__idx_1942"></a><tt>scale-vect</tt> that perform
 the operations vector addition, vector subtraction, and multiplying a
 vector by a scalar:</p>
 
@@ -1629,9 +1629,9 @@ vector by a scalar:</p>
     <em>s</em> · (<em>x</em>, <em>y</em>) = (<em>sx</em>, <em>sy</em>)
 </p>
 
-<p><a id="%_thm_2.47"></a>
+<p><a id="__thm_2.47"></a>
 <b>Exercise 2.47.</b>  Here are two possible constructors for frames:
-</p><p></p><p><tt><a id="%_idx_1944"></a>(define (make-frame origin edge1 edge2)<br />
+</p><p></p><p><tt><a id="__idx_1944"></a>(define (make-frame origin edge1 edge2)<br />
   (list origin edge1 edge2))<br /><br />
 (define (make-frame origin edge1 edge2)<br />
   (cons origin (cons edge1 edge2)))<br /></tt></p><p></p><p>
@@ -1640,10 +1640,10 @@ implementation for frames.
 
 </p><p></p><p>
 
-<a id="%_sec_Temp_214"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_214">Painters</a></h4><p>
+<a id="__sec_Temp_214"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_214">Painters</a></h4><p>
 
-<a id="%_idx_1946"></a>
+<a id="__idx_1946"></a>
 A painter is represented as a procedure that, given a frame
 as argument, draws a particular image shifted and scaled to fit the frame.
 That is to say, if <tt>p</tt> is a painter and <tt>f</tt> is a frame, then we
@@ -1652,10 +1652,10 @@ argument.</p><p>
 
 The details of how primitive painters are implemented depend on the
 particular characteristics of the graphics system and the type of
-image to be drawn.  For instance, suppose we have a procedure <a id="%_idx_1948"></a><tt>draw-line</tt> that draws a line on the screen between two specified
+image to be drawn.  For instance, suppose we have a procedure <a id="__idx_1948"></a><tt>draw-line</tt> that draws a line on the screen between two specified
 points.  Then we can create painters for line drawings, such as the
-<tt>wave</tt> painter in figure <a href="#%_fig_2.10">2.10</a>, from lists of line
-segments as follows:<a href="#footnote_Temp_215" id="call_footnote_Temp_215"><sup><small>27</small></sup></a></p><p></p><p><tt><a id="%_idx_1950"></a>(define (segments-&gt;painter segment-list)<br />
+<tt>wave</tt> painter in figure <a href="#__fig_2.10">2.10</a>, from lists of line
+segments as follows:<a href="#footnote_Temp_215" id="call_footnote_Temp_215"><sup><small>27</small></sup></a></p><p></p><p><tt><a id="__idx_1950"></a>(define (segments-&gt;painter segment-list)<br />
   (lambda (frame)<br />
     (for-each<br />
      (lambda (segment)<br />
@@ -1675,17 +1675,17 @@ capabilities. The details of their implementation do not matter.  Any
 procedure can serve as a painter, provided that it takes a frame as
 argument and draws something scaled to fit the frame.<a href="#footnote_Temp_216" id="call_footnote_Temp_216"><sup><small>28</small></sup></a>
 
-</p><p><a id="%_thm_2.48"></a>
-<b>Exercise 2.48.</b>  <a id="%_idx_1952"></a>A directed line segment in the
+</p><p><a id="__thm_2.48"></a>
+<b>Exercise 2.48.</b>  <a id="__idx_1952"></a>A directed line segment in the
 plane can be represented as a pair of vectors – the
 vector running from the origin to the start-point of the segment, and
 the vector running from the origin to the end-point of the segment.
-Use your vector representation from exercise <a href="#%_thm_2.46">2.46</a> to
-define a representation for segments with a constructor <a id="%_idx_1954"></a><tt>make-segment</tt> and selectors <a id="%_idx_1956"></a><tt>start-segment</tt> and <a id="%_idx_1958"></a><tt>end-segment</tt>.
+Use your vector representation from exercise <a href="#__thm_2.46">2.46</a> to
+define a representation for segments with a constructor <a id="__idx_1954"></a><tt>make-segment</tt> and selectors <a id="__idx_1956"></a><tt>start-segment</tt> and <a id="__idx_1958"></a><tt>end-segment</tt>.
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.49"></a>
+</p><p><a id="__thm_2.49"></a>
 <b>Exercise 2.49.</b>  Use <tt>segments-&gt;painter</tt> to define the following primitive painters:</p><p>
 
 a.  The painter that draws the outline of the designated frame.</p><p>
@@ -1700,10 +1700,10 @@ d.  The <tt>wave</tt> painter.
 
 </p><p></p><p>
 
-<a id="%_sec_Temp_219"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_219">Transforming and combining painters</a></h4><p>
+<a id="__sec_Temp_219"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_219">Transforming and combining painters</a></h4><p>
 
-<a id="%_idx_1960"></a>
+<a id="__idx_1960"></a>
 An operation on painters (such as <tt>flip-vert</tt> or <tt>beside</tt>)
 works by creating a painter that invokes the original painters
 with respect to frames derived from the argument frame.
@@ -1727,7 +1727,7 @@ and the other two specify the ends of its edge vectors.
 Thus, arguments within the
 unit square specify a frame contained within the original frame.</p><p>
 
-</p><p></p><p><tt><a id="%_idx_1962"></a>(define (transform-painter painter origin corner1 corner2)<br />
+</p><p></p><p><tt><a id="__idx_1962"></a>(define (transform-painter painter origin corner1 corner2)<br />
   (lambda (frame)<br />
     (let ((m (frame-coord-map frame)))<br />
       (let ((new-origin (m origin)))<br />
@@ -1737,7 +1737,7 @@ unit square specify a frame contained within the original frame.</p><p>
                      (sub-vect (m corner2) new-origin)))))))<br /></tt></p><p></p><p></p><p>
 
 Here's how to flip painter images vertically:
-</p><p></p><p><tt><a id="%_idx_1964"></a>(define (flip-vert painter)<br />
+</p><p></p><p><tt><a id="__idx_1964"></a>(define (flip-vert painter)<br />
   (transform-painter painter<br />
                      (make-vect 0.0 1.0)   <em>; new <tt>origin</tt></em><br />
                      (make-vect 1.0 1.0)   <em>; new end of <tt>edge1</tt></em><br />
@@ -1745,19 +1745,19 @@ Here's how to flip painter images vertically:
 Using <tt>transform-painter</tt>, we can easily define new transformations.
 For example, we can define a painter that shrinks its image to the
 upper-right quarter of the frame it is given:
-</p><p></p><p><tt><a id="%_idx_1966"></a>(define (shrink-to-upper-right painter)<br />
+</p><p></p><p><tt><a id="__idx_1966"></a>(define (shrink-to-upper-right painter)<br />
   (transform-painter painter<br />
                      (make-vect 0.5 0.5)<br />
                      (make-vect 1.0 0.5)<br />
                      (make-vect 0.5 1.0)))<br /></tt></p><p></p><p>
 Other transformations rotate images counterclockwise by 90 degrees<a href="#footnote_Temp_220" id="call_footnote_Temp_220"><sup><small>29</small></sup></a>
-</p><p></p><p><tt><a id="%_idx_1968"></a>(define (rotate90 painter)<br />
+</p><p></p><p><tt><a id="__idx_1968"></a>(define (rotate90 painter)<br />
   (transform-painter painter<br />
                      (make-vect 1.0 0.0)<br />
                      (make-vect 1.0 1.0)<br />
                      (make-vect 0.0 0.0)))<br /></tt></p><p></p><p>
 or squash images towards the center of the frame:<a href="#footnote_Temp_221" id="call_footnote_Temp_221"><sup><small>30</small></sup></a>
-</p><p></p><p><tt><a id="%_idx_1970"></a>(define (squash-inwards painter)<br />
+</p><p></p><p><tt><a id="__idx_1970"></a>(define (squash-inwards painter)<br />
   (transform-painter painter<br />
                      (make-vect 0.0 0.0)<br />
                      (make-vect 0.65 0.35)<br />
@@ -1773,7 +1773,7 @@ When the compound painter is given a frame, it
 calls the first transformed painter to paint in the left half of
 the frame and calls the second transformed painter to paint in the
 right half of the frame:
-</p><p></p><p><tt><a id="%_idx_1972"></a>(define (beside painter1 painter2)<br />
+</p><p></p><p><tt><a id="__idx_1972"></a>(define (beside painter1 painter2)<br />
   (let ((split-point (make-vect 0.5 0.0)))<br />
     (let ((paint-left<br />
            (transform-painter painter1<br />
@@ -1795,26 +1795,26 @@ implement.  The <tt>beside</tt> procedure need not know anything
 about the details of the component painters other than that each
 painter will draw something in its designated frame.</p><p>
 
-</p><p><a id="%_thm_2.50"></a>
-<b>Exercise 2.50.</b>  Define the transformation <a id="%_idx_1974"></a><tt>flip-horiz</tt>, which flips
+</p><p><a id="__thm_2.50"></a>
+<b>Exercise 2.50.</b>  Define the transformation <a id="__idx_1974"></a><tt>flip-horiz</tt>, which flips
 painters horizontally, and transformations that rotate
 painters counterclockwise by 180 degrees and 270 degrees.
 
 </p><p></p><p>
 
-</p><p><a id="%_thm_2.51"></a>
-<b>Exercise 2.51.</b>  Define the <a id="%_idx_1976"></a><tt>below</tt> operation for painters.  <tt>Below</tt> takes two
+</p><p><a id="__thm_2.51"></a>
+<b>Exercise 2.51.</b>  Define the <a id="__idx_1976"></a><tt>below</tt> operation for painters.  <tt>Below</tt> takes two
 painters as arguments.  The resulting painter, given a frame,
 draws with the first painter in the
 bottom of the frame and with the second painter in the top.  Define <tt>below</tt> in two different ways – first by writing a procedure that is
 analogous to the <tt>beside</tt> procedure given above, and
 again in terms of <tt>beside</tt> and suitable
-rotation operations (from exercise <a href="#%_thm_2.50">2.50</a>).
+rotation operations (from exercise <a href="#__thm_2.50">2.50</a>).
 
 </p><p></p><p>
 
-<a id="%_sec_Temp_224"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_224">Levels of language for robust design</a></h4><p>
+<a id="__sec_Temp_224"></a>
+</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_224">Levels of language for robust design</a></h4><p>
 
 The picture language exercises some of the critical ideas
 we've introduced about abstraction with procedures and data.  The
@@ -1828,7 +1828,7 @@ combination for painters.</p><p>
 
 
 We have also obtained a glimpse of another crucial idea about
-languages and program design.  This is the approach of <a id="%_idx_1978"></a><a id="%_idx_1980"></a><em>stratified
+languages and program design.  This is the approach of <a id="__idx_1978"></a><a id="__idx_1980"></a><em>stratified
 design</em>, the notion that a complex system should be structured as a
 sequence of levels that are described using a sequence of languages.
 Each level is constructed by combining parts that are regarded as
@@ -1860,11 +1860,11 @@ primitives, using geometric combiners such as <tt>beside</tt> and <tt>below</tt>
 operations, such as <tt>square-of-four</tt>, capture common patterns of
 combining geometric combiners.</p><p>
 
-<a id="%_idx_1982"></a>Stratified design helps make programs <em>robust</em>, that is, it makes
+<a id="__idx_1982"></a>Stratified design helps make programs <em>robust</em>, that is, it makes
 it likely that small changes in a specification will require
 correspondingly small changes in the program.  For instance, suppose
 we wanted to change the image based on <tt>wave</tt> shown in
-figure <a href="#%_fig_2.9">2.9</a>.  We could work at the lowest level
+figure <a href="#__fig_2.9">2.9</a>.  We could work at the lowest level
 to change the detailed appearance of the <tt>wave</tt> element; we could
 work at the middle level to change the way <tt>corner-split</tt>
 replicates the <tt>wave</tt>; we could work at the highest level to
@@ -1873,13 +1873,13 @@ In general, each level of a stratified design provides a different
 vocabulary for expressing the characteristics of the system, and a
 different kind of ability to change it.</p><p>
 
-</p><p><a id="%_thm_2.52"></a>
+</p><p><a id="__thm_2.52"></a>
 <b>Exercise 2.52.</b>  Make changes to the square limit of <tt>wave</tt> shown in
-figure <a href="#%_fig_2.9">2.9</a> by working at each of the levels
+figure <a href="#__fig_2.9">2.9</a> by working at each of the levels
 described above.  In particular:</p><p>
 
 a.  Add some segments to the primitive <tt>wave</tt> painter
-of exercise  <a href="#%_thm_2.49">2.49</a> (to add a smile, for example).</p><p>
+of exercise  <a href="#__thm_2.49">2.49</a> (to add a smile, for example).</p><p>
 
 b.  Change the pattern constructed by <tt>corner-split</tt>
 (for example, by using only one copy of the
@@ -1891,7 +1891,7 @@ might make the big Mr. Rogers look outward from each corner of the square.)
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a href="#call_footnote_Temp_154" id="footnote_Temp_154"><sup><small>6</small></sup></a> The use of the word <a id="%_idx_1536"></a>“closure” here comes from abstract algebra,
+</p><div class="footnote"><p><a href="#call_footnote_Temp_154" id="footnote_Temp_154"><sup><small>6</small></sup></a> The use of the word <a id="__idx_1536"></a>“closure” here comes from abstract algebra,
 where a set of elements is said to be closed under an operation if
 applying the operation to elements in the set produces an element that
 is again an element of the set.  The Lisp community
@@ -1901,19 +1901,19 @@ procedures with free variables.  We do not use the word “closure” in
 this second sense in this book.
 
 </p><p><a href="#call_footnote_Temp_155" id="footnote_Temp_155"><sup><small>7</small></sup></a> The notion that a means of
-<a id="%_idx_1542"></a>combination should satisfy closure is a straightforward idea.
+<a id="__idx_1542"></a>combination should satisfy closure is a straightforward idea.
 Unfortunately, the data combiners provided in many popular programming
 languages do not satisfy closure, or make closure cumbersome to
-exploit.  In <a id="%_idx_1544"></a>Fortran or <a id="%_idx_1546"></a>Basic, one typically combines data elements by
+exploit.  In <a id="__idx_1544"></a>Fortran or <a id="__idx_1546"></a>Basic, one typically combines data elements by
 assembling them into arrays – but one cannot form arrays whose
-elements are themselves arrays.  <a id="%_idx_1548"></a>Pascal and <a id="%_idx_1550"></a>C admit structures whose
+elements are themselves arrays.  <a id="__idx_1548"></a>Pascal and <a id="__idx_1550"></a>C admit structures whose
 elements are structures.  However, this requires that the programmer
 manipulate pointers explicitly, and adhere to the restriction that
 each field of a structure can contain only elements of a prespecified form.
 Unlike
 Lisp with its pairs, these languages have no built-in general-purpose
 glue that makes it easy to manipulate compound data in a uniform way.
-This limitation lies behind Alan <a id="%_idx_1552"></a>Perlis's comment in his foreword to
+This limitation lies behind Alan <a id="__idx_1552"></a>Perlis's comment in his foreword to
 this book: “In Pascal the plethora of declarable data structures
 induces a specialization within functions that inhibits and penalizes
 casual cooperation.  It is better to have 100 functions operate on one
@@ -1922,17 +1922,17 @@ structures.”
 
 </p><p><a href="#call_footnote_Temp_156" id="footnote_Temp_156"><sup><small>8</small></sup></a> In this book, we use <em>list</em> to mean a chain of
 pairs terminated by the end-of-list marker.  In contrast, the term
-<a id="%_idx_1572"></a><a id="%_idx_1574"></a><em>list structure</em> refers to any data structure made out of pairs,
+<a id="__idx_1572"></a><a id="__idx_1574"></a><em>list structure</em> refers to any data structure made out of pairs,
 not just to lists.
 
 </p><p><a href="#call_footnote_Temp_157" id="footnote_Temp_157"><sup><small>9</small></sup></a> Since nested applications of <tt>car</tt> and <tt>cdr</tt>
 are cumbersome to write, Lisp dialects provide abbreviations for
 them – for instance,
-<a id="%_idx_1584"></a><a id="%_idx_1586"></a></p>
+<a id="__idx_1584"></a><a id="__idx_1586"></a></p>
 
 <p><code>(cadr ⟨arg⟩) = (car (cdr ⟨arg⟩))</p>
 
-<p>The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a id="%_idx_1588"></a><a id="%_idx_1590"></a><tt>car</tt> operation and
+<p>The names of all such procedures start with <tt>c</tt> and end with <tt>r</tt>.  Each <tt>a</tt> between them stands for a <a id="__idx_1588"></a><a id="__idx_1590"></a><tt>car</tt> operation and
 each <tt>d</tt> for a <tt>cdr</tt> operation, to be applied in the same order
 in which they appear in the name.  The names <tt>car</tt> and <tt>cdr</tt>
 persist because simple combinations like <tt>cadr</tt> are
@@ -1942,24 +1942,24 @@ pronounceable.
 standardization of Lisp dialects has been dissipated in arguments that
 are literally over nothing: Should <tt>nil</tt> be an ordinary name?
 Should the value of <tt>nil</tt> be a symbol?  Should it be a list?
-Should it be a pair?  <a id="%_idx_1598"></a>In Scheme, <tt>nil</tt> is an ordinary name,
+Should it be a pair?  <a id="__idx_1598"></a>In Scheme, <tt>nil</tt> is an ordinary name,
 which we use in this section as a variable whose value is
 the end-of-list marker (just as <tt>true</tt> is an ordinary variable
 that has a true value).  Other dialects of
 Lisp, including Common Lisp, treat <tt>nil</tt> as a special symbol.  The
-<a id="%_idx_1600"></a>authors of this book, who have endured too many language
+<a id="__idx_1600"></a>authors of this book, who have endured too many language
 standardization brawls, would like to avoid the entire issue.  Once we
-have introduced quotation in section <a href="book-Z-H-16.html#%_sec_2.3">2.3</a>, we will
+have introduced quotation in section <a href="book-Z-H-16.html#__sec_2.3">2.3</a>, we will
 denote the empty list as <tt>'()</tt> and dispense with the
 variable <tt>nil</tt> entirely.
 
 </p><p><a href="#call_footnote_Temp_164" id="footnote_Temp_164"><sup><small>11</small></sup></a> To define <tt>f</tt> and <tt>g</tt> using
-<a id="%_idx_1656"></a><tt>lambda</tt> we would write
+<a id="__idx_1656"></a><tt>lambda</tt> we would write
 </p><p></p><p><tt>(define f (lambda (x y . z) &lt;<em>body</em>&gt;))<br />
 (define g (lambda w &lt;<em>body</em>&gt;))<br /></tt></p><p></p><p>
 
 </p><p><a href="#call_footnote_Temp_166" id="footnote_Temp_166"><sup><small>12</small></sup></a> Scheme
-standardly provides a <a id="%_idx_1664"></a><tt>map</tt> procedure that is more general
+standardly provides a <a id="__idx_1664"></a><tt>map</tt> procedure that is more general
 than the one described here.
 This more general <tt>map</tt>
 takes a procedure of <em>n</em> arguments, together with <em>n</em> lists, and
@@ -1977,47 +1977,47 @@ returning a list of the results.  For example:
 first two clauses in the <tt>cond</tt> matters, since the empty list
 satisfies <tt>null?</tt> and also is not a pair.
 
-</p><p><a href="#call_footnote_Temp_182" id="footnote_Temp_182"><sup><small>14</small></sup></a> This is, in fact, precisely the <a id="%_idx_1746"></a><tt>fringe</tt> procedure from
-exercise <a href="#%_thm_2.28">2.28</a>.  Here we've renamed it to emphasize that
+</p><p><a href="#call_footnote_Temp_182" id="footnote_Temp_182"><sup><small>14</small></sup></a> This is, in fact, precisely the <a id="__idx_1746"></a><tt>fringe</tt> procedure from
+exercise <a href="#__thm_2.28">2.28</a>.  Here we've renamed it to emphasize that
 it is part of a family of general sequence-manipulation procedures.
 
-</p><p><a href="#call_footnote_Temp_183" id="footnote_Temp_183"><sup><small>15</small></sup></a> <a id="%_idx_1760"></a>Richard Waters (1979)
-developed a program that automatically analyzes traditional <a id="%_idx_1762"></a>Fortran
+</p><p><a href="#call_footnote_Temp_183" id="footnote_Temp_183"><sup><small>15</small></sup></a> <a id="__idx_1760"></a>Richard Waters (1979)
+developed a program that automatically analyzes traditional <a id="__idx_1762"></a>Fortran
 programs, viewing them in terms of maps, filters, and accumulations.
 He found that fully 90 percent of the code in the Fortran Scientific
 Subroutine Package fits neatly into this paradigm.  One of the reasons
 for the success of Lisp as a programming language is that lists
 provide a standard medium for expressing ordered collections so that
 they can be manipulated using higher-order operations.  The
-programming language <a id="%_idx_1764"></a>APL owes much of its power and appeal to a
+programming language <a id="__idx_1764"></a>APL owes much of its power and appeal to a
 similar choice. In APL all data are represented as arrays, and there is a
 universal and convenient set of generic operators for all sorts of
 array operations.
 
-</p><p><a href="#call_footnote_Temp_186" id="footnote_Temp_186"><sup><small>16</small></sup></a> According to <a id="%_idx_1776"></a>Knuth (1981), this rule was formulated by
-<a id="%_idx_1778"></a>W. G. Horner early in the nineteenth century, but the method was
+</p><p><a href="#call_footnote_Temp_186" id="footnote_Temp_186"><sup><small>16</small></sup></a> According to <a id="__idx_1776"></a>Knuth (1981), this rule was formulated by
+<a id="__idx_1778"></a>W. G. Horner early in the nineteenth century, but the method was
 actually used by Newton over a hundred years earlier.  Horner's rule
 evaluates the polynomial using fewer additions and multiplications
 than does the straightforward method of first computing <em>a</em><sub><em>n</em></sub><em>x</em><sup><em>n</em></sup>,
 then adding <em>a</em><sub><em>n</em>-1</sub><em>x</em><sup><em>n</em>-1</sup>, and so on.  In fact, it is possible to
 prove that any algorithm for evaluating arbitrary polynomials must use
 at least as many additions and multiplications as does Horner's rule,
-and thus Horner's rule is an <a id="%_idx_1780"></a><a id="%_idx_1782"></a>optimal algorithm for polynomial
+and thus Horner's rule is an <a id="__idx_1780"></a><a id="__idx_1782"></a>optimal algorithm for polynomial
 evaluation.  This was proved (for the number of additions) by
-<a id="%_idx_1784"></a>A. M. Ostrowski in a 1954 paper that essentially founded the modern
+<a id="__idx_1784"></a>A. M. Ostrowski in a 1954 paper that essentially founded the modern
 study of optimal algorithms.  The analogous statement for
-multiplications was proved by <a id="%_idx_1786"></a>V. Y. Pan in 1966.  The book by <a id="%_idx_1788"></a>Borodin
-and <a id="%_idx_1790"></a>Munro (1975) provides an overview of these and other results about
+multiplications was proved by <a id="__idx_1786"></a>V. Y. Pan in 1966.  The book by <a id="__idx_1788"></a>Borodin
+and <a id="__idx_1790"></a>Munro (1975) provides an overview of these and other results about
 optimal algorithms.
 
 </p><p><a href="#call_footnote_Temp_190" id="footnote_Temp_190"><sup><small>17</small></sup></a> This definition uses the
 extended version of <tt>map</tt> described in footnote <a href="#footnote_Temp_166">12</a>.
 
 </p><p><a href="#call_footnote_Temp_194" id="footnote_Temp_194"><sup><small>18</small></sup></a> This approach to nested mappings was shown
-to us by <a id="%_idx_1820"></a>David Turner, whose languages <a id="%_idx_1822"></a>KRC and <a id="%_idx_1824"></a>Miranda provide elegant
+to us by <a id="__idx_1820"></a>David Turner, whose languages <a id="__idx_1822"></a>KRC and <a id="__idx_1824"></a>Miranda provide elegant
 formalisms for dealing with these constructs.  The examples in this
-section (see also exercise <a href="#%_thm_2.42">2.42</a>) are adapted from Turner
-1981.  In section <a href="book-Z-H-24.html#%_sec_3.5.3">3.5.3</a>, we'll see how this
+section (see also exercise <a href="#__thm_2.42">2.42</a>) are adapted from Turner
+1981.  In section <a href="book-Z-H-24.html#__sec_3.5.3">3.5.3</a>, we'll see how this
 approach generalizes to infinite sequences.
 
 </p><p><a href="#call_footnote_Temp_195" id="footnote_Temp_195"><sup><small>19</small></sup></a> We're
@@ -2028,20 +2028,20 @@ j)</tt>, not <tt>(cons i j)</tt>.
 </p><p><a href="#call_footnote_Temp_196" id="footnote_Temp_196"><sup><small>20</small></sup></a> The set <em>S</em> - <em>x</em> is the set of all elements
 of <em>S</em>, excluding <em>x</em>.
 
-</p><p><a href="#call_footnote_Temp_197" id="footnote_Temp_197"><sup><small>21</small></sup></a> <a id="%_idx_1834"></a><a id="%_idx_1836"></a><a id="%_idx_1838"></a>Semicolons in Scheme code are used to
+</p><p><a href="#call_footnote_Temp_197" id="footnote_Temp_197"><sup><small>21</small></sup></a> <a id="__idx_1834"></a><a id="__idx_1836"></a><a id="__idx_1838"></a>Semicolons in Scheme code are used to
 introduce <em>comments</em>.  Everything from the semicolon to the end of
 the line is ignored by the interpreter.  In this book we don't use
 many comments; we try to make our programs self-documenting by using
 descriptive names.
 
 </p><p><a href="#call_footnote_Temp_202" id="footnote_Temp_202"><sup><small>22</small></sup></a> The picture language is based on the language
-<a id="%_idx_1856"></a>Peter Henderson created to construct
-images like <a id="%_idx_1858"></a>M.C. Escher's “Square Limit” woodcut (see Henderson 1982).
+<a id="__idx_1856"></a>Peter Henderson created to construct
+images like <a id="__idx_1858"></a>M.C. Escher's “Square Limit” woodcut (see Henderson 1982).
 The woodcut incorporates a
 repeated scaled pattern, similar to the arrangements drawn using
 the <tt>square-limit</tt> procedure in this section.
 
-</p><p><a href="#call_footnote_Temp_204" id="footnote_Temp_204"><sup><small>23</small></sup></a> <a id="%_idx_1866"></a><a id="%_idx_1868"></a>William Barton Rogers (1804-1882) was the founder and first president
+</p><p><a href="#call_footnote_Temp_204" id="footnote_Temp_204"><sup><small>23</small></sup></a> <a id="__idx_1866"></a><a id="__idx_1868"></a>William Barton Rogers (1804-1882) was the founder and first president
 of MIT.  A geologist and talented teacher, he taught at William and
 Mary College and at the University of Virginia.  In 1859 he moved to
 Boston, where he had more time for research, worked on a plan
@@ -2062,7 +2062,7 @@ modern times has demonstrated its utter worthlessness.
 </p></blockquote><p>
 
 Rogers served as president of MIT until 1870, when he resigned due to
-ill health.  In 1878 the second president of MIT, <a id="%_idx_1870"></a>John Runkle,
+ill health.  In 1878 the second president of MIT, <a id="__idx_1870"></a>John Runkle,
 resigned under the pressure of a financial crisis brought on by the
 Panic of 1873 and strain of fighting off attempts by Harvard to take
 over MIT.  Rogers returned to hold the office of president until
@@ -2077,7 +2077,7 @@ to mind the beginnings of science.  I remember one hundred and fifty
 years ago Stephen Hales published a pamphlet on the subject of
 illuminating gas, in which he stated that his researches had
 demonstrated that 128 grains of bituminous coal – ”
-<a id="%_idx_1872"></a></p><p>“Bituminous coal,” these were his last words on earth.  Here he bent
+<a id="__idx_1872"></a></p><p>“Bituminous coal,” these were his last words on earth.  Here he bent
 forward, as if consulting some notes on the table before him, then
 slowly regaining an erect position, threw up his hands, and was
 translated from the scene of his earthly labors and triumphs to “the
@@ -2086,7 +2086,7 @@ disembodied spirit finds unending satisfaction in contemplating the
 new and still unfathomable mysteries of the infinite future.
 </p></blockquote>
 In the words of  Francis A. Walker
-<a id="%_idx_1874"></a>(MIT's third president):
+<a id="__idx_1874"></a>(MIT's third president):
 <blockquote>
 <p>All his life he had borne himself most faithfully and heroically, and
 he died as so good a knight would surely have wished, in harness, at
@@ -2095,36 +2095,36 @@ his post, and in the very part and act of public duty.
 
 <p><a href="#call_footnote_Temp_207" id="footnote_Temp_207"><sup><small>24</small></sup></a> Equivalently, we could
 write
-</p><p></p><p><tt><a id="%_idx_1902"></a>(define flipped-pairs<br />
+</p><p></p><p><tt><a id="__idx_1902"></a>(define flipped-pairs<br />
   (square-of-four identity flip-vert identity flip-vert))<br /></tt></p><p></p><p>
 
 
 </p><p><a href="#call_footnote_Temp_208" id="footnote_Temp_208"><sup><small>25</small></sup></a> <tt>Rotate180</tt>
-rotates a painter by 180 degrees (see exercise <a href="#%_thm_2.50">2.50</a>).
+rotates a painter by 180 degrees (see exercise <a href="#__thm_2.50">2.50</a>).
 Instead of <tt>rotate180</tt> we could say <tt>(compose flip-vert flip-horiz)</tt>, using
-the <tt>compose</tt> procedure from exercise <a href="book-Z-H-12.html#%_thm_1.42">1.42</a>.
+the <tt>compose</tt> procedure from exercise <a href="book-Z-H-12.html#__thm_1.42">1.42</a>.
 
 </p><p><a href="#call_footnote_Temp_211" id="footnote_Temp_211"><sup><small>26</small></sup></a> <tt>Frame-coord-map</tt> uses
-the vector operations described in exercise <a href="#%_thm_2.46">2.46</a> below, which we
+the vector operations described in exercise <a href="#__thm_2.46">2.46</a> below, which we
 assume have been implemented using some representation for vectors.
 Because of data abstraction, it doesn't matter what this vector
 representation is, so long as the vector operations behave correctly.
 
 </p><p><a href="#call_footnote_Temp_215" id="footnote_Temp_215"><sup><small>27</small></sup></a> <tt>Segments-&gt;painter</tt> uses the representation for line
-segments described in exercise <a href="#%_thm_2.48">2.48</a> below.
-It also uses the <tt>for-each</tt> procedure described in exercise <a href="#%_thm_2.23">2.23</a>.
+segments described in exercise <a href="#__thm_2.48">2.48</a> below.
+It also uses the <tt>for-each</tt> procedure described in exercise <a href="#__thm_2.23">2.23</a>.
 
 </p><p><a href="#call_footnote_Temp_216" id="footnote_Temp_216"><sup><small>28</small></sup></a> For example, the <tt>rogers</tt> painter of
-figure <a href="#%_fig_2.11">2.11</a> was constructed from a gray-level image.
+figure <a href="#__fig_2.11">2.11</a> was constructed from a gray-level image.
 For each point in a given frame,
 the <tt>rogers</tt> painter determines the point in the image that is mapped to it
 under the frame coordinate map, and shades it
 accordingly.  By allowing different types of painters, we are capitalizing on the
-abstract data idea discussed in section <a href="book-Z-H-14.html#%_sec_2.1.3">2.1.3</a>, where we
+abstract data idea discussed in section <a href="book-Z-H-14.html#__sec_2.1.3">2.1.3</a>, where we
 argued that a rational-number representation could be anything at all that
 satisfies an appropriate condition.  Here we're using the fact that a
 painter can be implemented in any way at all, so long as it draws
-something in the designated frame.  Section <a href="book-Z-H-14.html#%_sec_2.1.3">2.1.3</a> also
+something in the designated frame.  Section <a href="book-Z-H-14.html#__sec_2.1.3">2.1.3</a> also
 showed how pairs could be implemented as procedures.  Painters are our
 second example of a procedural representation for data.
 
@@ -2132,11 +2132,11 @@ second example of a procedural representation for data.
 frames, because it also stretches and shrinks the image to fit into
 the rotated frame.
 
-</p><p><a href="#call_footnote_Temp_221" id="footnote_Temp_221"><sup><small>30</small></sup></a> The diamond-shaped images in figures <a href="#%_fig_2.10">2.10</a>
-and <a href="#%_fig_2.11">2.11</a> were created with <tt>squash-inwards</tt> applied to
+</p><p><a href="#call_footnote_Temp_221" id="footnote_Temp_221"><sup><small>30</small></sup></a> The diamond-shaped images in figures <a href="#__fig_2.10">2.10</a>
+and <a href="#__fig_2.11">2.11</a> were created with <tt>squash-inwards</tt> applied to
 <tt>wave</tt> and <tt>rogers</tt>.
 
-</p><p><a href="#call_footnote_Temp_225" id="footnote_Temp_225"><sup><small>31</small></sup></a> Section <a href="book-Z-H-22.html#%_sec_3.3.4">3.3.4</a> describes one such language.
+</p><p><a href="#call_footnote_Temp_225" id="footnote_Temp_225"><sup><small>31</small></sup></a> Section <a href="book-Z-H-22.html#__sec_3.3.4">3.3.4</a> describes one such language.
 
 </p></div>
 

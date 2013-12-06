@@ -13,16 +13,16 @@
 
 
 
-<a id="%_chap_3"></a>
+<a id="__chap_3"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_3">Chapter 3</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_3">Modularity, Objects, and State</a></p><p>
+<div class="chapterheading"><a href="book-Z-H-4.html#__toc___chap_3">Chapter 3</a></div></h1><p>
+<a href="book-Z-H-4.html#__toc___chap_3">Modularity, Objects, and State</a></p><p>
 
 </p><p>
 
 </p><p>
 </p><div style="text-align: right;">
-<table width="60%"><tr><td>
+<table width="60_"><tr><td>
 <span class="epigraph">
 <p>
 
@@ -32,11 +32,11 @@ M<img src="images/ch3-Z-G-1.gif" border="0" /></p><p>
 
 (Even while it changes, it stands still.)</p><p>
 
-<a id="%_idx_2820"></a>Heraclitus</p><p>
+<a id="__idx_2820"></a>Heraclitus</p><p>
 
 Plus ça change, plus c'est la même chose.</p><p>
 
-<a id="%_idx_2822"></a>Alphonse Karr</p><p>
+<a id="__idx_2822"></a>Alphonse Karr</p><p>
 
 </p></span>
 </td></tr></table></div>
@@ -55,7 +55,7 @@ systems so that they will be <em>modular</em>, that is, so that they can
 be divided “naturally” into coherent parts that can be separately
 developed and maintained.</p><p>
 
-<a id="%_idx_2824"></a><a id="%_idx_2826"></a>One powerful design strategy, which is particularly appropriate to the
+<a id="__idx_2824"></a><a id="__idx_2826"></a>One powerful design strategy, which is particularly appropriate to the
 construction of programs for modeling physical systems, is to base the
 structure of our programs on the structure of the system being
 modeled.  For each object in the system, we construct a corresponding
@@ -73,9 +73,9 @@ To a large extent, then, the way we organize a large program is
 dictated by our perception of the system to be modeled.  In this
 chapter we will investigate two prominent organizational strategies
 arising from two rather different “world views” of the structure of
-systems.  The first organizational strategy concentrates on <a id="%_idx_2828"></a><em>objects</em>, viewing a large system as a collection of distinct objects
+systems.  The first organizational strategy concentrates on <a id="__idx_2828"></a><em>objects</em>, viewing a large system as a collection of distinct objects
 whose behaviors may change over time.  An alternative organizational
-strategy concentrates on the <a id="%_idx_2830"></a><em>streams</em> of information that flow in
+strategy concentrates on the <a id="__idx_2830"></a><em>streams</em> of information that flow in
 the system, much as an electrical engineer views a signal-processing
 system.</p><p>
 
@@ -84,8 +84,8 @@ raise significant linguistic issues in programming.
 With objects, we must be concerned with how a computational object can
 change and yet maintain its identity.  This will force us to abandon
 our old substitution model of computation
-(section <a href="book-Z-H-10.html#%_sec_1.1.5">1.1.5</a>) in favor of a more mechanistic
-but less theoretically tractable <a id="%_idx_2832"></a><em>environment model</em> of
+(section <a href="book-Z-H-10.html#__sec_1.1.5">1.1.5</a>) in favor of a more mechanistic
+but less theoretically tractable <a id="__idx_2832"></a><em>environment model</em> of
 computation.  The difficulties of dealing with objects, change, and
 identity are a fundamental consequence of the need to grapple with
 time in our computational models.  These difficulties become even
@@ -93,7 +93,7 @@ greater when we allow the possibility of concurrent execution of
 programs.  The stream approach can be most fully exploited when we
 decouple simulated time in our model from the order of the events that
 take place in the computer during evaluation.  We will accomplish this
-using a technique known as <a id="%_idx_2834"></a><em>delayed evaluation</em>.</p><p>
+using a technique known as <a id="__idx_2834"></a><em>delayed evaluation</em>.</p><p>
 
 
 

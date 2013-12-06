@@ -13,14 +13,14 @@
 
 
 
-<a id="%_chap_4"></a>
+<a id="__chap_4"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_4">Chapter 4</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_4">Metalinguistic Abstraction</a></p><p>
+<div class="chapterheading"><a href="book-Z-H-4.html#__toc___chap_4">Chapter 4</a></div></h1><p>
+<a href="book-Z-H-4.html#__toc___chap_4">Metalinguistic Abstraction</a></p><p>
 
 </p><p>
 </p><div style="text-align: right;">
-<table width="60%"><tr><td>
+<table width="60_"><tr><td>
 <span class="epigraph">
 <p>
 
@@ -33,7 +33,7 @@ alphabet: a couple-dozen squiggles we can draw with the pen.  This is
 the key!  And the treasure, too, if we can only get our hands on it!
 It's as if – as if the key to the treasure <em>is</em> the treasure!</p><p>
 
-<a id="%_idx_4188"></a>John Barth, <em>Chimera</em></p><p>
+<a id="__idx_4188"></a>John Barth, <em>Chimera</em></p><p>
 
 </p></span>
 </td></tr></table></div>
@@ -60,7 +60,7 @@ complex problem by adopting a new language that enables us to describe
 primitives, means of combination, and means of abstraction that are
 particularly well suited to the problem at hand.<a href="#footnote_Temp_508" id="call_footnote_Temp_508"><sup><small>1</small></sup></a></p><p>
 
-<a id="%_idx_4190"></a><a id="%_idx_4192"></a>Programming is endowed with a multitude of languages.  There are
+<a id="__idx_4190"></a><a id="__idx_4192"></a>Programming is endowed with a multitude of languages.  There are
 physical languages, such as the machine languages for particular
 computers.  These languages are concerned with the representation of
 data and control in terms of individual bits of storage and primitive
@@ -74,11 +74,11 @@ These languages have means of combination and abstraction, such as
 procedure definition, that are appropriate to the larger-scale
 organization of systems.</p><p>
 
-<a id="%_idx_4194"></a><a id="%_idx_4196"></a><em>Metalinguistic abstraction</em> – establishing new
+<a id="__idx_4194"></a><a id="__idx_4196"></a><em>Metalinguistic abstraction</em> – establishing new
 languages – plays an important role in all branches of engineering
 design.  It is particularly important to computer programming, because
 in programming not only can we formulate new languages but we can also
-implement these languages by constructing evaluators.  An <a id="%_idx_4198"></a><em>evaluator</em> (or <em>interpreter</em>) for a programming language is a procedure
+implement these languages by constructing evaluators.  An <a id="__idx_4198"></a><em>evaluator</em> (or <em>interpreter</em>) for a programming language is a procedure
 that, when applied to an expression of the language, performs the
 actions required to evaluate that expression.</p><p>
 
@@ -95,24 +95,24 @@ rather than only users of languages designed by others.<p>
 
 In fact, we can regard almost any program as the evaluator for some
 language.  For instance, the polynomial manipulation system of
-section <a href="book-Z-H-18.html#%_sec_2.5.3">2.5.3</a> embodies the rules of polynomial
+section <a href="book-Z-H-18.html#__sec_2.5.3">2.5.3</a> embodies the rules of polynomial
 arithmetic and implements them in terms of operations on
 list-structured data.  If we augment this system with procedures to
 read and print polynomial expressions, we have the core of a
 special-purpose language for dealing with problems in symbolic
 mathematics.  The digital-logic simulator of
-section <a href="book-Z-H-22.html#%_sec_3.3.4">3.3.4</a> and the constraint propagator of
-section <a href="book-Z-H-22.html#%_sec_3.3.5">3.3.5</a> are legitimate languages in their own
+section <a href="book-Z-H-22.html#__sec_3.3.4">3.3.4</a> and the constraint propagator of
+section <a href="book-Z-H-22.html#__sec_3.3.5">3.3.5</a> are legitimate languages in their own
 right, each with its own primitives, means of combination, and means
 of abstraction.  Seen from this perspective, the technology for coping
 with large-scale computer systems merges with the technology for
-building new computer languages, and <a id="%_idx_4200"></a>computer science itself becomes
+building new computer languages, and <a id="__idx_4200"></a>computer science itself becomes
 no more (and no less) than the discipline of constructing appropriate
 descriptive languages.</p><p>
 
 We now embark on a tour of the technology by which languages are
 established in terms of other languages.  In this chapter we shall use
-Lisp as a base, implementing evaluators as Lisp procedures.  <a id="%_idx_4202"></a>Lisp is
+Lisp as a base, implementing evaluators as Lisp procedures.  <a id="__idx_4202"></a>Lisp is
 particularly well suited to this task, because of its ability to
 represent and manipulate symbolic expressions.  We will take the first
 step in understanding how languages are implemented by building an
@@ -141,11 +141,11 @@ streams to decouple the representation of time in the world from time
 in the computer.  Our stream programs, however, were
 sometimes cumbersome, because they were constrained by
 the applicative-order evaluation of Scheme.
-In section <a href="book-Z-H-27.html#%_sec_4.2">4.2</a>, we'll change
+In section <a href="book-Z-H-27.html#__sec_4.2">4.2</a>, we'll change
 the underlying language to provide for a more elegant approach, by modifying
 the evaluator to provide for <em>normal-order evaluation</em>.</p><p>
 
-Section <a href="book-Z-H-28.html#%_sec_4.3">4.3</a> implements a more
+Section <a href="book-Z-H-28.html#__sec_4.3">4.3</a> implements a more
 ambitious linguistic change, whereby expressions have many values,
 rather than just a single value.  In this language of <em>nondeterministic computing</em>, it is natural to express processes that
 generate all possible values for expressions and then search for those
@@ -156,7 +156,7 @@ With our nondeterministic evaluator, keeping track of multiple values
 and performing searches are handled automatically by the underlying
 mechanism of the language.</p><p>
 
-In section <a href="book-Z-H-29.html#%_sec_4.4">4.4</a> we implement a <em>logic-programming</em> language in which knowledge is expressed in terms
+In section <a href="book-Z-H-29.html#__sec_4.4">4.4</a> we implement a <em>logic-programming</em> language in which knowledge is expressed in terms
 of relations, rather than in terms of computations with inputs and
 outputs.  Even though this makes the language drastically different
 from Lisp, or indeed from any conventional language, we will see that
@@ -186,11 +186,11 @@ are with the large-scale organization of electrical devices to solve a
 given application problem; the physical feasibility of the parts is
 assumed.  This layered collection of languages is another example of
 the stratified design technique illustrated by the picture
-language of section <a href="book-Z-H-15.html#%_sec_2.2.4">2.2.4</a>.
+language of section <a href="book-Z-H-15.html#__sec_2.2.4">2.2.4</a>.
 
 </p><p><a href="#call_footnote_Temp_509" id="footnote_Temp_509"><sup><small>2</small></sup></a> The most important features that our evaluator leaves out
 are mechanisms for handling errors and supporting debugging.  For a
-more extensive discussion of evaluators, see <a id="%_idx_4204"></a><a id="%_idx_4206"></a><a id="%_idx_4208"></a>Friedman, Wand, and Haynes
+more extensive discussion of evaluators, see <a id="__idx_4204"></a><a id="__idx_4206"></a><a id="__idx_4208"></a>Friedman, Wand, and Haynes
 1992, which gives an exposition of programming languages that proceeds
 via a sequence of evaluators written in Scheme.
 
