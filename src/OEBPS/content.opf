@@ -54,7 +54,7 @@
         <item id="book-Z-H-36" href="book-Z-H-36.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-37" href="book-Z-H-37.html" media-type="application/xhtml+xml"/>
         <item id="book-Z-H-38" href="book-Z-H-38.html" media-type="application/xhtml+xml"/>
-        <item id="css" href="stylesheet.css" media-type="text/css"/>
+        <item id="css" href="book-Z-C.css" media-type="text/css"/>
 
         <!-- Images -->
         <item id="ch1-Z-G-1" href="images/ch1-Z-G-1.gif" media-type="image/gif"/>
