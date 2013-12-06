@@ -237,7 +237,7 @@ concurrent use of the shared values.</p><p>
 initially contains $100.  Concurrently, Peter deposits $10, Paul
 withdraws $20, and Mary withdraws half the money in the account, by
 executing the following commands:
-</p><table border="0"><tr><td vstyle="text-align: top;">Peter: </td><td vstyle="text-align: top;"><tt>(set! balance (+ balance 10))</tt></td></tr><tr><td vstyle="text-align: top;">Paul: </td><td vstyle="text-align: top;"><tt>(set! balance (- balance 20))</tt></td></tr><tr><td vstyle="text-align: top;">Mary: </td><td vstyle="text-align: top;"><tt>(set! balance (- balance (/ balance 2)))</tt>
+</p><table border="0"><tr><td style="text-align: top;">Peter: </td><td style="text-align: top;"><tt>(set! balance (+ balance 10))</tt></td></tr><tr><td style="text-align: top;">Paul: </td><td style="text-align: top;"><tt>(set! balance (- balance 20))</tt></td></tr><tr><td style="text-align: top;">Mary: </td><td style="text-align: top;"><tt>(set! balance (- balance (/ balance 2)))</tt>
 </td></tr></table><p>
 
 </p><p></p><p>a. List all the different possible values for <tt>balance</tt> after these
@@ -328,11 +328,11 @@ This creates two concurrent processes – <em>P</em><sub>1</sub>, which sets <tt
 execution is complete, <tt>x</tt> will be left with one of five possible
 values, depending on the interleaving of the events of <em>P</em><sub>1</sub> and
 <em>P</em><sub>2</sub>:
-</p><table border="0"><tr><td vstyle="text-align: top;">101: </td><td vstyle="text-align: top;"><em>P</em><sub>1</sub> sets <tt>x</tt> to 100 and then <em>P</em><sub>2</sub> increments <tt>x</tt> to 101.</td></tr><tr><td vstyle="text-align: top;">121: </td><td vstyle="text-align: top;"><em>P</em><sub>2</sub> increments <tt>x</tt> to 11 and then <em>P</em><sub>1</sub> sets <tt>x</tt> to
-<tt>x</tt> times <tt>x</tt>.</td></tr><tr><td vstyle="text-align: top;">110: </td><td vstyle="text-align: top;"><em>P</em><sub>2</sub> changes <tt>x</tt> from 10 to 11 between the two times that
-<em>P</em><sub>1</sub> accesses the value of <tt>x</tt> during the evaluation of <tt>(* x x)</tt>.</td></tr><tr><td vstyle="text-align: top;">11:  </td><td vstyle="text-align: top;"><em>P</em><sub>2</sub> accesses <tt>x</tt>, then <em>P</em><sub>1</sub> sets <tt>x</tt> to 100,
-then <em>P</em><sub>2</sub> sets <tt>x</tt>.</td></tr><tr><td vstyle="text-align: top;">100: </td><td vstyle="text-align: top;"><em>P</em><sub>1</sub> accesses <tt>x</tt> (twice), then <em>P</em><sub>2</sub> sets <tt>x</tt> to 11,
-then <em>P</em><sub>1</sub> sets <tt>x</tt>.</td></tr><tr><td vstyle="text-align: top;"></td></tr></table><p>
+</p><table border="0"><tr><td style="text-align: top;">101: </td><td style="text-align: top;"><em>P</em><sub>1</sub> sets <tt>x</tt> to 100 and then <em>P</em><sub>2</sub> increments <tt>x</tt> to 101.</td></tr><tr><td style="text-align: top;">121: </td><td style="text-align: top;"><em>P</em><sub>2</sub> increments <tt>x</tt> to 11 and then <em>P</em><sub>1</sub> sets <tt>x</tt> to
+<tt>x</tt> times <tt>x</tt>.</td></tr><tr><td style="text-align: top;">110: </td><td style="text-align: top;"><em>P</em><sub>2</sub> changes <tt>x</tt> from 10 to 11 between the two times that
+<em>P</em><sub>1</sub> accesses the value of <tt>x</tt> during the evaluation of <tt>(* x x)</tt>.</td></tr><tr><td style="text-align: top;">11:  </td><td style="text-align: top;"><em>P</em><sub>2</sub> accesses <tt>x</tt>, then <em>P</em><sub>1</sub> sets <tt>x</tt> to 100,
+then <em>P</em><sub>2</sub> sets <tt>x</tt>.</td></tr><tr><td style="text-align: top;">100: </td><td style="text-align: top;"><em>P</em><sub>1</sub> accesses <tt>x</tt> (twice), then <em>P</em><sub>2</sub> sets <tt>x</tt> to 11,
+then <em>P</em><sub>1</sub> sets <tt>x</tt>.</td></tr><tr><td style="text-align: top;"></td></tr></table><p>
 
 
 We can constrain the concurrency by using serialized procedures,
