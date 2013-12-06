@@ -1,0 +1,465 @@
+4697 value of attribute "href" is invalid; must be a URI
+4620 attribute "name" not allowed here; expected attribute "accesskey", "charset", "class", "coords", "dir", "href", "hreflang", "id", "lang", "rel", "rev", "shape", "style", "tabindex", "target", "title", "type" or "xml:lang"
+3997 value of attribute "id" is invalid; must be an XML name without colons
+3263 URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "_i"
+ 847 URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "_t"
+ 422 URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "_s"
+ 188 attribute "vstyle" not allowed here; expected attribute "abbr", "align", "axis", "char", "charoff", "class", "colspan", "dir", "headers", "id", "lang", "rowspan", "scope", "style", "title", "valign" or "xml:lang"
+ 165 URLDecoder: Illegal hex characters in escape (%) pattern - For input string: "_f"
+ 155 element "img" missing required attribute "alt"
+ 155 attribute "border" not allowed here; expected attribute "alt", "class", "dir", "height", "id", "ismap", "lang", "longdesc", "style", "title", "usemap", "width" or "xml:lang"
+ 103 element "p" not allowed here; expected the element end-tag, text or element "a", "abbr", "acronym", "applet", "b", "bdo", "big", "br", "cite", "code", "del", "dfn", "em", "i", "iframe", "img", "ins", "kbd", "map", "noscript", "ns:svg", "object", "q", "samp", "script", "small", "span", "strong", "sub", "sup", "tt" or "var" (with xmlns:ns="http://www.w3.org/2000/svg")
+  98 element "div" not allowed here; expected the element end-tag, text or element "a", "abbr", "acronym", "applet", "b", "bdo", "big", "br", "cite", "code", "del", "dfn", "em", "i", "iframe", "img", "ins", "kbd", "map", "noscript", "ns:svg", "object", "q", "samp", "script", "small", "span", "strong", "sub", "sup", "tt" or "var" (with xmlns:ns="http://www.w3.org/2000/svg")
+  91 element "caption" not allowed here; expected the element end-tag or element "tr"
+  50 text not allowed here; expected the element end-tag or element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+  39 text not allowed here; expected element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+  36 element "a" not allowed here; expected element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+  35 element "u" not allowed anywhere; expected the element end-tag, text or element "a", "abbr", "acronym", "applet", "b", "bdo", "big", "br", "cite", "code", "del", "dfn", "em", "i", "iframe", "img", "ins", "kbd", "map", "noscript", "ns:svg", "object", "q", "samp", "script", "small", "span", "strong", "sub", "sup", "tt" or "var" (with xmlns:ns="http://www.w3.org/2000/svg")
+  28 element "em" not allowed here; expected the element end-tag or element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+  10 element "font" not allowed anywhere; expected the element end-tag, text or element "a", "abbr", "acronym", "applet", "b", "bdo", "big", "br", "cite", "code", "del", "dfn", "em", "i", "iframe", "img", "ins", "kbd", "map", "noscript", "ns:svg", "object", "q", "samp", "script", "small", "span", "strong", "sub", "sup", "tt" or "var" (with xmlns:ns="http://www.w3.org/2000/svg")
+  10 element "a" not allowed here; expected element "li"
+   8 element "blockquote" incomplete; expected element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+   7 element "tt" not allowed here; expected element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+   5 element "a" not allowed here; expected the element end-tag or element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+   4 element "tt" not allowed here; expected the element end-tag or element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+   3 element "p" not allowed here; expected element "li"
+   2 element "sub" not allowed here; expected the element end-tag or element "address", "blockquote", "del", "div", "dl", "h1", "h2", "h3", "h4", "h5", "h6", "hr", "ins", "noscript", "ns:svg", "ol", "p", "pre", "script", "table" or "ul" (with xmlns:ns="http://www.w3.org/2000/svg")
+   2 The element type "code" must be terminated by the matching end-tag "</code>".
+   2 'footnote_Temp_166': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 image file OEBPS/images/ch5-Z-G-9.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-8.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-7.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-6.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-5.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-4.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-3.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-2.gif is missing
+   1 image file OEBPS/images/ch5-Z-G-1.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-9.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-8.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-7.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-6.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-5.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-4.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-3.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-2.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-10.gif is missing
+   1 image file OEBPS/images/ch4-Z-G-1.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-9.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-8.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-7.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-60.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-6.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-59.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-58.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-57.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-56.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-55.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-54.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-53.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-52.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-51.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-50.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-5.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-49.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-48.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-47.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-46.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-45.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-44.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-43.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-42.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-41.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-40.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-4.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-39.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-38.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-37.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-36.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-35.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-32.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-31.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-30.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-3.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-27.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-26.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-25.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-24.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-23.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-22.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-21.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-20.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-2.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-19.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-18.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-17.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-16.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-15.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-14.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-13.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-12.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-11.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-10.gif is missing
+   1 image file OEBPS/images/ch3-Z-G-1.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-9.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-8.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-78.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-77.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-76.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-71.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-7.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-67.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-65.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-64.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-63.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-62.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-61.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-60.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-6.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-59.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-54.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-53.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-52.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-51.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-50.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-5.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-49.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-48.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-47.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-46.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-45.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-43.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-42.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-41.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-40.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-4.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-39.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-38.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-37.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-36.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-35.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-34.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-33.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-32.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-31.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-30.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-3.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-29.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-28.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-27.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-26.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-25.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-24.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-2.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-17.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-16.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-15.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-13.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-12.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-11.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-10.gif is missing
+   1 image file OEBPS/images/ch2-Z-G-1.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-7.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-6.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-5.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-4.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-38.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-37.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-36.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-35.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-30.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-3.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-29.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-28.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-27.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-26.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-19.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-13.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-12.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-10.gif is missing
+   1 image file OEBPS/images/ch1-Z-G-1.gif is missing
+   1 could not parse OEBPS/book-Z-H-35.html: duplicate id: %_fig_5.17
+   1 OPS/XHTML file OEBPS/images/ch1-Z-G-34.gif is missing
+   1 OPS/XHTML file OEBPS/images/ch1-Z-G-2.gif is missing
+   1 'http://i.creativecommons.org/l/by-nc/3.0/88x31.png': remote resource reference not allowed; resource must be placed in the OCF
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_9': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_8': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-27.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-20.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_7': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-27.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-21.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-20.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-17.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_6': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-27.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-21.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-20.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-17.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_5': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-27.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-21.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-20.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-17.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_4': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_32': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_31': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_30': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-33.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-31.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-27.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-21.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-20.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-17.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-14.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_3': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_29': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_28': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_27': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_26': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_25': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_24': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_23': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_22': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_22': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_21': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_21': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_20': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_20': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_20': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_19': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_19': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_19': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_19': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_18': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_18': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_18': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_18': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_17': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_17': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_17': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_17': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_17': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_16': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_15': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_14': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_13': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_12': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_11': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-34.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-32.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-29.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-28.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-26.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-24.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-23.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-22.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-18.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-16.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-12.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-11.html'
+   1 'heading_id_10': fragment identifier is not defined in 'OEBPS/book-Z-H-10.html'
+   1 'footnote_Temp_815': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_814': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_813': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_812': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_809': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_806': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_803': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_797': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_795': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_794': fragment identifier is not defined in 'OEBPS/book-Z-H-35.html'
+   1 'footnote_Temp_225': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_221': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_220': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_216': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_215': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_211': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_208': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_207': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_204': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_202': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_197': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_196': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_195': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_194': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_190': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_186': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_183': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_182': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_170': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_164': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'footnote_Temp_158': fragment identifier is not defined in 'OEBPS/book-Z-H-15.html'
+   1 'OEBPS/images/ch1-Z-G-34.svg': referenced resource missing in the package.
