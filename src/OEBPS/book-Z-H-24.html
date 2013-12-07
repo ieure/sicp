@@ -14,7 +14,7 @@
 
 
 <a id="__sec_3.5"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_3.5">3.5  Streams</a></h2><p>
+<h2>3.5  Streams</h2><p>
 
 
 <a id="__idx_3726"></a>
@@ -66,7 +66,7 @@ of which modeling technique leads to more modular and more easily
 maintained systems remains open.</p><p>
 
 <a id="__sec_3.5.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.5.1">3.5.1  Streams Are Delayed Lists</a></h3><p>
+</p><h3>3.5.1  Streams Are Delayed Lists</h3><p>
 
 
 <a id="__idx_3732"></a>
@@ -224,7 +224,7 @@ selects the <tt>cdr</tt> of the pair and evaluates the delayed expression
 found there to obtain the rest of the stream.<a href="#footnote_Temp_446" id="call_footnote_Temp_446"><sup><small>56</small></sup></a>
 
 <a id="__sec_Temp_447"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_447">The stream implementation in action</a></h4><p>
+</p><h4>The stream implementation in action</h4><p>
 
 To see how this implementation behaves, let us analyze the
 “outrageous” prime computation we saw above, reformulated in terms
@@ -324,7 +324,7 @@ streams existed “all at once” when, in reality, the computation is
 performed incrementally, as in traditional programming styles.</p><p>
 
 <a id="__sec_Temp_449"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_449">Implementing <tt>delay</tt> and <tt>force</tt></a></h4><p>
+</p><h4>Implementing <tt>delay</tt> and <tt>force</tt></h4><p>
 
 <a id="__idx_3796"></a>Although <tt>delay</tt> and <tt>force</tt> may seem like mysterious
 operations, their implementation is really quite straightforward.
@@ -430,7 +430,7 @@ differ if we had implemented <tt>(delay &lt;<em>exp</em>&gt;)</tt> simply as
 </p><p></p><p>
 
 <a id="__sec_3.5.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.5.2">3.5.2  Infinite Streams</a></h3><p>
+</p><h3>3.5.2  Infinite Streams</h3><p>
 
 
 <a id="__idx_3832"></a>
@@ -519,7 +519,7 @@ infinite, because the sieve contains a sieve within it.</p><p>
 </td></tr></table></div><p></p><p>
 
 <a id="__sec_Temp_457"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_457">Defining streams implicitly</a></h4><p>
+</p><h4>Defining streams implicitly</h4><p>
 
 <a id="__idx_3860"></a>
 The <tt>integers</tt> and <tt>fibs</tt> streams above were defined by
@@ -785,7 +785,7 @@ together with the result of exercise <a href="#__thm_3.59">3.59</a> to generate
 </p><p>
 
 <a id="__sec_3.5.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.5.3">3.5.3  Exploiting the Stream Paradigm</a></h3><p>
+</p><h3>3.5.3  Exploiting the Stream Paradigm</h3><p>
 
 </p><p>
 
@@ -803,7 +803,7 @@ convenient to combine and compare components of state from different
 moments.</p><p>
 
 <a id="__sec_Temp_471"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_471">Formulating iterations as stream processes</a></h4><p>
+</p><h4>Formulating iterations as stream processes</h4><p>
 
 <a id="__idx_3944"></a>
 In section <a href="book-Z-H-11.html#__sec_1.2.1">1.2.1</a>, we introduced iterative
@@ -957,7 +957,7 @@ How rapidly do these sequences converge?
 </p><p>
 
 <a id="__sec_Temp_476"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_476">Infinite streams of pairs</a></h4><p>
+</p><h4>Infinite streams of pairs</h4><p>
 
 <a id="__idx_3984"></a><a id="__idx_3986"></a><a id="__idx_3988"></a>
 In section <a href="book-Z-H-15.html#__sec_2.2.3">2.2.3</a>, we saw how the sequence paradigm
@@ -1140,7 +1140,7 @@ different ways (showing how they can be so written).
 </p><p>
 
 <a id="__sec_Temp_489"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_489">Streams as signals</a></h4><p>
+</p><h4>Streams as signals</h4><p>
 
 <a id="__idx_4018"></a><a id="__idx_4020"></a>
 We began our discussion of streams by describing them as computational
@@ -1275,7 +1275,7 @@ average of two successive input stream elements.  Then use <tt>smooth</tt> as a 
 more modular style.
 </p><p>
 <a id="__sec_3.5.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.5.4">3.5.4  Streams and Delayed Evaluation</a></h3><p>
+</p><h3>3.5.4  Streams and Delayed Evaluation</h3><p>
 
 
 <a id="__idx_4054"></a><a id="__idx_4056"></a>
@@ -1446,7 +1446,7 @@ values <em>i</em><sub><em>L</em><sub>0</sub></sub>  =  0 amps and <em>v</em><sub
 </p><p>
 
 <a id="__sec_Temp_499"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_499">Normal-order evaluation</a></h4><p>
+</p><h4>Normal-order evaluation</h4><p>
 
 <a id="__idx_4092"></a><a id="__idx_4094"></a>
 The examples in this section illustrate how the explicit use of <tt>delay</tt> and <tt>force</tt> provides great programming flexibility, but the
@@ -1483,7 +1483,7 @@ evaluation do not mix well in programming languages, and devising ways
 to deal with both of these at once is an active area of research.
 
 <a id="__sec_3.5.5"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.5.5">3.5.5  Modularity of Functional Programs and Modularity of Objects</a></h3><p>
+</p><h3>3.5.5  Modularity of Functional Programs and Modularity of Objects</h3><p>
 
 
 <a id="__idx_4116"></a><a id="__idx_4118"></a>
@@ -1570,7 +1570,7 @@ successively more trials.
 </p><p></p><p>
 
 <a id="__sec_Temp_503"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_503">A functional-programming view of time</a></h4><p>
+</p><h4>A functional-programming view of time</h4><p>
 
 <a id="__idx_4144"></a><a id="__idx_4146"></a>
 Let us now return to the issues of objects and state that were raised

@@ -14,7 +14,7 @@
 
 
 <a id="__sec_4.4"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_4.4">4.4  Logic Programming</a></h2><p>
+<h2>4.4  Logic Programming</h2><p>
 
 
 <a id="__idx_5028"></a>
@@ -144,7 +144,7 @@ that we make substantial use of streams, which were introduced in
 chapter 3.
 
 <a id="__sec_4.4.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.4.1">4.4.1  Deductive Information Retrieval</a></h3><p>
+</p><h3>4.4.1  Deductive Information Retrieval</h3><p>
 
 
 <a id="__idx_5096"></a>
@@ -160,7 +160,7 @@ personnel information and can also take advantage of general rules in
 order to make logical deductions.</p><p>
 
 <a id="__sec_Temp_649"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_649">A sample data base</a></h4><p>
+</p><h4>A sample data base</h4><p>
 
 <a id="__idx_5102"></a>
 <a id="__idx_5104"></a><a id="__idx_5106"></a>The personnel data base for Microshaft
@@ -239,7 +239,7 @@ A computer programmer could fill in for a trainee:
             (administration big wheel))<br /></tt></p><p></p><p>
 
 <a id="__sec_Temp_650"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_650">Simple queries</a></h4><p>
+</p><h4>Simple queries</h4><p>
 
 <a id="__idx_5110"></a>
 The query language allows users to retrieve information from the data
@@ -345,7 +345,7 @@ in Slumerville.
 </p><p>
 
 <a id="__sec_Temp_653"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_653">Compound queries</a></h4><p>
+</p><h4>Compound queries</h4><p>
 
 <a id="__idx_5122"></a>
 Simple queries form the primitive operations of the query language.
@@ -436,7 +436,7 @@ division, together with the supervisor's name and job.
 </p><p>
 
 <a id="__sec_Temp_657"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_657">Rules</a></h4><p>
+</p><h4>Rules</h4><p>
 
 <a id="__idx_5136"></a>
 <a id="__idx_5138"></a>In addition to primitive queries and compound queries, the query
@@ -568,7 +568,7 @@ which each pair appears only once?  Explain.
 </p><p></p><p>
 
 <a id="__sec_Temp_664"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_664">Logic as programs</a></h4><p>
+</p><h4>Logic as programs</h4><p>
 
 <a id="__idx_5156"></a>
 We can regard a rule as a kind of logical implication: <em>If</em> an
@@ -676,7 +676,7 @@ deduce more complicated relationships.)
 </p><p>
 
 <a id="__sec_4.4.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.4.2">4.4.2  How the Query System Works</a></h3><p>
+</p><h3>4.4.2  How the Query System Works</h3><p>
 
 
 <a id="__idx_5172"></a>
@@ -710,7 +710,7 @@ analogous to the way <tt>eval</tt> classifies expressions for the
 interpreter described in section <a href="book-Z-H-26.html#__sec_4.1">4.1</a>.</p><p>
 
 <a id="__sec_Temp_668"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_668">Pattern matching</a></h4><p>
+</p><h4>Pattern matching</h4><p>
 
 <a id="__idx_5174"></a><a id="__idx_5176"></a>
 A <em>pattern matcher</em> is a program that tests whether some datum
@@ -751,7 +751,7 @@ match we find, we use the frame returned by the match to instantiate
 the pattern with a value for <tt>?x</tt>.
 
 <a id="__sec_Temp_669"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_669">Streams of frames</a></h4><p>
+</p><h4>Streams of frames</h4><p>
 
 <a id="__idx_5184"></a><a id="__idx_5186"></a>
 The testing of patterns against frames is organized through the use of
@@ -786,7 +786,7 @@ instantiated by the values in each frame, and this is the stream that
 is finally printed.</p><p>
 
 <a id="__sec_Temp_671"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_671">Compound queries</a></h4><p>
+</p><h4>Compound queries</h4><p>
 
 <a id="__idx_5196"></a>
 The real elegance of the stream-of-frames implementation is evident
@@ -866,7 +866,7 @@ variables in the pattern, then apply the Lisp predicate.  We remove
 from the input stream all frames for which the predicate fails.
 
 <a id="__sec_Temp_675"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_675">Unification</a></h4><p>
+</p><h4>Unification</h4><p>
 
 <a id="__idx_5208"></a><a id="__idx_5210"></a>
 In order to handle rules in the query language, we must be able to
@@ -934,7 +934,7 @@ to be consistent with this frame), the previously bound <tt>?x</tt> will
 refer to this value.<a href="#footnote_Temp_677" id="call_footnote_Temp_677"><sup><small>72</small></sup></a>
 
 <a id="__sec_Temp_678"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_678">Applying rules</a></h4><p>
+</p><h4>Applying rules</h4><p>
 
 <a id="__idx_5216"></a>
 Unification is the key to the component of the query system that makes
@@ -991,7 +991,7 @@ bindings and evaluating the rule or procedure body relative to these.
 </p><p>
 
 <a id="__sec_Temp_679"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_679">Simple queries</a></h4><p>
+</p><h4>Simple queries</h4><p>
 
 <a id="__idx_5220"></a>
 We saw earlier in this section how to evaluate simple queries in the
@@ -1018,7 +1018,7 @@ consists of all the ways that any of the frames in the original input
 stream can be extended to produce a match with the given pattern.
 
 <a id="__sec_Temp_681"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_681">The query evaluator and the driver loop</a></h4><p>
+</p><h4>The query evaluator and the driver loop</h4><p>
 
 <a id="__idx_5226"></a>
 Despite the complexity of the underlying matching operations, the
@@ -1052,7 +1052,7 @@ to be added to the data base.  For instance,</p><p>
                     (supervisor ?x ?middle-manager))))<br /></tt></p><p></p><p>
 
 <a id="__sec_4.4.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.4.3">4.4.3  Is Logic Programming Mathematical Logic?</a></h3><p>
+</p><h3>4.4.3  Is Logic Programming Mathematical Logic?</h3><p>
 
 
 <a id="__idx_5244"></a><a id="__idx_5246"></a>
@@ -1108,7 +1108,7 @@ the same result could be obtained by working entirely within
 mathematical logic.<a href="#footnote_Temp_684" id="call_footnote_Temp_684"><sup><small>76</small></sup></a></p><p>
 
 <a id="__sec_Temp_685"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_685">Infinite loops</a></h4><p>
+</p><h4>Infinite loops</h4><p>
 
 <a id="__idx_5260"></a>
 A consequence of the procedural interpretation of logic programs is
@@ -1162,7 +1162,7 @@ or on low-level details concerning the order in which the system
 processes queries.<a href="#footnote_Temp_686" id="call_footnote_Temp_686"><sup><small>77</small></sup></a>
 
 <a id="__sec_Temp_687"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_687">Problems with <tt>not</tt></a></h4><p>
+</p><h4>Problems with <tt>not</tt></h4><p>
 
 <a id="__idx_5266"></a>
 <a id="__idx_5268"></a>Another quirk in the query system concerns <tt>not</tt>.  Given the data
@@ -1311,7 +1311,7 @@ Check your rules on queries such as
 </p><p>
 
 <a id="__sec_4.4.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.4.4">4.4.4  Implementing the Query System</a></h3><p>
+</p><h3>4.4.4  Implementing the Query System</h3><p>
 
 </p><p>
 
@@ -1320,7 +1320,7 @@ works. Now we fill in the details by presenting a complete
 implementation of the system.</p><p>
 
 <a id="__sec_4.4.4.1"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.1">4.4.4.1  The Driver Loop and Instantiation</a></h4><p>
+</p><h4>4.4.4.1  The Driver Loop and Instantiation</h4><p>
 
 </p><p>
 
@@ -1397,7 +1397,7 @@ section <a href="#__sec_4.4.4.8">4.4.4.8</a>.
 </p><p>
 
 <a id="__sec_4.4.4.2"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.2">4.4.4.2  The Evaluator</a></h4><p>
+</p><h4>4.4.4.2  The Evaluator</h4><p>
 
 </p><p>
 
@@ -1417,7 +1417,7 @@ assumed to be a simple query, to be processed by <tt>simple-query</tt>.</p><p>
 implement the abstract syntax of the special forms.</p><p>
 
 <a id="__sec_Temp_696"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_696">Simple queries</a></h4><p>
+</p><h4>Simple queries</h4><p>
 
 <a id="__idx_5312"></a>
 The <tt>simple-query</tt> procedure handles simple queries.  It takes as
@@ -1448,7 +1448,7 @@ ways that any of the frames in the original input stream can be
 extended to produce a match with the given pattern.
 
 <a id="__sec_Temp_697"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_697">Compound queries</a></h4><p>
+</p><h4>Compound queries</h4><p>
 
 <a id="__idx_5316"></a>
 <a id="__idx_5318"></a><tt>And</tt> queries are handled as illustrated in
@@ -1492,7 +1492,7 @@ The predicates and selectors for the syntax of conjuncts and disjuncts
 are given in section <a href="#__sec_4.4.4.7">4.4.4.7</a>.</p><p>
 
 <a id="__sec_Temp_698"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_698">Filters</a></h4><p>
+</p><h4>Filters</h4><p>
 
 <a id="__idx_5326"></a><tt>Not</tt> is handled by the method outlined in
 section <a href="#__sec_4.4.2">4.4.2</a>.  We attempt to extend each frame in
@@ -1554,7 +1554,7 @@ are given in section <a href="#__sec_4.4.4.7">4.4.4.7</a>.
 </p><p>
 
 <a id="__sec_4.4.4.3"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.3">4.4.4.3  Finding Assertions by Pattern Matching</a></h4><p>
+</p><h4>4.4.4.3  Finding Assertions by Pattern Matching</h4><p>
 
 </p><p>
 
@@ -1645,7 +1645,7 @@ The procedures used by <tt>extend-if-consistent</tt> to manipulate
 bindings are defined in section <a href="#__sec_4.4.4.8">4.4.4.8</a>.</p><p>
 
 <a id="__sec_Temp_699"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_699">Patterns with dotted tails</a></h4><p>
+</p><h4>Patterns with dotted tails</h4><p>
 
 <a id="__idx_5350"></a>
 
@@ -1676,7 +1676,7 @@ that list.  For example, matching the pattern <tt>(computer . ?type)</tt> agains
 list <tt>(programmer trainee)</tt>.
 
 <a id="__sec_4.4.4.4"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.4">4.4.4.4  Rules and Unification</a></h4><p>
+</p><h4>4.4.4.4  Rules and Unification</h4><p>
 
 </p><p>
 
@@ -1840,7 +1840,7 @@ variables whenever necessary.</p><p>
   (tree-walk exp))<br /></tt></p><p></p><p>
 
 <a id="__sec_4.4.4.5"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.5">4.4.4.5  Maintaining the Data Base</a></h4><p>
+</p><h4>4.4.4.5  Maintaining the Data Base</h4><p>
 
 
 <a id="__idx_5372"></a>
@@ -1979,7 +1979,7 @@ section <a href="book-Z-H-24.html#__sec_3.5.2">3.5.2</a>: <tt>(define ones (con
 </p><p>
 
 <a id="__sec_4.4.4.6"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.6">4.4.4.6  Stream Operations</a></h4><p>
+</p><h4>4.4.4.6  Stream Operations</h4><p>
 
 
 <a id="__idx_5384"></a>
@@ -2030,7 +2030,7 @@ to generate a stream consisting of a single element:</p><p>
   (cons-stream x the-empty-stream))<br /></tt></p><p></p><p>
 
 <a id="__sec_4.4.4.7"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.7">4.4.4.7  Query Syntax Procedures</a></h4><p>
+</p><h4>4.4.4.7  Query Syntax Procedures</h4><p>
 
 
 <a id="__idx_5396"></a>
@@ -2147,7 +2147,7 @@ form for printing, using</p><p>
          (symbol-&gt;string (cadr variable))))))<br /></tt></p><p></p><p>
 
 <a id="__sec_4.4.4.8"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_4.4.4.8">4.4.4.8  Frames and Bindings</a></h4><p>
+</p><h4>4.4.4.8  Frames and Bindings</h4><p>
 
 </p><p>
 

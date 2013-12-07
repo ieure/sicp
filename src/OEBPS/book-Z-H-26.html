@@ -14,7 +14,7 @@
 
 
 <a id="__sec_4.1"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_4.1">4.1  The Metacircular Evaluator</a></h2><p>
+<h2>4.1  The Metacircular Evaluator</h2><p>
 
 
 <a id="__idx_4210"></a>
@@ -73,7 +73,7 @@ representation of procedures and environments.  For example, <tt>make-procedure<
 of arguments.</p><p>
 
 <a id="__sec_4.1.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.1">4.1.1  The Core of the Evaluator</a></h3><p>
+</p><h3>4.1.1  The Core of the Evaluator</h3><p>
 
 
 <a id="__idx_4226"></a>
@@ -86,7 +86,7 @@ The evaluation process can be described as the interplay between two
 procedures: <tt>eval</tt> and <tt>apply</tt>.</p><p>
 
 <a id="__sec_Temp_512"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_512">Eval</a></h4><p>
+</p><h4>Eval</h4><p>
 
 <a id="__idx_4230"></a><tt>Eval</tt> takes as arguments an expression and an environment.  It
 classifies the expression and directs its evaluation.  <tt>Eval</tt> is
@@ -101,7 +101,7 @@ language by using the same evaluator, but with a different collection of
 syntax procedures.</p><p>
 
 <a id="__sec_Temp_513"></a>
-</p><h5><a href="book-Z-H-4.html#__toc___sec_Temp_513">Primitive expressions</a></h5><p>
+</p><h5>Primitive expressions</h5><p>
 
 </p><p></p><ul><li><a id="__idx_4238"></a><a id="__idx_4240"></a>For self-evaluating expressions, such as numbers, <tt>eval</tt> returns
 the expression itself.<p>
@@ -110,7 +110,7 @@ the expression itself.<p>
 </li></ul><p></p><p>
 
 <a id="__sec_Temp_514"></a>
-</p><h5><a href="book-Z-H-4.html#__toc___sec_Temp_514">Special forms</a></h5><p>
+</p><h5>Special forms</h5><p>
 
 </p><p></p><ul><p>
 
@@ -140,7 +140,7 @@ expressions and then evaluated.
 
 
 <a id="__sec_Temp_515"></a>
-</p><h5><a href="book-Z-H-4.html#__toc___sec_Temp_515">Combinations</a></h5><p>
+</p><h5>Combinations</h5><p>
 
 </p><p></p><ul><li>For a procedure application, <tt>eval</tt> must recursively
 evaluate the operator part and the operands of the combination.  The
@@ -183,7 +183,7 @@ definition of <tt>eval</tt> itself.
 (See exercise <a href="#__thm_4.3">4.3</a>.)</p><p>
 
 <a id="__sec_Temp_516"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_516">Apply</a></h4><p>
+</p><h4>Apply</h4><p>
 
 <tt>Apply</tt> takes two arguments, a procedure and a list of arguments
 to which the procedure should be applied.  <tt>Apply</tt> classifies
@@ -212,7 +212,7 @@ Here is the definition of <tt>apply</tt>:</p><p>
 
 
 <a id="__sec_Temp_517"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_517">Procedure arguments</a></h4><p>
+</p><h4>Procedure arguments</h4><p>
 
 When <tt>eval</tt> processes a
 procedure application, it uses <tt>list-of-values</tt> to produce the
@@ -227,7 +227,7 @@ values:<a href="#footnote_Temp_518" id="call_footnote_Temp_518"><sup><small>5</s
             (list-of-values (rest-operands exps) env))))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_519"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_519">Conditionals</a></h4><p>
+</p><h4>Conditionals</h4><p>
 
 <tt>Eval-if</tt> evaluates the predicate part of an <tt>if</tt> expression
 in the given environment.  If
@@ -249,7 +249,7 @@ metacircular representation of truth might not be the same as that of
 the underlying Scheme.<a href="#footnote_Temp_520" id="call_footnote_Temp_520"><sup><small>6</small></sup></a></p><p>
 
 <a id="__sec_Temp_521"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_521">Sequences</a></h4><p>
+</p><h4>Sequences</h4><p>
 
 <tt>Eval-sequence</tt> is used by <tt>apply</tt> to evaluate the sequence of
 expressions in a procedure body and by <tt>eval</tt> to evaluate the
@@ -264,7 +264,7 @@ occur.  The value returned is the value of the final expression.</p><p>
               (eval-sequence (rest-exps exps) env))))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_522"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_522">Assignments and definitions</a></h4><p>
+</p><h4>Assignments and definitions</h4><p>
 
 The following procedure handles assignments to variables.  It calls
 <tt>eval</tt> to find the value to be assigned and transmits the variable
@@ -306,7 +306,7 @@ from right to left.
 </p><p></p><p>
 
 <a id="__sec_4.1.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.2">4.1.2  Representing Expressions</a></h3><p>
+</p><h3>4.1.2  Representing Expressions</h3><p>
 
 
 <a id="__idx_4274"></a><a id="__idx_4276"></a>
@@ -421,7 +421,7 @@ expression is the operator, and the <tt>cdr</tt> is the list of operands:</p><p>
 
 
 <a id="__sec_Temp_529"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_529">Derived expressions</a></h4><p>
+</p><h4>Derived expressions</h4><p>
 
 <a id="__idx_4352"></a><a id="__idx_4354"></a><a id="__idx_4356"></a><a id="__idx_4358"></a>
 Some special forms in our language can be defined in terms of
@@ -620,7 +620,7 @@ changing <tt>eval</tt> or <tt>apply</tt>.
 </p><p></p><p>
 
 <a id="__sec_4.1.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.3">4.1.3  Evaluator Data Structures</a></h3><p>
+</p><h3>4.1.3  Evaluator Data Structures</h3><p>
 
 </p><p>
 
@@ -631,7 +631,7 @@ program, such as the representation of procedures and environments and
 the representation of true and false.</p><p>
 
 <a id="__sec_Temp_541"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_541">Testing of predicates</a></h4><p>
+</p><h4>Testing of predicates</h4><p>
 
 <a id="__idx_4432"></a>For conditionals, we accept anything to be true that is not
 the explicit <tt>false</tt> object.</p><p>
@@ -641,7 +641,7 @@ the explicit <tt>false</tt> object.</p><p>
   (eq? x false))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_542"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_542">Representing procedures</a></h4><p>
+</p><h4>Representing procedures</h4><p>
 
 <a id="__idx_4438"></a>
 To handle primitives, we assume that we have available the
@@ -666,7 +666,7 @@ bodies, and environments using the constructor <tt>make-procedure</tt>:</p><p>
   (tagged-list? p 'procedure))<br /><a id="__idx_4448"></a>(define (procedure-parameters p) (cadr p))<br /><a id="__idx_4450"></a>(define (procedure-body p) (caddr p))<br /><a id="__idx_4452"></a>(define (procedure-environment p) (cadddr p))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_543"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_543">Operations on Environments</a></h4><p>
+</p><h4>Operations on Environments</h4><p>
 
 
 <a id="__idx_4454"></a>
@@ -821,7 +821,7 @@ make.
 </p><p></p><p>
 
 <a id="__sec_4.1.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.4">4.1.4  Running the Evaluator as a Program</a></h3><p>
+</p><h3>4.1.4  Running the Evaluator as a Program</h3><p>
 
 
 <a id="__idx_4492"></a>
@@ -940,7 +940,7 @@ wrong.  Explain why Louis's <tt>map</tt> fails even though Eva's works.
 </p><p></p><p>
 
 <a id="__sec_4.1.5"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.5">4.1.5  Data as Programs</a></h3><p>
+</p><h3>4.1.5  Data as Programs</h3><p>
 
 
 <a id="__idx_4540"></a><a id="__idx_4542"></a>
@@ -1034,7 +1034,7 @@ intended behavior of <tt>halts?</tt>.<a href="#footnote_Temp_558" id="call_footn
 </p><p></p><p>
 
 <a id="__sec_4.1.6"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.6">4.1.6  Internal Definitions</a></h3><p>
+</p><h3>4.1.6  Internal Definitions</h3><p>
 
 
 <a id="__idx_4598"></a><a id="__idx_4600"></a>
@@ -1306,7 +1306,7 @@ of <tt>f</tt>, which uses neither internal definitions nor <tt>letrec</tt>:
 </p><p></p><p>
 
 <a id="__sec_4.1.7"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_4.1.7">4.1.7  Separating Syntactic Analysis from Execution</a></h3><p>
+</p><h3>4.1.7  Separating Syntactic Analysis from Execution</h3><p>
 
 
 <a id="__idx_4634"></a><a id="__idx_4636"></a><a id="__idx_4638"></a>

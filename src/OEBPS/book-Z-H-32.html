@@ -14,7 +14,7 @@
 
 
 <a id="__sec_5.2"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_5.2">5.2  A Register-Machine Simulator</a></h2><p>
+<h2>5.2  A Register-Machine Simulator</h2><p>
 
 
 <a id="__idx_5622"></a><a id="__idx_5624"></a>
@@ -90,7 +90,7 @@ exercise <a href="book-Z-H-31.html#__thm_5.4">5.4</a>.
 </p><p></p><p>
 
 <a id="__sec_5.2.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.2.1">5.2.1  The Machine Model</a></h3><p>
+</p><h3>5.2.1  The Machine Model</h3><p>
 
 </p><p>
 
@@ -122,7 +122,7 @@ and installs these as the machine's instruction sequence.  <tt>Make-machine</tt>
     machine))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_724"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_724">Registers</a></h4><p>
+</p><h4>Registers</h4><p>
 
 <a id="__idx_5640"></a>
 We will represent a register as a procedure with local state, as in
@@ -145,7 +145,7 @@ The following procedures are used to access registers:</p><p>
   ((register 'set) value))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_725"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_725">The stack</a></h4><p>
+</p><h4>The stack</h4><p>
 
 <a id="__idx_5648"></a>
 We can also represent a stack as a procedure with local state.  The
@@ -180,7 +180,7 @@ The following procedures are used to access stacks:</p><p>
   ((stack 'push) value))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_726"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_726">The basic machine</a></h4><p>
+</p><h4>The basic machine</h4><p>
 
 The <tt>make-new-machine</tt> procedure, shown in
 figure <a href="#__fig_5.13">5.13</a>, constructs an object whose local
@@ -293,7 +293,7 @@ given name in a given machine:
 </p><p>
 
 <a id="__sec_5.2.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.2.2">5.2.2  The Assembler</a></h3><p>
+</p><h3>5.2.2  The Assembler</h3><p>
 
 
 <a id="__idx_5682"></a>
@@ -432,7 +432,7 @@ name is used to indicate two different locations.
 </p><p>
 
 <a id="__sec_5.2.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.2.3">5.2.3  Generating Execution Procedures for Instructions</a></h3><p>
+</p><h3>5.2.3  Generating Execution Procedures for Instructions</h3><p>
 
 
 <a id="__idx_5716"></a>
@@ -471,7 +471,7 @@ by using syntax procedures to extract and classify the parts of an instruction.<
 
 
 <a id="__sec_Temp_729"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_729"><tt>Assign</tt> instructions</a></h4><p>
+</p><h4><tt>Assign</tt> instructions</h4><p>
 
 <a id="__idx_5720"></a>
 The <tt>make-assign</tt> procedure handles <tt>assign</tt> instructions:
@@ -521,7 +521,7 @@ the <tt>pc</tt> to the next instruction by running the procedure
 <tt>branch</tt> and <tt>goto</tt>.</p><p>
 
 <a id="__sec_Temp_730"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_730"><tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions</a></h4><p>
+</p><h4><tt>Test</tt>, <tt>branch</tt>, and <tt>goto</tt> instructions</h4><p>
 
 <a id="__idx_5734"></a><tt>Make-test</tt> handles <tt>test</tt> instructions in a similar way.  It
 extracts the expression that specifies the condition to be tested and
@@ -583,7 +583,7 @@ new destination.
   (cadr goto-instruction))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_731"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_731">Other instructions</a></h4><p>
+</p><h4>Other instructions</h4><p>
 
 The stack instructions <tt>save</tt> and <tt>restore</tt> simply use the
 stack with the designated register and advance the <tt>pc</tt>:
@@ -618,7 +618,7 @@ time, the action procedure is executed and the <tt>pc</tt> advanced.
 
 
 <a id="__sec_Temp_732"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_732">Execution procedures for subexpressions</a></h4><p>
+</p><h4>Execution procedures for subexpressions</h4><p>
 
 <a id="__idx_5768"></a><a id="__idx_5770"></a><a id="__idx_5772"></a>The value of a <tt>reg</tt>, <tt>label</tt>, or <tt>const</tt> expression
 may be needed for assignment to a register (<tt>make-assign</tt>) or for input to
@@ -759,7 +759,7 @@ instructions.
 </p><p>
 
 <a id="__sec_5.2.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.2.4">5.2.4  Monitoring Machine Performance</a></h3><p>
+</p><h3>5.2.4  Monitoring Machine Performance</h3><p>
 
 
 <a id="__idx_5804"></a>

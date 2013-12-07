@@ -14,7 +14,7 @@
 
 
 <a id="__sec_5.4"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_5.4">5.4  The Explicit-Control Evaluator</a></h2><p>
+<h2>5.4  The Explicit-Control Evaluator</h2><p>
 
 
 <a id="__idx_5996"></a>
@@ -48,7 +48,7 @@ integrated-circuit layout.<a href="#footnote_Temp_765" id="call_footnote_Temp_76
 </p><p>
 
 <a id="__sec_Temp_766"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_766">Registers and operations</a></h4><p>
+</p><h4>Registers and operations</h4><p>
 
 <a id="__idx_6006"></a>
 <a id="__idx_6008"></a>In designing the explicit-control evaluator, we must specify the
@@ -94,7 +94,7 @@ complete list of machine operations.  These are implicit in the
 evaluator's controller, which will be presented in detail.</p><p>
 
 <a id="__sec_5.4.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.4.1">5.4.1  The Core of the Explicit-Control Evaluator</a></h3><p>
+</p><h3>5.4.1  The Core of the Explicit-Control Evaluator</h3><p>
 
 
 <a id="__idx_6032"></a>
@@ -131,7 +131,7 @@ evaluated.<a href="#footnote_Temp_767" id="call_footnote_Temp_767"><sup><small>2
   (goto (label unknown-expression-type))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_768"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_768">Evaluating simple expressions</a></h4><p>
+</p><h4>Evaluating simple expressions</h4><p>
 
 <a id="__idx_6036"></a>
 Numbers and strings (which are self-evaluating),
@@ -159,7 +159,7 @@ that they can be passed to the <tt>make-procedure</tt> operation, along
 with the environment in <tt>env</tt>.</p><p>
 
 <a id="__sec_Temp_769"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_769">Evaluating procedure applications</a></h4><p>
+</p><h4>Evaluating procedure applications</h4><p>
 
 <a id="__idx_6046"></a><a id="__idx_6048"></a>
 A procedure application is specified by a combination containing an
@@ -275,7 +275,7 @@ explicit-control evaluator will evaluate the operands of a combination
 in left-to-right order.</p><p>
 
 <a id="__sec_Temp_774"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_774">Procedure application</a></h4><p>
+</p><h4>Procedure application</h4><p>
 
 </p><p>
 
@@ -345,7 +345,7 @@ environment carried by the procedure, together with the argument list
 and the corresponding list of variables to be bound.</p><p>
 
 <a id="__sec_5.4.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.4.2">5.4.2  Sequence Evaluation and Tail Recursion</a></h3><p>
+</p><h3>5.4.2  Sequence Evaluation and Tail Recursion</h3><p>
 
 
 <a id="__idx_6082"></a>
@@ -406,7 +406,7 @@ ev-sequence-last-exp<br />
   (goto (label eval-dispatch))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_775"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_775">Tail recursion</a></h4><p>
+</p><h4>Tail recursion</h4><p>
 
 <a id="__idx_6088"></a><a id="__idx_6090"></a>
 In chapter 1 we said that the process described by a procedure such as</p><p>
@@ -487,7 +487,7 @@ stack space, and expressing a true iteration would require some
 control mechanism other than procedure call.</p><p>
 
 <a id="__sec_5.4.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.4.3">5.4.3  Conditionals, Assignments, and Definitions</a></h3><p>
+</p><h3>5.4.3  Conditionals, Assignments, and Definitions</h3><p>
 
 <a id="__idx_6104"></a>As with the metacircular evaluator, special forms are handled by
 selectively evaluating fragments of the expression.  For an <tt>if</tt>
@@ -533,7 +533,7 @@ ev-if-consequent<br />
   (goto (label eval-dispatch))<br /></tt></p><p></p><p></p><p>
 
 <a id="__sec_Temp_779"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_779">Assignments and definitions</a></h4><p>
+</p><h4>Assignments and definitions</h4><p>
 
 <a id="__idx_6108"></a>Assignments are handled by <tt>ev-assignment</tt>, which is reached from
 <tt>eval-dispatch</tt> with the assignment expression in <tt>exp</tt>.  The code at <tt>ev-assignment</tt> first evaluates the value part of the expression and
@@ -603,7 +603,7 @@ based on the lazy evaluator of section <a href="book-Z-H-27.html#__sec_4.2">4.2
 </p><p></p><p>
 
 <a id="__sec_5.4.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.4.4">5.4.4  Running the Evaluator</a></h3><p>
+</p><h3>5.4.4  Running the Evaluator</h3><p>
 
 
 <a id="__idx_6128"></a>
@@ -703,7 +703,7 @@ a Scheme program, which is itself being evaluated by the Scheme
 interpreter.</p><p>
 
 <a id="__sec_Temp_787"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_787">Monitoring the performance of the evaluator</a></h4><p>
+</p><h4>Monitoring the performance of the evaluator</h4><p>
 
 <a id="__idx_6160"></a>
 <a id="__idx_6162"></a>Simulation can be a powerful tool to guide the implementation of

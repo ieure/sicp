@@ -14,7 +14,7 @@
 
 
 <a id="__sec_2.3"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_2.3">2.3  Symbolic Data</a></h2><p>
+<h2>2.3  Symbolic Data</h2><p>
 
 
 <a id="__idx_1984"></a>
@@ -24,7 +24,7 @@ capability of our language by introducing the ability to work with
 arbitrary symbols as data.</p><p>
 
 <a id="__sec_2.3.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_2.3.1">2.3.1  Quotation</a></h3><p>
+</p><h3>2.3.1  Quotation</h3><p>
 
 
 <a id="__idx_1988"></a>
@@ -137,7 +137,7 @@ To her surprise, the interpreter prints back <tt>quote</tt>.  Explain.
 </p><p>
 
 <a id="__sec_2.3.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_2.3.2">2.3.2  Example: Symbolic Differentiation</a></h3><p>
+</p><h3>2.3.2  Example: Symbolic Differentiation</h3><p>
 
 
 <a id="__idx_2042"></a><a id="__idx_2044"></a><a id="__idx_2046"></a>
@@ -165,7 +165,7 @@ worrying about how these are to be represented.  Only afterward will
 we address the representation problem.</p><p>
 
 <a id="__sec_Temp_235"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_235">The differentiation program with abstract data</a></h4><p>
+</p><h4>The differentiation program with abstract data</h4><p>
 
 <a id="__idx_2048"></a>
 In order to keep things simple, we will consider a very simple
@@ -232,7 +232,7 @@ design a proper set of selectors and constructors.  This is the issue
 we must address next.</p><p>
 
 <a id="__sec_Temp_236"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_236">Representing algebraic expressions</a></h4><p>
+</p><h4>Representing algebraic expressions</h4><p>
 
 <a id="__idx_2058"></a>
 We can imagine many ways to use list structure to represent algebraic
@@ -405,7 +405,7 @@ works?
 </p><p>
 
 <a id="__sec_2.3.3"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_2.3.3">2.3.3  Example: Representing Sets</a></h3><p>
+</p><h3>2.3.3  Example: Representing Sets</h3><p>
 
 
 <a id="__idx_2100"></a>
@@ -439,7 +439,7 @@ in a way consistent with the interpretations given above.<a href="#footnote_Temp
 
 
 <a id="__sec_Temp_241"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_241">Sets as unordered lists</a></h4><p>
+</p><h4>Sets as unordered lists</h4><p>
 
 <a id="__idx_2112"></a><a id="__idx_2114"></a>
 One way to represent a set is as a list of its elements in which no
@@ -506,7 +506,7 @@ preference to the non-duplicate one?
 
 
 <a id="__sec_Temp_244"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_244">Sets as ordered lists</a></h4><p>
+</p><h4>Sets as ordered lists</h4><p>
 
 <a id="__idx_2124"></a><a id="__idx_2126"></a>
 One way to speed up our set operations is to change the representation
@@ -596,7 +596,7 @@ represented as ordered lists.
 </p><p>
 
 <a id="__sec_Temp_247"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_247">Sets as binary trees</a></h4><p>
+</p><h4>Sets as binary trees</h4><p>
 
 <a id="__idx_2136"></a><a id="__idx_2138"></a><a id="__idx_2140"></a><a id="__idx_2142"></a><a id="__idx_2144"></a><a id="__idx_2146"></a>
 We can do better than the ordered-list representation by arranging the
@@ -768,7 +768,7 @@ the list <tt>(1 3 5 7 9 11)</tt>.
 </p><p>
 
 <a id="__sec_Temp_255"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_255">Sets and information retrieval</a></h4><p>
+</p><h4>Sets and information retrieval</h4><p>
 
 <a id="__idx_2200"></a>
 We have examined options for using lists to represent sets and have
@@ -828,7 +828,7 @@ the numerical values of the keys.
 </p><p></p><p>
 
 <a id="__sec_2.3.4"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_2.3.4">2.3.4  Example: Huffman Encoding Trees</a></h3><p>
+</p><h3>2.3.4  Example: Huffman Encoding Trees</h3><p>
 
 <a id="__idx_2212"></a>
 This section provides practice in the use of list structure and data
@@ -935,7 +935,7 @@ the string 1010, so we move right, left, right, left and reach C.
 Thus, the entire message is BAC.</p><p>
 
 <a id="__sec_Temp_257"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_257">Generating Huffman trees</a></h4><p>
+</p><h4>Generating Huffman trees</h4><p>
 
 Given an “alphabet” of symbols and their relative frequencies, how
 do we construct the “best” code?  (In other words, which tree will
@@ -986,7 +986,7 @@ the order in which the two nodes are merged (i.e., which will be the
 right branch and which will be the left branch) is arbitrary.<p>
 
 <a id="__sec_Temp_259"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_259">Representing Huffman trees</a></h4><p>
+</p><h4>Representing Huffman trees</h4><p>
 
 In the exercises below we will work with a system that uses
 Huffman trees to encode and decode messages and generates Huffman
@@ -1030,7 +1030,7 @@ which we will have much more to say about in
 sections <a href="book-Z-H-17.html#__sec_2.4">2.4</a> and <a href="book-Z-H-18.html#__sec_2.5">2.5</a>.</p><p>
 
 <a id="__sec_Temp_260"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_260">The decoding procedure</a></h4><p>
+</p><h4>The decoding procedure</h4><p>
 
 The following procedure implements the decoding algorithm.
 It takes as arguments a list of zeros and ones, together with
@@ -1064,7 +1064,7 @@ complains if the procedure finds something other than a zero or a one in the
 input data.</p><p>
 
 <a id="__sec_Temp_261"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_261">Sets of weighted elements</a></h4><p>
+</p><h4>Sets of weighted elements</h4><p>
 
 In our representation of trees, each non-leaf node contains a set of
 symbols, which we have represented as a simple list.  However, the

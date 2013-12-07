@@ -14,7 +14,7 @@
 
 
 <a id="__sec_3.4"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_3.4">3.4  Concurrency: Time Is of the Essence</a></h2><p>
+<h2>3.4  Concurrency: Time Is of the Essence</h2><p>
 
 
 <a id="__idx_3578"></a>
@@ -76,7 +76,7 @@ because our computers do, entails additional complexity in our
 understanding of time.</p><p>
 
 <a id="__sec_3.4.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.4.1">3.4.1  The Nature of Time in Concurrent Systems</a></h3><p>
+</p><h3>3.4.1  The Nature of Time in Concurrent Systems</h3><p>
 
 
 <a id="__idx_3584"></a>
@@ -154,7 +154,7 @@ change, the balance is still what he thought it was.</p><p>
 
 
 <a id="__sec_Temp_408"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_408">Correct behavior of concurrent programs</a></h4><p>
+</p><h4>Correct behavior of concurrent programs</h4><p>
 
 <a id="__idx_3600"></a>
 The above example typifies the subtle bugs that can creep into
@@ -252,7 +252,7 @@ explain how these values can occur.
 </p><p>
 
 <a id="__sec_3.4.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_3.4.2">3.4.2  Mechanisms for Controlling Concurrency</a></h3><p>
+</p><h3>3.4.2  Mechanisms for Controlling Concurrency</h3><p>
 
 <a id="__idx_3608"></a>
 We've seen that the difficulty in dealing with concurrent processes is
@@ -284,7 +284,7 @@ behavior is correct.  Many mechanisms have been developed for this
 purpose.  In this section, we describe one of them, the <em>serializer</em>.</p><p>
 
 <a id="__sec_Temp_413"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_413">Serializing access to shared state</a></h4><p>
+</p><h4>Serializing access to shared state</h4><p>
 
 <a id="__idx_3610"></a>
 Serialization implements the following idea: Processes will execute
@@ -307,7 +307,7 @@ serializer.  This guarantees that the value of the variable cannot be
 changed between an access and the corresponding assignment.</p><p>
 
 <a id="__sec_Temp_414"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_414">Serializers in Scheme</a></h4><p>
+</p><h4>Serializers in Scheme</h4><p>
 
 To make the above mechanism more concrete, suppose that we have
 extended Scheme to include a procedure called <a id="__idx_3612"></a><tt>parallel-execute</tt>:</p><p>
@@ -472,7 +472,7 @@ what concurrency is allowed by these two versions of <tt>make-account</tt> ?
 </p><p>
 
 <a id="__sec_Temp_420"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_420">Complexity of using multiple shared resources</a></h4><p>
+</p><h4>Complexity of using multiple shared resources</h4><p>
 
 <a id="__idx_3622"></a><a id="__idx_3624"></a>
 Serializers provide a powerful abstraction that helps isolate the
@@ -637,7 +637,7 @@ consider what happens when <tt>serialized-exchange</tt> is called.
 </p><p>
 
 <a id="__sec_Temp_427"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_427">Implementing serializers</a></h4><p>
+</p><h4>Implementing serializers</h4><p>
 
 <a id="__idx_3638"></a>
 We implement serializers in terms of a more primitive synchronization
@@ -741,7 +741,7 @@ semaphores</p><p>
 </p><p>
 
 <a id="__sec_Temp_434"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_434">Deadlock</a></h4><p>
+</p><h4>Deadlock</h4><p>
 
 <a id="__idx_3694"></a><a id="__idx_3696"></a>
 Now that we have seen how to implement serializers, we can see
@@ -791,7 +791,7 @@ can know which additional shared resources it will require.)
 </p><p>
 
 <a id="__sec_Temp_438"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_438">Concurrency, time, and communication</a></h4><p>
+</p><h4>Concurrency, time, and communication</h4><p>
 
 We've seen how programming concurrent systems requires controlling the
 ordering of events when different processes access shared

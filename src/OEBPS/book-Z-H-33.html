@@ -14,7 +14,7 @@
 
 
 <a id="__sec_5.3"></a>
-<h2><a href="book-Z-H-4.html#__toc___sec_5.3">5.3  Storage Allocation and Garbage Collection</a></h2><p>
+<h2>5.3  Storage Allocation and Garbage Collection</h2><p>
 
 
 <a id="__idx_5828"></a><a id="__idx_5830"></a>
@@ -52,7 +52,7 @@ method we shall discuss in this section is called <em>garbage
 collection</em>.</p><p>
 
 <a id="__sec_5.3.1"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.3.1">5.3.1  Memory as Vectors</a></h3><p>
+</p><h3>5.3.1  Memory as Vectors</h3><p>
 
 </p><p>
 
@@ -89,7 +89,7 @@ that specifies the beginning location of a vector in memory with an
 <em>index</em> that specifies the offset of a particular element of the vector.</p><p>
 
 <a id="__sec_Temp_746"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_746">Representing Lisp data</a></h4><p>
+</p><h4>Representing Lisp data</h4><p>
 
 <a id="__idx_5852"></a><a id="__idx_5854"></a>
 We can use vectors to implement the basic pair structures required for
@@ -154,7 +154,7 @@ unique pointers is called <a id="__idx_5888"></a><a id="__idx_5890"></a><em>inte
 
 
 <a id="__sec_Temp_751"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_751">Implementing the primitive list operations</a></h4><p>
+</p><h4>Implementing the primitive list operations</h4><p>
 
 </p><p>
 
@@ -215,7 +215,7 @@ simply tests the equality of all fields in the registers, and
 <a id="__idx_5910"></a><a id="__idx_5912"></a><a id="__idx_5914"></a><a id="__idx_5916"></a>predicates such as <tt>pair?</tt>, <tt>null?</tt>, <tt>symbol?</tt>, and <tt>number?</tt> need only check the type field.</p><p>
 
 <a id="__sec_Temp_754"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_754">Implementing stacks</a></h4><p>
+</p><h4>Implementing stacks</h4><p>
 
 <a id="__idx_5918"></a>
 Although our register machines use stacks, we need do nothing special
@@ -279,7 +279,7 @@ available as primitive operations.
 </p><p>
 
 <a id="__sec_5.3.2"></a>
-</p><h3><a href="book-Z-H-4.html#__toc___sec_5.3.2">5.3.2  Maintaining the Illusion of Infinite Memory</a></h3><p>
+</p><h3>5.3.2  Maintaining the Illusion of Infinite Memory</h3><p>
 
 <a id="__idx_5930"></a></p><p>
 
@@ -331,7 +331,7 @@ copy the useful pairs into the new free memory (which was the old
 working memory).<a href="#footnote_Temp_760" id="call_footnote_Temp_760"><sup><small>15</small></sup></a></p><p>
 
 <a id="__sec_Temp_761"></a>
-</p><h4><a href="book-Z-H-4.html#__toc___sec_Temp_761">Implementation of a stop-and-copy garbage collector</a></h4><p>
+</p><h4>Implementation of a stop-and-copy garbage collector</h4><p>
 
 We now use our register-machine language to describe the stop-and-copy
 algorithm in more detail.  We will assume that there is a register
