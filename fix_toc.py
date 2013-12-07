@@ -1,3 +1,4 @@
+from collections import defaultdict, Counter
 from HTMLParser import HTMLParser
 import os.path
 import re
@@ -11,6 +12,8 @@ ElementTree.register_namespace('', ncx_namespace)
 
 toc_file = sys.argv[1]
 content_dir, _ = os.path.split(toc_file)
+
+found_sections = defaultdict(Counter)
 
 
 def _tag_name(name):
@@ -32,32 +35,40 @@ def subsection_source(content_src, subsection_number):
 class SectionFinder(HTMLParser):
     def __init__(self, src_file, section_title):
         HTMLParser.__init__(self)
-        self.last_href = None
+        self.last_id = None
         self.new_src = None
+        self.consume_text = False
         self.current_text = ''
         self.section_title = section_title
         self.src_file = src_file
+        self.section_title_index = found_sections[src_file][section_title]
+        self.found_sections = 0
 
-    def build_src(self, content_href):
-        _, fragment = urldefrag(content_href)
-        fragment = fragment.replace('__toc_', '')
-        return '#'.join([self.src_file, fragment])
+    def build_src(self, anchor_id):
+        return '#'.join([self.src_file, anchor_id])
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
-        if tag == 'a' and 'href' in attrs:
-            self.last_href = attrs['href']
+        if tag == 'a' and 'id' in attrs:
+            self.last_id = attrs['id']
+        elif self.last_id is not None and tag.startswith('h'):
+            self.consume_text = True
 
     def handle_endtag(self, tag):
-        if self.last_href and tag == 'a':
+        if self.last_id and tag.startswith('h'):
             if self.current_text == self.section_title:
-                self.new_src = self.build_src(self.last_href)
+                if self.found_sections == self.section_title_index:
+                    self.new_src = self.build_src(self.last_id)
+                    found_sections[self.src_file][self.section_title] += 1
 
-            self.last_href = None
+                self.found_sections += 1
+
+            self.last_id = None
+            self.consume_text = False
             self.current_text = ''
 
     def handle_data(self, data):
-        if self.last_href:
+        if self.consume_text:
             self.current_text += data
 
 
