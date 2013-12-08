@@ -44,6 +44,7 @@ check:
 	xmllint --noout $(XML)
 
 $(BUILD_DIR)/huge/%_cropped.pdf: $(BUILD_DIR)/huge/ $(LATEX_DIR)/%.tex
+	@echo "Building huge $@"
 	sed 's/\\sicpsize}{\\fontsize{16}{18}/\\sicpsize}{\\fontsize{200}{220}/' < $(LATEX_DIR)/sicpstyle.sty > $(LATEX_DIR)/sicpstyle2.sty
 	mv $(LATEX_DIR)/sicpstyle2.sty $(LATEX_DIR)/sicpstyle.sty
 	cd $(LATEX_DIR) && pdflatex -output-dir ./build/huge/ ./$*.tex
@@ -58,14 +59,18 @@ $(IMAGES_DIR)/%.svg: $(BUILD_DIR)/huge/%.pbm
 
 
 $(BUILD_DIR)/%_cropped.pdf: $(BUILD_DIR) $(LATEX_DIR)/%.tex
+	@echo "Building regular"
+	@echo "$(CONTENT)"
+	false
 	sed 's/\\sicpsize}{\\fontsize{200}{220}/\\sicpsize}{\\fontsize{16}{18}/' < $(LATEX_DIR)/sicpstyle.sty > $(LATEX_DIR)/sicpstyle2.sty
 	mv $(LATEX_DIR)/sicpstyle2.sty $(LATEX_DIR)/sicpstyle.sty
 	cd $(LATEX_DIR) && pdflatex -output-dir ./build ./$*.tex
 	pdfcrop --clip $(BUILD_DIR)/$*.pdf $(BUILD_DIR)/$*_cropped.pdf
 	rm -f $(NORMAL_MARK)
 
-$(IMAGES_DIR)/%.gif: $(BUILD_DIR)/%_cropped.pdf
-	convert $(BUILD_DIR)/$*_cropped.pdf $@
+# $(IMAGES_DIR)/%.gif: $(BUILD_DIR)/%_cropped.pdf
+# 	@echo "Converting $@"
+# 	convert $(BUILD_DIR)/$*_cropped.pdf $@
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
@@ -79,4 +84,4 @@ svg: $(SVG_FILES)
 gif: $(GIF_FILES)
 
 clean:
-	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES) $(GIF_FILES) src/mimetype
+	rm -rf sicp.epub $(BUILD_DIR) $(SVG_FILES) src/mimetype
