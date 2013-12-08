@@ -5,7 +5,7 @@
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Structure and Interpretation of Computer Programs</title>
     <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
   </head>
@@ -13,12 +13,12 @@
 
 
 
-<a name="%_sec_5.3" id="%_sec_5.3"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_5.3">5.3  Storage Allocation and Garbage Collection</a></h2><p>
+<a id="__sec_5.3"></a>
+<h2>5.3  Storage Allocation and Garbage Collection</h2><p>
 
 
-<a name="%_idx_5828" id="%_idx_5828"></a><a name="%_idx_5830" id="%_idx_5830"></a>
-In section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a>, we will show how to implement a Scheme
+<a id="__idx_5828"></a><a id="__idx_5830"></a>
+In section <a href="book-Z-H-34.html#__sec_5.4">5.4</a>, we will show how to implement a Scheme
 evaluator as a register machine.  In order to simplify the discussion,
 we will assume that our register machines can be equipped with a <em>list-structured memory</em>, in which the basic operations for
 manipulating list-structured data are primitive.  Postulating the
@@ -43,7 +43,7 @@ and argument lists.  Although the constant creation of new data
 objects would pose no problem on a computer with an infinite amount of
 rapidly addressable memory, computer memories are available only in
 finite sizes (more's the pity).  Lisp systems
-thus provide an <a name="%_idx_5832" id="%_idx_5832"></a><em>automatic storage allocation</em> facility to
+thus provide an <a id="__idx_5832"></a><em>automatic storage allocation</em> facility to
 support the illusion of an infinite memory.  When a data object is no
 longer needed, the memory allocated to it is automatically recycled
 and used to construct new data objects.  There are various
@@ -51,64 +51,64 @@ techniques for providing such automatic storage allocation.  The
 method we shall discuss in this section is called <em>garbage
 collection</em>.</p><p>
 
-<a name="%_sec_5.3.1" id="%_sec_5.3.1"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.3.1">5.3.1  Memory as Vectors</a></h3><p>
+<a id="__sec_5.3.1"></a>
+</p><h3>5.3.1  Memory as Vectors</h3><p>
 
 </p><p>
 
 A conventional computer memory can be thought of as an array of
 cubbyholes, each of which can contain a piece of information.  Each
-cubbyhole has a unique name, called its <a name="%_idx_5834" id="%_idx_5834"></a><em>address</em> or <a name="%_idx_5836" id="%_idx_5836"></a><em>location</em>.  Typical memory systems provide two primitive operations:
+cubbyhole has a unique name, called its <a id="__idx_5834"></a><em>address</em> or <a id="__idx_5836"></a><em>location</em>.  Typical memory systems provide two primitive operations:
 one that fetches the data stored in a specified location and one that
 assigns new data to a specified location.  Memory addresses can be
 incremented to support sequential access to some set of the
 cubbyholes.  More generally, many important data operations require
 that memory addresses be treated as data, which can be stored in
 memory locations and manipulated in machine registers.  The
-representation of list structure is one application of such <a name="%_idx_5838" id="%_idx_5838"></a><a name="%_idx_5840" id="%_idx_5840"></a><em>address arithmetic</em>.</p><p>
+representation of list structure is one application of such <a id="__idx_5838"></a><a id="__idx_5840"></a><em>address arithmetic</em>.</p><p>
 
 To model computer memory, we use a new kind of data
-structure called a <a name="%_idx_5842" id="%_idx_5842"></a><em>vector</em>.  Abstractly, a vector is a compound
+structure called a <a id="__idx_5842"></a><em>vector</em>.  Abstractly, a vector is a compound
 data object whose individual elements can be accessed by means of an
 integer index in an amount of time that is independent of the
-index.<a name="call_footnote_Temp_744" href="#footnote_Temp_744" id="call_footnote_Temp_744"><sup><small>5</small></sup></a> In order to describe memory operations, we use two
+index.<a href="#footnote_Temp_744" id="call_footnote_Temp_744"><sup><small>5</small></sup></a> In order to describe memory operations, we use two
 primitive Scheme procedures for manipulating vectors:</p><p>
 
-</p><p></p><ul><a name="%_idx_5844" id="%_idx_5844"></a><a name="%_idx_5846" id="%_idx_5846"></a><li><tt>(vector-ref &lt;<em>vector</em>&gt; &lt;<em>n</em>&gt;)</tt> returns the <em>n</em>th
+</p><p></p><ul><a id="__idx_5844"></a><a id="__idx_5846"></a><li><tt>(vector-ref &lt;<em>vector</em>&gt; &lt;<em>n</em>&gt;)</tt> returns the <em>n</em>th
 element of the vector.<p>
 
-<a name="%_idx_5848" id="%_idx_5848"></a><a name="%_idx_5850" id="%_idx_5850"></a></p></li><li><tt>(vector-set! &lt;<em>vector</em>&gt; &lt;<em>n</em>&gt; &lt;<em>value</em>&gt;)</tt> sets
+<a id="__idx_5848"></a><a id="__idx_5850"></a></p></li><li><tt>(vector-set! &lt;<em>vector</em>&gt; &lt;<em>n</em>&gt; &lt;<em>value</em>&gt;)</tt> sets
 the <em>n</em>th element of the vector to the designated value.
 </li></ul><p>
 For example, if <tt>v</tt> is a vector, then <tt>(vector-ref v 5)</tt> gets
 the fifth entry in the vector <tt>v</tt> and <tt>(vector-set! v 5 7)</tt>
-changes the value of the fifth entry of the vector <tt>v</tt> to 7.<a name="call_footnote_Temp_745" href="#footnote_Temp_745" id="call_footnote_Temp_745"><sup><small>6</small></sup></a>
+changes the value of the fifth entry of the vector <tt>v</tt> to 7.<a href="#footnote_Temp_745" id="call_footnote_Temp_745"><sup><small>6</small></sup></a>
 For computer memory, this access can be implemented
 through the use of address arithmetic to combine a <em>base address</em>
 that specifies the beginning location of a vector in memory with an
 <em>index</em> that specifies the offset of a particular element of the vector.</p><p>
 
-<a name="%_sec_Temp_746" id="%_sec_Temp_746"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_746">Representing Lisp data</a></h4><p>
+<a id="__sec_Temp_746"></a>
+</p><h4>Representing Lisp data</h4><p>
 
-<a name="%_idx_5852" id="%_idx_5852"></a><a name="%_idx_5854" id="%_idx_5854"></a>
+<a id="__idx_5852"></a><a id="__idx_5854"></a>
 We can use vectors to implement the basic pair structures required for
 a list-structured memory.  Let us imagine that computer memory is
-divided into two vectors: <a name="%_idx_5856" id="%_idx_5856"></a><tt>the-cars</tt> and <a name="%_idx_5858" id="%_idx_5858"></a><tt>the-cdrs</tt>.  We will
+divided into two vectors: <a id="__idx_5856"></a><tt>the-cars</tt> and <a id="__idx_5858"></a><tt>the-cdrs</tt>.  We will
 represent list structure as follows: A pointer to a pair is an index
 into the two vectors.  The <tt>car</tt> of the pair is the entry in <tt>the-cars</tt> with the designated index, and the <tt>cdr</tt> of the pair is
 the entry in <tt>the-cdrs</tt> with the designated index.  We also need a
 representation for objects other than pairs (such as numbers and
 symbols) and a way to distinguish one kind of data from another.
 There are many methods of accomplishing this, but they all reduce to
-using <a name="%_idx_5860" id="%_idx_5860"></a><a name="%_idx_5862" id="%_idx_5862"></a><em>typed pointers</em>, that is, to extending the notion of
-“pointer” to include information on data type.<a name="call_footnote_Temp_747" href="#footnote_Temp_747" id="call_footnote_Temp_747"><sup><small>7</small></sup></a> The data type enables the system to
+using <a id="__idx_5860"></a><a id="__idx_5862"></a><em>typed pointers</em>, that is, to extending the notion of
+“pointer” to include information on data type.<a href="#footnote_Temp_747" id="call_footnote_Temp_747"><sup><small>7</small></sup></a> The data type enables the system to
 distinguish a pointer to a pair (which consists of the “pair” data
 type and an index into the memory vectors) from pointers to other
 kinds of data (which consist of some other data type and whatever is
 being used to represent data of that type).  Two data objects are
-<a name="%_idx_5868" id="%_idx_5868"></a>considered to be the same (<tt>eq?</tt>) if their pointers are
-identical.<a name="call_footnote_Temp_748" href="#footnote_Temp_748" id="call_footnote_Temp_748"><sup><small>8</small></sup></a> Figure <a href="#%_fig_5.14">5.14</a>
+<a id="__idx_5868"></a>considered to be the same (<tt>eq?</tt>) if their pointers are
+identical.<a href="#footnote_Temp_748" id="call_footnote_Temp_748"><sup><small>8</small></sup></a> Figure <a href="#__fig_5.14">5.14</a>
 illustrates the use of this method to represent the list <tt>((1 2) 3
 4)</tt>, whose box-and-pointer diagram is also shown.  We use letter
 prefixes to denote the data-type information.  Thus, a pointer to the
@@ -118,31 +118,31 @@ left of each pair the vector index that specifies where the <tt>car</tt>
 and <tt>cdr</tt> of the pair are stored.  The blank locations in <tt>the-cars</tt> and <tt>the-cdrs</tt> may contain parts of other list
 structures (not of interest here).</p><p>
 
-<a name="%_fig_5.14" id="%_fig_5.14"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-7.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 5.14:</b>  Box-and-pointer and memory-vector representations
+<a id="__fig_5.14"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-7.gif" alt="ch5-Z-G-7" style="border: none;" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.14:</b>  Box-and-pointer and memory-vector representations
 of the list <tt>((1 2) 3 4)</tt>.</div></caption><tr><td>
 
 </td></tr></table></div><p>                                                         </p><p>
 
 A pointer to a number, such as <tt>n4</tt>,
 might consist of a type indicating numeric data together with the
-actual representation of the number 4.<a name="call_footnote_Temp_749" href="#footnote_Temp_749" id="call_footnote_Temp_749"><sup><small>9</small></sup></a>
+actual representation of the number 4.<a href="#footnote_Temp_749" id="call_footnote_Temp_749"><sup><small>9</small></sup></a>
 To deal with numbers that are too large to
 be represented in the fixed amount of space allocated for a single
-pointer, we could use a distinct <a name="%_idx_5880" id="%_idx_5880"></a><em>bignum</em> data type, for which the
+pointer, we could use a distinct <a id="__idx_5880"></a><em>bignum</em> data type, for which the
 pointer designates a list in which the parts of the number are
-stored.<a name="call_footnote_Temp_750" href="#footnote_Temp_750" id="call_footnote_Temp_750"><sup><small>10</small></sup></a></p><p>
+stored.<a href="#footnote_Temp_750" id="call_footnote_Temp_750"><sup><small>10</small></sup></a></p><p>
 
 
-<a name="%_idx_5882" id="%_idx_5882"></a>A symbol might be represented as a typed pointer that designates a
+<a id="__idx_5882"></a>A symbol might be represented as a typed pointer that designates a
 sequence of the characters that form the symbol's printed representation.
 This sequence is constructed by the Lisp reader when the character string
 is initially encountered in input.  Since we want two instances of a
 symbol to be recognized as the “same” symbol by <tt>eq?</tt> and we
-<a name="%_idx_5884" id="%_idx_5884"></a>want <tt>eq?</tt> to be a simple test for equality of pointers, we must
+<a id="__idx_5884"></a>want <tt>eq?</tt> to be a simple test for equality of pointers, we must
 ensure that if the reader sees the same character string twice, it
 will use the same pointer (to the same sequence of characters) to
 represent both occurrences.  To accomplish this, the reader maintains
-a table, traditionally called the <a name="%_idx_5886" id="%_idx_5886"></a><em>obarray</em>, of all the symbols it
+a table, traditionally called the <a id="__idx_5886"></a><em>obarray</em>, of all the symbols it
 has ever encountered.  When the reader encounters a character string
 and is about to construct a symbol, it checks the obarray to see if it
 has ever before seen the same character string.  If it has not, it
@@ -150,15 +150,15 @@ uses the characters to construct a new symbol (a typed pointer to a
 new character sequence) and enters this pointer in the obarray.  If the
 reader has seen the string before, it returns the symbol pointer
 stored in the obarray.  This process of replacing character strings by
-unique pointers is called <a name="%_idx_5888" id="%_idx_5888"></a><a name="%_idx_5890" id="%_idx_5890"></a><em>interning</em> symbols.</p><p>
+unique pointers is called <a id="__idx_5888"></a><a id="__idx_5890"></a><em>interning</em> symbols.</p><p>
 
 
-<a name="%_sec_Temp_751" id="%_sec_Temp_751"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_751">Implementing the primitive list operations</a></h4><p>
+<a id="__sec_Temp_751"></a>
+</p><h4>Implementing the primitive list operations</h4><p>
 
 </p><p>
 
-<a name="%_idx_5892" id="%_idx_5892"></a><a name="%_idx_5894" id="%_idx_5894"></a>Given the above representation scheme, we can replace each
+<a id="__idx_5892"></a><a id="__idx_5894"></a>Given the above representation scheme, we can replace each
 “primitive” list operation of a register machine with one or more
 primitive vector operations.  We will use two registers, <tt>the-cars</tt> and <tt>the-cdrs</tt>, to identify the memory vectors, and will
 assume that <tt>vector-ref</tt> and <tt>vector-set!</tt> are available as
@@ -169,7 +169,7 @@ the typed pointer.</p><p>
 
 For example, we can make a register machine support the instructions</p><p>
 
-<a name="%_idx_5896" id="%_idx_5896"></a><a name="%_idx_5898" id="%_idx_5898"></a>
+<a id="__idx_5896"></a><a id="__idx_5898"></a>
 </p><p></p><p><tt>(assign &lt;<em>reg<sub>1</sub></em>&gt; (op car) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /><br />
 (assign &lt;<em>reg<sub>1</sub></em>&gt; (op cdr) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /></tt></p><p></p><p>
 if we implement these, respectively, as</p><p>
@@ -179,7 +179,7 @@ if we implement these, respectively, as</p><p>
 (assign &lt;<em>reg<sub>1</sub></em>&gt; (op vector-ref) (reg the-cdrs) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /></tt></p><p></p><p>
 The instructions</p><p>
 
-<a name="%_idx_5900" id="%_idx_5900"></a><a name="%_idx_5902" id="%_idx_5902"></a>
+<a id="__idx_5900"></a><a id="__idx_5902"></a>
 </p><p></p><p><tt>(perform (op set-car!) (reg &lt;<em>reg<sub>1</sub></em>&gt;) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /><br />
 (perform (op set-cdr!) (reg &lt;<em>reg<sub>1</sub></em>&gt;) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /></tt></p><p></p><p>
 are implemented as
@@ -190,17 +190,17 @@ are implemented as
  (op vector-set!) (reg the-cdrs) (reg &lt;<em>reg<sub>1</sub></em>&gt;) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br /></tt></p><p></p><p>
 </p><p>
 
-<a name="%_idx_5904" id="%_idx_5904"></a><tt>Cons</tt> is performed by allocating an unused index and storing the
+<a id="__idx_5904"></a><tt>Cons</tt> is performed by allocating an unused index and storing the
 arguments to <tt>cons</tt> in <tt>the-cars</tt> and <tt>the-cdrs</tt> at that
 indexed vector position.  We presume that there is a special register,
-<a name="%_idx_5906" id="%_idx_5906"></a><tt>free</tt>, that always holds a pair pointer containing the next
+<a id="__idx_5906"></a><tt>free</tt>, that always holds a pair pointer containing the next
 available index, and that we can increment the index part of that
-pointer to find the next free location.<a name="call_footnote_Temp_752" href="#footnote_Temp_752" id="call_footnote_Temp_752"><sup><small>11</small></sup></a>
+pointer to find the next free location.<a href="#footnote_Temp_752" id="call_footnote_Temp_752"><sup><small>11</small></sup></a>
 For example, the instruction</p><p>
 
 </p><p></p><p><tt>(assign &lt;<em>reg<sub>1</sub></em>&gt; (op cons) (reg &lt;<em>reg<sub>2</sub></em>&gt;) (reg &lt;<em>reg<sub>3</sub></em>&gt;))<br /></tt></p><p></p><p>
 is implemented as the following sequence of vector
-operations:<a name="call_footnote_Temp_753" href="#footnote_Temp_753" id="call_footnote_Temp_753"><sup><small>12</small></sup></a></p><p>
+operations:<a href="#footnote_Temp_753" id="call_footnote_Temp_753"><sup><small>12</small></sup></a></p><p>
 
 </p><p></p><p><tt>(perform<br />
  (op vector-set!) (reg the-cars) (reg free) (reg &lt;<em>reg<sub>2</sub></em>&gt;))<br />
@@ -212,18 +212,18 @@ The <tt>eq?</tt> operation</p><p>
 
 </p><p></p><p><tt>(op eq?) (reg &lt;<em>reg<sub>1</sub></em>&gt;) (reg &lt;<em>reg<sub>2</sub></em>&gt;)<br /></tt></p><p></p><p>
 simply tests the equality of all fields in the registers, and
-<a name="%_idx_5910" id="%_idx_5910"></a><a name="%_idx_5912" id="%_idx_5912"></a><a name="%_idx_5914" id="%_idx_5914"></a><a name="%_idx_5916" id="%_idx_5916"></a>predicates such as <tt>pair?</tt>, <tt>null?</tt>, <tt>symbol?</tt>, and <tt>number?</tt> need only check the type field.</p><p>
+<a id="__idx_5910"></a><a id="__idx_5912"></a><a id="__idx_5914"></a><a id="__idx_5916"></a>predicates such as <tt>pair?</tt>, <tt>null?</tt>, <tt>symbol?</tt>, and <tt>number?</tt> need only check the type field.</p><p>
 
-<a name="%_sec_Temp_754" id="%_sec_Temp_754"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_754">Implementing stacks</a></h4><p>
+<a id="__sec_Temp_754"></a>
+</p><h4>Implementing stacks</h4><p>
 
-<a name="%_idx_5918" id="%_idx_5918"></a>
+<a id="__idx_5918"></a>
 Although our register machines use stacks, we need do nothing special
 here, since stacks can be modeled in terms of lists.  The stack can be
 a list of the saved values, pointed to by a special register <tt>the-stack</tt>.  Thus, <tt>(save &lt;<em>reg</em>&gt;)</tt> can be implemented as</p><p>
 
-<a name="%_idx_5920" id="%_idx_5920"></a></p><p></p><p><tt>(assign the-stack (op cons) (reg &lt;<em>reg</em>&gt;) (reg the-stack))<br /></tt></p><p></p><p>
-<a name="%_idx_5922" id="%_idx_5922"></a>Similarly, <tt>(restore &lt;<em>reg</em>&gt;)</tt> can be implemented as
+<a id="__idx_5920"></a></p><p></p><p><tt>(assign the-stack (op cons) (reg &lt;<em>reg</em>&gt;) (reg the-stack))<br /></tt></p><p></p><p>
+<a id="__idx_5922"></a>Similarly, <tt>(restore &lt;<em>reg</em>&gt;)</tt> can be implemented as
 </p><p></p><p><tt>(assign &lt;<em>reg</em>&gt; (op car) (reg the-stack))<br />
 (assign the-stack (op cdr) (reg the-stack))<br /></tt></p><p></p><p>
 and <tt>(perform (op initialize-stack))</tt> can be implemented as
@@ -235,9 +235,9 @@ separate vector.  Then pushing and popping the stack can be
 accomplished by incrementing or decrementing an index into that
 vector.</p><p>
 
-</p><p><a name="%_thm_5.20" id="%_thm_5.20"></a>
+</p><p><a id="__thm_5.20"></a>
 <b>Exercise 5.20.</b>  Draw the box-and-pointer representation and the memory-vector
-representation (as in figure <a href="#%_fig_5.14">5.14</a>) of the
+representation (as in figure <a href="#__fig_5.14">5.14</a>) of the
 list structure produced by</p><p>
 
 </p><p></p><p><tt>(define x (cons 1 2))<br />
@@ -246,8 +246,8 @@ with the <tt>free</tt> pointer initially <tt>p1</tt>.  What is the final
 value of <tt>free</tt> ?  What pointers represent the values of <tt>x</tt> and <tt>y</tt> ?
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.21" id="%_thm_5.21"></a>
-<b>Exercise 5.21.</b>  <a name="%_idx_5924" id="%_idx_5924"></a>Implement register machines for the following procedures.
+</p><p><a id="__thm_5.21"></a>
+<b>Exercise 5.21.</b>  <a id="__idx_5924"></a>Implement register machines for the following procedures.
 Assume that the list-structure memory operations are available as
 machine primitives.</p><p>
 
@@ -269,8 +269,8 @@ machine primitives.</p><p>
   (count-iter tree 0))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_5.22" id="%_thm_5.22"></a>
-<b>Exercise 5.22.</b>  <a name="%_idx_5926" id="%_idx_5926"></a><a name="%_idx_5928" id="%_idx_5928"></a>Exercise <a href="book-Z-H-22.html#%_thm_3.12">3.12</a> of section <a href="book-Z-H-22.html#%_sec_3.3.1">3.3.1</a>
+</p><p><a id="__thm_5.22"></a>
+<b>Exercise 5.22.</b>  <a id="__idx_5926"></a><a id="__idx_5928"></a>Exercise <a href="book-Z-H-22.html#__thm_3.12">3.12</a> of section <a href="book-Z-H-22.html#__sec_3.3.1">3.3.1</a>
 presented an <tt>append</tt> procedure that appends two lists to form a
 new list and an <tt>append!</tt> procedure that splices two lists
 together.  Design a register machine to implement each of these
@@ -278,16 +278,16 @@ procedures.  Assume that the list-structure memory operations are
 available as primitive operations.
 </p><p>
 
-<a name="%_sec_5.3.2" id="%_sec_5.3.2"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_5.3.2">5.3.2  Maintaining the Illusion of Infinite Memory</a></h3><p>
+<a id="__sec_5.3.2"></a>
+</p><h3>5.3.2  Maintaining the Illusion of Infinite Memory</h3><p>
 
-<a name="%_idx_5930" id="%_idx_5930"></a></p><p>
+<a id="__idx_5930"></a></p><p>
 
 The representation method outlined in
-section <a href="#%_sec_5.3.1">5.3.1</a> solves the problem of implementing
+section <a href="#__sec_5.3.1">5.3.1</a> solves the problem of implementing
 list structure, provided that we have an infinite amount of memory.
 With a real computer we will eventually run out of free space in which
-to construct new pairs.<a name="call_footnote_Temp_758" href="#footnote_Temp_758" id="call_footnote_Temp_758"><sup><small>13</small></sup></a>
+to construct new pairs.<a href="#footnote_Temp_758" id="call_footnote_Temp_758"><sup><small>13</small></sup></a>
 However, most of the pairs generated in a typical
 computation are used only to hold intermediate results.  After these
 results are accessed, the pairs are no longer needed – they are <em>garbage</em>.  For instance, the computation</p><p>
@@ -309,11 +309,11 @@ collection</em>.  Garbage collection is based on the observation that, at
 any moment in a Lisp interpretation, the only objects that can
 affect the future of the computation are those that can be reached by
 some succession of <tt>car</tt> and <tt>cdr</tt> operations starting from
-the pointers that are currently in the machine registers.<a name="call_footnote_Temp_759" href="#footnote_Temp_759" id="call_footnote_Temp_759"><sup><small>14</small></sup></a>  Any memory cell
+the pointers that are currently in the machine registers.<a href="#footnote_Temp_759" id="call_footnote_Temp_759"><sup><small>14</small></sup></a>  Any memory cell
 that is not so accessible may be recycled.</p><p>
 
 There are many ways to perform garbage collection.  The method we
-shall examine here is called <a name="%_idx_5932" id="%_idx_5932"></a><a name="%_idx_5934" id="%_idx_5934"></a><em>stop-and-copy</em>.  The basic idea is
+shall examine here is called <a id="__idx_5932"></a><a id="__idx_5934"></a><em>stop-and-copy</em>.  The basic idea is
 to divide memory into two halves: “working memory” and “free
 memory.”  When <tt>cons</tt> constructs pairs, it allocates these in
 working memory.  When working memory is full, we perform garbage
@@ -328,22 +328,22 @@ if we interchange the roles of working memory and free memory, we can
 continue processing; new pairs will be allocated in the new working
 memory (which was the old free memory).  When this is full, we can
 copy the useful pairs into the new free memory (which was the old
-working memory).<a name="call_footnote_Temp_760" href="#footnote_Temp_760" id="call_footnote_Temp_760"><sup><small>15</small></sup></a></p><p>
+working memory).<a href="#footnote_Temp_760" id="call_footnote_Temp_760"><sup><small>15</small></sup></a></p><p>
 
-<a name="%_sec_Temp_761" id="%_sec_Temp_761"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_761">Implementation of a stop-and-copy garbage collector</a></h4><p>
+<a id="__sec_Temp_761"></a>
+</p><h4>Implementation of a stop-and-copy garbage collector</h4><p>
 
 We now use our register-machine language to describe the stop-and-copy
 algorithm in more detail.  We will assume that there is a register
-called <a name="%_idx_5966" id="%_idx_5966"></a><tt>root</tt> that contains a pointer to a structure that
+called <a id="__idx_5966"></a><tt>root</tt> that contains a pointer to a structure that
 eventually points at all accessible data.  This can be arranged by
 storing the contents of all the machine registers in a
 pre-allocated list pointed at by <tt>root</tt> just before starting
-garbage collection.<a name="call_footnote_Temp_762" href="#footnote_Temp_762" id="call_footnote_Temp_762"><sup><small>16</small></sup></a> We also assume that, in addition to the
+garbage collection.<a href="#footnote_Temp_762" id="call_footnote_Temp_762"><sup><small>16</small></sup></a> We also assume that, in addition to the
 current working memory, there is free memory available into which we
 can copy the useful data.  The current working memory consists of
-vectors whose base addresses are in <a name="%_idx_5968" id="%_idx_5968"></a><a name="%_idx_5970" id="%_idx_5970"></a>registers called <tt>the-cars</tt>
-and <tt>the-cdrs</tt>, and the free memory is in registers called <a name="%_idx_5972" id="%_idx_5972"></a><a name="%_idx_5974" id="%_idx_5974"></a><tt>new-cars</tt> and <tt>new-cdrs</tt>.</p><p>
+vectors whose base addresses are in <a id="__idx_5968"></a><a id="__idx_5970"></a>registers called <tt>the-cars</tt>
+and <tt>the-cdrs</tt>, and the free memory is in registers called <a id="__idx_5972"></a><a id="__idx_5974"></a><tt>new-cars</tt> and <tt>new-cdrs</tt>.</p><p>
 
 Garbage collection is triggered when we exhaust the free cells in the
 current working memory, that is, when a <tt>cons</tt> operation attempts
@@ -356,15 +356,15 @@ memory and new memory will have been interchanged – new pairs will be
 constructed in the new memory, beginning at the place indicated by
 <tt>free</tt>, and the (previous) working memory will be available as the
 new memory for the next garbage collection.
-Figure <a href="#%_fig_5.15">5.15</a> shows the arrangement of memory just
+Figure <a href="#__fig_5.15">5.15</a> shows the arrangement of memory just
 before and just after garbage collection.</p><p>
 
-<a name="%_fig_5.15" id="%_fig_5.15"></a></p><p></p><div align="left"><table width="100%"><tr><td><img src="images/ch5-Z-G-8.gif" border="0" /></td></tr><caption align="bottom"><div align="left"><b>Figure 5.15:</b>  Reconfiguration of memory by the garbage-collection
+<a id="__fig_5.15"></a></p><p></p><div style="text-align: left;"><table width="100_"><tr><td><img src="images/ch5-Z-G-8.gif" alt="ch5-Z-G-8" style="border: none;" /></td></tr><caption style="caption-side: bottom;"><div style="text-align: left;"><b>Figure 5.15:</b>  Reconfiguration of memory by the garbage-collection
 process.</div></caption><tr><td>
 
 </td></tr></table></div><p></p><p>
 
-<a name="%_idx_5976" id="%_idx_5976"></a><a name="%_idx_5978" id="%_idx_5978"></a>The state of the garbage-collection process is controlled by
+<a id="__idx_5976"></a><a id="__idx_5978"></a>The state of the garbage-collection process is controlled by
 maintaining two pointers: <tt>free</tt> and <tt>scan</tt>.  These are
 initialized to point to the beginning of the new memory.  The
 algorithm begins by relocating the pair pointed at by <tt>root</tt> to
@@ -374,7 +374,7 @@ pointer is incremented.  In addition, the old location of the pair is
 marked to show that its contents have been moved.  This marking is
 done as follows: In the <tt>car</tt> position, we place a special tag
 that signals that this is an already-moved object.  (Such an object is
-traditionally called a <a name="%_idx_5980" id="%_idx_5980"></a><em>broken heart</em>.)<a name="call_footnote_Temp_763" href="#footnote_Temp_763" id="call_footnote_Temp_763"><sup><small>17</small></sup></a>  In the <tt>cdr</tt> position we place a <a name="%_idx_5988" id="%_idx_5988"></a><em>forwarding
+traditionally called a <a id="__idx_5980"></a><em>broken heart</em>.)<a href="#footnote_Temp_763" id="call_footnote_Temp_763"><sup><small>17</small></sup></a>  In the <tt>cdr</tt> position we place a <a id="__idx_5988"></a><em>forwarding
 address</em> that points at the location to which the object has been
 moved.</p><p>
 
@@ -407,9 +407,9 @@ instructions for a register
 machine.  The basic step of relocating an object is accomplished by a
 subroutine called <tt>relocate-old-result-in-new</tt>.  This
 subroutine gets its argument, a pointer to the object to be relocated,
-from a register named <a name="%_idx_5990" id="%_idx_5990"></a><tt>old</tt>.  It relocates the designated object
+from a register named <a id="__idx_5990"></a><tt>old</tt>.  It relocates the designated object
 (incrementing <tt>free</tt> in the process),
-puts a pointer to the relocated object into a register called <a name="%_idx_5992" id="%_idx_5992"></a><tt>new</tt>, and returns by branching to the entry point stored in the register
+puts a pointer to the relocated object into a register called <a id="__idx_5992"></a><tt>new</tt>, and returns by branching to the entry point stored in the register
 <tt>relocate-continue</tt>.  To begin garbage collection, we invoke this
 subroutine to relocate the <tt>root</tt> pointer, after initializing <tt>free</tt> and <tt>scan</tt>.  When the relocation of <tt>root</tt> has been
 accomplished, we install the new pointer as the new <tt>root</tt> and
@@ -466,7 +466,7 @@ The subroutine <tt>relocate-old-result-in-new</tt> relocates objects as
 follows: If the object to be relocated (pointed at by <tt>old</tt>) is
 not a pair, then we return the same pointer to the object unchanged
 (in <tt>new</tt>).  (For example, we may be scanning a pair whose <tt>car</tt> is the number 4.  If we represent the <tt>car</tt> by <tt>n4</tt>, as
-described in section <a href="#%_sec_5.3.1">5.3.1</a>, then we want the
+described in section <a href="#__sec_5.3.1">5.3.1</a>, then we want the
 “relocated” <tt>car</tt> pointer to still be <tt>n4</tt>.)  Otherwise, we
 must perform the relocation.  If the <tt>car</tt> position of the pair to
 be relocated contains a broken-heart tag, then the pair has in fact
@@ -475,9 +475,9 @@ already been moved, so we retrieve the forwarding address (from the
 If the pointer in <tt>old</tt> points at a yet-unmoved pair, then we move
 the pair to the first free cell in new memory (pointed at by <tt>free</tt>) and set up the broken heart by storing a broken-heart tag and
 forwarding address at the old location.
-<tt>Relocate-old-result-in-new</tt> uses a register <a name="%_idx_5994" id="%_idx_5994"></a><tt>oldcr</tt>
+<tt>Relocate-old-result-in-new</tt> uses a register <a id="__idx_5994"></a><tt>oldcr</tt>
 to hold the <tt>car</tt> or the <tt>cdr</tt> of the object pointed at by
-<tt>old</tt>.<a name="call_footnote_Temp_764" href="#footnote_Temp_764" id="call_footnote_Temp_764"><sup><small>18</small></sup></a></p><p>
+<tt>old</tt>.<a href="#footnote_Temp_764" id="call_footnote_Temp_764"><sup><small>18</small></sup></a></p><p>
 
 </p><p></p><p><tt>relocate-old-result-in-new<br />
   (test (op pointer-to-pair?) (reg old))<br />
@@ -523,39 +523,39 @@ collection the next time memory runs out.</p><p>
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_744" href="#call_footnote_Temp_744" id="footnote_Temp_744"><sup><small>5</small></sup></a> We could represent memory as lists of items.
+</p><div class="footnote"><p><a href="#call_footnote_Temp_744" id="footnote_Temp_744"><sup><small>5</small></sup></a> We could represent memory as lists of items.
 However, the access time would then not be independent of the index,
 since accessing the <em>n</em>th element of a list requires <em>n</em> - 1 <tt>cdr</tt>
 operations.
 
-</p><p><a name="footnote_Temp_745" href="#call_footnote_Temp_745" id="footnote_Temp_745"><sup><small>6</small></sup></a> For completeness, we should specify a <tt>make-vector</tt>
+</p><p><a href="#call_footnote_Temp_745" id="footnote_Temp_745"><sup><small>6</small></sup></a> For completeness, we should specify a <tt>make-vector</tt>
 operation that constructs vectors.  However, in the present
 application we will use vectors only to model fixed divisions of the
 computer memory.
 
-</p><p><a name="footnote_Temp_747" href="#call_footnote_Temp_747" id="footnote_Temp_747"><sup><small>7</small></sup></a> This is
-precisely the same <a name="%_idx_5864" id="%_idx_5864"></a><a name="%_idx_5866" id="%_idx_5866"></a>“tagged data” idea we introduced in chapter 2 for
+</p><p><a href="#call_footnote_Temp_747" id="footnote_Temp_747"><sup><small>7</small></sup></a> This is
+precisely the same <a id="__idx_5864"></a><a id="__idx_5866"></a>“tagged data” idea we introduced in chapter 2 for
 dealing with generic operations.  Here, however, the data types are
 included at the primitive machine level rather than constructed
 through the use of lists.
 
-</p><p><a name="footnote_Temp_748" href="#call_footnote_Temp_748" id="footnote_Temp_748"><sup><small>8</small></sup></a> Type information may be encoded in a variety of
+</p><p><a href="#call_footnote_Temp_748" id="footnote_Temp_748"><sup><small>8</small></sup></a> Type information may be encoded in a variety of
 ways, depending on the details of the machine on which the Lisp
 system is to be implemented.  The execution efficiency of Lisp
 programs will be strongly dependent on how cleverly this choice is
 made, but it is difficult to formulate general design rules for good
 choices.  The most straightforward way to implement typed pointers is
-to allocate a fixed set of bits in each pointer to be a <a name="%_idx_5870" id="%_idx_5870"></a><em>type
+to allocate a fixed set of bits in each pointer to be a <a id="__idx_5870"></a><em>type
 field</em> that encodes the data type.  Important questions to be
 addressed in designing such a representation include the following:
 How many type bits are required?  How large must the vector indices
 be?  How efficiently can the primitive machine instructions be used to
 manipulate the type fields of pointers?  Machines that include special
 hardware for the efficient handling of type fields are said to have
-<a name="%_idx_5872" id="%_idx_5872"></a><em>tagged architectures</em>.
+<a id="__idx_5872"></a><em>tagged architectures</em>.
 
-</p><p><a name="footnote_Temp_749" href="#call_footnote_Temp_749" id="footnote_Temp_749"><sup><small>9</small></sup></a> This decision on the
-<a name="%_idx_5874" id="%_idx_5874"></a><a name="%_idx_5876" id="%_idx_5876"></a><a name="%_idx_5878" id="%_idx_5878"></a>representation of numbers determines whether <tt>eq?</tt>, which tests
+</p><p><a href="#call_footnote_Temp_749" id="footnote_Temp_749"><sup><small>9</small></sup></a> This decision on the
+<a id="__idx_5874"></a><a id="__idx_5876"></a><a id="__idx_5878"></a>representation of numbers determines whether <tt>eq?</tt>, which tests
 equality of pointers, can be used to test for equality of numbers.  If
 the pointer contains the number itself, then equal numbers will have
 the same pointer.  But if the pointer contains the index of a location
@@ -563,21 +563,21 @@ where the number is stored, equal numbers will be guaranteed to have
 equal pointers only if we are careful never to store the same number
 in more than one location.
 
-</p><p><a name="footnote_Temp_750" href="#call_footnote_Temp_750" id="footnote_Temp_750"><sup><small>10</small></sup></a> This is just like writing a number as a sequence of
+</p><p><a href="#call_footnote_Temp_750" id="footnote_Temp_750"><sup><small>10</small></sup></a> This is just like writing a number as a sequence of
 digits, except that each “digit” is a number between 0 and the
 largest number that can be stored in a single pointer.
 
-</p><p><a name="footnote_Temp_752" href="#call_footnote_Temp_752" id="footnote_Temp_752"><sup><small>11</small></sup></a> There are other ways
+</p><p><a href="#call_footnote_Temp_752" id="footnote_Temp_752"><sup><small>11</small></sup></a> There are other ways
 of finding free storage.  For example, we could link together all the
-unused pairs into a <a name="%_idx_5908" id="%_idx_5908"></a><em>free list</em>.  Our free locations are
+unused pairs into a <a id="__idx_5908"></a><em>free list</em>.  Our free locations are
 consecutive (and hence can be accessed by incrementing a pointer)
 because we are using a compacting garbage collector, as we will see in
-section <a href="#%_sec_5.3.2">5.3.2</a>.
+section <a href="#__sec_5.3.2">5.3.2</a>.
 
-</p><p><a name="footnote_Temp_753" href="#call_footnote_Temp_753" id="footnote_Temp_753"><sup><small>12</small></sup></a> This is essentially the implementation of <tt>cons</tt> in terms of <tt>set-car!</tt> and <tt>set-cdr!</tt>, as described in
-section <a href="book-Z-H-22.html#%_sec_3.3.1">3.3.1</a>.  The operation <tt>get-new-pair</tt> used in that implementation is realized here by the <tt>free</tt> pointer.
+</p><p><a href="#call_footnote_Temp_753" id="footnote_Temp_753"><sup><small>12</small></sup></a> This is essentially the implementation of <tt>cons</tt> in terms of <tt>set-car!</tt> and <tt>set-cdr!</tt>, as described in
+section <a href="book-Z-H-22.html#__sec_3.3.1">3.3.1</a>.  The operation <tt>get-new-pair</tt> used in that implementation is realized here by the <tt>free</tt> pointer.
 
-</p><p><a name="footnote_Temp_758" href="#call_footnote_Temp_758" id="footnote_Temp_758"><sup><small>13</small></sup></a> This may not be true eventually,
+</p><p><a href="#call_footnote_Temp_758" id="footnote_Temp_758"><sup><small>13</small></sup></a> This may not be true eventually,
 because memories may get large enough so that it would be impossible
 to run out of free memory in the lifetime of the computer.  For
 example, there are about 3× 10<sup>13</sup>, microseconds in a year, so
@@ -590,33 +590,33 @@ may have large numbers of processors operating in parallel on a single
 memory, so it may be possible to use up memory much faster than we
 have postulated.
 
-</p><p><a name="footnote_Temp_759" href="#call_footnote_Temp_759" id="footnote_Temp_759"><sup><small>14</small></sup></a> We
+</p><p><a href="#call_footnote_Temp_759" id="footnote_Temp_759"><sup><small>14</small></sup></a> We
 assume here that the stack is represented as a list as described in
-section <a href="#%_sec_5.3.1">5.3.1</a>, so that items on the stack are
+section <a href="#__sec_5.3.1">5.3.1</a>, so that items on the stack are
 accessible via the pointer in the stack register.
 
-</p><p><a name="footnote_Temp_760" href="#call_footnote_Temp_760" id="footnote_Temp_760"><sup><small>15</small></sup></a> This idea was invented and first implemented
-<a name="%_idx_5936" id="%_idx_5936"></a>by Minsky, as part of the implementation of <a name="%_idx_5938" id="%_idx_5938"></a>Lisp for the PDP-1 at the
-<a name="%_idx_5940" id="%_idx_5940"></a>MIT Research Laboratory of Electronics.  It was further developed by
-<a name="%_idx_5942" id="%_idx_5942"></a><a name="%_idx_5944" id="%_idx_5944"></a>Fenichel and Yochelson (1969) for use in the Lisp implementation for
-<a name="%_idx_5946" id="%_idx_5946"></a>the Multics time-sharing system.  Later, <a name="%_idx_5948" id="%_idx_5948"></a>Baker (1978) developed a
+</p><p><a href="#call_footnote_Temp_760" id="footnote_Temp_760"><sup><small>15</small></sup></a> This idea was invented and first implemented
+<a id="__idx_5936"></a>by Minsky, as part of the implementation of <a id="__idx_5938"></a>Lisp for the PDP-1 at the
+<a id="__idx_5940"></a>MIT Research Laboratory of Electronics.  It was further developed by
+<a id="__idx_5942"></a><a id="__idx_5944"></a>Fenichel and Yochelson (1969) for use in the Lisp implementation for
+<a id="__idx_5946"></a>the Multics time-sharing system.  Later, <a id="__idx_5948"></a>Baker (1978) developed a
 “real-time” version of the method, which does not require the
 computation to stop during garbage collection.  Baker's idea was
-extended by <a name="%_idx_5950" id="%_idx_5950"></a><a name="%_idx_5952" id="%_idx_5952"></a><a name="%_idx_5954" id="%_idx_5954"></a>Hewitt, Lieberman, and Moon (see Lieberman and Hewitt
+extended by <a id="__idx_5950"></a><a id="__idx_5952"></a><a id="__idx_5954"></a>Hewitt, Lieberman, and Moon (see Lieberman and Hewitt
 1983) to take advantage of the fact that some structure is more volatile
 and other structure is more permanent.  </p><p>
 
-An alternative commonly used garbage-collection technique is the <a name="%_idx_5956" id="%_idx_5956"></a><a name="%_idx_5958" id="%_idx_5958"></a><em>mark-sweep</em> method.  This consists of tracing all the structure
+An alternative commonly used garbage-collection technique is the <a id="__idx_5956"></a><a id="__idx_5958"></a><em>mark-sweep</em> method.  This consists of tracing all the structure
 accessible from the machine registers and marking each pair we reach.
 We then scan all of memory, and any location that is unmarked is
 “swept up” as garbage and made available for reuse.  A full
-<a name="%_idx_5960" id="%_idx_5960"></a>discussion of the mark-sweep method can be found in Allen 1978.</p><p>
+<a id="__idx_5960"></a>discussion of the mark-sweep method can be found in Allen 1978.</p><p>
 
 The Minsky-Fenichel-Yochelson algorithm is the dominant algorithm in
 use for large-memory systems because it examines only the useful part
 of memory.  This is in contrast to mark-sweep, in which the sweep
 phase must check all of memory.  A second advantage of stop-and-copy
-is that it is a <a name="%_idx_5962" id="%_idx_5962"></a><a name="%_idx_5964" id="%_idx_5964"></a><em>compacting</em> garbage collector.  That is, at the
+is that it is a <a id="__idx_5962"></a><a id="__idx_5964"></a><em>compacting</em> garbage collector.  That is, at the
 end of the garbage-collection phase the useful data will have been
 moved to consecutive memory locations, with all garbage pairs
 compressed out.  This can be an extremely important performance
@@ -624,15 +624,15 @@ consideration in machines with virtual memory, in which accesses to
 widely separated memory addresses may require extra paging
 operations.
 
-</p><p><a name="footnote_Temp_762" href="#call_footnote_Temp_762" id="footnote_Temp_762"><sup><small>16</small></sup></a> This list of registers does not include
+</p><p><a href="#call_footnote_Temp_762" id="footnote_Temp_762"><sup><small>16</small></sup></a> This list of registers does not include
 the registers used by the storage-allocation system – <tt>root</tt>, <tt>the-cars</tt>, <tt>the-cdrs</tt>, and the other registers that will be
 introduced in this section.
 
-</p><p><a name="footnote_Temp_763" href="#call_footnote_Temp_763" id="footnote_Temp_763"><sup><small>17</small></sup></a> The term <em><a name="%_idx_5982" id="%_idx_5982"></a>broken heart</em> was coined by David Cressey, who wrote a garbage
-collector for <a name="%_idx_5984" id="%_idx_5984"></a><a name="%_idx_5986" id="%_idx_5986"></a>MDL, a dialect of Lisp developed at MIT during the early
+</p><p><a href="#call_footnote_Temp_763" id="footnote_Temp_763"><sup><small>17</small></sup></a> The term <em><a id="__idx_5982"></a>broken heart</em> was coined by David Cressey, who wrote a garbage
+collector for <a id="__idx_5984"></a><a id="__idx_5986"></a>MDL, a dialect of Lisp developed at MIT during the early
 1970s.
 
-</p><p><a name="footnote_Temp_764" href="#call_footnote_Temp_764" id="footnote_Temp_764"><sup><small>18</small></sup></a> The garbage collector uses the low-level predicate
+</p><p><a href="#call_footnote_Temp_764" id="footnote_Temp_764"><sup><small>18</small></sup></a> The garbage collector uses the low-level predicate
 <tt>pointer-to-pair?</tt> instead of the list-structure <tt>pair?</tt>
 operation because in a real system there might be various things
 that are treated as pairs for garbage-collection purposes.

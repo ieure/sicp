@@ -5,7 +5,7 @@
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Structure and Interpretation of Computer Programs</title>
     <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
   </head>
@@ -13,14 +13,14 @@
 
 
 
-<a name="%_chap_5" id="%_chap_5"></a>
+<a id="__chap_5"></a>
 <h1 class="chapter">
-<div class="chapterheading"><a href="book-Z-H-4.html#%_toc_%_chap_5">Chapter 5</a></div></h1><p>
-<a href="book-Z-H-4.html#%_toc_%_chap_5">Computing with Register Machines</a></p><p>
+<div class="chapterheading">Chapter 5</div></h1><p>
+Computing with Register Machines</p><p>
 
 </p><p>
-</p><div align="right">
-<table width="60%"><tr><td>
+</p><div style="text-align: right;">
+<table width="60_"><tr><td>
 <span class="epigraph">
 <p>
 
@@ -30,7 +30,7 @@ has soul attributes the maker's glory to the work), insofar as nearly
 all the manifold motions are caused by a most simple and material
 force, just as all motions of the clock are caused by a single weight.</p><p>
 
-<a name="%_idx_5456" id="%_idx_5456"></a>Johannes Kepler (letter to Herwart von Hohenburg, 1605)</p><p>
+<a id="__idx_5456"></a>Johannes Kepler (letter to Herwart von Hohenburg, 1605)</p><p>
 
 </p></span>
 </td></tr></table></div>
@@ -59,9 +59,9 @@ complete description of the control structure of the Lisp evaluator,
 we must work at a more primitive level than Lisp itself.</p><p>
 
 In this chapter we will describe processes in terms of the step-by-step
-operation of a traditional computer.  Such a computer, or <a name="%_idx_5458" id="%_idx_5458"></a><em>register
+operation of a traditional computer.  Such a computer, or <a id="__idx_5458"></a><em>register
 machine</em>, sequentially executes <em>instructions</em> that
-manipulate the contents of a fixed set of storage elements called <a name="%_idx_5460" id="%_idx_5460"></a><em>registers</em>.  A typical register-machine instruction applies a
+manipulate the contents of a fixed set of storage elements called <a id="__idx_5460"></a><em>registers</em>.  A typical register-machine instruction applies a
 primitive operation to the contents of some registers and assigns the
 result to another register.  Our descriptions of processes executed by
 register machines will look very much like “machine-language”
@@ -74,7 +74,7 @@ machine-language computer programmer.  In designing register machines,
 we will develop mechanisms for implementing important programming
 constructs such as recursion.  We will also present a language for
 describing designs for register machines.  In
-section <a href="book-Z-H-32.html#%_sec_5.2">5.2</a> we will
+section <a href="book-Z-H-32.html#__sec_5.2">5.2</a> we will
 implement a Lisp program that
 uses these descriptions to simulate the machines we design.</p><p>
 
@@ -85,17 +85,17 @@ Such an operation can be performed by easily described hardware.  In
 order to deal with list structure, however, we will also use the
 memory operations <tt>car</tt>, <tt>cdr</tt>, and <tt>cons</tt>, which require
 an elaborate storage-allocation mechanism.  In
-section <a href="book-Z-H-33.html#%_sec_5.3">5.3</a> we study their implementation in
+section <a href="book-Z-H-33.html#__sec_5.3">5.3</a> we study their implementation in
 terms of more elementary operations.</p><p>
 
-In section <a href="book-Z-H-34.html#%_sec_5.4">5.4</a>, after we have accumulated experience
+In section <a href="book-Z-H-34.html#__sec_5.4">5.4</a>, after we have accumulated experience
 formulating simple procedures as register machines, we will design a
 machine that carries out the algorithm described by the metacircular
-evaluator of section <a href="book-Z-H-26.html#%_sec_4.1">4.1</a>.  This will fill in the gap in
+evaluator of section <a href="book-Z-H-26.html#__sec_4.1">4.1</a>.  This will fill in the gap in
 our understanding of how Scheme expressions are interpreted, by
 providing an explicit model for the mechanisms of control in the
 evaluator.
-In section <a href="book-Z-H-35.html#%_sec_5.5">5.5</a> we will study a simple compiler that
+In section <a href="book-Z-H-35.html#__sec_5.5">5.5</a> we will study a simple compiler that
 translates Scheme programs into sequences of instructions that can be
 executed directly with the registers and operations of the evaluator
 register machine.</p><p>

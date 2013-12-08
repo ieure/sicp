@@ -5,7 +5,7 @@
      (c) Dorai Sitaram, http://www.cs.rice.edu/~dorai/tex2page -->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type: text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Structure and Interpretation of Computer Programs</title>
     <link rel="stylesheet" type="text/css" href="book-Z-C.css" title="default" />
   </head>
@@ -13,43 +13,43 @@
 
 
 
-<a name="%_sec_4.3" id="%_sec_4.3"></a>
-<h2><a href="book-Z-H-4.html#%_toc_%_sec_4.3">4.3  Variations on a Scheme – Nondeterministic Computing</a></h2><p>
+<a id="__sec_4.3"></a>
+<h2>4.3  Variations on a Scheme – Nondeterministic Computing</h2><p>
 
 
-<a name="%_idx_4806" id="%_idx_4806"></a>
-<a name="%_idx_4808" id="%_idx_4808"></a>In this section, we extend the Scheme evaluator to support a
+<a id="__idx_4806"></a>
+<a id="__idx_4808"></a>In this section, we extend the Scheme evaluator to support a
 programming paradigm called <em>nondeterministic computing</em> by
 building into the evaluator a facility to support automatic search.
 This is a much more profound change to the language than the
-introduction of lazy evaluation in section <a href="book-Z-H-27.html#%_sec_4.2">4.2</a>.</p><p>
+introduction of lazy evaluation in section <a href="book-Z-H-27.html#__sec_4.2">4.2</a>.</p><p>
 
-<a name="%_idx_4810" id="%_idx_4810"></a>Nondeterministic computing, like stream processing, is useful for
+<a id="__idx_4810"></a>Nondeterministic computing, like stream processing, is useful for
 “generate and test” applications.  Consider the task of starting with
 two lists of positive integers and finding a pair of integers – one
 from the first list and one from the second list – whose sum is prime.
 We saw how to handle this with finite sequence operations in
-section <a href="book-Z-H-15.html#%_sec_2.2.3">2.2.3</a> and with infinite streams in
-section <a href="book-Z-H-24.html#%_sec_3.5.3">3.5.3</a>.  Our approach was to generate
+section <a href="book-Z-H-15.html#__sec_2.2.3">2.2.3</a> and with infinite streams in
+section <a href="book-Z-H-24.html#__sec_3.5.3">3.5.3</a>.  Our approach was to generate
 the sequence of all possible pairs and filter these to select the
 pairs whose sum is prime.  Whether we actually generate the entire
 sequence of pairs first as in chapter 2, or interleave the generating
 and filtering as in chapter 3, is immaterial to the essential image of
 how the computation is organized.</p><p>
 
-<a name="%_idx_4812" id="%_idx_4812"></a>The nondeterministic approach evokes a different image.  Imagine simply
+<a id="__idx_4812"></a>The nondeterministic approach evokes a different image.  Imagine simply
 that we choose (in some way) a number from the first list and a number
 from the second list and require (using some mechanism) that their sum
 be prime.  This is expressed by following procedure:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4814" id="%_idx_4814"></a>(define (prime-sum-pair list1 list2)<br />
+</p><p></p><p><tt><a id="__idx_4814"></a>(define (prime-sum-pair list1 list2)<br />
   (let ((a (an-element-of list1))<br />
         (b (an-element-of list2)))<br />
     (require (prime? (+ a b)))<br />
     (list a b)))<br /></tt></p><p></p><p>
 It might seem as if this procedure merely restates the problem,
 rather than specifying a way to solve it.  Nevertheless, this is
-a legitimate nondeterministic program.<a name="call_footnote_Temp_598" href="#footnote_Temp_598" id="call_footnote_Temp_598"><sup><small>42</small></sup></a></p><p>
+a legitimate nondeterministic program.<a href="#footnote_Temp_598" id="call_footnote_Temp_598"><sup><small>42</small></sup></a></p><p>
 
 
 The key idea here is that expressions in a nondeterministic language
@@ -64,7 +64,7 @@ programmer from the details of how values are delayed and forced, the
 nondeterministic program evaluator will free the programmer from the
 details of how choices are made.</p><p>
 
-<a name="%_idx_4820" id="%_idx_4820"></a>It is instructive to contrast the different images of time evoked by
+<a id="__idx_4820"></a>It is instructive to contrast the different images of time evoked by
 nondeterministic evaluation and stream processing.  Stream processing
 uses lazy evaluation to decouple the time when the stream of possible
 answers is assembled from the time when the actual stream elements are
@@ -89,42 +89,42 @@ procedure as follows:</p><p>
 The value returned was obtained after the evaluator repeatedly chose
 elements from each of the lists, until a successful choice was made.</p><p>
 
-Section <a href="#%_sec_4.3.1">4.3.1</a> introduces <tt>amb</tt> and explains how it
+Section <a href="#__sec_4.3.1">4.3.1</a> introduces <tt>amb</tt> and explains how it
 supports nondeterminism through the evaluator's automatic search
-mechanism.  Section <a href="#%_sec_4.3.2">4.3.2</a> presents examples of
-nondeterministic programs, and section <a href="#%_sec_4.3.3">4.3.3</a>
+mechanism.  Section <a href="#__sec_4.3.2">4.3.2</a> presents examples of
+nondeterministic programs, and section <a href="#__sec_4.3.3">4.3.3</a>
 gives the details of how to implement the <tt>amb</tt> evaluator by
 modifying the ordinary Scheme evaluator.</p><p>
 
-<a name="%_sec_4.3.1" id="%_sec_4.3.1"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.1">4.3.1  Amb and Search</a></h3><p>
+<a id="__sec_4.3.1"></a>
+</p><h3>4.3.1  Amb and Search</h3><p>
 
 </p><p>
 
-<a name="%_idx_4822" id="%_idx_4822"></a>To extend Scheme to support nondeterminism, we introduce a new special
-form called <tt>amb</tt>.<a name="call_footnote_Temp_599" href="#footnote_Temp_599" id="call_footnote_Temp_599"><sup><small>43</small></sup></a>
+<a id="__idx_4822"></a>To extend Scheme to support nondeterminism, we introduce a new special
+form called <tt>amb</tt>.<a href="#footnote_Temp_599" id="call_footnote_Temp_599"><sup><small>43</small></sup></a>
 The expression <tt>(amb &lt;<em><em>e</em><sub>1</sub></em>&gt; &lt;<em><em>e</em><sub>2</sub></em>&gt; <tt>...</tt> &lt;<em><em>e</em><sub><em>n</em></sub></em>&gt;)</tt>
 returns the value of one of the <em>n</em> expressions &lt;<em><em>e</em><sub><em>i</em></sub></em>&gt; “ambiguously.”
 For example, the expression</p><p>
 
 </p><p></p><p><tt>(list (amb 1 2 3) (amb 'a 'b))<br /></tt></p><p></p><p>
 can have six possible values:
-</p><table border="0"><tr><td valign="top"><tt>(1 a) </tt></td><td valign="top"><tt>(1 b) </tt></td><td valign="top"><tt>(2 a) </tt></td><td valign="top"><tt>(2 b) </tt></td><td valign="top"><tt>(3 a) </tt></td><td valign="top"><tt>(3 b)
+</p><table style="border: none;"><tr><td style="text-align: top;"><tt>(1 a) </tt></td><td style="text-align: top;"><tt>(1 b) </tt></td><td style="text-align: top;"><tt>(2 a) </tt></td><td style="text-align: top;"><tt>(2 b) </tt></td><td style="text-align: top;"><tt>(3 a) </tt></td><td style="text-align: top;"><tt>(3 b)
 </tt></td></tr></table><tt>Amb</tt> with a single choice produces an ordinary (single) value.<p>
 
-<a name="%_idx_4826" id="%_idx_4826"></a><tt>Amb</tt> with no choices – the expression <tt>(amb)</tt> – is an
+<a id="__idx_4826"></a><tt>Amb</tt> with no choices – the expression <tt>(amb)</tt> – is an
 expression with no acceptable values.  Operationally, we can think of
 <tt>(amb)</tt> as an expression that when evaluated causes the
 computation to “fail”: The computation aborts and no value is
 produced.  Using this idea, we can express the requirement that a
 particular predicate expression <tt>p</tt> must be true as follows:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4828" id="%_idx_4828"></a>(define (require p)<br />
+</p><p></p><p><tt><a id="__idx_4828"></a>(define (require p)<br />
   (if (not p) (amb)))<br /></tt></p><p></p><p></p><p>
 
 With <tt>amb</tt> and <tt>require</tt>, we can implement the <tt>an-element-of</tt> procedure used above:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4830" id="%_idx_4830"></a>(define (an-element-of items)<br />
+</p><p></p><p><tt><a id="__idx_4830"></a>(define (an-element-of items)<br />
   (require (not (null? items)))<br />
   (amb (car items) (an-element-of (cdr items))))<br /></tt></p><p></p><p>
 <tt>An-element-of</tt> fails if the list is empty.  Otherwise it
@@ -135,18 +135,18 @@ We can also express infinite ranges of choices.  The following
 procedure potentially returns any integer greater than or equal to
 some given <em>n</em>:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4832" id="%_idx_4832"></a>(define (an-integer-starting-from n)<br />
+</p><p></p><p><tt><a id="__idx_4832"></a>(define (an-integer-starting-from n)<br />
   (amb n (an-integer-starting-from (+ n 1))))<br /></tt></p><p></p><p>
 This is like the stream procedure <tt>integers-starting-from</tt>
-described in section <a href="book-Z-H-24.html#%_sec_3.5.2">3.5.2</a>, but with an important
+described in section <a href="book-Z-H-24.html#__sec_3.5.2">3.5.2</a>, but with an important
 difference: The stream procedure returns an object that represents the
 sequence of all integers beginning with <em>n</em>, whereas the <tt>amb</tt>
-procedure returns a single integer.<a name="call_footnote_Temp_600" href="#footnote_Temp_600" id="call_footnote_Temp_600"><sup><small>44</small></sup></a></p><p>
+procedure returns a single integer.<a href="#footnote_Temp_600" id="call_footnote_Temp_600"><sup><small>44</small></sup></a></p><p>
 
-<a name="%_idx_4834" id="%_idx_4834"></a>Abstractly, we can imagine that evaluating an <tt>amb</tt> expression
+<a id="__idx_4834"></a>Abstractly, we can imagine that evaluating an <tt>amb</tt> expression
 causes time to split into branches, where the computation continues on
 each branch with one of the possible values of the expression.  We say
-that <tt>amb</tt> represents a <a name="%_idx_4836" id="%_idx_4836"></a><em>nondeterministic choice point</em>.
+that <tt>amb</tt> represents a <a id="__idx_4836"></a><em>nondeterministic choice point</em>.
 If we had a machine with a sufficient number of processors that could
 be dynamically allocated, we could implement the search in a
 straightforward way.  Execution would proceed as in a sequential
@@ -155,38 +155,38 @@ more processors would be allocated and initialized to continue all of
 the parallel executions implied by the choice.  Each processor would
 proceed sequentially as if it were the only choice, until it either
 terminates by encountering a failure, or it further subdivides, or
-it finishes.<a name="call_footnote_Temp_601" href="#footnote_Temp_601" id="call_footnote_Temp_601"><sup><small>45</small></sup></a></p><p>
+it finishes.<a href="#footnote_Temp_601" id="call_footnote_Temp_601"><sup><small>45</small></sup></a></p><p>
 
-<a name="%_idx_4840" id="%_idx_4840"></a>On the other hand, if we have a machine that can execute
+<a id="__idx_4840"></a>On the other hand, if we have a machine that can execute
 only one process (or a few concurrent processes),
 we must consider the alternatives sequentially.
 One could imagine modifying an evaluator
 to pick at random a branch to follow whenever it encounters a choice
 point.  Random choice, however, can easily lead to failing values.
 We might try running the evaluator over and over, making random
-choices and hoping to find a non-failing value, but it is better to <a name="%_idx_4842" id="%_idx_4842"></a><a name="%_idx_4844" id="%_idx_4844"></a><em>systematically search</em> all possible execution paths.
+choices and hoping to find a non-failing value, but it is better to <a id="__idx_4842"></a><a id="__idx_4844"></a><em>systematically search</em> all possible execution paths.
 The <tt>amb</tt> evaluator that we will develop and work with in this section
 implements a systematic search as follows: When the evaluator
 encounters an application of <tt>amb</tt>, it initially selects the first
 alternative.  This selection may itself lead to a further choice.  The
 evaluator will always initially choose the first alternative at each
 choice point.  If a choice results in a failure, then the evaluator
-<a name="%_idx_4846" id="%_idx_4846"></a><a name="%_idx_4848" id="%_idx_4848"></a><a name="%_idx_4850" id="%_idx_4850"></a>automagically<a name="call_footnote_Temp_602" href="#footnote_Temp_602" id="call_footnote_Temp_602"><sup><small>46</small></sup></a> <a name="%_idx_4852" id="%_idx_4852"></a><em>backtracks</em>
+<a id="__idx_4846"></a><a id="__idx_4848"></a><a id="__idx_4850"></a>automagically<a href="#footnote_Temp_602" id="call_footnote_Temp_602"><sup><small>46</small></sup></a> <a id="__idx_4852"></a><em>backtracks</em>
 to the most recent choice point and tries the next
 alternative.  If it runs out of alternatives at any choice point, the
 evaluator will back up to the previous choice point and resume from
-there.  This process leads to a search strategy known as <a name="%_idx_4854" id="%_idx_4854"></a><a name="%_idx_4856" id="%_idx_4856"></a><a name="%_idx_4858" id="%_idx_4858"></a><em>depth-first search</em> or <em>chronological backtracking</em>.<a name="call_footnote_Temp_603" href="#footnote_Temp_603" id="call_footnote_Temp_603"><sup><small>47</small></sup></a></p><p>
+there.  This process leads to a search strategy known as <a id="__idx_4854"></a><a id="__idx_4856"></a><a id="__idx_4858"></a><em>depth-first search</em> or <em>chronological backtracking</em>.<a href="#footnote_Temp_603" id="call_footnote_Temp_603"><sup><small>47</small></sup></a></p><p>
 
-<a name="%_sec_Temp_604" id="%_sec_Temp_604"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_604">Driver loop</a></h4><p>
+<a id="__sec_Temp_604"></a>
+</p><h4>Driver loop</h4><p>
 
-<a name="%_idx_4908" id="%_idx_4908"></a>The driver loop for the <tt>amb</tt> evaluator
+<a id="__idx_4908"></a>The driver loop for the <tt>amb</tt> evaluator
 has some unusual properties.  It reads an
 expression and prints the value of the first non-failing execution, as
 in the <tt>prime-sum-pair</tt> example shown above.  If we
 want to see the value of the next successful execution, we can
 ask the interpreter to backtrack and attempt to generate a second
-non-failing execution.  This is signaled by typing the symbol <a name="%_idx_4910" id="%_idx_4910"></a><tt>try-again</tt>.  If any expression except <tt>try-again</tt> is given, the
+non-failing execution.  This is signaled by typing the symbol <a id="__idx_4910"></a><tt>try-again</tt>.  If any expression except <tt>try-again</tt> is given, the
 interpreter will start a new problem, discarding the unexplored
 alternatives in the previous problem.  Here is a sample
 interaction:</p><p>
@@ -198,8 +198,8 @@ try-again<br /><i>;;; Amb-Eval value:</i><br /><i>(8 35)</i><br /><i>;;; Amb
 try-again<br /><i>;;; There are no more values of</i><br /><i>(prime-sum-pair (quote (1 3 5 8)) (quote (20 35 110)))</i><br /><i>;;; Amb-Eval input:</i><br />
 (prime-sum-pair '(19 27 30) '(11 36 58))<br /><i>;;; Starting a new problem</i><br /><i>;;; Amb-Eval value:</i><br /><i>(30 11)</i><br /></tt></p><p></p><p></p><p>
 
-</p><p><a name="%_thm_4.35" id="%_thm_4.35"></a>
-<b>Exercise 4.35.</b>  <a name="%_idx_4912" id="%_idx_4912"></a><a name="%_idx_4914" id="%_idx_4914"></a>Write a procedure <tt>an-integer-between</tt> that returns an integer
+</p><p><a id="__thm_4.35"></a>
+<b>Exercise 4.35.</b>  <a id="__idx_4912"></a><a id="__idx_4914"></a>Write a procedure <tt>an-integer-between</tt> that returns an integer
 between two given bounds.  This can be used to implement a
 procedure that finds Pythagorean triples,
 i.e., triples of integers (<em>i</em>,<em>j</em>,<em>k</em>) between the given bounds such
@@ -212,22 +212,22 @@ that <em>i</em> <u>&lt;</u> <em>j</em> and <em>i</em><sup>2</sup>  +  <em>j</em>
         (list i j k)))))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.36" id="%_thm_4.36"></a>
-<b>Exercise 4.36.</b>  <a name="%_idx_4916" id="%_idx_4916"></a><a name="%_idx_4918" id="%_idx_4918"></a>Exercise <a href="book-Z-H-24.html#%_thm_3.69">3.69</a> discussed how to generate
+</p><p><a id="__thm_4.36"></a>
+<b>Exercise 4.36.</b>  <a id="__idx_4916"></a><a id="__idx_4918"></a>Exercise <a href="book-Z-H-24.html#__thm_3.69">3.69</a> discussed how to generate
 the stream of <em>all</em> Pythagorean triples, with no upper bound on the
 size of the integers to be searched.  Explain why simply replacing
 <tt>an-integer-between</tt> by <tt>an-integer-starting-from</tt> in the procedure in
-exercise <a href="#%_thm_4.35">4.35</a> is not an adequate way to
+exercise <a href="#__thm_4.35">4.35</a> is not an adequate way to
 generate arbitrary Pythagorean triples.  Write a procedure that
 actually will accomplish this.  (That is, write a procedure for which
 repeatedly typing <tt>try-again</tt> would in principle eventually
 generate all Pythagorean triples.)
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.37" id="%_thm_4.37"></a>
-<b>Exercise 4.37.</b>  <a name="%_idx_4920" id="%_idx_4920"></a><a name="%_idx_4922" id="%_idx_4922"></a>Ben Bitdiddle claims that the following method for generating
+</p><p><a id="__thm_4.37"></a>
+<b>Exercise 4.37.</b>  <a id="__idx_4920"></a><a id="__idx_4922"></a>Ben Bitdiddle claims that the following method for generating
 Pythagorean triples is more efficient than the one in
-exercise <a href="#%_thm_4.35">4.35</a>.  Is he correct?  (Hint: Consider
+exercise <a href="#__thm_4.35">4.35</a>.  Is he correct?  (Hint: Consider
 the number of possibilities that must be explored.)</p><p>
 
 </p><p></p><p><tt>(define (a-pythagorean-triple-between low high)<br />
@@ -241,22 +241,22 @@ the number of possibilities that must be explored.)</p><p>
           (list i j k))))))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-<a name="%_sec_4.3.2" id="%_sec_4.3.2"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.2">4.3.2  Examples of Nondeterministic Programs</a></h3><p>
+<a id="__sec_4.3.2"></a>
+</p><h3>4.3.2  Examples of Nondeterministic Programs</h3><p>
 
 </p><p>
 
-Section <a href="#%_sec_4.3.3">4.3.3</a> describes the implementation of
+Section <a href="#__sec_4.3.3">4.3.3</a> describes the implementation of
 the <tt>amb</tt> evaluator.  First, however, we give some examples of how
 it can be used.  The advantage of nondeterministic programming is that
 we can suppress the details of how search is carried out, thereby
-<a name="%_idx_4924" id="%_idx_4924"></a>expressing our programs at a higher level of abstraction.</p><p>
+<a id="__idx_4924"></a>expressing our programs at a higher level of abstraction.</p><p>
 
-<a name="%_sec_Temp_608" id="%_sec_Temp_608"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_608">Logic Puzzles</a></h4><p>
+<a id="__sec_Temp_608"></a>
+</p><h4>Logic Puzzles</h4><p>
 
-<a name="%_idx_4926" id="%_idx_4926"></a><a name="%_idx_4928" id="%_idx_4928"></a><a name="%_idx_4930" id="%_idx_4930"></a>
-<a name="%_idx_4932" id="%_idx_4932"></a>The following puzzle (taken from Dinesman 1968) is typical of a large
+<a id="__idx_4926"></a><a id="__idx_4928"></a><a id="__idx_4930"></a>
+<a id="__idx_4932"></a>The following puzzle (taken from Dinesman 1968) is typical of a large
 class of simple logic puzzles:</p><p>
 
 </p><blockquote>
@@ -271,10 +271,10 @@ adjacent to Cooper's.  Where does everyone live?
 
 We can determine who lives on each floor in a straightforward way by
 enumerating all the possibilities and imposing the given
-restrictions:<a name="call_footnote_Temp_609" href="#footnote_Temp_609" id="call_footnote_Temp_609"><sup><small>48</small></sup></a></p><p>
+restrictions:<a href="#footnote_Temp_609" id="call_footnote_Temp_609"><sup><small>48</small></sup></a></p><p>
 
 
-</p><p></p><p><tt><a name="%_idx_4938" id="%_idx_4938"></a>(define (multiple-dwelling)<br />
+</p><p></p><p><tt><a id="__idx_4938"></a>(define (multiple-dwelling)<br />
   (let ((baker (amb 1 2 3 4 5))<br />
         (cooper (amb 1 2 3 4 5))<br />
         (fletcher (amb 1 2 3 4 5))<br />
@@ -301,17 +301,17 @@ result
 
 </p><p></p><p><tt>((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))<br /></tt></p><p></p><p>
 Although this simple procedure works, it is very slow.
-Exercises <a href="#%_thm_4.39">4.39</a>
-and <a href="#%_thm_4.40">4.40</a> discuss some possible
+Exercises <a href="#__thm_4.39">4.39</a>
+and <a href="#__thm_4.40">4.40</a> discuss some possible
 improvements.</p><p>
 
-</p><p><a name="%_thm_4.38" id="%_thm_4.38"></a>
+</p><p><a id="__thm_4.38"></a>
 <b>Exercise 4.38.</b>  Modify the multiple-dwelling procedure to omit the requirement that
 Smith and Fletcher do not live on adjacent floors.  How many solutions
 are there to this modified puzzle?
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.39" id="%_thm_4.39"></a>
+</p><p><a id="__thm_4.39"></a>
 <b>Exercise 4.39.</b>  Does the order of the restrictions in the multiple-dwelling procedure
 affect the answer? Does it affect the time to find an answer?  If you
 think it matters, demonstrate a faster program obtained from the given
@@ -320,7 +320,7 @@ argue your case.
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.40" id="%_thm_4.40"></a>
+</p><p><a id="__thm_4.40"></a>
 <b>Exercise 4.40.</b>  In the multiple dwelling problem, how many sets of assignments are
 there of people to floors, both before and after the requirement that
 floor assignments be distinct?  It is very inefficient to generate all
@@ -336,12 +336,12 @@ expressions.)
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.41" id="%_thm_4.41"></a>
-<b>Exercise 4.41.</b>  <a name="%_idx_4940" id="%_idx_4940"></a>Write an ordinary Scheme program to solve the multiple dwelling puzzle.
+</p><p><a id="__thm_4.41"></a>
+<b>Exercise 4.41.</b>  <a id="__idx_4940"></a>Write an ordinary Scheme program to solve the multiple dwelling puzzle.
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.42" id="%_thm_4.42"></a>
-<b>Exercise 4.42.</b>  <a name="%_idx_4942" id="%_idx_4942"></a>Solve the following “Liars” puzzle (from Phillips 1934):
+</p><p><a id="__thm_4.42"></a>
+<b>Exercise 4.42.</b>  <a id="__idx_4942"></a>Solve the following “Liars” puzzle (from Phillips 1934):
 </p><blockquote>
 Five schoolgirls sat for an examination.  Their parents – so they
 thought – showed an undue degree of interest in the result.  They
@@ -358,8 +358,8 @@ What in fact was the order in which the five girls were placed?
 </p></blockquote>
 <p></p><p>
 
-</p><p><a name="%_thm_4.43" id="%_thm_4.43"></a>
-<b>Exercise 4.43.</b>  Use the <tt>amb</tt> evaluator to solve the following puzzle:<a name="call_footnote_Temp_616" href="#footnote_Temp_616" id="call_footnote_Temp_616"><sup><small>49</small></sup></a>
+</p><p><a id="__thm_4.43"></a>
+<b>Exercise 4.43.</b>  Use the <tt>amb</tt> evaluator to solve the following puzzle:<a href="#footnote_Temp_616" id="call_footnote_Temp_616"><sup><small>49</small></sup></a>
 </p><blockquote>
 Mary Ann Moore's father has a yacht and so has each of his four
 friends:  Colonel Downing, Mr. Hall, Sir Barnacle Hood, and Dr.
@@ -371,21 +371,21 @@ daughter.  Gabrielle's father owns the yacht that is named after Dr.
 Parker's daughter.  Who is Lorna's father?
 </blockquote>
 Try to write the program so that it runs efficiently (see
-exercise <a href="#%_thm_4.40">4.40</a>).  Also determine how many
+exercise <a href="#__thm_4.40">4.40</a>).  Also determine how many
 solutions there are if we are not told that Mary Ann's last name is
 Moore.
 <p></p><p>
 
-</p><p><a name="%_thm_4.44" id="%_thm_4.44"></a>
-<b>Exercise 4.44.</b>  <a name="%_idx_4944" id="%_idx_4944"></a><a name="%_idx_4946" id="%_idx_4946"></a><a name="%_idx_4948" id="%_idx_4948"></a><a name="%_idx_4950" id="%_idx_4950"></a>Exercise <a href="book-Z-H-15.html#%_thm_2.42">2.42</a> described the “eight-queens puzzle” of
+</p><p><a id="__thm_4.44"></a>
+<b>Exercise 4.44.</b>  <a id="__idx_4944"></a><a id="__idx_4946"></a><a id="__idx_4948"></a><a id="__idx_4950"></a>Exercise <a href="book-Z-H-15.html#__thm_2.42">2.42</a> described the “eight-queens puzzle” of
 placing queens on a chessboard so that no two attack each other.
 Write a nondeterministic program to solve this puzzle.
 </p><p></p><p>
 
-<a name="%_sec_Temp_618" id="%_sec_Temp_618"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_618">Parsing natural language</a></h4><p>
+<a id="__sec_Temp_618"></a>
+</p><h4>Parsing natural language</h4><p>
 
-<a name="%_idx_4952" id="%_idx_4952"></a><a name="%_idx_4954" id="%_idx_4954"></a>
+<a id="__idx_4952"></a><a id="__idx_4954"></a>
 Programs designed to accept natural language as input usually start by
 attempting to <em>parse</em> the input, that is, to match the input
 against some grammatical structure.  For example, we might try to
@@ -393,10 +393,10 @@ recognize simple sentences consisting of an article followed by a noun
 followed by a verb, such as “The cat eats.”  To accomplish such an
 analysis, we must be able to identify the parts of speech of
 individual words.  We could start with some lists that classify
-various words:<a name="call_footnote_Temp_619" href="#footnote_Temp_619" id="call_footnote_Temp_619"><sup><small>50</small></sup></a></p><p>
+various words:<a href="#footnote_Temp_619" id="call_footnote_Temp_619"><sup><small>50</small></sup></a></p><p>
 
-</p><p></p><p><tt><a name="%_idx_4956" id="%_idx_4956"></a>(define nouns '(noun student professor cat class))<br /><a name="%_idx_4958" id="%_idx_4958"></a>(define verbs '(verb studies lectures eats sleeps))<br /><a name="%_idx_4960" id="%_idx_4960"></a>(define articles '(article the a))<br /></tt></p><p></p><p>
-<a name="%_idx_4962" id="%_idx_4962"></a>We also need a <em>grammar</em>, that is, a set of rules describing how
+</p><p></p><p><tt><a id="__idx_4956"></a>(define nouns '(noun student professor cat class))<br /><a id="__idx_4958"></a>(define verbs '(verb studies lectures eats sleeps))<br /><a id="__idx_4960"></a>(define articles '(article the a))<br /></tt></p><p></p><p>
+<a id="__idx_4962"></a>We also need a <em>grammar</em>, that is, a set of rules describing how
 grammatical elements are composed from simpler elements.  A very
 simple grammar might stipulate that a sentence always consists of two
 pieces – a noun phrase followed by a verb – and that a noun phrase
@@ -411,7 +411,7 @@ procedures for each of the grammatical rules.  To parse a sentence, we
 identify its two constituent pieces and return a list of
 these two elements, tagged with the symbol <tt>sentence</tt>:</p><p>
 
-<a name="%_idx_4964" id="%_idx_4964"></a></p><p></p><p><tt>(define (parse-sentence)<br />
+<a id="__idx_4964"></a></p><p></p><p><tt>(define (parse-sentence)<br />
   (list 'sentence<br />
          (parse-noun-phrase)<br />
          (parse-word verbs)))<br /></tt></p><p></p><p>
@@ -430,7 +430,7 @@ parsed.  Each time we check a word, we require that <tt>*unparsed*</tt>
 must be non-empty and that it should begin with a word from the
 designated list.  If so, we remove that word from <tt>*unparsed*</tt> and
 return the word together with its part of speech (which is found at
-the head of the list):<a name="call_footnote_Temp_620" href="#footnote_Temp_620" id="call_footnote_Temp_620"><sup><small>51</small></sup></a></p><p>
+the head of the list):<a href="#footnote_Temp_620" id="call_footnote_Temp_620"><sup><small>51</small></sup></a></p><p>
 
 </p><p></p><p><tt>(define (parse-word word-list)<br />
   (require (not (null? *unparsed*)))<br />
@@ -443,7 +443,7 @@ To start the parsing, all we need to do is set <tt>*unparsed*</tt> to be
 the entire input, try to parse a sentence, and check that nothing is
 left over:</p><p>
 
-</p><p></p><p><tt>(define *unparsed* '())<br /><a name="%_idx_4966" id="%_idx_4966"></a>(define (parse input)<br />
+</p><p></p><p><tt>(define *unparsed* '())<br /><a id="__idx_4966"></a>(define (parse input)<br />
   (set! *unparsed* input)<br />
   (let ((sent (parse-sentence)))<br />
     (require (null? *unparsed*))<br />
@@ -464,7 +464,7 @@ units can be decomposed.</p><p>
 
 Let's add to our grammar a list of prepositions:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4968" id="%_idx_4968"></a>(define prepositions '(prep for to in by with))<br /></tt></p><p></p><p>
+</p><p></p><p><tt><a id="__idx_4968"></a>(define prepositions '(prep for to in by with))<br /></tt></p><p></p><p>
 
 and define a prepositional phrase (e.g., “for the cat”) to be
 a preposition followed by a noun phrase:</p><p>
@@ -475,7 +475,7 @@ a preposition followed by a noun phrase:</p><p>
         (parse-noun-phrase)))<br /></tt></p><p></p><p>
 Now we can define a sentence to be a noun phrase followed by a verb
 phrase, where a verb phrase can be either a verb or a verb phrase
-extended by a prepositional phrase:<a name="call_footnote_Temp_621" href="#footnote_Temp_621" id="call_footnote_Temp_621"><sup><small>52</small></sup></a></p><p>
+extended by a prepositional phrase:<a href="#footnote_Temp_621" id="call_footnote_Temp_621"><sup><small>52</small></sup></a></p><p>
 
 </p><p></p><p><tt>(define (parse-sentence)<br />
   (list 'sentence<br />
@@ -557,7 +557,7 @@ Asking the evaluator to try again yields
                               (article the) (noun cat)))))))<br /></tt></p><p></p><p>
 </p><p>
 
-</p><p><a name="%_thm_4.45" id="%_thm_4.45"></a>
+</p><p><a id="__thm_4.45"></a>
 <b>Exercise 4.45.</b>  With the grammar given above, the following sentence can be parsed in
 five different ways:
 “The professor lectures to the student in the class with the cat.”
@@ -565,15 +565,15 @@ Give the five parses and explain the differences in shades of
 meaning among them.
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.46" id="%_thm_4.46"></a>
-<b>Exercise 4.46.</b>  <a name="%_idx_4970" id="%_idx_4970"></a>The evaluators in sections <a href="book-Z-H-26.html#%_sec_4.1">4.1</a> and <a href="book-Z-H-27.html#%_sec_4.2">4.2</a>
+</p><p><a id="__thm_4.46"></a>
+<b>Exercise 4.46.</b>  <a id="__idx_4970"></a>The evaluators in sections <a href="book-Z-H-26.html#__sec_4.1">4.1</a> and <a href="book-Z-H-27.html#__sec_4.2">4.2</a>
 do not determine what order operands are evaluated in.
 We will see that the <tt>amb</tt> evaluator evaluates them from left to right.
 Explain why our parsing program wouldn't work if the operands were evaluated
 in some other order.
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.47" id="%_thm_4.47"></a>
+</p><p><a id="__thm_4.47"></a>
 <b>Exercise 4.47.</b>  Louis Reasoner suggests that, since a verb phrase is either a verb or
 a verb phrase followed by a prepositional phrase, it would be much more
 straightforward to define the procedure <tt>parse-verb-phrase</tt> as
@@ -587,28 +587,28 @@ Does this work?  Does the program's behavior change if we interchange
 the order of expressions in the <tt>amb</tt>?
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.48" id="%_thm_4.48"></a>
+</p><p><a id="__thm_4.48"></a>
 <b>Exercise 4.48.</b>  Extend the grammar given above to handle more complex sentences.  For
 example, you could extend noun phrases and verb phrases to include
-adjectives and adverbs, or you could handle compound sentences.<a name="call_footnote_Temp_626" href="#footnote_Temp_626" id="call_footnote_Temp_626"><sup><small>53</small></sup></a>
+adjectives and adverbs, or you could handle compound sentences.<a href="#footnote_Temp_626" id="call_footnote_Temp_626"><sup><small>53</small></sup></a>
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.49" id="%_thm_4.49"></a>
-<b>Exercise 4.49.</b>  <a name="%_idx_4976" id="%_idx_4976"></a>Alyssa P. Hacker is more interested in generating interesting
+</p><p><a id="__thm_4.49"></a>
+<b>Exercise 4.49.</b>  <a id="__idx_4976"></a>Alyssa P. Hacker is more interested in generating interesting
 sentences than in parsing them.  She reasons that by simply changing
 the procedure <tt>parse-word</tt> so that it ignores the “input
 sentence” and instead always succeeds and generates an appropriate
 word, we can use the programs we had built for parsing to do
 generation instead.  Implement Alyssa's idea, and show the first
-half-dozen or so sentences generated.<a name="call_footnote_Temp_628" href="#footnote_Temp_628" id="call_footnote_Temp_628"><sup><small>54</small></sup></a>
+half-dozen or so sentences generated.<a href="#footnote_Temp_628" id="call_footnote_Temp_628"><sup><small>54</small></sup></a>
 
 </p><p></p><p>
 
-<a name="%_sec_4.3.3" id="%_sec_4.3.3"></a>
-</p><h3><a href="book-Z-H-4.html#%_toc_%_sec_4.3.3">4.3.3  Implementing the <tt>Amb</tt> Evaluator</a></h3><p>
+<a id="__sec_4.3.3"></a>
+</p><h3>4.3.3  Implementing the <tt>Amb</tt> Evaluator</h3><p>
 
 
-<a name="%_idx_4978" id="%_idx_4978"></a>
+<a id="__idx_4978"></a>
 The evaluation of an ordinary Scheme expression may return a value,
 may never terminate, or may signal an error.  In nondeterministic
 Scheme the evaluation of an expression may in addition result in the
@@ -616,26 +616,26 @@ discovery of a dead end, in which case evaluation must backtrack to a previous
 choice point.  The interpretation of nondeterministic Scheme is
 complicated by this extra case.</p><p>
 
-<a name="%_idx_4980" id="%_idx_4980"></a>We will construct the <tt>amb</tt> evaluator for nondeterministic Scheme
-by modifying the analyzing evaluator of section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.<a name="call_footnote_Temp_629" href="#footnote_Temp_629" id="call_footnote_Temp_629"><sup><small>55</small></sup></a>
+<a id="__idx_4980"></a>We will construct the <tt>amb</tt> evaluator for nondeterministic Scheme
+by modifying the analyzing evaluator of section <a href="book-Z-H-26.html#__sec_4.1.7">4.1.7</a>.<a href="#footnote_Temp_629" id="call_footnote_Temp_629"><sup><small>55</small></sup></a>
 As in the analyzing evaluator, evaluation of an expression is
-accomplished by calling an <a name="%_idx_4982" id="%_idx_4982"></a>execution procedure produced by analysis of
+accomplished by calling an <a id="__idx_4982"></a>execution procedure produced by analysis of
 that expression.  The difference between the interpretation of ordinary
 Scheme and the interpretation of nondeterministic Scheme will be entirely
 in the execution procedures.</p><p>
 
-<a name="%_sec_Temp_630" id="%_sec_Temp_630"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_630">Execution procedures and continuations</a></h4><p>
+<a id="__sec_Temp_630"></a>
+</p><h4>Execution procedures and continuations</h4><p>
 
-<a name="%_idx_4984" id="%_idx_4984"></a>
-<a name="%_idx_4986" id="%_idx_4986"></a>Recall that the execution procedures for the ordinary evaluator take
+<a id="__idx_4984"></a>
+<a id="__idx_4986"></a>Recall that the execution procedures for the ordinary evaluator take
 one argument: the environment of execution.  In contrast, the
 execution procedures in the <tt>amb</tt> evaluator take three arguments:
 the environment, and two procedures called <em>continuation
 procedures</em>.  The evaluation of an expression will finish by calling
 one of these two continuations: If the evaluation results in a value,
-the <a name="%_idx_4988" id="%_idx_4988"></a><em>success continuation</em> is called with that value; if the
-evaluation results in the discovery of a dead end, the <a name="%_idx_4990" id="%_idx_4990"></a><em>failure
+the <a id="__idx_4988"></a><em>success continuation</em> is called with that value; if the
+evaluation results in the discovery of a dead end, the <a id="__idx_4990"></a><em>failure
 continuation</em> is called.  Constructing and calling appropriate
 continuations is the mechanism by which the nondeterministic evaluator
 implements backtracking.</p><p>
@@ -660,7 +660,7 @@ A failure is triggered during evaluation (that is, a failure
 continuation is called) when a user program explicitly rejects the
 current line of attack (for example, a call to <tt>require</tt> may
 result in execution of <tt>(amb)</tt>, an expression that always
-fails – see section <a href="#%_sec_4.3.1">4.3.1</a>).  The failure continuation in hand
+fails – see section <a href="#__sec_4.3.1">4.3.1</a>).  The failure continuation in hand
 at that point will cause the most recent choice point to choose
 another alternative.  If there are no more alternatives to be
 considered at that choice point, a failure at an earlier choice point
@@ -709,14 +709,14 @@ or to the top level.
 </p><p>
 
 
-<a name="%_sec_Temp_631" id="%_sec_Temp_631"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_631">Structure of the evaluator</a></h4><p>
+<a id="__sec_Temp_631"></a>
+</p><h4>Structure of the evaluator</h4><p>
 
-<a name="%_idx_4992" id="%_idx_4992"></a>The syntax- and data-representation procedures for the <tt>amb</tt>
+<a id="__idx_4992"></a>The syntax- and data-representation procedures for the <tt>amb</tt>
 evaluator, and also the basic <tt>analyze</tt> procedure, are identical
-to those in the evaluator of section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>,
+to those in the evaluator of section <a href="book-Z-H-26.html#__sec_4.1.7">4.1.7</a>,
 except for the fact that we need additional syntax procedures to
-recognize the <tt>amb</tt> special form:<a name="call_footnote_Temp_632" href="#footnote_Temp_632" id="call_footnote_Temp_632"><sup><small>56</small></sup></a>
+recognize the <tt>amb</tt> special form:<a href="#footnote_Temp_632" id="call_footnote_Temp_632"><sup><small>56</small></sup></a>
 </p><p></p><p><tt>(define (amb? exp) (tagged-list? exp 'amb))<br />
 (define (amb-choices exp) (cdr exp))<br /></tt></p><p></p><p>
 We must also add to the dispatch in <tt>analyze</tt> a clause that will
@@ -724,17 +724,17 @@ recognize this special form and generate an appropriate execution procedure:</p>
 
 </p><p></p><p><tt>((amb? exp) (analyze-amb exp))<br /></tt></p><p></p><p></p><p>
 
-The top-level procedure <tt>ambeval</tt> (similar to the version of <tt>eval</tt> given in section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>) analyzes the
+The top-level procedure <tt>ambeval</tt> (similar to the version of <tt>eval</tt> given in section <a href="book-Z-H-26.html#__sec_4.1.7">4.1.7</a>) analyzes the
 given expression and applies the resulting execution procedure to the
 given environment, together with two given continuations:</p><p>
 
-</p><p></p><p><tt><a name="%_idx_4994" id="%_idx_4994"></a>(define (ambeval exp env succeed fail)<br />
+</p><p></p><p><tt><a id="__idx_4994"></a>(define (ambeval exp env succeed fail)<br />
   ((analyze exp) env succeed fail))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_idx_4996" id="%_idx_4996"></a><a name="%_idx_4998" id="%_idx_4998"></a><a name="%_idx_5000" id="%_idx_5000"></a>A success continuation is a procedure of two arguments: the value just
+<a id="__idx_4996"></a><a id="__idx_4998"></a><a id="__idx_5000"></a>A success continuation is a procedure of two arguments: the value just
 obtained and another failure continuation to be used if that value leads
 to a subsequent failure. A failure continuation is a procedure of no
-arguments.  So <a name="%_idx_5002" id="%_idx_5002"></a>the general form of an execution procedure is</p><p>
+arguments.  So <a id="__idx_5002"></a>the general form of an execution procedure is</p><p>
 
 </p><p></p><p><tt>(lambda (env succeed fail)<br />
   <em>;; <tt>succeed</tt> is <tt>(lambda (value fail) <tt>...</tt>)</tt></em><br />
@@ -759,10 +759,10 @@ from the mechanics of passing the continuations around as the
 execution procedures call each other.  In going through the following code,
 you should compare each of the execution procedures with the
 corresponding procedure for the ordinary evaluator given in
-section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>.</p><p>
+section <a href="book-Z-H-26.html#__sec_4.1.7">4.1.7</a>.</p><p>
 
-<a name="%_sec_Temp_633" id="%_sec_Temp_633"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_633">Simple expressions</a></h4><p>
+<a id="__sec_Temp_633"></a>
+</p><h4>Simple expressions</h4><p>
 
 The execution procedures for the simplest kinds of expressions are
 essentially the same as those for the ordinary evaluator, except for the
@@ -770,7 +770,7 @@ need to manage the continuations.  The execution procedures simply
 succeed with the value of the expression, passing along the failure
 continuation that was passed to them.</p><p>
 
-<a name="%_idx_5004" id="%_idx_5004"></a>
+<a id="__idx_5004"></a>
 </p><p></p><p><tt>(define (analyze-self-evaluating exp)<br />
   (lambda (env succeed fail)<br />
     (succeed exp fail)))<br />
@@ -790,14 +790,14 @@ continuation that was passed to them.</p><p>
                fail))))<br /></tt></p><p></p><p></p><p>
 
 
-<a name="%_idx_5006" id="%_idx_5006"></a>Notice that looking up a variable always “succeeds.”  If <tt>lookup-variable-value</tt> fails to find the variable, it signals an
+<a id="__idx_5006"></a>Notice that looking up a variable always “succeeds.”  If <tt>lookup-variable-value</tt> fails to find the variable, it signals an
 error, as usual.  Such a “failure” indicates a program bug – a
 reference to an unbound variable; it is not an indication that we
 should try another nondeterministic choice instead of the one that is
 currently being tried.</p><p>
 
-<a name="%_sec_Temp_634" id="%_sec_Temp_634"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_634">Conditionals and sequences</a></h4><p>
+<a id="__sec_Temp_634"></a>
+</p><h4>Conditionals and sequences</h4><p>
 
 Conditionals are also handled in a similar way as in the ordinary
 evaluator.  The execution procedure generated by <tt>analyze-if</tt>
@@ -846,8 +846,8 @@ Namely, to sequentially execute <tt>a</tt> and then <tt>b</tt>, we call <tt>a</t
         (error "Empty sequence -- ANALYZE"))<br />
     (loop (car procs) (cdr procs))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_635" id="%_sec_Temp_635"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_635">Definitions and assignments</a></h4><p>
+<a id="__sec_Temp_635"></a>
+</p><h4>Definitions and assignments</h4><p>
 
 Definitions are another case where we must go to some trouble to
 manage the continuations, because it is necessary to evaluate the
@@ -868,7 +868,7 @@ defined and the success is propagated:</p><p>
              fail))))<br /></tt></p><p></p><p></p><p>
 
 
-<a name="%_idx_5008" id="%_idx_5008"></a>Assignments are more interesting.  This is the first place where we
+<a id="__idx_5008"></a>Assignments are more interesting.  This is the first place where we
 really use the continuations, rather than just passing them around.
 The execution procedure for assignments starts out like the one for
 definitions.  It first attempts to obtain the new value to be assigned
@@ -879,7 +879,7 @@ If <tt>vproc</tt> succeeds, however, and we go on to make the assignment,
 we must consider the possibility that this branch of the computation
 might later fail, which will require us to backtrack out of the
 assignment.  Thus, we must arrange to undo the assignment as
-part of the backtracking process.<a name="call_footnote_Temp_636" href="#footnote_Temp_636" id="call_footnote_Temp_636"><sup><small>57</small></sup></a></p><p>
+part of the backtracking process.<a href="#footnote_Temp_636" id="call_footnote_Temp_636"><sup><small>57</small></sup></a></p><p>
 
 This is accomplished by giving <tt>vproc</tt> a success continuation
 (marked with the comment “*1*” below) that saves the old value of
@@ -910,8 +910,8 @@ assignment before actually calling <tt>fail2</tt>.</p><p>
                             (fail2)))))<br />
              fail))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_637" id="%_sec_Temp_637"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_637">Procedure applications</a></h4><p>
+<a id="__sec_Temp_637"></a>
+</p><h4>Procedure applications</h4><p>
 
 The execution procedure for applications contains no new ideas except
 for the technical complexity of managing the continuations.  This
@@ -962,7 +962,7 @@ performed by <tt>execute-application</tt>, is
 accomplished in the same way as for the ordinary evaluator, except for
 the need to manage the continuations.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5012" id="%_idx_5012"></a>(define (execute-application proc args succeed fail)<br />
+</p><p></p><p><tt><a id="__idx_5012"></a>(define (execute-application proc args succeed fail)<br />
   (cond ((primitive-procedure? proc)<br />
          (succeed (apply-primitive-procedure proc args)<br />
                   fail))<br />
@@ -978,11 +978,11 @@ the need to manage the continuations.</p><p>
           "Unknown procedure type -- EXECUTE-APPLICATION"<br />
           proc))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_638" id="%_sec_Temp_638"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_638">Evaluating <tt>amb</tt> expressions</a></h4><p>
+<a id="__sec_Temp_638"></a>
+</p><h4>Evaluating <tt>amb</tt> expressions</h4><p>
 
 
-<a name="%_idx_5014" id="%_idx_5014"></a>The <tt>amb</tt> special form is the key element in the nondeterministic
+<a id="__idx_5014"></a>The <tt>amb</tt> special form is the key element in the nondeterministic
 language.  Here we see the essence of the interpretation process and
 the reason for keeping track of the continuations.  The execution
 procedure for <tt>amb</tt> defines a loop <tt>try-next</tt> that cycles
@@ -991,7 +991,7 @@ through the execution procedures for all the possible values of the
 failure continuation that will try the next one.  When there are no
 more alternatives to try, the entire <tt>amb</tt> expression fails.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5016" id="%_idx_5016"></a>(define (analyze-amb exp)<br />
+</p><p></p><p><tt><a id="__idx_5016"></a>(define (analyze-amb exp)<br />
   (let ((cprocs (map analyze (amb-choices exp))))<br />
     (lambda (env succeed fail)<br />
       (define (try-next choices)<br />
@@ -1003,11 +1003,11 @@ more alternatives to try, the entire <tt>amb</tt> expression fails.</p><p>
                              (try-next (cdr choices))))))<br />
       (try-next cprocs))))<br /></tt></p><p></p><p></p><p>
 
-<a name="%_sec_Temp_639" id="%_sec_Temp_639"></a>
-</p><h4><a href="book-Z-H-4.html#%_toc_%_sec_Temp_639">Driver loop</a></h4><p>
+<a id="__sec_Temp_639"></a>
+</p><h4>Driver loop</h4><p>
 
-<a name="%_idx_5018" id="%_idx_5018"></a>
-<a name="%_idx_5020" id="%_idx_5020"></a>The driver loop for the <tt>amb</tt> evaluator is complex, due to
+<a id="__idx_5018"></a>
+<a id="__idx_5020"></a>The driver loop for the <tt>amb</tt> evaluator is complex, due to
 the mechanism that permits the user to try again in evaluating an
 expression.  The driver uses a procedure called <tt>internal-loop</tt>,
 which takes as argument a procedure <tt>try-again</tt>.  The intent is
@@ -1031,8 +1031,8 @@ later fails.  In this case, however, we have completed a successful
 evaluation, so we can invoke the “failure” alternative branch in
 order to search for additional successful evaluations.</p><p>
 
-</p><p></p><p><tt><a name="%_idx_5022" id="%_idx_5022"></a>(define input-prompt ";;; Amb-Eval input:")<br />
-(define output-prompt ";;; Amb-Eval value:")<br /><a name="%_idx_5024" id="%_idx_5024"></a>(define (driver-loop)<br />
+</p><p></p><p><tt><a id="__idx_5022"></a>(define input-prompt ";;; Amb-Eval input:")<br />
+(define output-prompt ";;; Amb-Eval value:")<br /><a id="__idx_5024"></a>(define (driver-loop)<br />
   (define (internal-loop try-again)<br />
     (prompt-for-input input-prompt)<br />
     (let ((input (read)))<br />
@@ -1064,14 +1064,14 @@ problem and restarts the driver loop.  This is the behavior that will
 happen if the user types <tt>try-again</tt> when there is no evaluation
 in progress.</p><p>
 
-</p><p><a name="%_thm_4.50" id="%_thm_4.50"></a>
+</p><p><a id="__thm_4.50"></a>
 <b>Exercise 4.50.</b>  Implement a new special form <tt>ramb</tt> that is like <tt>amb</tt> except that it searches alternatives in a random order, rather
 than from left to right.  Show how this can help with Alyssa's problem
-in exercise <a href="#%_thm_4.49">4.49</a>.
+in exercise <a href="#__thm_4.49">4.49</a>.
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.51" id="%_thm_4.51"></a>
+</p><p><a id="__thm_4.51"></a>
 <b>Exercise 4.51.</b>  Implement a new kind of assignment called <tt>permanent-set!</tt> that
 is not undone upon failure.  For example, we can choose two distinct
 elements from a list and count the number of trials required to make a
@@ -1089,7 +1089,7 @@ rather than <tt>permanent-set!</tt> ?
 
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.52" id="%_thm_4.52"></a>
+</p><p><a id="__thm_4.52"></a>
 <b>Exercise 4.52.</b>  Implement a new construct called <tt>if-fail</tt> that permits the user to
 catch the failure of an expression.  <tt>If-fail</tt> takes two
 expressions.  It evaluates the first expression as usual and returns
@@ -1107,10 +1107,10 @@ following example:
          'all-odd)<br /><i>;;; Starting a new problem</i><br /><i>;;; Amb-Eval value:</i><br /><i>8</i><br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.53" id="%_thm_4.53"></a>
+</p><p><a id="__thm_4.53"></a>
 <b>Exercise 4.53.</b>  With <tt>permanent-set!</tt> as described in
-exercise <a href="#%_thm_4.51">4.51</a> and <tt>if-fail</tt> as in
-exercise <a href="#%_thm_4.52">4.52</a>, what will be the result of evaluating
+exercise <a href="#__thm_4.51">4.51</a> and <tt>if-fail</tt> as in
+exercise <a href="#__thm_4.52">4.52</a>, what will be the result of evaluating
 </p><p></p><p><tt>(let ((pairs '()))<br />
   (if-fail (let ((p (prime-sum-pair '(1 3 5 8) '(20 35 110))))<br />
              (permanent-set! pairs (cons p pairs))<br />
@@ -1118,8 +1118,8 @@ exercise <a href="#%_thm_4.52">4.52</a>, what will be the result of evaluating
            pairs))<br /></tt></p><p></p><p>
 </p><p></p><p>
 
-</p><p><a name="%_thm_4.54" id="%_thm_4.54"></a>
-<b>Exercise 4.54.</b>  <a name="%_idx_5026" id="%_idx_5026"></a>If we had not realized that <tt>require</tt> could be implemented as an
+</p><p><a id="__thm_4.54"></a>
+<b>Exercise 4.54.</b>  <a id="__idx_5026"></a>If we had not realized that <tt>require</tt> could be implemented as an
 ordinary procedure that uses <tt>amb</tt>, to be defined by the user as
 part of a nondeterministic program, we would have had to implement it
 as a special form.  This would require syntax procedures</p><p>
@@ -1145,23 +1145,23 @@ expressions.  Complete the following definition of <tt>analyze-require</tt>.</p>
 </p><p>
 
 </p><p></p><div class="smallprint"><hr /></div><p>
-</p><div class="footnote"><p><a name="footnote_Temp_598" href="#call_footnote_Temp_598" id="footnote_Temp_598"><sup><small>42</small></sup></a> We assume that we have previously defined a
+</p><div class="footnote"><p><a href="#call_footnote_Temp_598" id="footnote_Temp_598"><sup><small>42</small></sup></a> We assume that we have previously defined a
 procedure <tt>prime?</tt> that tests whether numbers are prime.  Even with
 <tt>prime?</tt> defined, the <tt>prime-sum-pair</tt> procedure may look
 suspiciously like the unhelpful “pseudo-Lisp” attempt to define the
 square-root function, which we described at the beginning of
-section <a href="book-Z-H-10.html#%_sec_1.1.7">1.1.7</a>.  In fact, a square-root procedure along those
+section <a href="book-Z-H-10.html#__sec_1.1.7">1.1.7</a>.  In fact, a square-root procedure along those
 lines can actually be formulated as a nondeterministic program.
 By incorporating a search mechanism into the evaluator, we
-are eroding the <a name="%_idx_4816" id="%_idx_4816"></a><a name="%_idx_4818" id="%_idx_4818"></a>distinction between purely declarative descriptions
+are eroding the <a id="__idx_4816"></a><a id="__idx_4818"></a>distinction between purely declarative descriptions
 and imperative specifications of how to compute answers.  We'll go
 even farther in this direction in
-section <a href="book-Z-H-29.html#%_sec_4.4">4.4</a>.
+section <a href="book-Z-H-29.html#__sec_4.4">4.4</a>.
 
-</p><p><a name="footnote_Temp_599" href="#call_footnote_Temp_599" id="footnote_Temp_599"><sup><small>43</small></sup></a> The idea of <tt>amb</tt> for nondeterministic programming was
-<a name="%_idx_4824" id="%_idx_4824"></a>first described in 1961 by John McCarthy (see McCarthy 1967).
+</p><p><a href="#call_footnote_Temp_599" id="footnote_Temp_599"><sup><small>43</small></sup></a> The idea of <tt>amb</tt> for nondeterministic programming was
+<a id="__idx_4824"></a>first described in 1961 by John McCarthy (see McCarthy 1967).
 
-</p><p><a name="footnote_Temp_600" href="#call_footnote_Temp_600" id="footnote_Temp_600"><sup><small>44</small></sup></a> In actuality, the distinction between nondeterministically
+</p><p><a href="#call_footnote_Temp_600" id="footnote_Temp_600"><sup><small>44</small></sup></a> In actuality, the distinction between nondeterministically
 returning a single choice and returning all choices depends somewhat
 on our point of view.  From the perspective of the code that uses the
 value, the nondeterministic choice returns a single value.  From the
@@ -1169,117 +1169,117 @@ perspective of the programmer designing the code, the nondeterministic
 choice potentially returns all possible values, and the computation
 branches so that each value is investigated separately.
 
-</p><p><a name="footnote_Temp_601" href="#call_footnote_Temp_601" id="footnote_Temp_601"><sup><small>45</small></sup></a> One might object that this is a hopelessly
+</p><p><a href="#call_footnote_Temp_601" id="footnote_Temp_601"><sup><small>45</small></sup></a> One might object that this is a hopelessly
 inefficient mechanism.  It might require millions of processors to
 solve some easily stated problem this way, and most of the time most
 of those processors would be idle.  This objection should be taken in
 the context of history.  Memory used to be considered just such an
-expensive commodity.  <a name="%_idx_4838" id="%_idx_4838"></a>In 1964 a megabyte of RAM cost about $400,000.
+expensive commodity.  <a id="__idx_4838"></a>In 1964 a megabyte of RAM cost about $400,000.
 Now every personal computer has many megabytes of RAM, and most of the
 time most of that RAM is unused.  It is hard to underestimate the cost
 of mass-produced electronics.
 
-</p><p><a name="footnote_Temp_602" href="#call_footnote_Temp_602" id="footnote_Temp_602"><sup><small>46</small></sup></a> Automagically: “Automatically, but in a way
+</p><p><a href="#call_footnote_Temp_602" id="footnote_Temp_602"><sup><small>46</small></sup></a> Automagically: “Automatically, but in a way
 which, for some reason (typically because it is too complicated, or
 too ugly, or perhaps even too trivial), the speaker doesn't feel like
 explaining.”  (Steele 1983, Raymond 1993)
 
-</p><p><a name="footnote_Temp_603" href="#call_footnote_Temp_603" id="footnote_Temp_603"><sup><small>47</small></sup></a> The integration of automatic search strategies
-<a name="%_idx_4860" id="%_idx_4860"></a>into programming languages has had a long and checkered history.  The
+</p><p><a href="#call_footnote_Temp_603" id="footnote_Temp_603"><sup><small>47</small></sup></a> The integration of automatic search strategies
+<a id="__idx_4860"></a>into programming languages has had a long and checkered history.  The
 first suggestions that nondeterministic algorithms might be elegantly
 encoded in a programming language with search and automatic
-backtracking came from <a name="%_idx_4862" id="%_idx_4862"></a>Robert Floyd (1967).  <a name="%_idx_4864" id="%_idx_4864"></a>Carl Hewitt
-(1969) invented a programming language called <a name="%_idx_4866" id="%_idx_4866"></a>Planner that explicitly
+backtracking came from <a id="__idx_4862"></a>Robert Floyd (1967).  <a id="__idx_4864"></a>Carl Hewitt
+(1969) invented a programming language called <a id="__idx_4866"></a>Planner that explicitly
 supported automatic chronological backtracking, providing for a
-built-in depth-first search strategy.  <a name="%_idx_4868" id="%_idx_4868"></a><a name="%_idx_4870" id="%_idx_4870"></a><a name="%_idx_4872" id="%_idx_4872"></a>Sussman, Winograd, and Charniak
-(1971) implemented a subset of this language, called <a name="%_idx_4874" id="%_idx_4874"></a>MicroPlanner,
+built-in depth-first search strategy.  <a id="__idx_4868"></a><a id="__idx_4870"></a><a id="__idx_4872"></a>Sussman, Winograd, and Charniak
+(1971) implemented a subset of this language, called <a id="__idx_4874"></a>MicroPlanner,
 which was used to support work in problem solving and robot planning.
 Similar ideas, arising from logic and theorem proving, led to the
-genesis in Edinburgh and Marseille of the elegant language <a name="%_idx_4876" id="%_idx_4876"></a>Prolog
-(which we will discuss in section <a href="book-Z-H-29.html#%_sec_4.4">4.4</a>).  After
-sufficient frustration with automatic search, <a name="%_idx_4878" id="%_idx_4878"></a><a name="%_idx_4880" id="%_idx_4880"></a>McDermott and Sussman
-(1972) developed a language called <a name="%_idx_4882" id="%_idx_4882"></a>Conniver, which included mechanisms
+genesis in Edinburgh and Marseille of the elegant language <a id="__idx_4876"></a>Prolog
+(which we will discuss in section <a href="book-Z-H-29.html#__sec_4.4">4.4</a>).  After
+sufficient frustration with automatic search, <a id="__idx_4878"></a><a id="__idx_4880"></a>McDermott and Sussman
+(1972) developed a language called <a id="__idx_4882"></a>Conniver, which included mechanisms
 for placing the search strategy under programmer control.  This proved
-unwieldy, however, and <a name="%_idx_4884" id="%_idx_4884"></a><a name="%_idx_4886" id="%_idx_4886"></a>Sussman and Stallman (1975) found a more
+unwieldy, however, and <a id="__idx_4884"></a><a id="__idx_4886"></a>Sussman and Stallman (1975) found a more
 tractable approach while investigating methods of symbolic analysis
 for electrical circuits.  They developed a non-chronological
 backtracking scheme that was based on tracing out the logical
 dependencies connecting facts, a technique that has come to be known
-as <a name="%_idx_4888" id="%_idx_4888"></a><em>dependency-directed backtracking</em>.  Although their method was
+as <a id="__idx_4888"></a><em>dependency-directed backtracking</em>.  Although their method was
 complex, it produced reasonably efficient programs because it did
-little redundant search.  <a name="%_idx_4890" id="%_idx_4890"></a><a name="%_idx_4892" id="%_idx_4892"></a>Doyle (1979) and McAllester (1978, 1980)
+little redundant search.  <a id="__idx_4890"></a><a id="__idx_4892"></a>Doyle (1979) and McAllester (1978, 1980)
 generalized and clarified the methods of Stallman and Sussman,
 developing a new paradigm for formulating search that is now called
-<a name="%_idx_4894" id="%_idx_4894"></a><em>truth maintenance</em>.  Modern problem-solving systems all
-use some form of truth-maintenance system as a substrate.  See <a name="%_idx_4896" id="%_idx_4896"></a><a name="%_idx_4898" id="%_idx_4898"></a>Forbus
+<a id="__idx_4894"></a><em>truth maintenance</em>.  Modern problem-solving systems all
+use some form of truth-maintenance system as a substrate.  See <a id="__idx_4896"></a><a id="__idx_4898"></a>Forbus
 and deKleer 1993 for a discussion of elegant ways to build
 truth-maintenance systems and applications using truth maintenance.
-<a name="%_idx_4900" id="%_idx_4900"></a><a name="%_idx_4902" id="%_idx_4902"></a><a name="%_idx_4904" id="%_idx_4904"></a>Zabih, McAllester, and
+<a id="__idx_4900"></a><a id="__idx_4902"></a><a id="__idx_4904"></a>Zabih, McAllester, and
 Chapman 1987 describes a nondeterministic extension to Scheme that
 is based on <tt>amb</tt>; it is similar to the interpreter described in
 this section, but more sophisticated, because it uses
 dependency-directed backtracking rather than chronological
-<a name="%_idx_4906" id="%_idx_4906"></a>backtracking.  Winston 1992 gives an introduction to both kinds of
+<a id="__idx_4906"></a>backtracking.  Winston 1992 gives an introduction to both kinds of
 backtracking.
 
-</p><p><a name="footnote_Temp_609" href="#call_footnote_Temp_609" id="footnote_Temp_609"><sup><small>48</small></sup></a> Our program uses the following procedure to determine
+</p><p><a href="#call_footnote_Temp_609" id="footnote_Temp_609"><sup><small>48</small></sup></a> Our program uses the following procedure to determine
 if the elements of a list are distinct:
-</p><p></p><p><tt><a name="%_idx_4934" id="%_idx_4934"></a>(define (distinct? items)<br />
+</p><p></p><p><tt><a id="__idx_4934"></a>(define (distinct? items)<br />
   (cond ((null? items) true)<br />
         ((null? (cdr items)) true)<br />
         ((member (car items) (cdr items)) false)<br />
         (else (distinct? (cdr items)))))<br /></tt></p><p></p><p>
-<a name="%_idx_4936" id="%_idx_4936"></a><tt>Member</tt> is like <tt>memq</tt> except that it uses <tt>equal?</tt> instead
+<a id="__idx_4936"></a><tt>Member</tt> is like <tt>memq</tt> except that it uses <tt>equal?</tt> instead
 of <tt>eq?</tt> to test for equality.
 
 
-</p><p><a name="footnote_Temp_616" href="#call_footnote_Temp_616" id="footnote_Temp_616"><sup><small>49</small></sup></a> This is taken from a booklet called “Problematical
+</p><p><a href="#call_footnote_Temp_616" id="footnote_Temp_616"><sup><small>49</small></sup></a> This is taken from a booklet called “Problematical
 Recreations,” published in the 1960s by Litton Industries, where it
 is attributed to the <em>Kansas State Engineer</em>.
 
-</p><p><a name="footnote_Temp_619" href="#call_footnote_Temp_619" id="footnote_Temp_619"><sup><small>50</small></sup></a> Here we use the convention that the first element of each list
+</p><p><a href="#call_footnote_Temp_619" id="footnote_Temp_619"><sup><small>50</small></sup></a> Here we use the convention that the first element of each list
 designates the part of speech for the rest of the words in the list.
 
-</p><p><a name="footnote_Temp_620" href="#call_footnote_Temp_620" id="footnote_Temp_620"><sup><small>51</small></sup></a> Notice that <tt>parse-word</tt> uses <tt>set!</tt> to modify the
+</p><p><a href="#call_footnote_Temp_620" id="footnote_Temp_620"><sup><small>51</small></sup></a> Notice that <tt>parse-word</tt> uses <tt>set!</tt> to modify the
 unparsed input list.  For this to work, our <tt>amb</tt> evaluator must
 undo the effects of <tt>set!</tt> operations when it backtracks.
 
-</p><p><a name="footnote_Temp_621" href="#call_footnote_Temp_621" id="footnote_Temp_621"><sup><small>52</small></sup></a> Observe that this
+</p><p><a href="#call_footnote_Temp_621" id="footnote_Temp_621"><sup><small>52</small></sup></a> Observe that this
 definition is recursive – a verb may be followed by any number
 of prepositional phrases.
 
-</p><p><a name="footnote_Temp_626" href="#call_footnote_Temp_626" id="footnote_Temp_626"><sup><small>53</small></sup></a> This kind of grammar can become arbitrarily complex, but it
-<a name="%_idx_4972" id="%_idx_4972"></a>is only a toy as far as real language understanding is concerned.
+</p><p><a href="#call_footnote_Temp_626" id="footnote_Temp_626"><sup><small>53</small></sup></a> This kind of grammar can become arbitrarily complex, but it
+<a id="__idx_4972"></a>is only a toy as far as real language understanding is concerned.
 Real natural-language understanding by computer requires an elaborate
 mixture of syntactic analysis and interpretation of meaning.  On the
 other hand, even toy parsers can be useful in supporting flexible
 command languages for programs such as information-retrieval systems.
-<a name="%_idx_4974" id="%_idx_4974"></a>Winston 1992 discusses computational approaches to real
+<a id="__idx_4974"></a>Winston 1992 discusses computational approaches to real
 language understanding and also the applications of simple grammars to
 command languages.
 
-</p><p><a name="footnote_Temp_628" href="#call_footnote_Temp_628" id="footnote_Temp_628"><sup><small>54</small></sup></a> Although Alyssa's idea works just fine (and is
+</p><p><a href="#call_footnote_Temp_628" id="footnote_Temp_628"><sup><small>54</small></sup></a> Although Alyssa's idea works just fine (and is
 surprisingly simple), the sentences that it generates are a bit
 boring – they don't sample the possible sentences of this language in
 a very interesting way.  In fact, the grammar is highly recursive in
 many places, and Alyssa's technique “falls into” one of these recursions and
-gets stuck.  See exercise <a href="#%_thm_4.50">4.50</a> for a way to deal with this.
+gets stuck.  See exercise <a href="#__thm_4.50">4.50</a> for a way to deal with this.
 
-</p><p><a name="footnote_Temp_629" href="#call_footnote_Temp_629" id="footnote_Temp_629"><sup><small>55</small></sup></a> We chose to implement the lazy evaluator in
-section <a href="book-Z-H-27.html#%_sec_4.2">4.2</a> as a modification of the ordinary
-metacircular evaluator of section <a href="book-Z-H-26.html#%_sec_4.1.1">4.1.1</a>.  In
+</p><p><a href="#call_footnote_Temp_629" id="footnote_Temp_629"><sup><small>55</small></sup></a> We chose to implement the lazy evaluator in
+section <a href="book-Z-H-27.html#__sec_4.2">4.2</a> as a modification of the ordinary
+metacircular evaluator of section <a href="book-Z-H-26.html#__sec_4.1.1">4.1.1</a>.  In
 contrast, we will base the <tt>amb</tt> evaluator on the analyzing evaluator
-of section <a href="book-Z-H-26.html#%_sec_4.1.7">4.1.7</a>, because the execution procedures
+of section <a href="book-Z-H-26.html#__sec_4.1.7">4.1.7</a>, because the execution procedures
 in that evaluator provide a convenient framework for implementing
 backtracking.
 
-</p><p><a name="footnote_Temp_632" href="#call_footnote_Temp_632" id="footnote_Temp_632"><sup><small>56</small></sup></a> We assume that the evaluator supports <tt>let</tt>
-(see exercise <a href="book-Z-H-26.html#%_thm_4.22">4.22</a>),
+</p><p><a href="#call_footnote_Temp_632" id="footnote_Temp_632"><sup><small>56</small></sup></a> We assume that the evaluator supports <tt>let</tt>
+(see exercise <a href="book-Z-H-26.html#__thm_4.22">4.22</a>),
 which we have used in our nondeterministic programs.
 
-</p><p><a name="footnote_Temp_636" href="#call_footnote_Temp_636" id="footnote_Temp_636"><sup><small>57</small></sup></a> We didn't worry about undoing definitions, since we can
-<a name="%_idx_5010" id="%_idx_5010"></a>assume that internal definitions are scanned out
-(section <a href="book-Z-H-26.html#%_sec_4.1.6">4.1.6</a>).
+</p><p><a href="#call_footnote_Temp_636" id="footnote_Temp_636"><sup><small>57</small></sup></a> We didn't worry about undoing definitions, since we can
+<a id="__idx_5010"></a>assume that internal definitions are scanned out
+(section <a href="book-Z-H-26.html#__sec_4.1.6">4.1.6</a>).
 
 </p></div>
 
