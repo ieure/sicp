@@ -11,7 +11,7 @@
         <dc:language>en-US</dc:language>
         <dc:source>http://mitpress.mit.edu/sicp/full-text/book/book.html</dc:source>
         <dc:publisher>MIT Press</dc:publisher>
-        <meta name="cover" content="cover.jpg"/>
+        <meta name="cover" content="cover"/>
     </metadata>
     <manifest>
         <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
